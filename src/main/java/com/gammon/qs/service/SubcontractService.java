@@ -2113,6 +2113,8 @@ public class SubcontractService {
 				subcontractInDB.setScDocLegalDate(subcontract.getScDocLegalDate());
 				subcontractInDB.setWorkCommenceDate(subcontract.getWorkCommenceDate());
 				subcontractInDB.setOnSiteStartDate(subcontract.getOnSiteStartDate());
+				subcontractInDB.setScFinalAccDraftDate(subcontract.getScFinalAccDraftDate());
+				subcontractInDB.setScFinalAccSignoffDate(subcontract.getScFinalAccSignoffDate());
 
 
 				subcontractHBDao.update(subcontractInDB);
@@ -2271,12 +2273,23 @@ public class SubcontractService {
 			List<SubcontractDetail> subcontractDetailList = subcontractDetailHBDao.getSubcontractDetailsForWD(jobNo, subcontractNo);
 
 			try {
+				if(percent == 100){
+					for (SubcontractDetail scDetail: subcontractDetailList) {
+						if(!filteredIds.contains(scDetail.getId())) continue;
+						double cumWorkDoneQty = scDetail.getQuantity();
+						double cumWorkDoneAmt = scDetail.getAmountSubcontract().doubleValue();
+						message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+					}
+					
+				}else{
 				for (SubcontractDetail scDetail: subcontractDetailList) {
 					if(!filteredIds.contains(scDetail.getId())) continue;
 					double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
 					double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
 					//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
 					message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+				}
+
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails

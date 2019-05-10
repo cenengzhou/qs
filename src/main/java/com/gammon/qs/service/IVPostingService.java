@@ -87,15 +87,19 @@ public class IVPostingService  {
 	private static final String levyRemark = "Levy Provision";
 	private static final String defectRemark = "Defect Provision";
 	private static final String insuranceRemark = "Insurance Provision";
+	private static final String innovationRemark = "Innovation";
 	private static final Integer sequenceNumber = Integer.valueOf(1);
 	private static final String currencyMode = "D";
 	private static final String eventPoint1 = "5";
 	private static final String eventPoint2 = "2";
 	
+	
 	private static final String marginItemNumber = "BQIVCC";
 	private static final String workDoneItemNumber = "BQIVWD";
 	private static final String revenueInternalItemNumber = "BQIVRI";
 	private static final String revenueExternalItemNumber = "BQIVRV";
+	private static final String innovationChargeCreditItemNumber = "BQIVIC";
+	private static final String innovationChargeDebitItemNumber = "BQIVID";
 	private static final String citaLevyItemNumber = "BQLECT";
 	private static final String pcfbLevyItemNumber = "BQLEPF";
 	private static final String levyProvisionItemNumber = "BQLPRV";
@@ -107,6 +111,7 @@ public class IVPostingService  {
 	private static final String carInsuranceProvisionItemNumber = "BQISCP";
 	private static final String eciInsuranceProvisionItemNumber = "BQISEP";
 	private static final String tplInsuranceProvisionItemNumber = "BQISTP";
+	
 	
 	private static final String versionAA = "GCL0002";
 	private static final String versionJI = "GCL0003";
@@ -452,6 +457,32 @@ public class IVPostingService  {
 					}
 				}
 			}
+			
+			/**
+			 * @author koeyyeung
+			 * modified on 21 Mar, 2019
+			 * Innovation Charge for Turnover **/
+			//STEP 5: Create Journal Entry for Innovation Charge
+			if(job.getInnovationApplicable().equals(JobInfo.INNOVATION_APPLICABLE))
+			{
+				logger.info("Innovation Charge %: "+job.getInnovationPercent());
+				//workDoneAmount 
+				journalEntry = createAAJournalEntry(job, username, innovationChargeCreditItemNumber,batchNumber,postingDate,glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++,documentNumber,postingTime);
+				if(journalEntry != null){
+					journalEntry.setAmountField(workDoneAmount*job.getInnovationPercent()/100*-1);
+					journalEntry.setNameRemarkExplanation(innovationRemark);
+					aaJournalEntries.getInsertFields().add(journalEntry);
+				}
+				journalEntry = createAAJournalEntry(job, username, innovationChargeDebitItemNumber,batchNumber,postingDate,glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++,documentNumber,postingTime);
+				if(journalEntry != null){
+					journalEntry.setAmountField(workDoneAmount*job.getInnovationPercent()/100);
+					journalEntry.setNameRemarkExplanation(innovationRemark);
+					aaJournalEntries.getInsertFields().add(journalEntry);
+				}
+				logger.info("Create Journal Entry for Innovation Charge -- END");
+				
+			}
+			
 		}
 		//Insert and call batches
 		logger.info("Inserting aa entries. Size: " + aaJournalEntries.getInsertFields().size());
@@ -483,7 +514,7 @@ public class IVPostingService  {
 		 */
 		Boolean updatedPostedIVInDB = true;
 		
-		//STEP 5: Update BQ Resource Summaries / BQ Item & Resources 
+		//STEP 6: Update BQ Resource Summaries / BQ Item & Resources 
 		//(currIV -> postedIV)
 		updatedPostedIVInDB = updatedPostedIVInDB && bqResourceSummaryDao.updateBQResourceSummariesAfterPosting(job, username, finalized);
 		/*if(job.getRepackagingType().equals("3")){

@@ -20,70 +20,105 @@
 	                  
 						<div class="col-md-8"><label>Subcontract Requisition Approved Date</label></div>
 						<div class="form-group col-md-4">
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="requistionApproved.singleDate" ng-model="subcontract.requisitionApprovedDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.requisitionApprovedDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.requisitionApprovedDate">
 								</div>
 							</div>
 						
 						
 						<div class="col-md-8"><label>Subcontract Tender Analysis Approved Date</label></div>
 						<div class="form-group col-md-4">
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="tenderAnalysisApprovedDate.singleDate" ng-model="subcontract.tenderAnalysisApprovedDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.tenderAnalysisApprovedDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.tenderAnalysisApprovedDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Pre-Award Finalization Meeting Date</label></div>
 						<div class="form-group col-md-4">								
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="preAwardMeetingDate.singleDate" ng-model="subcontract.preAwardMeetingDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.preAwardMeetingDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.preAwardMeetingDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Letter of Acceptance Signed by Subcontractor Date</label></div>
 						<div class="form-group col-md-4">
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="loaSignedDate.singleDate" ng-model="subcontract.loaSignedDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.loaSignedDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.loaSignedDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontract Document Executed by Subcontractor Date</label></div>
 						<div class="form-group col-md-4">
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="scDocScrDate.singleDate" ng-model="subcontract.scDocScrDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.scDocScrDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.scDocScrDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontract Document Executed by Legal Date</label></div>
 						<div class="form-group col-md-4">
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="scDocLegalDate.singleDate" ng-model="subcontract.scDocLegalDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.scDocLegalDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.scDocLegalDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Works Commencement Date</label></div>
 						<div class="form-group col-md-4">								
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="workCommenceDate.singleDate" ng-model="subcontract.workCommenceDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.workCommenceDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.workCommenceDate">
 								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontractor Start on-site Date</label></div>
 						<div class="form-group col-md-4">						
-								<div class="input-group">
-									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="onSiteStartDate.singleDate" ng-model="subcontract.onSiteStartDate"/>
+								<div class="input-group"
+									moment-picker="subcontract.onSiteStartDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.onSiteStartDate">
 								</div>
 						</div>
 						
-		                
+		                <div class="col-md-8"><label>Subcontractor Final Account Draft Date</label></div>
+						<div class="form-group col-md-4">						
+								<div class="input-group"
+									moment-picker="subcontract.scFinalAccDraftDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.scFinalAccDraftDate">
+								</div>
+						</div>
+						
+						<div class="col-md-8"><label>Subcontractor Final Account Sign Off Date</label></div>
+						<div class="form-group col-md-4">						
+								<div class="input-group"
+									moment-picker="subcontract.scFinalAccSignoffDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <iclass="fa fa-calendar"></i></span> 
+									<input class="form-control" ng-model="subcontract.scFinalAccSignoffDate">
+								</div>
+						</div>
+						
 	                	</div><!-- /.row -->
 		         	</div><!-- /.box-body -->
 		         	<div class="box-footer">

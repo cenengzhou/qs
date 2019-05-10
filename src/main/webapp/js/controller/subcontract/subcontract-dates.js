@@ -18,7 +18,9 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 					scDocScrDate: $scope.subcontract.scDocScrDate,
 					scDocLegalDate: $scope.subcontract.scDocLegalDate,
 					workCommenceDate: $scope.subcontract.workCommenceDate,
-					onSiteStartDate: $scope.subcontract.onSiteStartDate
+					onSiteStartDate: $scope.subcontract.onSiteStartDate,
+					scFinalAccDraftDate: $scope.subcontract.scFinalAccDraftDate,
+					scFinalAccSignoffDate: $scope.subcontract.scFinalAccSignoffDate
 			}
 
 			upateSubcontractDates(subcontractToUpdate);
