@@ -1815,6 +1815,7 @@ mainApp.config(function(blockUIConfig) {
 //		if(config.url.match(/^service\/adl($|\/).*/)) {
 //			return false; // ... don't block it.
 //		}
+		var message;
 		var bypassBlockUI = [
 			'service/mainCert/getCertificateDashboardData', 
 			'service/adl/getJobDashboardData',
@@ -1826,11 +1827,14 @@ mainApp.config(function(blockUIConfig) {
 			];
 		bypassBlockUI.forEach(function(addr){
 			if(config.url == addr) {
-				return false;
+				message = 'false';
 			}
 		});
 		
-		var message;
+		if(message == 'false'){
+			return false;
+		}
+			
 
 		  switch(config.method) {
 		    case 'GET':
