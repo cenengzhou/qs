@@ -1822,8 +1822,8 @@ mainApp.config(function(blockUIConfig) {
 			'service/job/getJobDates',
 			'service/subcontract/getSubcontractDashboardData',
 			'service/subcontract/getSubcontractDetailsDashboardData',
-			'service/payment/getPaymentResourceDistribution',
-			'service/payment/getPaymentCertSummary'
+			'service/payment/getPaymentResourceDistribution'
+			//'service/payment/getPaymentCertSummary'
 			];
 		bypassBlockUI.forEach(function(addr){
 			if(config.url == addr) {
