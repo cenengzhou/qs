@@ -1815,22 +1815,26 @@ mainApp.config(function(blockUIConfig) {
 //		if(config.url.match(/^service\/adl($|\/).*/)) {
 //			return false; // ... don't block it.
 //		}
+		var message;
 		var bypassBlockUI = [
 			'service/mainCert/getCertificateDashboardData', 
 			'service/adl/getJobDashboardData',
 			'service/job/getJobDates',
 			'service/subcontract/getSubcontractDashboardData',
 			'service/subcontract/getSubcontractDetailsDashboardData',
-			'service/payment/getPaymentResourceDistribution',
-			'service/payment/getPaymentCertSummary'
+			'service/payment/getPaymentResourceDistribution'
+			//'service/payment/getPaymentCertSummary'
 			];
 		bypassBlockUI.forEach(function(addr){
 			if(config.url == addr) {
-				return false;
+				message = 'false';
 			}
 		});
 		
-		var message;
+		if(message == 'false'){
+			return false;
+		}
+			
 
 		  switch(config.method) {
 		    case 'GET':

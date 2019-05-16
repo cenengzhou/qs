@@ -431,12 +431,13 @@
 								<label class="col-md-4">Innovation Charge</label>
 
 								<div class="row col-md-8">
-									<div class="col-md-6">
+									<div class="col-md-6" ng-if="isQsAdmin">
 										<input type="checkbox" data-ios-toggle="toggle"
 											data-style="ios" data-onstyle="primary"
 											data-offstyle="warning" data-on="Applicable"
-											data-off="Not-Applicable" ng-disabled="!isQsAdmin" ng-model="job.innovationApplicable">
+											data-off="Not-Applicable" ng-model="job.innovationApplicable">
 									</div>
+
 
 									<form name="innovationForm" id="innovationForm"
 										class="ng-pristine ng-valid">

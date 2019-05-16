@@ -28,7 +28,8 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
-					$scope.job.projectFullDescription = $scope.job.projectFullDescription.split("\n").join("<br>")
+					if($scope.job.projectFullDescription != null)
+						$scope.job.projectFullDescription = $scope.job.projectFullDescription.split("\n").join("<br>")
 					subcontractService.getParentSubcontractList($scope.jobNo)
 					.then(function(data){
 						$scope.parentSubcontractList = data;
