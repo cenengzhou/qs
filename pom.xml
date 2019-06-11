@@ -46,7 +46,7 @@
 		<!-- START: Customize the following properties after checking out the project -->
 		<!-- Java -->
 		<java.version>1.8</java.version>
-		<jdk1.8>C:\Program Files\Java\jdk1.8.0_121</jdk1.8>
+		<jdk1.8>C:\Program Files\Java\jdk1.8.0_65</jdk1.8>
 		<!-- END -->
 
 		<!-- Maven -->
