@@ -61,6 +61,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		PENDING, SUBMITTED, APPROVED, REJECTED, CANCELLED
 	}
 	
+	public static enum SOLO_JV {
+		S, JV
+	}
+	
 	@Transient
 	public void approvalPending() {
 		this.statusApproval = APPROVAL_STATUS.PENDING.name();
