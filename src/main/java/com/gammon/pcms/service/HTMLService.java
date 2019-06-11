@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -24,6 +25,7 @@ import com.gammon.pcms.config.FreemarkerConfig;
 import com.gammon.pcms.config.ServletConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.dao.hr.HrUserRepository;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.FreeMarkerHelper;
@@ -33,6 +35,7 @@ import com.gammon.pcms.model.Personnel;
 import com.gammon.pcms.model.PersonnelMap;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.model.adl.AddressBook;
+import com.gammon.pcms.model.hr.HrUser;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
@@ -130,7 +133,9 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private PersonnelService personnelService;
 	@Autowired
-	private WebServiceConfig webServiceConfig;
+	private WebServiceConfig webServiceConfig;	
+	@Autowired
+	private HrUserRepository hrUserRepository;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -441,7 +446,7 @@ public class HTMLService implements Serializable{
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public String eformEmailTemplate(String formCode, String jobNo, List objectList) throws Exception {
+	public String eformEmailTemplate(String formCode, String jobNo, Map paramMap) throws Exception {
 		MasterListVendor masterList = null;
 		JobInfo job = null;
 		job = jobInfoHBDao.obtainJobInfo(jobNo);
@@ -456,7 +461,7 @@ public class HTMLService implements Serializable{
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
-		data.put("objectList", objectList);
+		data.put("paramMap", paramMap);
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
 			
 		return strHTMLCodingContent;
@@ -518,11 +523,15 @@ public class HTMLService implements Serializable{
 		List<Personnel> personnelListByJob = personnelService.getActivePersonnel(jobInfo.getJobNumber());
 		List<PersonnelMap> allPersonnelMap = personnelService.getAllPersonnelMap();
 		Map<BigDecimal, List<Personnel>> map = new TreeMap<>();
+		Map<String, String> userFullnameMap = new HashMap<>();
 		personnelListByJob.forEach(personnel -> {
 			List<Personnel> list = map.get(personnel.getPersonnelMap().getUserSequence());
 			if(list == null) list = new ArrayList<>();
 			list.add(personnel);
 			map.put(personnel.getPersonnelMap().getUserSequence(), list);
+			userAdToFullnameMap(personnel.getUserAd(), userFullnameMap);
+			userAdToFullnameMap(personnel.getUserAdPrevious(), userFullnameMap);
+			userAdToFullnameMap(personnel.getUserAdToBeApproved(), userFullnameMap);
 		});
 		allPersonnelMap.forEach(personnelMap -> {
 			if(map.get(personnelMap.getUserSequence()) == null) {
@@ -535,8 +544,18 @@ public class HTMLService implements Serializable{
 		map.forEach((key, value) -> {
 			listForReport.addAll(value);
 		});
-		String emailContext = eformEmailTemplate(formCode, jobInfo.getJobNumber(), listForReport);
+		Map<String, Object> param = new HashMap<>();
+		param.put("personnel", listForReport);
+		param.put("username", userFullnameMap);
+		String emailContext = eformEmailTemplate(formCode, jobInfo.getJobNumber(), param);
 		return emailContext;
+	}
+	
+	private void userAdToFullnameMap(String userAd, Map<String, String> map) {
+		if(StringUtils.isNotBlank(userAd) && map.get(userAd) == null) {
+			HrUser user = hrUserRepository.findByUsername(userAd);
+			if(user != null && StringUtils.isNotBlank(user.getFullName())) map.put(userAd, user.getFullName());
+		}
 	}
 	
     /**
