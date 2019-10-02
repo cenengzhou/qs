@@ -1,9 +1,12 @@
 package com.gammon.pcms.dao.adl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -23,8 +26,29 @@ public class AddressBookDao extends BaseAdlHibernateDao<AddressBook> {
 
 		// Where
 		criteria.add(Restrictions.in("addressBookTypeCode", addressBookTypeList));
+		
 		List<AddressBook> resultList = (List<AddressBook>) criteria.list();
-		for(AddressBook addressBook : resultList){
+		for (AddressBook addressBook : resultList) {
+			Hibernate.initialize(addressBook.getSubcontractorWorkscopes());
+		}
+		return resultList;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<AddressBook> findByAddressBook(String addressBookTypeCode, BigDecimal addressBookNumber, String addressBookName) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Where
+		criteria.add(Restrictions.eq("addressBookTypeCode", addressBookTypeCode));
+		if (addressBookNumber != null)
+			criteria.add(Restrictions.eq("addressBookNumber", addressBookNumber));
+
+		else if (!GenericValidator.isBlankOrNull(addressBookName))
+			criteria.add(Restrictions.ilike("addressBookName", addressBookName, MatchMode.ANYWHERE));
+
+		List<AddressBook> resultList = (List<AddressBook>) criteria.list();
+		for (AddressBook addressBook : resultList) {
 			Hibernate.initialize(addressBook.getSubcontractorWorkscopes());
 		}
 		return resultList;

@@ -201,6 +201,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String innovationApplicable;//1: applicable, 0: not applicable
 	private Double innovationPercent;
 	
+	private Integer paymentTermFromClient;
 	
 	public JobInfo() {}
 	
@@ -1179,6 +1180,14 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	}
 	public void setInnovationPercent(Double innovationPercent) {
 		this.innovationPercent = innovationPercent;
+	}
+	
+	@Column(name = "PAYMENT_TERM_FROM_CLIENT")
+	public Integer getPaymentTermFromClient() {
+		return paymentTermFromClient;
+	}
+	public void setPaymentTermFromClient(Integer paymentTermFromClient) {
+		this.paymentTermFromClient = paymentTermFromClient;
 	}
 	
 	@Override

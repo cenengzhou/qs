@@ -1669,10 +1669,10 @@ public class PaymentService{
 		
 
 
-		// 2. Obtain parent job's Main Contract Certificate for QS1 & QS2
-		logger.info("2. Obtain parent job's Main Contract Certificate for QS1 & QS2");
+		// 2. Obtain parent job's Main Contract Certificate for QS1 & QS2 & QS8
+		logger.info("2. Obtain parent job's Main Contract Certificate for QS1 & QS2 & QS8");
 		Integer mainCertNo = null;
-		if ((paymentTerms.equals("QS1") || paymentTerms.equals("QS2")) &&
+		if ((paymentTerms.equals("QS1") || paymentTerms.equals("QS2") || paymentTerms.equals("QS8")) &&
 				paymentCert.getMainContractPaymentCertNo() != null) {
 			error = isValidMainContractCertificate(jobNo, paymentCert.getMainContractPaymentCertNo());
 			if (error != null) {
@@ -1996,7 +1996,7 @@ public class PaymentService{
 
 				}
 
-				//Validate Main Cert No. for QS1 and QS2
+				//Validate Main Cert No. for QS1 and QS2 , QS8
 				//paymentCert = calculateAndUpdatePaymentDueDate(paymentCert);
 				PaymentDueDateAndValidationResponseWrapper wrapper = paymentPostingService.calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
 						paymentCert.getSubcontract().getPackageNo(),
@@ -2013,7 +2013,9 @@ public class PaymentService{
 					return error;
 				}
 				
-				if((paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS1") || paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS2"))
+				if((paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS1") 
+						|| paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS2")
+						|| paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS8"))
 						&&paymentCert.getMainContractPaymentCertNo()==null){
 					error = "Main Certificate No. cannot be empty.";
 					logger.info(error);

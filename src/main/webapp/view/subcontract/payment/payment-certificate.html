@@ -28,14 +28,14 @@
 							</div>
 						</div>
 					<div>
-						<div class="form-group" ng-show="paymentTerms== 'QS1' || paymentTerms =='QS2'">
+						<div class="form-group" ng-show="paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8'">
 							<label>Main Certificate No.</label>
 							<div class="controls">
 								<select class="form-control " ng-model="mainCertNo.selected"
 									ng-options="o as o for o in mainCertNo.options" 
 									ng-change="calculatePaymentDueDate()"
 									ng-disabled="disableButtons"
-									ng-required = "paymentTerms== 'QS1' || paymentTerms =='QS2'"></select>
+									ng-required = "paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8'"></select>
 							</div>
 						</div>
 

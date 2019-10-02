@@ -87,8 +87,16 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function getAddressBookListOfSubcontractorAndClient(){
-    	var request = $http.get('service/adl/getAddressBookListOfSubcontractorAndClient');
+    function getAddressBookListOfSubcontractorAndClient(addressBookParam, addressBookTypeCode){
+    	var request = $http({
+    		method: 'GET',
+    		url: 'service/adl/getAddressBookListOfSubcontractorAndClient',
+    		params:{
+    			addressBookParam: addressBookParam,
+    			addressBookTypeCode: addressBookTypeCode
+    			
+    		}
+    	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     

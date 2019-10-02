@@ -111,7 +111,7 @@
 							</div>
 						</div>
 						
-						<div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px; " ng-click="changeDivHeight('jobDesc')" id="jobDesc">
+						<!-- <div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px; " ng-click="changeDivHeight('jobDesc')" id="jobDesc">
 							<style>
 								div:focus {
 								    outline: none;
@@ -124,7 +124,8 @@
 								<span ng-bind-html="trustAsHtml(job.projectFullDescription)"></span>
 							</div>
 						</div>
-						<div ng-show="divHeight['jobDesc'].preview" style="margin-left:15px;padding:10px;font-weight:700" ng-click="changeDivHeight('jobDesc')">...</div>
+						<div ng-show="divHeight['jobDesc'].preview" style="margin-left:15px;padding:10px;font-weight:700" ng-click="changeDivHeight('jobDesc')">...</div> -->
+												
 						
 						<div class="col-md-6">
 							<div class="col-md-6">
@@ -216,14 +217,6 @@
 								<label>{{job.clientType}}</label>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="col-md-6">
-								<label>Engineer / Architect</label>
-							</div>
-							<div class="col-md-6">
-								<label>{{job.engineerArchitect}}</label>
-							</div>
-						</div>
 					</div>
 
 					<br>
@@ -231,6 +224,42 @@
 					<div class="box box-default">
 						<div class="box-body">
 							<div class="row">
+
+
+								<label class="col-md-4">Project Information</label>
+
+								<div class="row col-md-8">
+									
+									<div class="form-group col-md-12">
+										<label>Project Full Description</label>
+										<div class="input-group col-md-12">
+
+											<textarea class="form-control"
+													style="overflow: hidden; box-sizing: border-box;height=auto;"
+													ng-model="job.projectFullDescription"></textarea>
+										</div>
+									</div>
+									
+									<div class="form-group col-md-6">
+										<label>Engineer / Architect</label>
+										<div class="input-group col-md-12">
+
+											<input type="text" class="form-control"
+												ng-model="job.engineerArchitect">
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+
+
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+
 								<label class="col-md-4">Major Information</label>
 
 								<div class="row col-md-8">
@@ -281,8 +310,7 @@
 									<div class="form-group col-md-6">
 										<label>Client Contract Number</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control"
-												maxlength="40"
+											<input type="text" class="form-control" maxlength="40"
 												ng-model="job.clientContractNo">
 										</div>
 									</div>
@@ -551,6 +579,13 @@
 											<input type="text" class="form-control"
 												maxlength="3"
 												ng-model="job.paymentTermForNSC">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Payment Terms from Client</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control"
+												ng-model="job.paymentTermFromClient">
 										</div>
 									</div>
 									<div class="form-group col-md-6">

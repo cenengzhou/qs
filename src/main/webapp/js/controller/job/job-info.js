@@ -28,8 +28,8 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
-					if($scope.job.projectFullDescription != null)
-						$scope.job.projectFullDescription = $scope.job.projectFullDescription.split("\n").join("<br>")
+//					if($scope.job.projectFullDescription != null)
+//						$scope.job.projectFullDescription = $scope.job.projectFullDescription.split("\n").join("<br>")
 					subcontractService.getParentSubcontractList($scope.jobNo)
 					.then(function(data){
 						$scope.parentSubcontractList = data;
@@ -42,13 +42,13 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 				});
 	}
 	
-	$scope.trustAsHtml = function(string) {
+	/*$scope.trustAsHtml = function(string) {
 	    return $sce.trustAsHtml(string);
-	};
+	};*/
 	
-	$scope.divHeight = {'jobDesc': {'preview': false, 'minHeight': 90, 'offsetHeight': 0}};
+	/*$scope.divHeight = {'jobDesc': {'preview': false, 'minHeight': 90, 'offsetHeight': 0}};*/
 
-	$scope.changeDivHeight = function(id){
+	/*$scope.changeDivHeight = function(id){
 		var div = $('#'+id)[0];
 		var item = $scope.divHeight[id];
 		if(item && !item.offsetHeight) {
@@ -65,11 +65,11 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			var minHeight = item.offsetHeight > item.minHeight ? item.minHeight : item.offsetHeight;
 			$(div).animate({'height' : minHeight}, 500);
 		}
-	}
+	}*/
 	
-	$timeout(function(){
+	/*$timeout(function(){
 		$scope.changeDivHeight('jobDesc');
-	}, 500);
+	}, 500);*/
 	
 	$scope.syncEotAndRevisedDate = function(item){
 		if($scope.loaded)
@@ -152,6 +152,27 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					}
 				});
 		}
+	
+	
+	
+	var textarea = document.querySelector('textarea');
 
+	textarea.addEventListener('mousedown', autosize);
+	textarea.addEventListener('keydown', autosize);
+	             
+	function autosize(){
+	  var el = this;
+	  setTimeout(function(){
+	    el.style.cssText = 'height:auto; padding:0';
+	    // for box-sizing other than "content-box" use:
+	    // el.style.cssText = '-moz-box-sizing:content-box';
+
+	    var height=el.scrollHeight+20;
+	    el.style.cssText = 'height:' + height + 'px';
+	  },0);
+	}
+
+	
+	
 }]);
 

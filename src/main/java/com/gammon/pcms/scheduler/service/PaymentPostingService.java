@@ -331,10 +331,14 @@ public class PaymentPostingService {
 		try {
 			Calendar calculatedDueDate = Calendar.getInstance(); // based on today
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");     
-			
-			// 1. QS1 or QS2
-			if ("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms())) {
-				logger.info("Calculating Due Date: QS1, QS2");
+			/**
+			 * Add Payment Terms QS8 Pay when paid + 0 day
+			 * @author koeyyeung
+			 * modified on 29-08-2019
+			 * **/
+			// 1. QS1 or QS2 or QS8
+			if ("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms()) || "QS8".equals(scPackage.getPaymentTerms())) {
+				logger.info("Calculating Due Date: "+jobNumber + "-SC" + packageNo + "-MainCert " +mainCertNo + "-" + scPackage.getPaymentTerms());
 				// 1a. Obtain Main Certificate's As At Date
 				ParentJobMainCertReceiveDateWrapper mainCertAsAtRecDateWrapper = null;
 				try {
@@ -499,7 +503,7 @@ public class PaymentPostingService {
 				return responseWrapper;
 			}
 			
-			//For QS0 - QS7
+			//For QS0 - QS8
 			if (calculatedDueDate.before(Calendar.getInstance())) 
 				calculatedDueDate.setTime(new Date());
 

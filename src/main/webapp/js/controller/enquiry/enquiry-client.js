@@ -30,7 +30,7 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'bl
 	}
 	
 	$scope.loadGridData = function(){
-		rootscopeService.gettingAddressBookListOfClient()
+		rootscopeService.gettingAddressBookListOfClient($scope.searchClient)
 		    .then(function(response) {
 				if(angular.isArray(response.addressBookListOfClient)){
 					$scope.gridOptions.data = response.addressBookListOfClient;
@@ -39,7 +39,7 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'bl
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 	}
-	$scope.loadGridData();
+
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};

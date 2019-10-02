@@ -348,6 +348,10 @@
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS7', 'btn-inverse' : subcontract.paymentTerms != 'QS7'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS7'">QS7</label>
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS8')"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS8', 'btn-inverse' : subcontract.paymentTerms != 'QS8'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS8'">QS8</label>
 												</div>
 												<label class="p-t-5">{{paymentTermsHints.id + ' - ' + paymentTermsHints.value}}</label>
 												<br>

@@ -6,7 +6,7 @@ mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl',
 	$scope.newRecord = {};
 	$scope.formOfSubcontractList = ['Major', 'Minor', 'Consultancy Agreement', 'Internal Trading'];
 	$scope.companyList = ['00000'];
-	$scope.scPaymentTermList = ['QS0', 'QS1', 'QS2', 'QS3', 'QS4', 'QS5', 'QS6', 'QS7'];
+	$scope.scPaymentTermList = ['QS0', 'QS1', 'QS2', 'QS3', 'QS4', 'QS5', 'QS6', 'QS7', 'QS8'];
 	$scope.retentionTypeList = ['Lump Sum Amount Retention', 'Percentage - Original SC Sum', 'Percentage - Revised SC Sum', 'No Retention'];
 	getCompanyList();
 

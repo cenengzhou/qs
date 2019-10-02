@@ -103,7 +103,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 //			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
 //		} else {
 		rootscopeService.gettingAddressBookListOfSubcontractor($scope.searchSubcontractorNo, $scope.searchWorkScopes)
-		.then(function(response){
+		.then(function(response){			
 			if(angular.isArray(response.addressBookListOfSubcontractor)){
 				$scope.convertAbbr(response.addressBookListOfSubcontractor);
 				$scope.gridOptions.data = response.addressBookListOfSubcontractor;

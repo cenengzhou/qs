@@ -92,6 +92,7 @@ public class PaymentCert extends BasePersistedObject {
 		PAYMENT_TERMS_DESCRIPTION.put("QS5", "QS5 -Pay when Invoice Received + 30 days");
 		PAYMENT_TERMS_DESCRIPTION.put("QS6", "QS6 -Pay when Invoice Received + 45 days");
 		PAYMENT_TERMS_DESCRIPTION.put("QS7", "QS7 -Pay when Invoice Received + 60 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS8", "QS8 -Pay when Paid + 0 day");
 		
 	}
 	

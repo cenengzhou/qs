@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -270,14 +271,27 @@ public class ADLService {
 		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
 	}
 	
-	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() throws Exception{
-		List<String> addressBookTypeList = new ArrayList<String>();
+	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(String addressBookParam, String addressBookTypeCode) throws Exception{
+//		List<String> addressBookTypeList = new ArrayList<String>();
 		// should be enum of AddressBook class
-		addressBookTypeList.add(AddressBook.TYPE_VENDOR);
-		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
-		addressBookTypeList.add(AddressBook.TYPE_COMPANY);
+//		addressBookTypeList.add(AddressBook.TYPE_VENDOR);
+//		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
+//		addressBookTypeList.add(AddressBook.TYPE_COMPANY);
 //		Map<String, Set<String>> subcontractorWorkscopeMap = masterListService.obtainSubcontractorWorkScopeMap(null, null);
-		List<AddressBook> addressBookList = addressBookDao.findByAddressBookTypeList(addressBookTypeList);
+		
+		List<AddressBook> addressBookList = new ArrayList<AddressBook>();
+		if (!GenericValidator.isBlankOrNull(addressBookParam)){
+			try {
+				Integer.parseInt(addressBookParam);
+				addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, new BigDecimal(addressBookParam), null);
+			} catch (Exception e) {
+				addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, null, addressBookParam);
+			}
+		}
+//		else
+//			addressBookList = addressBookDao.findByAddressBookTypeList(addressBookTypeList);			
+
+		
 //		for(AddressBook addressBook : addressBookList) {
 //			PayeeMaster payeeMaster = payeeMasterHBDao.find(addressBook.getAddressBookNumber());
 //			if(payeeMaster != null){
@@ -285,6 +299,7 @@ public class ADLService {
 //			}
 //			addressBook.setWorkScopeList(subcontractorWorkscopeMap.get(addressBook.getAddressBookNumber().toString()));
 //		}
+				
 		return addressBookList;
 	}
 	

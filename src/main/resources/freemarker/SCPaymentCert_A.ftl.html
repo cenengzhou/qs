@@ -1834,7 +1834,7 @@ ${((paymentCertViewWrapper.amountDueMovement/paymentCertViewWrapper.exchangeRate
 <p class=MsoNormal>${paymentCertViewWrapper.asAtDate!""}</p>
 </td>
 </tr>
-<#if scPackage.paymentTerms == "QS1" || scPackage.paymentTerms == "QS2">
+<#if scPackage.paymentTerms == "QS1" || scPackage.paymentTerms == "QS2" || scPackage.paymentTerms == "QS8">
 <tr style='mso-yfti-irow:1;height:28.2pt'>
 <td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
 <p class=MsoNormal>Main Certificate No.</p>
@@ -1981,6 +1981,9 @@ QS6 - Pay when Invoice Received + 45 days
 <#break>
 <#case "QS7">
 QS7 - Pay when Invoice Received + 60 days
+<#break>
+<#case "QS8">
+QS8 - Pay when Paid + 0 day
 <#break>
 <#default>
 </#switch>

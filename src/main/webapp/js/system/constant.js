@@ -110,7 +110,8 @@ mainApp.constant('GlobalParameter', {
 				{id:"QS4", value: "Pay when Invoice Received + 28 days"},
 				{id:"QS5", value: "Pay when Invoice Received + 30 days"},
 				{id:"QS6", value: "Pay when Invoice Received + 45 days"},
-				{id:"QS7", value: "Pay when Invoice Received + 60 days"}
+				{id:"QS7", value: "Pay when Invoice Received + 60 days"},
+				{id:"QS8", value: "Pay when Paid + 0 day"}
 	],
 	paymentStatus: [
         		{id:'PND', value:'Pending', color:'#007D00'},

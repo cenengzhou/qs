@@ -249,9 +249,10 @@ public class ADLController {
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBookListOfSubcontractorAndClient', @securityConfig.getRolePcmsEnq())")
 	@JsonView(AddressBookView.SubcontractorAndClientEnquiry.class)
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient", method = RequestMethod.GET)
-	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {
+	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(@RequestParam(required = true) String addressBookParam,
+																		@RequestParam(required = true) String addressBookTypeCode) {
 		try {
-			return adlService.getAddressBookListOfSubcontractorAndClient();
+			return adlService.getAddressBookListOfSubcontractorAndClient(addressBookParam, addressBookTypeCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
