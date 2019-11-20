@@ -373,7 +373,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.AddressBookloadGridData = function(){
 		if($scope.addressLoaded === false){
-			rootscopeService.gettingAddressBookListOfSubcontractorAndClient()
+			rootscopeService.gettingAddressBookListOfSubcontractorAndClient("", "")
 		    .then(function(response) {
 				if(angular.isArray(response.addressBookListOfSubcontractorAndClient)){
 					response.addressBookListOfSubcontractorAndClient.forEach(function(addressBook){
