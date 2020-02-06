@@ -106,7 +106,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers();
+		web.ignoring()
+		.antMatchers(
+				"/admintest/**",
+				"/spring-ws/*", 
+				"/resources/**",
+				"/plugins/**",
+				"/css/**",
+				"/image/**",
+				"/badCredentials.jsp",
+				"/index.html",
+//				"/service/GetCurrentSessionId",
+				"/service/ValidateCurrentSession",
+				"/js/**/*.js",
+				"/view/**",
+				"/favicon.ico",
+				"/403.html",
+				"/503.html",
+				"/login.htm*",
+				"/logout.htm*"
+				);
 		web.debug(StringUtils.isEmpty(springSecurityDebug)?false:new Boolean(springSecurityDebug));
 	}
 
@@ -164,25 +183,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionRegistry(securityConfig.sessionRegistry()).and()
 			.sessionFixation().migrateSession().and()
 			.authorizeRequests()
-			.antMatchers(
-					"/admintest/**",
-					"/spring-ws/*", 
-					"/resources/**",
-					"/plugins/**",
-					"/css/**",
-					"/image/**",
-					"/badCredentials.jsp",
-					"/index.html",
-//					"/service/GetCurrentSessionId",
-					"/service/ValidateCurrentSession",
-//					"/js/**/*.js",
-//					"/view/**",
-					"/favicon.ico",
-					"/403.html",
-					"/503.html",
-					"/login.htm*",
-					"/logout.htm*"
-					).permitAll()
 			.antMatchers("/swagger-ui.html*")
 			.hasAnyRole(securityConfig.getRolePcmsImsEnq())
 			.antMatchers("/**/*")

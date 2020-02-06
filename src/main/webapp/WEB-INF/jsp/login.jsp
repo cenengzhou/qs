@@ -5,11 +5,7 @@
 <html ng-app = "loginApp">
 <head>
 	<title>QS 2.0</title>
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="pragma" content="no-cache" />
-	<meta http-equiv="cache-control" content="no-store" />
-	<meta http-equiv="cache-control" content="max-age=0" />
-	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="cache-control" content="private" />
 	<meta charset="utf-8">
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 	<script>
@@ -19,8 +15,8 @@
 		}
 	</script>
 	<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
-	<script src="plugins/angularjs/1.4.9/angular.js"></script>	
-	<script src="plugins/angular-block-ui/v0.2/js/angular-block-ui.js"></script>
+	<script src="plugins/angularjs/1.4.9/angular.min.js"></script>	
+	<script src="plugins/angular-block-ui/v0.2/js/angular-block-ui.min.js"></script>
 
 	<style type="text/css">
 	body {
