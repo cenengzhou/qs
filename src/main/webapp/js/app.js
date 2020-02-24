@@ -153,6 +153,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.kpi', {
+		url: "/kpi",
+		templateUrl: "view/job/job-variation-kpi.html?@PROJECT_VERSION@",
+		controller: 'JobVariationKpiCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               		 		'js/controller/job/job-variation-kpi.js?@PROJECT_VERSION@',
+               		 		'js/controller/job/job-variation-kpi-add.js?@PROJECT_VERSION@',
+                           'js/service/variation-kpi-service.js?@PROJECT_VERSION@',
+                    ] 
+                });
+            }]
+        }
+	})
 	.state('job.attachment', {
 		templateUrl: "view/job/job-attachment.html?@PROJECT_VERSION@",
 	})
