@@ -67,12 +67,12 @@
 												</button>
 												<button type="button"
 													class="form-control btn btn-success btn-block" style="color:white"
-													ng-click="onAdd()" ng-hide="isSelected < 1">
+													ng-click="onDelete()" ng-hide="gridSelectedRows.length < 1">
 													<i class="fa fa-remove"></i> Delete
 												</button>
 												<button type="button"
 													class="form-control btn btn-primary btn-block" style="color:white"
-													ng-click="onAdd()" ng-hide="isDirty < 1">
+													ng-click="onUpdate()" ng-hide="gridDirtyRows.length < 1">
 													<i class="fa fa-save"></i> Update
 												</button>
 											</div>

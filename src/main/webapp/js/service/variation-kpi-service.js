@@ -3,6 +3,8 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     return({
     	findByJobNo:	findByJobNo,
     	saveByJobNo: 	saveByJobNo,
+    	saveListByJobNo: saveListByJobNo,
+    	deleteByJobNo:	deleteByJobNo,
     	getByPage:		getByPage
     });
 	
@@ -60,6 +62,23 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 			method: "post",
 			url: "service/variationKpi/" + jobNo,
 			data: kpi
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function saveListByJobNo(jobNo, kpiList) {
+		var request = $http({
+			method: "post",
+			url: "service/variationKpi/saveList/" + jobNo,
+			data: kpiList
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function deleteByJobNo(jobNo, id) {
+		var request = $http({
+			method: "delete",
+			url: "service/variationKpi/" + jobNo + "/" + id
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

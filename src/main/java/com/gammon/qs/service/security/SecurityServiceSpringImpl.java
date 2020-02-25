@@ -3,7 +3,6 @@ package com.gammon.qs.service.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,12 +10,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import com.gammon.pcms.application.User;
-import com.gammon.pcms.config.WebServiceConfig;
 @Component
 public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<String> {
-
-	@Autowired
-	private WebServiceConfig webServiceConfig;
 	
 	public String getCurrentRemoteAddress() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

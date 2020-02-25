@@ -34,9 +34,14 @@ public class VariationKpiController {
 		return service.save(jobNo, kpi);
 	}
 
-	@RequestMapping(value = "{jobNo}", method = RequestMethod.DELETE)
-	public VariationKpi delete(@PathVariable String jobNo, @RequestBody VariationKpi kpi) {
-		return service.delete(jobNo, kpi);
+	@RequestMapping(value = "saveList/{jobNo}", method = RequestMethod.POST)
+	public List<VariationKpi> post(@PathVariable String jobNo, @RequestBody List<VariationKpi> kpiList) {
+		return service.save(jobNo, kpiList);
+	}
+	
+	@RequestMapping(value = "{jobNo}/{ids}", method = RequestMethod.DELETE)
+	public void delete(@PathVariable String jobNo, @PathVariable Long[] ids) {
+		service.delete(jobNo, ids);
 	}
 	
 	@RequestMapping(value = "{page}/{size}", method = RequestMethod.GET)

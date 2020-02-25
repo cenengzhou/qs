@@ -140,10 +140,41 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			$scope.kpi.month = period.month() + 1;
 			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpi)
 			.then(function(data) {
-				if(data) loadData();
+				if(data) getPage();
 			});
 		}
 	}
+	
+	$scope.onDelete = function() {
+		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+		if(selectedRows.length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select row to delete.");
+			return;
+		}else{
+			const ids = selectedRows.map(row => row.id);
+			variationKpiService.deleteByJobNo($scope.jobNo, ids)
+			.then(function(data) {
+				$scope.gridApi.selection.clearSelectedRows();
+				getPage();
+			});
+		}
+	}
+	
+	$scope.onUpdate = function() {
+		if($scope.gridDirtyRows.length > 0){
+			var kpis = [];
+			$scope.gridDirtyRows.forEach(row => {
+				kpis.push(row.entity);
+			});
+			
+			variationKpiService.saveListByJobNo($scope.jobNo, kpis)
+			.then(function(data) {
+				$scope.gridApi.rowEdit.setRowsClean($scope.gridApi, $scope.gridDirtyRows);
+				if(data) getPage();
+			});
+		}
+	}
+	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		

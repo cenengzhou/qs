@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.dao.VariationKpiRepository;
 import com.gammon.pcms.model.VariationKpi;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 @Transactional
 @Service
 public class VariationKpiService {
@@ -31,13 +33,23 @@ public class VariationKpiService {
 		return repository.save(kpi);
 	}
 	
-	public void delete(StringVariationKpi kpi) {
-		VariationKpi kpiDb = repository.getOne(kpi.getId());
-		if(kpiDb.getNoJob().equals(kpi.getNoJob())) {
-			repository.delete(kpiDb);
-		} else {
-			throw new IllegalAccessError("cannot delete variation kpi");
-		}
+	public List<VariationKpi> save(String jobNo, List<VariationKpi> kpiList) {
+		kpiList.forEach(kpi -> {
+			kpi.setNoJob(jobNo);
+		});
+		return repository.save(kpiList);
+	}
+	
+	public void delete(String jobNo, Long[] ids) {
+		List<Long> idList = Arrays.asList(ids);
+		idList.forEach(id -> {
+			VariationKpi kpiDb = repository.getOne((Long)id);
+			if(kpiDb.getNoJob().equals(jobNo)) {
+				repository.delete(kpiDb);
+			} else {
+				throw new IllegalAccessError("cannot delete variation kpi");
+			}
+		});
 	}
 	
 	public Page<VariationKpi> filterPagination(
