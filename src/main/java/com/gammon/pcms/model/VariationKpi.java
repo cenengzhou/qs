@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
 
 
@@ -201,15 +203,17 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.remarks = remarks;
 	}
 
-
 	@Override
 	public String toString() {
-		return String.format(
-				"[VariationKpi] {\"id\":\"%s\", \"noJob\":\"%s\", \"year\":\"%s\", \"month\":\"%s\", \"numberIssued\":\"%s\", \"amountIssued\":\"%s\", \"numberSubmitted\":\"%s\", \"amountSubmitted\":\"%s\", \"numberAssessed\":\"%s\", \"amountAssessed\":\"%s\", \"numberApplied\":\"%s\", \"amountApplied\":\"%s\", \"numberCertified\":\"%s\", \"amountCertified\":\"%s\", \"remarks\":\"%s\"}",
-				id, noJob, year, month, numberIssued, amountIssued, numberSubmitted, amountSubmitted, numberAssessed,
-				amountAssessed, numberApplied, amountApplied, numberCertified, amountCertified, remarks);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = null;
+		try {
+			jsonString = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
 	}
-
 
 
 }

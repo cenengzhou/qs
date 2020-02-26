@@ -16,6 +16,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
 
 
@@ -31,16 +33,12 @@ public class Qa extends com.gammon.pcms.application.PcmsPersistedAuditObject imp
 
 	private static final long serialVersionUID = -8334030542963714324L;
 	private long id;
-	private Date dateCreated;
-	private Date dateLastModified;
 	private Date dateSent;
 	private String field;
 	private Long idTable;
 	private String message;
 	private String nameTable;
 	private String sender;
-	private String usernameCreated;
-	private String usernameLastModified;
 
 	public Qa() {
 	}
@@ -55,28 +53,6 @@ public class Qa extends com.gammon.pcms.application.PcmsPersistedAuditObject imp
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="DATE_CREATED")
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="DATE_LAST_MODIFIED")
-	public Date getDateLastModified() {
-		return this.dateLastModified;
-	}
-
-	public void setDateLastModified(Date dateLastModified) {
-		this.dateLastModified = dateLastModified;
 	}
 
 
@@ -140,32 +116,18 @@ public class Qa extends com.gammon.pcms.application.PcmsPersistedAuditObject imp
 	}
 
 
-	@Column(name="USERNAME_CREATED")
-	public String getUsernameCreated() {
-		return this.usernameCreated;
-	}
-
-	public void setUsernameCreated(String usernameCreated) {
-		this.usernameCreated = usernameCreated;
-	}
-
-
-	@Column(name="USERNAME_LAST_MODIFIED")
-	public String getUsernameLastModified() {
-		return this.usernameLastModified;
-	}
-
-	public void setUsernameLastModified(String usernameLastModified) {
-		this.usernameLastModified = usernameLastModified;
-	}
-
-
 	@Override
 	public String toString() {
-		return String.format(
-				"[Qa] {\"id\":\"%s\", \"dateCreated\":\"%s\", \"dateLastModified\":\"%s\", \"dateSent\":\"%s\", \"field\":\"%s\", \"idTable\":\"%s\", \"message\":\"%s\", \"nameTable\":\"%s\", \"sender\":\"%s\", \"usernameCreated\":\"%s\", \"usernameLastModified\":\"%s}",
-				id, dateCreated, dateLastModified, dateSent, field, idTable, message, nameTable, sender,
-				usernameCreated, usernameLastModified);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = null;
+		try {
+			jsonString = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
 	}
+
+	
 
 }
