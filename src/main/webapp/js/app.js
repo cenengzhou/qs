@@ -163,7 +163,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                		 		'js/controller/job/job-variation-kpi.js?@PROJECT_VERSION@',
-               		 		'js/controller/job/job-variation-kpi-add.js?@PROJECT_VERSION@',
                            'js/service/variation-kpi-service.js?@PROJECT_VERSION@',
                     ] 
                 });

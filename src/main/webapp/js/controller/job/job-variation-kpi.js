@@ -30,8 +30,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			};
 	
 	$scope.fields = [
-		{type: 'job', description: 'Project', field: 'noJob', order: 1, alt: "Job Number"},
-		{type: 'month', description: 'Month Ending', field: 'month', order: 2, alt:'Month Ending'},
+		{type: 'job', description: 'Project', field: 'noJob', order: 1},
+		{type: 'month', description: 'Month Ending', field: 'month', order: 2},
 		{type: 'number', description: 'Number of Issued', field: 'numberIssued', order: 3, alt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)'},
 		{type: 'amount', description: 'Amount of Issued', field: 'amountIssued', order: 4, alt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value'},
 		{type: 'number', description: 'Number of Submitted', field: 'numberSubmitted', order: 5, alt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep'},
@@ -225,5 +225,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 		if($scope.gridSelectedRows.length > 0) h += base;
 		if($scope.gridDirtyRows.length > 0) h += base;
 		return h + "px";
+	}
+	$scope.getButtonClass = function(type) {
+		return type == 'update' ? $scope.gridSelectedRows.length > 0 ? 'col-md-6' : 'col-md-12' :
+				type == 'delete' ? $scope.gridDirtyRows.length > 0 ? 'col-md-6' : 'col-md-12' 
+				: 'col-md-12';
 	}
 }]);
