@@ -155,6 +155,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			variationKpiService.deleteByJobNo($scope.jobNo, ids)
 			.then(function(data) {
 				$scope.gridApi.selection.clearSelectedRows();
+				$scope.gridSelectedRows = [];
 				getPage();
 			});
 		}
@@ -169,7 +170,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			
 			variationKpiService.saveListByJobNo($scope.jobNo, kpis)
 			.then(function(data) {
-				$scope.gridApi.rowEdit.setRowsClean($scope.gridApi, $scope.gridDirtyRows);
+				$scope.gridDirtyRows = [];
 				if(data) getPage();
 			});
 		}
@@ -221,8 +222,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 	$scope.getTextAreaHeight = function() {
 		const base = 35;
 		let h = base;
-		if($scope.isSelected) h += base;
-		if($scope.isDirty) h += base;
+		if($scope.gridSelectedRows.length > 0) h += base;
+		if($scope.gridDirtyRows.length > 0) h += base;
 		return h + "px";
 	}
 }]);
