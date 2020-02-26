@@ -182,6 +182,10 @@ public class AttachmentService {
 		}
 	}
 
+	public List<Attachment> obtainSubcontractDateAttachmentList(Long subcontractId) {
+		return attachmentHBDao.obtainSubcontractDateAttachmentList(subcontractId);
+	}
+	
 	public List<Attachment> obtainAttachmentList(String nameObject, String textKey) throws Exception{
 		List<Attachment> attachmentList = new ArrayList<>();
 		switch (nameObject) {

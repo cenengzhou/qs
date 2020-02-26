@@ -3,7 +3,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	
-
+	$scope.dates = subcontractService.dates;
 //	Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){

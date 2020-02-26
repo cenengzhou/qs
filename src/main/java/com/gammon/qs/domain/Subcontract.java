@@ -176,7 +176,7 @@ public class Subcontract extends BasePersistedObject {
 	private Date onSiteStartDate;
 	private Date scFinalAccDraftDate;
 	private Date scFinalAccSignoffDate;
-	
+
 	@Transient
 	public boolean isAwarded() {
 		return (subcontractStatus == null ? false : (subcontractStatus >= 500));

@@ -163,7 +163,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                		 		'js/controller/job/job-variation-kpi.js?@PROJECT_VERSION@',
-               		 		'js/controller/job/job-variation-kpi-add.js?@PROJECT_VERSION@',
                            'js/service/variation-kpi-service.js?@PROJECT_VERSION@',
                     ] 
                 });
@@ -496,7 +495,21 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
-	
+	.state('subcontract.sti', {
+		url: '/sti',
+		templateUrl: "view/subcontract/subcontract-tracking-info.html?@PROJECT_VERSION@",
+		controller: 'SubcontractTrackingInfoCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-tracking-info.js?@PROJECT_VERSION@'
+                    ] 
+                });
+            }]
+        }	
+	})
 	.state('subcontract.attachment', {
 		templateUrl: "view/subcontract/subcontract-attachment.html?@PROJECT_VERSION@",
 	})
@@ -513,6 +526,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
+               		 	   'js/controller/attachment/modal/attachment-subcontract-select-modal.js?@PROJECT_VERSION@',
                            'js/controller/attachment/attachment-main.js?@PROJECT_VERSION@',
                            'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
                            'js/service/attachment-service.js?@PROJECT_VERSION@',

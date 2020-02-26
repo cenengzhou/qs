@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -81,6 +82,7 @@ public class AttachmentController {
 								@RequestParam(required = true, value = "nameObject") String nameObject,
 								@RequestParam(required = true, value = "textKey") String textKey,
 								@RequestParam(required = true, value = "sequenceNo") String sequenceNo,
+								@RequestParam(required = false, value = "") String refilename,
 								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload uploadAttachment - START");
@@ -93,8 +95,12 @@ public class AttachmentController {
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
 			if (file != null) {
-
-				boolean result = attachmentService.uploadAttachment(nameObject, textKey, new BigDecimal(sn), multipartFile.getOriginalFilename(), file, null);
+				String originalFilename = multipartFile.getOriginalFilename();
+				String[] fileExt = originalFilename.split("\\.");
+				String ext = "";
+				if(fileExt.length > 1) ext = "." + fileExt[1];
+				String filename = StringUtils.isEmpty(refilename) ? originalFilename : refilename + ext;
+				boolean result = attachmentService.uploadAttachment(nameObject, textKey, new BigDecimal(sn), filename, file, null);
 
 				sn++;
 				Map<String, Object> resultMap = new HashMap<String, Object>();

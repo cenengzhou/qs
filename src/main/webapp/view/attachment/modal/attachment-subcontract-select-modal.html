@@ -1,0 +1,45 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h3 class="modal-title">Select attachment type</h3>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+
+	<div class="animated fadeIn">
+		<div class="row">
+			<form name="uploadAttachmentFilesSubCon" id="uploadAttachmentFilesSubCon">
+				<div class="col-md-6"
+					ng-repeat="d in dates | filter: { group: 'CD'} | orderBy: 'order'">
+					<label class="btn btn-block btn-primary"
+						style="margin: 3px; padding: 20px"> <i
+						class="glyphicon glyphicon-upload"></i> {{d.description}} <input
+						style="display: none;" class="form-control file-loading"
+						type="file" name="{{d.model}}" id="{{d.model}}"
+						ng-model="attachmentFilesSubCon[d.model]" alt="{{d.description}}"
+						onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFilesSubCon[this.name],this.alt)"
+						/>
+					</label>
+				</div>
+				<div class="col-md-12">
+					<label class="btn btn-block btn-primary"
+						style="margin: 3px; padding: 20px"> <i
+						class="glyphicon glyphicon-upload"></i> Others <input
+						style="display: none;" class="form-control file-loading"
+						type="file" name="others" id="others"
+						ng-model="attachmentFilesOthers"
+						onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFilesSubCon[this.name])"
+						multiple />
+					</label>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -9,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDate;
 import com.gammon.pcms.model.Attachment;
 import com.gammon.qs.dao.BaseHibernateDao;
 
@@ -33,6 +34,25 @@ public class AttachmentHBDao extends BaseHibernateDao<Attachment> {
 		return null;
 	}
 
+	public List<Attachment> obtainSubcontractDateAttachmentList(Long idTable) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("nameTable", Attachment.SUBCONTRACT_TABLE));
+		criteria.add(Restrictions.eq("idTable", idTable));
+		criteria.add(Restrictions.or(
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_requisitionApprovedDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_tenderAnalysisApprovedDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_preAwardMeetingDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_loaSignedDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_scDocScrDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_scDocLegalDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_workCommenceDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_onSiteStartDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_scFinalAccDraftDate).getDescription() + "%"),
+				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_scFinalAccSignoffDate).getDescription() + "%")
+		));
+		return criteria.list();
+	}
+	
 	public Attachment obtainAttachment(String nameTable, BigDecimal idTable, BigDecimal noSequence) {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
