@@ -10,7 +10,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 	
 	var paginationOptions = {
 		    pageNumber: 1,
-		    pageSize: 5,
+		    pageSize: 10,
 		    sort: null
 		  };
 	$scope.kpi = {
@@ -30,18 +30,18 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			};
 	
 	$scope.fields = [
-		{type: 'job', description: 'Project', field: 'noJob', order: 1},
-		{type: 'month', description: 'Month', field: 'month', order: 2},
-		{type: 'number', description: 'Number of Issued', field: 'numberIssued', order: 3},
-		{type: 'amount', description: 'Amount of Issued', field: 'amountIssued', order: 4},
-		{type: 'number', description: 'Number of Submitted', field: 'numberSubmitted', order: 5},
-		{type: 'amount', description: 'Amount of Submitted', field: 'amountSubmitted', order: 6},
-		{type: 'number', description: 'Number of Assessed', field: 'numberAssessed', order: 7},
-		{type: 'amount', description: 'Amount of Assessed', field: 'amountAssessed', order: 8},
-		{type: 'number', description: 'Number of Applied', field: 'numberApplied', order: 9},
-		{type: 'amount', description: 'Amount of Applied', field: 'amountApplied', order: 10},
-		{type: 'number', description: 'Number of Certified', field: 'numberCertified', order: 11},
-		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12}
+		{type: 'job', description: 'Project', field: 'noJob', order: 1, alt: "Job Number"},
+		{type: 'month', description: 'Month Ending', field: 'month', order: 2, alt:'Month Ending'},
+		{type: 'number', description: 'Number of Issued', field: 'numberIssued', order: 3, alt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)'},
+		{type: 'amount', description: 'Amount of Issued', field: 'amountIssued', order: 4, alt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value'},
+		{type: 'number', description: 'Number of Submitted', field: 'numberSubmitted', order: 5, alt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep'},
+		{type: 'amount', description: 'Amount of Submitted', field: 'amountSubmitted', order: 6, alt: 'Value of GCL Variations submissions'},
+		{type: 'number', description: 'Number of Assessed', field: 'numberAssessed', order: 7, alt: 'Number of Variations were GCL have received the Clients \\ Client\'s Rep assessment'},
+		{type: 'amount', description: 'Amount of Assessed', field: 'amountAssessed', order: 8, alt: 'Value of Client\'s Rep Variation Assessments'},
+		{type: 'number', description: 'Number of Applied', field: 'numberApplied', order: 9, alt: 'Number of Variations were we have included an applied amount within our Application'},
+		{type: 'amount', description: 'Amount of Applied', field: 'amountApplied', order: 10, alt: 'Value of Variations within GCL Interim Application'},
+		{type: 'number', description: 'Number of Certified', field: 'numberCertified', order: 11, alt: 'Number of variations were the client has included a certification'},
+		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'}
 	];
 
 	$scope.gridOptions = {
@@ -57,28 +57,28 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			exporterMenuPdf: false,    
 			enableSorting: true,
 			rowEditWaitInterval :-1,
-		    paginationPageSizes: [5, 25, 50],
-		    paginationPageSize: 5,
+		    paginationPageSizes: [10, 25, 50],
+		    paginationPageSize: 10,
 		    paginationCurrentPage: 1,
 		    useExternalPagination: true,
 		    useExternalSorting: true,
 		    useExternalFiltering: true,
 			columnDefs: [
 						 { field: 'id', enableCellEdit: false, visible: false},
-						 { field: 'noJob', width:100, displayName: "Project", enableCellEdit: false, enableFiltering: false},
+						 { field: $scope.fields[0].field, width:100, displayName: "Project", enableCellEdit: false, enableFiltering: false},
 						 { field: 'year', width:100, displayName: "Year", enableCellEdit: true},
 						 { field: 'month', width:100, displayName: "Month", enableCellEdit: true},
-						 { field: 'numberIssued', width:150, displayName: "No.Issued", enableCellEdit: true},
-						 { field: 'amountIssued', width:150, displayName: "Amt.Issued", enableCellEdit: true},
-						 { field: 'numberSubmitted', width:150, displayName: "No.Submitted", enableCellEdit: true},
-						 { field: 'amountSubmitted', width:150, displayName: "Amt.Submitted", enableCellEdit: true},
-						 { field: 'numberAssessed', width:150, displayName: "No.Assessed", enableCellEdit: true},
-						 { field: 'amountAssessed', width:150, displayName: "Amt.Assessed", enableCellEdit: true},
-						 { field: 'numberApplied', width:150, displayName: "No.Applied", enableCellEdit: true},
-						 { field: 'amountApplied', width:150, displayName: "Amt.Applied", enableCellEdit: true},
-						 { field: 'numberCertified', width:150, displayName: "No.Certified", enableCellEdit: true},
-						 { field: 'amountCertified', width:150, displayName: "Amt.Certified", enableCellEdit: true},
-						 { field: 'remarks', width:250, displayName: "Remarks", enableCellEdit: true}
+						 { field: $scope.fields[2].field, width:150, displayName: $scope.fields[2].description, enableCellEdit: true},
+						 { field: $scope.fields[3].field, width:150, displayName: $scope.fields[3].description, enableCellEdit: true},
+						 { field: $scope.fields[4].field, width:150, displayName: $scope.fields[4].description, enableCellEdit: true},
+						 { field: $scope.fields[5].field, width:150, displayName: $scope.fields[5].description, enableCellEdit: true},
+						 { field: $scope.fields[6].field, width:150, displayName: $scope.fields[6].description, enableCellEdit: true},
+						 { field: $scope.fields[7].field, width:150, displayName: $scope.fields[7].description, enableCellEdit: true},
+						 { field: $scope.fields[8].field, width:150, displayName: $scope.fields[8].description, enableCellEdit: true},
+						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true},
+						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true},
+						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true},
+						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
 	var getPage = function() {
@@ -126,9 +126,9 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			$scope.gridOptions.totalItems = data.totalElements;
 			$scope.totalItems = data.totalElements;
 			if($scope.gridOptions > 50) {
-				$scope.gridOptions.paginationPageSizes = [5, 25, 50, data.totalElements];
+				$scope.gridOptions.paginationPageSizes = [10, 25, 50, data.totalElements];
 			} else {
-				$scope.gridOptions.paginationPageSizes = [5, 25, 50];
+				$scope.gridOptions.paginationPageSizes = [10, 25, 50];
 			}
 			$scope.gridApi.selection.clearSelectedRows();
 		});
