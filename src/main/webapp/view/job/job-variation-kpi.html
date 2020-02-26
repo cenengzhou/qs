@@ -52,11 +52,11 @@
 										<div class="form-group">
 											<label>Remarks</label>
 											<div style="padding: 0px">
-												<div class="col-md-9">
+												<div class="col-md-9" style="padding-left:0px">
 													<textarea class="form-control" ng-model="kpi.remarks"
 														ng-style="{'height':getTextAreaHeight()}"></textarea>
 												</div>
-												<div class="col-md-3">
+												<div class="col-md-3" style="padding-right:0px">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
 														style="color: white" ng-click="onAdd()"
@@ -66,13 +66,13 @@
 													<button type="button"
 														class="form-control btn btn-success btn-block"
 														style="color: white" ng-click="onDelete()"
-														ng-hide="gridSelectedRows.length < 1">
+														ng-if="gridSelectedRows.length > 0">
 														<i class="fa fa-remove"></i> Delete
 													</button>
 													<button type="button"
 														class="form-control btn btn-primary btn-block"
 														style="color: white" ng-click="onUpdate()"
-														ng-hide="gridDirtyRows.length < 1">
+														ng-if="gridDirtyRows.length > 0">
 														<i class="fa fa-save"></i> Update
 													</button>
 												</div>
