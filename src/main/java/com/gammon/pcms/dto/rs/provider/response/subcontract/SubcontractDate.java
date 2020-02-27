@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gammon.pcms.model.Attachment;
-import com.gammon.pcms.model.Qa;
+import com.gammon.pcms.model.Comment;
 
 public class SubcontractDate {
 	
@@ -15,7 +15,7 @@ public class SubcontractDate {
 	private String description;
 	private Date date;
 	private List<Attachment> attachmentList = new ArrayList<>();
-	private List<Qa> qaList = new ArrayList<>();
+	private List<Comment> qaList = new ArrayList<>();
 
 	public static final String SCDATE_GROUP_CD = "CD";
 	public static final String SCDATE_GROUP_STI = "STI";
@@ -130,10 +130,10 @@ public class SubcontractDate {
 	public void setAttachmentList(List<Attachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-	public List<Qa> getQaList() {
+	public List<Comment> getQaList() {
 		return qaList;
 	}
-	public void setQaList(List<Qa> qaList) {
+	public void setQaList(List<Comment> qaList) {
 		this.qaList = qaList;
 	}
 

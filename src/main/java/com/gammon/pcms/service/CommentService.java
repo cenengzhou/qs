@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.pcms.dao.QaRepository;
-import com.gammon.pcms.model.Qa;
+import com.gammon.pcms.dao.CommentRepository;
+import com.gammon.pcms.model.Comment;
 
 @Transactional
 @Service
-public class QaService {
+public class CommentService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private QaRepository repository;
+	private CommentRepository repository;
 	
-	public List<Qa> obtainQaList(Long idTable, String nameTable, String field) {
+	public List<Comment> obtainQaList(Long idTable, String nameTable, String field) {
 		return repository.findByIdTableAndNameTableAndFieldLike(idTable, nameTable, field + "%");
 	}
 }

@@ -1,4 +1,8 @@
 --------------------------------------------------------
+--  DDL for Sequence COMMENT_SEQ
+--------------------------------------------------------
+   CREATE SEQUENCE  "PCMSDATAPROD"."COMMENT_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE  NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Table COMMENT
 --------------------------------------------------------
   CREATE TABLE "PCMSDATAPROD"."COMMENT" 

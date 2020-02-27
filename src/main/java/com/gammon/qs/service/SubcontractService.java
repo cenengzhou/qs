@@ -38,10 +38,10 @@ import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDate;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.model.Attachment;
-import com.gammon.pcms.model.Qa;
+import com.gammon.pcms.model.Comment;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
-import com.gammon.pcms.service.QaService;
+import com.gammon.pcms.service.CommentService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -169,7 +169,7 @@ public class SubcontractService {
 	@Autowired
 	private AttachmentService attachmentService;
 	@Autowired
-	private QaService qaService;
+	private CommentService qaService;
 
 	// Approval System
 	@Autowired
@@ -205,7 +205,7 @@ public class SubcontractService {
 		// get attachment
 		List<Attachment> attachmentList = attachmentService.obtainSubcontractDateAttachmentList(subcontract.getId());
 		// get QA
-		List<Qa> qaList = qaService.obtainQaList(subcontract.getId(), Attachment.SUBCONTRACT_TABLE, "");
+		List<Comment> qaList = qaService.obtainQaList(subcontract.getId(), Attachment.SUBCONTRACT_TABLE, "");
 		dateList.forEach(scd -> {
 			if(attachmentList != null) scd.setAttachmentList(attachmentList.stream().filter(attach -> attach.getNameFile().indexOf(scd.getDescription()) > -1).collect(Collectors.toList()));
 			if(qaList != null) scd.setQaList(qaList.stream().filter(qa -> qa.getField().equals(scd.getField())).collect(Collectors.toList()));

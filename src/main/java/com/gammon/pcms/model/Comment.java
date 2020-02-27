@@ -22,14 +22,14 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 
 
 /**
- * The persistent class for the QA database table.
+ * The persistent class for the COMMENT database table.
  * 
  */
 @Audited
 @AuditOverride(forClass = PcmsPersistedAuditObject.class)
 @Entity
-@NamedQuery(name="Qa.findAll", query="SELECT q FROM Qa q")
-public class Qa extends com.gammon.pcms.application.PcmsPersistedAuditObject implements Serializable {
+@NamedQuery(name="Comment.findAll", query="SELECT q FROM Comment q")
+public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = -8334030542963714324L;
 	private long id;
@@ -40,13 +40,13 @@ public class Qa extends com.gammon.pcms.application.PcmsPersistedAuditObject imp
 	private String nameTable;
 	private String sender;
 
-	public Qa() {
+	public Comment() {
 	}
 
 
 	@Id
-	@SequenceGenerator(name="QA_ID_GENERATOR", sequenceName="QA_SEQ")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="QA_ID_GENERATOR")
+	@SequenceGenerator(name="COMMENT_ID_GENERATOR", sequenceName="COMMENT_SEQ")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="COMMENT_ID_GENERATOR")
 	public long getId() {
 		return this.id;
 	}
