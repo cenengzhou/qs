@@ -334,7 +334,7 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-
+		
 		<!-- Hibernate: integate with unit test framework -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

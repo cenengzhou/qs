@@ -11,12 +11,16 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
-
 
 /**
  * The persistent class for the VARIATION_KPI database table.
@@ -25,13 +29,13 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 @Audited
 @AuditOverride(forClass = PcmsPersistedAuditObject.class)
 @Entity
-@Table(name="VARIATION_KPI")
-@SequenceGenerator(	name = "VARIATION_KPI_GEN", sequenceName = "VARIATION_KPI_SEQ", allocationSize = 1)
-@NamedQuery(name="VariationKpi.findAll", query="SELECT v FROM VariationKpi v")
+@Table(name = "VARIATION_KPI")
+@SequenceGenerator(name = "VARIATION_KPI_GEN", sequenceName = "VARIATION_KPI_SEQ", allocationSize = 1)
+@NamedQuery(name = "VariationKpi.findAll", query = "SELECT v FROM VariationKpi v")
 public class VariationKpi extends PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = 7517505028363979338L;
-	
+
 	private Long id;
 	private String noJob;
 	private int year;
@@ -51,14 +55,9 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	public VariationKpi() {
 	}
 
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-					generator = "VARIATION_KPI_GEN")
-	@Column(name = "ID",
-			unique = true,
-			nullable = false,
-			scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VARIATION_KPI_GEN")
+	@Column(name = "ID", unique = true, nullable = false, scale = 0)
 	public Long getId() {
 		return this.id;
 	}
@@ -67,8 +66,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.id = id;
 	}
 
-
-	@Column(name="NO_JOB")
+	@Column(name = "NO_JOB")
 	public String getNoJob() {
 		return this.noJob;
 	}
@@ -77,8 +75,9 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.noJob = noJob;
 	}
 
-
-	@Column(name="\"YEAR\"")
+	@Min(value = 1970, message = "Year out of range")
+	@Max(value = 2999, message = "Year out of range")
+	@Column(name = "\"YEAR\"")
 	public int getYear() {
 		return this.year;
 	}
@@ -87,8 +86,9 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.year = year;
 	}
 
-
-	@Column(name="\"MONTH\"")
+	@Min(value = 1, message = "Month out of range")
+	@Max(value = 12, message = "Month out of range")
+	@Column(name = "\"MONTH\"")
 	public int getMonth() {
 		return this.month;
 	}
@@ -97,8 +97,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.month = month;
 	}
 
-
-	@Column(name="NUMBER_ISSUED")
+	@Column(name = "NUMBER_ISSUED")
 	public int getNumberIssued() {
 		return this.numberIssued;
 	}
@@ -107,7 +106,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.numberIssued = numberIssued;
 	}
 
-	@Column(name="AMOUNT_ISSUED")
+	@Column(name = "AMOUNT_ISSUED")
 	public BigDecimal getAmountIssued() {
 		return this.amountIssued;
 	}
@@ -116,8 +115,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.amountIssued = amountIssued;
 	}
 
-
-	@Column(name="NUMBER_SUBMITTED")
+	@Column(name = "NUMBER_SUBMITTED")
 	public int getNumberSubmitted() {
 		return this.numberSubmitted;
 	}
@@ -126,7 +124,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.numberSubmitted = numberSubmitted;
 	}
 
-	@Column(name="AMOUNT_SUBMITTED")
+	@Column(name = "AMOUNT_SUBMITTED")
 	public BigDecimal getAmountSubmitted() {
 		return this.amountSubmitted;
 	}
@@ -135,8 +133,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.amountSubmitted = amountSubmitted;
 	}
 
-
-	@Column(name="NUMBER_ASSESSED")
+	@Column(name = "NUMBER_ASSESSED")
 	public int getNumberAssessed() {
 		return this.numberAssessed;
 	}
@@ -145,7 +142,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.numberAssessed = numberAssessed;
 	}
 
-	@Column(name="AMOUNT_ASSESSED")
+	@Column(name = "AMOUNT_ASSESSED")
 	public BigDecimal getAmountAssessed() {
 		return this.amountAssessed;
 	}
@@ -154,8 +151,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.amountAssessed = amountAssessed;
 	}
 
-
-	@Column(name="NUMBER_APPLIED")
+	@Column(name = "NUMBER_APPLIED")
 	public int getNumberApplied() {
 		return this.numberApplied;
 	}
@@ -164,7 +160,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.numberApplied = numberApplied;
 	}
 
-	@Column(name="AMOUNT_APPLIED")
+	@Column(name = "AMOUNT_APPLIED")
 	public BigDecimal getAmountApplied() {
 		return this.amountApplied;
 	}
@@ -173,8 +169,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.amountApplied = amountApplied;
 	}
 
-
-	@Column(name="NUMBER_CERTIFIED")
+	@Column(name = "NUMBER_CERTIFIED")
 	public int getNumberCertified() {
 		return this.numberCertified;
 	}
@@ -183,7 +178,7 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.numberCertified = numberCertified;
 	}
 
-	@Column(name="AMOUNT_CERTIFIED")
+	@Column(name = "AMOUNT_CERTIFIED")
 	public BigDecimal getAmountCertified() {
 		return this.amountCertified;
 	}
@@ -191,7 +186,6 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	public void setAmountCertified(BigDecimal amountCertified) {
 		this.amountCertified = amountCertified;
 	}
-
 
 	public String getRemarks() {
 		return this.remarks;
@@ -201,15 +195,16 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		this.remarks = remarks;
 	}
 
-
 	@Override
 	public String toString() {
-		return String.format(
-				"[VariationKpi] {\"id\":\"%s\", \"noJob\":\"%s\", \"year\":\"%s\", \"month\":\"%s\", \"numberIssued\":\"%s\", \"amountIssued\":\"%s\", \"numberSubmitted\":\"%s\", \"amountSubmitted\":\"%s\", \"numberAssessed\":\"%s\", \"amountAssessed\":\"%s\", \"numberApplied\":\"%s\", \"amountApplied\":\"%s\", \"numberCertified\":\"%s\", \"amountCertified\":\"%s\", \"remarks\":\"%s\"}",
-				id, noJob, year, month, numberIssued, amountIssued, numberSubmitted, amountSubmitted, numberAssessed,
-				amountAssessed, numberApplied, amountApplied, numberCertified, amountCertified, remarks);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = null;
+		try {
+			jsonString = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
 	}
-
-
 
 }
