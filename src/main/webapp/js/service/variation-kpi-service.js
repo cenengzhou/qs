@@ -63,7 +63,8 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 			url: "service/variationKpi/" + jobNo,
 			data: kpi
 		});
-		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+//		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+		return request;
     }
     
     function saveListByJobNo(jobNo, kpiList) {
@@ -72,7 +73,8 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 			url: "service/variationKpi/saveList/" + jobNo,
 			data: kpiList
 		});
-		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+//		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+		return request;
     }
     
     function deleteByJobNo(jobNo, id) {

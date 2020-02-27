@@ -14,8 +14,13 @@
 									<div class="col-md-2"
 										ng-repeat="field in fields | orderBy:'order'">
 										<div class="form-group">
-											<label style="cursor:pointer" data-toggle="tooltip" title="{{field.alt}}">
-											{{field.description}} <i class="fa fa-2x fa-info-circle text-primary" ></i>
+											<label ng-if="field.alt" style="cursor: pointer"
+												data-toggle="tooltip" title="{{field.alt}}">
+												{{field.description}} <i
+												class="fa fa-2x fa-info-circle text-primary"></i>
+											</label> <label ng-if="!field.alt"> {{field.description}} <i
+												class="fa fa-2x fa-info-circle text-primary"
+												style="visibility: hidden"></i>
 											</label>
 											<div class="input-group" ng-if="field.type == 'job'">
 												<span class="input-group-addon"><i
@@ -52,28 +57,16 @@
 										<div class="form-group">
 											<label>Remarks</label>
 											<div style="padding: 0px">
-												<div class="col-md-9" style="padding-left:0px">
+												<div class="col-md-9" style="padding-left: 0px">
 													<textarea class="form-control" ng-model="kpi.remarks"
-														ng-style="{'height':getTextAreaHeight()}"></textarea>
+														style="height: 35px"></textarea>
 												</div>
-												<div class="col-md-3" style="padding-right:0px">
+												<div class="col-md-3" style="padding-right: 0px">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
 														style="color: white" ng-click="onAdd()"
 														ng-disabled="!addForm.$valid">
 														<i class="fa fa-plus"></i> Add
-													</button>
-													<button type="button"
-														class="form-control btn btn-success btn-block"
-														style="color: white" ng-click="onDelete()"
-														ng-if="gridSelectedRows.length > 0">
-														<i class="fa fa-remove"></i> Delete
-													</button>
-													<button type="button"
-														class="form-control btn btn-primary btn-block"
-														style="color: white" ng-click="onUpdate()"
-														ng-if="gridDirtyRows.length > 0">
-														<i class="fa fa-save"></i> Update
 													</button>
 												</div>
 											</div>
@@ -83,7 +76,6 @@
 
 							</form>
 						</div>
-
 						<div class="row m-10">
 							<div id="variationKpiGrid"
 								save-and-restore-grid-state="variationKpi" ui-grid-save-state
@@ -91,6 +83,27 @@
 								ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit
 								ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid">
 							</div>
+						</div>
+						<div class="row">
+							<div
+								ng-class="getButtonClass('update')">
+								<button type="button"
+									class="form-control btn btn-primary btn-block"
+									style="color: white" ng-click="onUpdate()"
+									ng-if="gridDirtyRows.length > 0">
+									<i class="fa fa-save"></i> Update
+								</button>
+							</div>
+							<div
+								ng-class="getButtonClass('delete')">
+								<button type="button"
+									class="form-control btn btn-success btn-block"
+									style="color: white" ng-click="onDelete()"
+									ng-if="gridSelectedRows.length > 0">
+									<i class="fa fa-remove"></i> Delete
+								</button>
+							</div>
+
 						</div>
 					</div>
 

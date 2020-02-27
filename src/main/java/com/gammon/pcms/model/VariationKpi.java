@@ -215,5 +215,4 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		return jsonString;
 	}
 
-
 }

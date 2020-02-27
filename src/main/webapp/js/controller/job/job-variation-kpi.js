@@ -30,8 +30,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			};
 	
 	$scope.fields = [
-		{type: 'job', description: 'Project', field: 'noJob', order: 1, alt: "Job Number"},
-		{type: 'month', description: 'Month Ending', field: 'month', order: 2, alt:'Month Ending'},
+		{type: 'job', description: 'Project', field: 'noJob', order: 1},
+		{type: 'month', description: 'Month Ending', field: 'month', order: 2},
 		{type: 'number', description: 'Number of Issued', field: 'numberIssued', order: 3, alt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)'},
 		{type: 'amount', description: 'Amount of Issued', field: 'amountIssued', order: 4, alt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value'},
 		{type: 'number', description: 'Number of Submitted', field: 'numberSubmitted', order: 5, alt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep'},
@@ -66,18 +66,18 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			columnDefs: [
 						 { field: 'id', enableCellEdit: false, visible: false},
 						 { field: $scope.fields[0].field, width:100, displayName: "Project", enableCellEdit: false, enableFiltering: false},
-						 { field: 'year', width:100, displayName: "Year", enableCellEdit: true},
-						 { field: 'month', width:100, displayName: "Month", enableCellEdit: true},
-						 { field: $scope.fields[2].field, width:150, displayName: $scope.fields[2].description, enableCellEdit: true},
-						 { field: $scope.fields[3].field, width:150, displayName: $scope.fields[3].description, enableCellEdit: true},
-						 { field: $scope.fields[4].field, width:150, displayName: $scope.fields[4].description, enableCellEdit: true},
-						 { field: $scope.fields[5].field, width:150, displayName: $scope.fields[5].description, enableCellEdit: true},
-						 { field: $scope.fields[6].field, width:150, displayName: $scope.fields[6].description, enableCellEdit: true},
-						 { field: $scope.fields[7].field, width:150, displayName: $scope.fields[7].description, enableCellEdit: true},
-						 { field: $scope.fields[8].field, width:150, displayName: $scope.fields[8].description, enableCellEdit: true},
-						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true},
-						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true},
-						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true},
+						 { field: 'year', width:100, displayName: "Year", enableCellEdit: true, type: 'number'},
+						 { field: 'month', width:100, displayName: "Month", enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[2].field, width:150, displayName: $scope.fields[2].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[3].field, width:150, displayName: $scope.fields[3].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[4].field, width:150, displayName: $scope.fields[4].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[5].field, width:150, displayName: $scope.fields[5].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[6].field, width:150, displayName: $scope.fields[6].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[7].field, width:150, displayName: $scope.fields[7].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[8].field, width:150, displayName: $scope.fields[8].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true, type: 'number'},
 						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
@@ -122,6 +122,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 				remarks
 		)
 		.then(function(data){
+			$scope.gridSelectedRows = [];
+			$scope.gridDirtyRows = [];
 			$scope.gridOptions.data = data.content;
 			$scope.gridOptions.totalItems = data.totalElements;
 			$scope.totalItems = data.totalElements;
@@ -141,6 +143,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpi)
 			.then(function(data) {
 				if(data) getPage();
+			}, function(error){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to insert record");
 			});
 		}
 	}
@@ -172,6 +176,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			.then(function(data) {
 				$scope.gridDirtyRows = [];
 				if(data) getPage();
+			}, function(error) {
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to update record");
 			});
 		}
 	}
@@ -184,6 +190,14 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
         });
 	
 		$scope.gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(colDef.field == 'month' && (newValue > 12 || newValue < 0)) {
+				newValue = oldValue;
+				rowEntity.month = oldValue;
+			}
+			if(colDef.field == 'year' && (newValue > 2099 || newValue < 1970)) {
+				newValue = oldValue;
+				rowEntity.year = oldValue;
+			}
 			if(newValue != oldValue) $scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 			$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
 			$scope.isDirty = $scope.gridDirtyRows.length > 0;
@@ -225,5 +239,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 		if($scope.gridSelectedRows.length > 0) h += base;
 		if($scope.gridDirtyRows.length > 0) h += base;
 		return h + "px";
+	}
+	$scope.getButtonClass = function(type) {
+		return type == 'update' ? $scope.gridSelectedRows.length > 0 ? 'col-md-6' : 'col-md-12' :
+				type == 'delete' ? $scope.gridDirtyRows.length > 0 ? 'col-md-6' : 'col-md-12' 
+				: 'col-md-12';
 	}
 }]);
