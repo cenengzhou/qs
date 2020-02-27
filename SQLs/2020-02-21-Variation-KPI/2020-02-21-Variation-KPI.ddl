@@ -1,4 +1,8 @@
 --------------------------------------------------------
+--  DDL for Sequence VARIATION_KPI_SEQ
+--------------------------------------------------------
+   CREATE SEQUENCE  "PCMSDATAPROD"."VARIATION_KPI_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE  NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Table VARIATION_KPI
 --------------------------------------------------------
   CREATE TABLE "PCMSDATAPROD"."VARIATION_KPI" 
