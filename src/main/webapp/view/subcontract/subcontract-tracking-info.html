@@ -20,7 +20,7 @@
 					<ul class="list-group list-group-unbordered">
 						<li class="list-group-item"
 							ng-repeat="d in dates | filter: { group: 'STI'} | orderBy: 'order'">
-							<b>{{d.description}} Date</b> <b class="pull-right">{{subcontract[d.model]
+							<b>{{d.description}} Date</b> <b class="pull-right">{{subcontract[d.field]
 								| date:GlobalParameter.DATE_FORMAT}}</b>
 						</li>
 					</ul>

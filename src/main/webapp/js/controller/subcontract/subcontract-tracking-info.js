@@ -1,6 +1,10 @@
-mainApp.controller('SubcontractTrackingInfoCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter', 
-                                            function($scope, subcontractService, modalService, $state, GlobalParameter ) {
+mainApp.controller('SubcontractTrackingInfoCtrl', ['$scope', 'subcontractDateService', 'subcontractService', 'modalService', '$state', 'GlobalParameter', 
+                                            function($scope, subcontractDateService, subcontractService, modalService, $state, GlobalParameter ) {
 	$scope.GlobalParameter = GlobalParameter;
 
-	$scope.dates = subcontractService.dates;
+	$scope.dates = [];
+	subcontractDateService.getScDateList($scope.jobNo, $scope.subcontractNo)
+	.then(function(data){
+		$scope.dates = data;
+	});
 }]);
