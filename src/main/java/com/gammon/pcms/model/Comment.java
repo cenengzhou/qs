@@ -31,7 +31,7 @@ import com.gammon.pcms.model.hr.HrUser;
 @Audited
 @AuditOverride(forClass = PcmsPersistedAuditObject.class)
 @Entity
-@Table(name="\"COMMENT\"")
+@Table(name="COMMENTS")
 @NamedQuery(name="Comment.findAll", query="SELECT c FROM Comment c")
 public class Comment extends PcmsPersistedAuditObject implements Serializable {
 
