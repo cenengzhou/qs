@@ -60,7 +60,7 @@
 							<div>
 								<input type="text" class="form-control"
 									id="PaymentCertRecord_paymentCertNo"
-									value="{{PaymentCertRecord.paymentCertNo}}" readonly>
+									value="{{PaymentCertRecord.paymentCertNo}}" ng-readonly="PaymentCertRecord.paymentStatus != 'PND'">
 							</div>
 						</div>
 					</div>
