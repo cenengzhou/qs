@@ -144,7 +144,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			.then(function(data) {
 				if(data) getPage();
 			}, function(error){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to insert record");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'Record for Month Ending ' + period.format('YYYY-MM') + ' already exists');
 			});
 		}
 	}
