@@ -42,7 +42,7 @@
 									</button>
 									<ul class="dropdown-menu" uib-dropdown-menu role="menu"
 										aria-labelledby="single-button">
-										<li role="menuitem" ng-repeat="attach in d.attachmentList" ng-click="downloadAttachment(attach)"
+										<li role="menuitem" ng-repeat="attach in d.attachmentList | orderBy: '-dateLastModified'" ng-click="downloadAttachment(attach)"
 											style="cursor: pointer; white-space: nowrap; padding: 5px;">
 											{{attach.nameFile}}<br> <small style="color: #ccc">{{attach.dateLastModified
 												| date:'yyyy-MM-dd HH:mm:ss'}}</small>
