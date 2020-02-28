@@ -96,9 +96,8 @@ public class AttachmentController {
 			byte[] file = multipartFile.getBytes();
 			if (file != null) {
 				String originalFilename = multipartFile.getOriginalFilename();
-				String[] fileExt = originalFilename.split("\\.");
-				String ext = "";
-				if(fileExt.length > 1) ext = "." + fileExt[1];
+				int extIndex = originalFilename.lastIndexOf(".");
+				String ext = extIndex > 0 ? originalFilename.substring(extIndex) : "";
 				String filename = StringUtils.isEmpty(refilename) ? originalFilename : refilename + ext;
 				boolean result = attachmentService.uploadAttachment(nameObject, textKey, new BigDecimal(sn), filename, file, null);
 

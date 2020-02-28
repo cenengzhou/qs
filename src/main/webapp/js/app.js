@@ -424,7 +424,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/service/subcontract-service.js?@PROJECT_VERSION@',
+             		 	   'js/service/subcontract-date-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
+                           'js/service/comment-service.js?@PROJECT_VERSION@',
                            'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
                            'js/service/addendum-service.js?@PROJECT_VERSION@'
                     ] 
@@ -511,7 +513,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         }	
 	})
 	.state('subcontract.attachment', {
-		templateUrl: "view/subcontract/subcontract-attachment.html?@PROJECT_VERSION@",
+		templateUrl: "view/subcontract/subcontract-attachment.html?@PROJECT_VERSION@"
 	})
 	.state('subcontract.attachment.first', {
 		url: "/attachment",

@@ -10,8 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
@@ -19,6 +21,7 @@ import org.hibernate.envers.Audited;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
+import com.gammon.pcms.model.hr.HrUser;
 
 
 /**
@@ -28,8 +31,9 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 @Audited
 @AuditOverride(forClass = PcmsPersistedAuditObject.class)
 @Entity
-@NamedQuery(name="Comment.findAll", query="SELECT q FROM Comment q")
-public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObject implements Serializable {
+@Table(name="\"COMMENT\"")
+@NamedQuery(name="Comment.findAll", query="SELECT c FROM Comment c")
+public class Comment extends PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = -8334030542963714324L;
 	private long id;
@@ -39,7 +43,9 @@ public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObjec
 	private String message;
 	private String nameTable;
 	private String sender;
-
+	
+	private HrUser senderObject;
+	
 	public Comment() {
 	}
 
@@ -56,7 +62,7 @@ public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObjec
 	}
 
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="DATE_SENT")
 	public Date getDateSent() {
 		return this.dateSent;
@@ -115,7 +121,17 @@ public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObjec
 		this.sender = sender;
 	}
 
+	@Transient
+	public HrUser getSenderObject() {
+		return senderObject;
+	}
 
+
+	public void setSenderObject(HrUser senderObject) {
+		this.senderObject = senderObject;
+	}
+	
+	
 	@Override
 	public String toString() {
 		ObjectMapper mapper = new ObjectMapper();
@@ -127,7 +143,5 @@ public class Comment extends com.gammon.pcms.application.PcmsPersistedAuditObjec
 		}
 		return jsonString;
 	}
-
-	
 
 }

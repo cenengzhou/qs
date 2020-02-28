@@ -1,9 +1,13 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter', 
-                                            function($scope, subcontractService, modalService, $state, GlobalParameter ) {
+mainApp.controller('SubcontractDatesCtrl', ['$scope', '$timeout', 'subcontractService', 'subcontractDateService', 'commentService', 'modalService', '$state', 'GlobalHelper', 'GlobalParameter', 
+                                            function($scope, $timeout, subcontractService, subcontractDateService, commentService, modalService, $state, GlobalHelper, GlobalParameter ) {
 	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	
-	$scope.dates = subcontractService.dates;
+	$scope.dates = [];
+	subcontractDateService.getScDateList($scope.jobNo, $scope.subcontractNo, true)
+	.then(function(data){
+		$scope.dates = data;
+	});
 //	Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
@@ -63,6 +67,34 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 	})
 	$scope.openDropdown = function( $event){
 		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
+	
+	$scope.downloadAttachment = function(attach) {
+		const textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
+		const nameObject = GlobalParameter['AbstractAttachment'].SCPackageNameObject;
+    	url = 'service/attachment/obtainFileAttachment?nameObject='+nameObject+'&textKey='+textKey+'&sequenceNo='+attach.noSequence;
+    	GlobalHelper.downloadFile(encodeURI(url));
+	}
+	
+	$scope.addComment = function(event, obj) {
+		if(obj.comment && (event.type == 'click' || event.key == 'Enter')){
+			const comment = {
+					field: obj.field,
+					idTable: $scope.subcontract.id,
+					message: obj.comment,
+					nameTable: 'SUBCONTRACT'
+			}
+			commentService.save(comment)
+			.then(function(data) {
+				commentService.find('SUBCONTRACT', $scope.subcontract.id, obj.field)
+				.then(function(newData){
+					$scope.dates.forEach(d => {
+						if(d.field == obj.field) d.commentList = newData;
+						obj.comment = '';
+					});
+				});
+			});
+		}
 	}
 	
 }]);

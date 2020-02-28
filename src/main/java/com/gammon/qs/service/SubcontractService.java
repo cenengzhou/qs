@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,11 +33,8 @@ import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
-import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDate;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.helper.FileHelper;
-import com.gammon.pcms.model.Attachment;
-import com.gammon.pcms.model.Comment;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
 import com.gammon.pcms.service.CommentService;
@@ -169,7 +165,7 @@ public class SubcontractService {
 	@Autowired
 	private AttachmentService attachmentService;
 	@Autowired
-	private CommentService qaService;
+	private CommentService commentService;
 
 	// Approval System
 	@Autowired
@@ -180,37 +176,6 @@ public class SubcontractService {
 	static final int RECORDS_PER_PAGE = 100;
 	
 	public SubcontractService(){		
-	}
-
-	public List<SubcontractDate> getScDateList(String jobNumber, String packageNo) throws DatabaseOperationException {
-		Subcontract subcontract = this.obtainSubcontract(jobNumber, packageNo);
-		List<SubcontractDate> dateList = new ArrayList<>();
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_requisitionApprovedDate, subcontract.getRequisitionApprovedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_tenderAnalysisApprovedDate, subcontract.getTenderAnalysisApprovedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_preAwardMeetingDate, subcontract.getPreAwardMeetingDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_loaSignedDate, subcontract.getLoaSignedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scDocScrDate, subcontract.getScDocScrDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scDocLegalDate, subcontract.getScDocLegalDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_workCommenceDate, subcontract.getWorkCommenceDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_onSiteStartDate, subcontract.getOnSiteStartDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scFinalAccDraftDate, subcontract.getScFinalAccDraftDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scFinalAccSignoffDate, subcontract.getScFinalAccSignoffDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scCreatedDate, subcontract.getScCreatedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scAwardApprovalRequestSentDate, subcontract.getScAwardApprovalRequestSentDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_scApprovalDate, subcontract.getScApprovalDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_latestAddendumValueUpdatedDate, subcontract.getLatestAddendumValueUpdatedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_firstPaymentCertIssuedDate, subcontract.getFirstPaymentCertIssuedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_lastPaymentCertIssuedDate, subcontract.getLastPaymentCertIssuedDate()));
-		dateList.add(SubcontractDate.getInstance(SubcontractDate.SCDATE_finalPaymentIssuedDate, subcontract.getFinalPaymentIssuedDate()));
-		// get attachment
-		List<Attachment> attachmentList = attachmentService.obtainSubcontractDateAttachmentList(subcontract.getId());
-		// get QA
-		List<Comment> qaList = qaService.obtainQaList(subcontract.getId(), Attachment.SUBCONTRACT_TABLE, "");
-		dateList.forEach(scd -> {
-			if(attachmentList != null) scd.setAttachmentList(attachmentList.stream().filter(attach -> attach.getNameFile().indexOf(scd.getDescription()) > -1).collect(Collectors.toList()));
-			if(qaList != null) scd.setQaList(qaList.stream().filter(qa -> qa.getField().equals(scd.getField())).collect(Collectors.toList()));
-		});
-		return dateList;
 	}
 	
 	public List<UDC> getCachedWorkScopeList() {

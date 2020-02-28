@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -327,6 +328,7 @@ public class AttachmentService {
 			}
 
 			// write to file
+			fileName = filenameLimit(fileName);
 			File attachment = new File(dirPath + fileName);
 			logger.info("Attachment Full Path: " + attachment.getPath());
 
@@ -335,10 +337,10 @@ public class AttachmentService {
 			while (attachment.exists()) { // check if the file exists, append
 											// new file if necessary
 				i++;
-				int extensionPosition = fileName.lastIndexOf(".");
-				tmpFileName = fileName.substring(0, extensionPosition) + "(" + i + ")"
-						+ fileName.substring(extensionPosition, fileName.length());
-
+//				int extensionPosition = fileName.lastIndexOf(".");
+//				tmpFileName = fileName.substring(0, extensionPosition) + "(" + i + ")"
+//						+ fileName.substring(extensionPosition, fileName.length());
+				tmpFileName = filenameLimit(fileName, i);
 				// Set new name for duplicated filename
 				attachment = new File(dirPath + tmpFileName);
 			}
@@ -381,8 +383,23 @@ public class AttachmentService {
 			return true;
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
-			throw new IOException("Fail to upload attachment " + fileName + ".");
+			throw new IOException("Fail to upload attachment " + fileName + ": " + e.getMessage());
 		}
+	}
+	
+	public String filenameLimit(String filename) {
+		return filenameLimit(filename, 0);
+	}
+	public String filenameLimit(String filename, int append) {
+		return filenameLimit(filename, append, 100);
+	}
+	public String filenameLimit(String filename, int append, int limit) {
+		int extIndex = filename.lastIndexOf(".");
+		String ext = extIndex > 0 ? filename.substring(extIndex) : "";
+		String appendText = append > 0 ? "(" + append + ")" : "";
+		int filenameLimit = limit - appendText.length() - ext.length();
+		filename = StringUtils.left(filename, filenameLimit > extIndex ? extIndex : filenameLimit) + appendText + ext;
+		return filename;
 	}
 
 	public AttachmentFile obtainFileAttachment(String nameObject, String textKey, Integer sequenceNumber)

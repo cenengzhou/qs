@@ -37,7 +37,7 @@ public class AttachmentHBDao extends BaseHibernateDao<Attachment> {
 	public List<Attachment> obtainSubcontractDateAttachmentList(Long idTable) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("nameTable", Attachment.SUBCONTRACT_TABLE));
-		criteria.add(Restrictions.eq("idTable", idTable));
+		criteria.add(Restrictions.eq("idTable", new BigDecimal(idTable)));
 		criteria.add(Restrictions.or(
 				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_requisitionApprovedDate).getDescription() + "%"),
 				Restrictions.like("nameFile", SubcontractDate.getInstance(SubcontractDate.SCDATE_tenderAnalysisApprovedDate).getDescription() + "%"),

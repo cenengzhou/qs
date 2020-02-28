@@ -1,7 +1,13 @@
-mainApp.controller("AttachmentSubcontractSelectModalCtrl", ['$rootScope', '$scope', '$uibModalInstance', 'subcontractService', 'modalService', '$cookies', '$state', 'roundUtil',
-                                   function ($rootScope, $scope, $uibModalInstance, subcontractService, modalService, $cookies, $state, roundUtil) {
+mainApp.controller("AttachmentSubcontractSelectModalCtrl", ['$rootScope', '$scope', 'subcontractDateService', '$uibModalInstance', 'modalService', '$cookies', '$state', 'roundUtil',
+                                   function ($rootScope, $scope, subcontractDateService, $uibModalInstance, modalService, $cookies, $state, roundUtil) {
 
-	$scope.dates = subcontractService.dates;
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.subcontractNo = $cookies.get("subcontractNo");
+	$scope.dates = [];
+	subcontractDateService.getScDateList($scope.jobNo, $scope.subcontractNo)
+	.then(function(data){
+		$scope.dates = data;
+	});
 	$scope.isUpdatable = true;
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");

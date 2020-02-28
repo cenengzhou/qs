@@ -46,113 +46,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	updateSubcontractDetailAdmin:						updateSubcontractDetailAdmin,
     	updateSubcontractDetailListAdmin:					updateSubcontractDetailListAdmin,
     	getSubcontractDetail:								getSubcontractDetail,
-    	getParentSubcontractList:							getParentSubcontractList,
-    	dates: [
-    	    {
-    	        "description": "Subcontract Requisition Approved",
-    	        "model": "requisitionApprovedDate",
-    	        "order": 1,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Tender Analysis Approved",
-    	        "model": "tenderAnalysisApprovedDate",
-    	        "order": 2,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Pre-Award Finalization Meeting",
-    	        "model": "preAwardMeetingDate",
-    	        "order": 3,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Letter of Acceptance Signed by Subcontractor",
-    	        "model": "loaSignedDate",
-    	        "order": 4,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Document Executed by Subcontractor",
-    	        "model": "scDocScrDate",
-    	        "order": 5,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Document Executed by Legal",
-    	        "model": "scDocLegalDate",
-    	        "order": 6,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Works Commencement",
-    	        "model": "workCommenceDate",
-    	        "order": 7,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontractor Start on-site",
-    	        "model": "onSiteStartDate",
-    	        "order": 8,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Final Account",
-    	        "remark": "(Signed by Sub-Contractor)",
-    	        "model": "scFinalAccDraftDate",
-    	        "order": 9,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Final Account",
-    	        "remark": "(Formal Agreement)",
-    	        "model": "scFinalAccSignoffDate",
-    	        "order": 10,
-    	        "group": "CD"
-    	    },
-    	    {
-    	        "description": "Subcontract Created",
-    	        "model": "createdDate",
-    	        "order": 11,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "Subcontract Award Approval Request Sent out",
-    	        "model": "scAwardApprovalRequestSentDate",
-    	        "order": 12,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "Subcontract Award Approval",
-    	        "model": "scApprovalDate",
-    	        "order": 13,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "Latest Addendum Approval",
-    	        "model": "latestAddendumValueUpdatedDate",
-    	        "order": 14,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "1st Payment Certificate Issued",
-    	        "model": "firstPaymentCertIssuedDate",
-    	        "order": 15,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "Latest Payment Certificate Issued",
-    	        "model": "lastPaymentCertIssuedDate",
-    	        "order": 16,
-    	        "group": "STI"
-    	    },
-    	    {
-    	        "description": "Final Payment Certificate Issued",
-    	        "model": "finalPaymentIssuedDate",
-    	        "order": 17,
-    	        "group": "STI"
-    	    },
-    	]
+    	getParentSubcontractList:							getParentSubcontractList
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -692,6 +586,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }   
+
 }]);
 
 
