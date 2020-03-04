@@ -15,12 +15,14 @@
 					<h3 class="box-title">Contractual Date</h3>
 				</div>
 				<div class="box-body">
-					<div class="row"
-						ng-repeat="d in dates | filter: { group: 'CD'} | orderBy: 'order'">
+					<div class="row" ng-repeat="d in dates | filter: { group: 'CD'} | orderBy: 'order'">
+					
 						<div class="col-md-4">
 							<label>{{d.description}} Date</label>
 						</div>
+						
 						<div class="form-group col-md-8">
+						
 							<div class="col-md-3">
 								<div class="input-group" moment-picker="subcontract[d.field]"
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
@@ -30,8 +32,7 @@
 										ng-model="subcontract[d.field]">
 								</div>
 							</div>
-							
-							
+
 							<div class="col-md-3" ng-if="d.attachmentList.length > 0">
 								<div class="btn-group" uib-dropdown is-open="d.isopen"
 									ng-if="d.attachmentList.length > 1" style="display: block">
@@ -42,7 +43,9 @@
 									</button>
 									<ul class="dropdown-menu" uib-dropdown-menu role="menu"
 										aria-labelledby="single-button">
-										<li role="menuitem" ng-repeat="attach in d.attachmentList | orderBy: '-dateLastModified'" ng-click="downloadAttachment(attach)"
+										<li role="menuitem"
+											ng-repeat="attach in d.attachmentList | orderBy: '-dateLastModified'"
+											ng-click="downloadAttachment(attach)"
 											style="cursor: pointer; white-space: nowrap; padding: 5px;">
 											{{attach.nameFile}}<br> <small style="color: #ccc">{{attach.dateLastModified
 												| date:'yyyy-MM-dd HH:mm:ss'}}</small>
@@ -52,44 +55,44 @@
 									</ul>
 								</div>
 								<div class="btn btn-primary form-control"
-									ng-if="d.attachmentList.length == 1" ng-click="downloadAttachment(d.attachmentList[0])"
+									ng-if="d.attachmentList.length == 1"
+									ng-click="downloadAttachment(d.attachmentList[0])"
 									style="color: white; display: block">Download</div>
 							</div>
-							
+
 							<div ng-class="{'col-md-6': d.attachmentList.length > 0, 'col-md-9': d.attachmentList.length == 0}">
 								<div class="input-group">
 									<input type="text" ng-focus="d.focus=true" ng-model="d.comment"
 										ng-blur="d.focus=false" ng-keyup="addComment($event, d)"
-										placeholder="{{d.commentList.length > 0 ? d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message : 'enter comment'}}"
-										class="form-control">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="addComment($event, d)"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-      </span>
+										placeholder="{{d.commentList.length > 0 && !d.focus ? d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message : 'enter comment'}}"
+										class="form-control"> <span class="input-group-btn">
+										<button class="btn btn-default" type="button"
+											ng-click="addComment($event, d)">
+											<i class="fa fa-paper-plane" aria-hidden="true"></i>
+										</button>
+									</span>
 								</div>
 								<md-content ng-if="d.focus && d.commentList.length > 0"
 									style="position:absolute;top:35px;z-index:10000; width:100%;max-height: 300px; border: 2px solid #ccc">
-								<md-list class="md-dense" flex> 
-								<md-subheader ng-if="false" style="background: #ccc"
-									class="md-no-sticky">{{d.description}} Date:<br>
-								{{subcontract[d.field] | date:'yyyy-MM-dd' }}</md-subheader> 
-								<md-divider ng-if="false"></md-divider> 
-								<md-list-item
-									class="md-3-line" ng-repeat="comment in d.commentList" ng-click="null">
-									
+								<md-list class="md-dense" flex> <md-subheader
+									ng-if="false" style="background: #ccc" class="md-no-sticky">{{d.description}} Date:<br>
+								{{subcontract[d.field] | date:'yyyy-MM-dd' }}</md-subheader> <md-divider
+									ng-if="false"></md-divider> <md-list-item class="md-3-line"
+									ng-repeat="comment in d.commentList" ng-click="null">
+
 								<img imageonload roll-back-image="resources/images/profile.png"
-											data-ng-src="{{GlobalParameter.imageServerAddress+comment.senderObject.employeeId+'.jpg'}}" class="md-avatar"
-									alt="{{comment.senderObject.fullName}}" />
+									data-ng-src="{{GlobalParameter.imageServerAddress+comment.senderObject.employeeId+'.jpg'}}"
+									class="md-avatar" alt="{{comment.senderObject.fullName}}" />
 								<div class="md-list-item-text" layout="column">
 									<h3>{{ comment.senderObject.fullName }}</h3>
 									<h4>{{ comment.message }}</h4>
 									<p>{{ comment.dateSent | date:'yyyy-MM-dd HH:mm:ss' }}</p>
 								</div>
-								<md-divider ng-if="$index < d.commentList.length -1"></md-divider> 
-								</md-list-item> 
-								</md-list> </md-content>
+								<md-divider ng-if="$index < d.commentList.length -1"></md-divider>
+								</md-list-item> </md-list> </md-content>
 
 							</div>
-   
+
 						</div>
 
 					</div>
