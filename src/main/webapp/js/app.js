@@ -162,7 +162,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               		 		'js/controller/job/job-variation-kpi.js?@PROJECT_VERSION@',
+               		 	   'js/controller/job/job-variation-kpi.js?@PROJECT_VERSION@',
+               		 	   'js/controller/job/modal/job-variation-kpi-add-modal.js?@PROJECT_VERSION@',
                            'js/service/variation-kpi-service.js?@PROJECT_VERSION@',
                     ] 
                 });
