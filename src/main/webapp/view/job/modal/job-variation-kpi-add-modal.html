@@ -5,7 +5,7 @@
 			<span class="input-group" 
 				moment-picker="kpi.period" format="YYYY-MM"
 				start-view="year" today="true">
-				<span class="input-group-addon">Variation KPI for <i class="fa fa-calendar"></i></span>
+				<span class="input-group-addon">Month Ending <i class="fa fa-calendar"></i></span>
 				<input class="form-control" required ng-model="kpi.period" ng-model-options="{ updateOn: 'blur' }">
 			</span>
 		</div>
@@ -70,13 +70,13 @@
 
 									<div class="col-md-12" style="width:100%;padding:5px;border: 1px solid #eee">
 										<div class="form-group">
-											<label>Remarks</label>
+											<!-- label>Remarks</label -->
 											<div style="padding: 0px">
-												<div class="col-md-9" style="padding-left: 0px">
+												<!-- div class="col-md-9" style="padding-left: 0px">
 													<textarea class="form-control" ng-model="kpi.remarks"
 														style="height: 35px"></textarea>
-												</div>
-												<div class="col-md-3" style="padding-right: 0px">
+												</div -->
+												<div class="col-md-12" style="padding-left: 0px"; padding-right: 0px">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
 														style="color: white" ng-click="onAdd()"
