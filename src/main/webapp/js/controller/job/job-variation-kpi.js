@@ -78,7 +78,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true, type: 'number'},
-						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
+//						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
 	$scope.getPage = function() {
