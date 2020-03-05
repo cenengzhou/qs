@@ -104,7 +104,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		var amountApplied = $scope.gridApi ? $scope.gridApi.grid.columns[12].filters[0].term : "";
 		var numberCertified = $scope.gridApi ? $scope.gridApi.grid.columns[13].filters[0].term : ""; 
 		var amountCertified = $scope.gridApi ? $scope.gridApi.grid.columns[14].filters[0].term : "";
-//		var remarks = $scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var remarks = '';//$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
 		variationKpiService.getByPage(page, size, direction, property,
 				noJob, 
 				year, 
