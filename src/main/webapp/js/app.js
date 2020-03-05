@@ -262,6 +262,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
+               		 	   'js/service/subcontract-date-service.js?@PROJECT_VERSION@',
                            'js/service/subcontract-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
