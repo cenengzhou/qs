@@ -15,7 +15,7 @@
 					<h3 class="box-title">Contractual Date</h3>
 				</div>
 				<div class="box-body">
-					<div class="row" ng-repeat="d in dates | filter: { group: 'CD'} | orderBy: 'order'">
+					<div class="row" ng-repeat="d in dates | filter: { group: 'CD'} | orderBy: 'order'" ng-init="d.comment = d.commentList.length > 0 && !d.focus ? d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message : ''">
 					
 						<div class="col-md-4">
 							<label>{{d.description}} Date</label>
@@ -35,9 +35,9 @@
 
 							<div class="col-md-9">
 								<div class="input-group">
-									<input type="text" ng-focus="d.focus=true" ng-model="d.comment"
-										ng-blur="d.focus=false" ng-keyup="addComment($event, d)"
-										placeholder="{{d.commentList.length > 0 && !d.focus ? d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message : 'enter comment'}}"
+									<input type="text" ng-focus="d.focus=true;d.comment=''" ng-model="d.comment"
+										ng-blur="d.focus=false; blurComment(d)" ng-keyup="addComment($event, d)"
+										placeholder="enter comment"
 										class="form-control"> 
 									<span class="input-group-btn">
 										<button class="btn btn-default" type="button"

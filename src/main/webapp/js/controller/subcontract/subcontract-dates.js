@@ -77,7 +77,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', '$timeout', 'subcontractSe
 	}
 	
 	$scope.addComment = function(event, obj) {
-		if(obj.comment && (event.type == 'click' || event.key == 'Enter')){
+		if(obj.comment && (event.type == 'click' || event.key == 'Enter') && obj.commentList && obj.comment != getFirstComment(obj)){
 			const comment = {
 					field: obj.field,
 					idTable: $scope.subcontract.id,
@@ -90,11 +90,21 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', '$timeout', 'subcontractSe
 				.then(function(newData){
 					$scope.dates.forEach(d => {
 						if(d.field == obj.field) d.commentList = newData;
-						obj.comment = '';
+						obj.comment = obj.focus ? '' :getFirstComment(obj);
 					});
 				});
 			});
 		}
+	}
+	
+	function getFirstComment(d) {
+		return d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message;
+	}
+	
+	$scope.blurComment = function(d, comment) {
+		$timeout(function(){
+			d.comment = d.commentList.length > 0 && !d.focus ? getFirstComment(d) : '';
+		}, 500);
 	}
 	
 }]);
