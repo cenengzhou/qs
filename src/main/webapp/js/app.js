@@ -362,12 +362,17 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract-award.dates', {
 		url: "/dates",
-		templateUrl: "view/subcontract/subcontract-award-dates.html?@PROJECT_VERSION@",
+		templateUrl: "view/subcontract/subcontract-dates.html?@PROJECT_VERSION@",
+		params: {
+			hideHeader: true
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
+	       		 	     'js/service/subcontract-date-service.js?@PROJECT_VERSION@',
+	                     'js/service/comment-service.js?@PROJECT_VERSION@',
                	         'js/controller/subcontract/subcontract-dates.js?@PROJECT_VERSION@'
                     ] 
                 });
@@ -406,6 +411,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
+         		 	   	   'js/controller/attachment/modal/attachment-subcontract-select-modal.js?@PROJECT_VERSION@',
                            'js/controller/attachment/attachment-main.js?@PROJECT_VERSION@',
                            'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
                            'js/service/attachment-service.js?@PROJECT_VERSION@',

@@ -1,6 +1,9 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', '$timeout', 'subcontractService', 'subcontractDateService', 'commentService', 'modalService', '$state', 'GlobalHelper', 'GlobalParameter', 
-                                            function($scope, $timeout, subcontractService, subcontractDateService, commentService, modalService, $state, GlobalHelper, GlobalParameter ) {
+mainApp.controller('SubcontractDatesCtrl', ['$scope', '$stateParams', '$timeout', 'subcontractService', 'subcontractDateService', 'commentService', 'modalService', '$state', 'GlobalHelper', 'GlobalParameter', 
+                                            function($scope, $stateParams, $timeout, subcontractService, subcontractDateService, commentService, modalService, $state, GlobalHelper, GlobalParameter ) {
 	$scope.GlobalParameter = GlobalParameter;
+	if(!$scope.hideHeader) {
+		$scope.hideHeader = $stateParams.hideHeader;
+	}
 	getSubcontract();
 	
 	$scope.dates = [];
