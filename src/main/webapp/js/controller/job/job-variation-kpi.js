@@ -1,5 +1,5 @@
-mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout',
-                                   function($scope, variationKpiService, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout) {
+mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uibModal', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout',
+                                   function($scope, variationKpiService, $uibModal, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout) {
 	$scope.GlobalParameter = GlobalParameter;
 
 	$scope.jobNo = $cookies.get("jobNo");
@@ -78,10 +78,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true, type: 'number'},
-						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
+//						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
-	var getPage = function() {
+	$scope.getPage = function() {
 	    getVariationKpiList(paginationOptions.pageNumber, paginationOptions.pageSize, paginationOptions.direction, paginationOptions.property);
 	};
 		
@@ -104,7 +104,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 		var amountApplied = $scope.gridApi ? $scope.gridApi.grid.columns[12].filters[0].term : "";
 		var numberCertified = $scope.gridApi ? $scope.gridApi.grid.columns[13].filters[0].term : ""; 
 		var amountCertified = $scope.gridApi ? $scope.gridApi.grid.columns[14].filters[0].term : "";
-		var remarks = $scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var remarks = '';//$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
 		variationKpiService.getByPage(page, size, direction, property,
 				noJob, 
 				year, 
@@ -136,17 +136,14 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 		});
 	}
 	$scope.onAdd = function() {
-		if($scope.addForm.$valid){
-			var period = moment($scope.kpi.period);
-			$scope.kpi.year = period.year();
-			$scope.kpi.month = period.month() + 1;
-			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpi)
-			.then(function(data) {
-				if(data) getPage();
-			}, function(error){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'Record for Month Ending ' + period.format('YYYY-MM') + ' already exists');
-			});
-		}
+		$scope.uibModalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: "view/job/modal/job-variation-kpi-add-modal.html",
+			controller: 'JobVariationKpiAddModalCtrl',
+			size: 'lg',
+			backdrop: 'static',
+			scope: $scope
+		});
 	}
 	
 	$scope.onDelete = function() {
@@ -160,7 +157,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			.then(function(data) {
 				$scope.gridApi.selection.clearSelectedRows();
 				$scope.gridSelectedRows = [];
-				getPage();
+				$scope.getPage();
 			});
 		}
 	}
@@ -175,7 +172,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 			variationKpiService.saveListByJobNo($scope.jobNo, kpis)
 			.then(function(data) {
 				$scope.gridDirtyRows = [];
-				if(data) getPage();
+				if(data) $scope.getPage();
 			}, function(error) {
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to update record");
 			});
@@ -215,19 +212,19 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$coo
 	          paginationOptions.direction= sortColumns[0].sort.direction.toUpperCase();
 	          paginationOptions.property= sortColumns[0].name;
 	        }
-	        getPage();
+	        $scope.getPage();
 	      });
 		$scope.gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
 	        paginationOptions.pageNumber = newPage;
 	        paginationOptions.pageSize = pageSize;
-	        getPage();
+	        $scope.getPage();
 	      });
 		$scope.gridApi.core.on.filterChanged($scope, function () {
 			if (angular.isDefined($scope.filterTimeout)) {
 			    $timeout.cancel($scope.filterTimeout);
 			}
 			$scope.filterTimeout = $timeout(function () {
-			    getPage();
+				$scope.getPage();
 			}, 500);
 	      });
 

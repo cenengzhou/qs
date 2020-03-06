@@ -37,6 +37,7 @@ import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotD
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
+import com.gammon.pcms.service.CommentService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -163,6 +164,8 @@ public class SubcontractService {
 	private AccountCodeWSDao accountCodeWSDao;
 	@Autowired
 	private AttachmentService attachmentService;
+	@Autowired
+	private CommentService commentService;
 
 	// Approval System
 	@Autowired
@@ -171,10 +174,10 @@ public class SubcontractService {
 	private List<UDC> cachedWorkScopeList = new ArrayList<UDC>();
 	
 	static final int RECORDS_PER_PAGE = 100;
-
+	
 	public SubcontractService(){		
 	}
-
+	
 	public List<UDC> getCachedWorkScopeList() {
 		return cachedWorkScopeList;
 	}

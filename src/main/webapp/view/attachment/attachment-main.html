@@ -55,7 +55,7 @@
 						<div class="col-md-4">
 							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="isUpdatable && onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
-								<label class="btn btn-block btn-primary"> <i
+								<label class="btn btn-block btn-primary" ng-if="!attachmentType.isSubcontract"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
 									Attachment&hellip; <input style="display: none;"
 									class="form-control file-loading" type="file" name="files"
@@ -64,6 +64,9 @@
 									multiple />
 								</label>
 							</form>
+							<label class="btn btn-block btn-primary" ng-if="attachmentType.isSubcontract" ng-click="openSelectSubcontractAttachmentType()"> <i
+								class="glyphicon glyphicon-upload"></i> Upload File Attachment&hellip; 
+							</label>
 						</div>
 
 						<div class="col-md-4">

@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
+mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$location','attachmentService', '$uibModal', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
+                                         function($rootScope, $scope, $q, $location, attachmentService, $uibModal, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
 	/*
 	 * attachment within ADDRESS BOOK modal is not control by this controller
 	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
@@ -14,6 +14,9 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 		$scope.cancel = function () {
 			$scope.uibModalInstance.close();
 		};
+	}
+	$scope.attachmentType = {
+			isSubcontract: $scope.nameObject == GlobalParameter['AbstractAttachment'].SCPackageNameObject
 	}
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.mainCertNo = $cookies.get("mainCertNo");
@@ -130,12 +133,24 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     	
     }
 
-    $scope.onSubmitAttachmentUpload = function(f){
+    $scope.openSelectSubcontractAttachmentType = function() {
+		$scope.uibModalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: "view/attachment/modal/attachment-subcontract-select-modal.html",
+			controller: 'AttachmentSubcontractSelectModalCtrl',
+			size: 'lg',
+			backdrop: 'static',
+			scope: $scope
+		});
+    }
+    
+    $scope.onSubmitAttachmentUpload = function(f, n){
 		var formData = new FormData();
 		var result = {};
 		result['allowedFile'] = [];
 		result['blockedFile'] = [];
 		angular.forEach(f.files, function(file){
+			if(n) file.name = n + '.' + file.name.split('.')[1];
 			if(isAllowedFile(file)){
 				formData.append('files', file);
 				result['allowedFile'].push(file.name);
@@ -146,11 +161,13 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 		formData.append('nameObject', $scope.nameObject);
 		formData.append('textKey', $scope.textKey)
 		formData.append('sequenceNo', $scope.sequenceNo+1);
+		formData.append('refilename', n ? n : "");
 		$scope.uploadAttachmentFacade(formData)
 		.then(function(data){
 			f.value = null;
 			$scope.loadAttachment($scope.nameObject, $scope.textKey);
 			showModalIfBlockUpload(result);
+			$rootScope.$broadcast('upload-complete');
 		});
 	}
 	
@@ -278,9 +295,23 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 
 				});
    }
-   
+   	var userList = [];
+   	var deferred = []
 	function getUserByUsername (username){
-		return $http.get('service/security/getUserByUsername?username='+username);
+		if(!deferred[username]) deferred[username] = $q.defer();
+		if(!userList[username]) {
+			if(!deferred[username].loading){
+				deferred[username].loading = true;
+				$http.get('service/security/getUserByUsername?username='+username)
+				.then(function(response) {
+					userList[username] = response.data;
+					deferred[username].resolve(response.data);
+				});
+			}
+		} else {
+			deferred[username].resolve(userList[username])
+		}
+		return deferred[username].promise;
 	}
     
     function processData(data){
@@ -302,9 +333,9 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     		att.user = {fullname: att.usernameCreated};
     		att.user.userIcon = 'resources/images/profile.png';
     		getUserByUsername(att.usernameCreated)
-    		.then(function(response){
-    			if(response.data instanceof Object){
-    				att.user = response.data;
+    		.then(function(data){
+    			if(data instanceof Object){
+    				att.user = data;
     				if(att.user.StaffID !== null){
     					att.user.userIcon = GlobalParameter.imageServerAddress+att.user.StaffID+'.jpg';
     				} else {

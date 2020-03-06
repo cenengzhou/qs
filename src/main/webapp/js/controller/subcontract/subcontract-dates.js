@@ -1,9 +1,16 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter', 
-                                            function($scope, subcontractService, modalService, $state, GlobalParameter ) {
+mainApp.controller('SubcontractDatesCtrl', ['$scope', '$stateParams', '$timeout', 'subcontractService', 'subcontractDateService', 'commentService', 'modalService', '$state', 'GlobalHelper', 'GlobalParameter', 
+                                            function($scope, $stateParams, $timeout, subcontractService, subcontractDateService, commentService, modalService, $state, GlobalHelper, GlobalParameter ) {
 	$scope.GlobalParameter = GlobalParameter;
+	if(!$scope.hideHeader) {
+		$scope.hideHeader = $stateParams.hideHeader;
+	}
 	getSubcontract();
 	
-
+	$scope.dates = [];
+	subcontractDateService.getScDateList($scope.jobNo, $scope.subcontractNo, true)
+	.then(function(data){
+		$scope.dates = data;
+	});
 //	Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
@@ -63,6 +70,44 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 	})
 	$scope.openDropdown = function( $event){
 		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
+	
+	$scope.downloadAttachment = function(attach) {
+		const textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
+		const nameObject = GlobalParameter['AbstractAttachment'].SCPackageNameObject;
+    	url = 'service/attachment/obtainFileAttachment?nameObject='+nameObject+'&textKey='+textKey+'&sequenceNo='+attach.noSequence;
+    	GlobalHelper.downloadFile(encodeURI(url));
+	}
+	
+	$scope.addComment = function(event, obj) {
+		if(obj.comment && (event.type == 'click' || event.key == 'Enter') && obj.comment != getFirstComment(obj)){
+			const comment = {
+					field: obj.field,
+					idTable: $scope.subcontract.id,
+					message: obj.comment,
+					nameTable: 'SUBCONTRACT'
+			}
+			commentService.save(comment)
+			.then(function(data) {
+				commentService.find('SUBCONTRACT', $scope.subcontract.id, obj.field)
+				.then(function(newData){
+					$scope.dates.forEach(d => {
+						if(d.field == obj.field) d.commentList = newData;
+						obj.comment = obj.commentList.length > 0 && !obj.focus ? getFirstComment(obj) : '';
+					});
+				});
+			});
+		}
+	}
+	
+	function getFirstComment(d) {
+		return d.commentList && d.commentList.length > 0 ? d.commentList[0].senderObject.fullName + ': ' + d.commentList[0].message : '';
+	}
+	
+	$scope.blurComment = function(d, comment) {
+		$timeout(function(){
+			d.comment = d.commentList.length > 0 && !d.focus ? getFirstComment(d) : '';
+		}, 500);
 	}
 	
 }]);

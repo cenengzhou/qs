@@ -11,56 +11,9 @@
 						<div class="row">
 							<form name="addForm">
 								<div class="form-group">
-									<div class="col-md-2"
-										ng-repeat="field in fields | orderBy:'order'">
-										<div class="form-group">
-											<label ng-if="field.alt" style="cursor: pointer"
-												data-toggle="tooltip" title="{{field.alt}}">
-												{{field.description}} <i
-												class="fa fa-2x fa-info-circle text-primary"></i>
-											</label> <label ng-if="!field.alt"> {{field.description}} <i
-												class="fa fa-2x fa-info-circle text-primary"
-												style="visibility: hidden"></i>
-											</label>
-											<div class="input-group" ng-if="field.type == 'job'">
-												<span class="input-group-addon"><i
-													class="fa fa-folder-open"></i></span> <input type="text"
-													placeholder="" class="form-control " value="{{jobNo}}"
-													disabled />
-											</div>
-
-											<div class="input-group" ng-if="field.type == 'month'"
-												moment-picker="kpi.period" format="YYYY-MM"
-												start-view="year" today="true">
-												<span class="input-group-addon"><i
-													class="fa fa-calendar"></i></span> <input class="form-control"
-													required ng-model="kpi.period"
-													ng-model-options="{ updateOn: 'blur' }">
-											</div>
-
-											<div class="input-group" ng-if="field.type == 'number'">
-												<span class="input-group-addon">@</span> <input
-													type="number" min="0" step="1" pattern="\d+" placeholder=""
-													class="form-control " ng-model="kpi[field.field]" required />
-											</div>
-
-											<div class="input-group" ng-if="field.type == 'amount'">
-												<span class="input-group-addon">$</span> <input
-													type="number" min="0.00" step="0.01" placeholder=""
-													class="form-control " ng-model="kpi[field.field]" required />
-											</div>
-
-										</div>
-									</div>
-
 									<div class="col-md-12">
 										<div class="form-group">
-											<label>Remarks</label>
 											<div style="padding: 0px">
-												<div class="col-md-9" style="padding-left: 0px">
-													<textarea class="form-control" ng-model="kpi.remarks"
-														style="height: 35px"></textarea>
-												</div>
 												<div class="col-md-3" style="padding-right: 0px">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
@@ -77,7 +30,7 @@
 							</form>
 						</div>
 						<div class="row m-10">
-							<div id="variationKpiGrid"
+							<div id="variationKpiGrid" resize ng-style="resizeWithOffset(250)"
 								save-and-restore-grid-state="variationKpi" ui-grid-save-state
 								ui-grid="gridOptions" ui-grid-selection ui-grid-pagination
 								ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit

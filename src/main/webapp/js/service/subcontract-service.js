@@ -586,6 +586,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }   
+
 }]);
 
 
