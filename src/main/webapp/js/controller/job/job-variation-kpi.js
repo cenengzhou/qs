@@ -152,7 +152,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select row to delete.");
 			return;
 		}else{
-			const ids = selectedRows.map(row => row.id);
+			const ids = selectedRows.map(function(row){return row.id;});
 			variationKpiService.deleteByJobNo($scope.jobNo, ids)
 			.then(function(data) {
 				$scope.gridApi.selection.clearSelectedRows();
@@ -165,7 +165,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 	$scope.onUpdate = function() {
 		if($scope.gridDirtyRows.length > 0){
 			var kpis = [];
-			$scope.gridDirtyRows.forEach(row => {
+			$scope.gridDirtyRows.forEach(function(row) {
 				kpis.push(row.entity);
 			});
 			
