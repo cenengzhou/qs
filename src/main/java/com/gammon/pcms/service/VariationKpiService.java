@@ -28,6 +28,10 @@ public class VariationKpiService {
 		return repository.findByNoJob(jobNo);
 	}
 	
+	public List<VariationKpi> getByYear(String jobNo, int year) {
+		return repository.getByYear(jobNo, year);
+	}
+	
 	public VariationKpi save(String jobNo, VariationKpi kpi) {
 		kpi.setNoJob(jobNo);
 		return repository.save(kpi);
