@@ -21,51 +21,51 @@
 	<div
 		ng-class="{'col-md-10': showMonthColumn, 'col-md-12': !showMonthColumn}"
 		ng-style="{'padding-left': showMonthColumn ? '0px' : '15px'}">
-		<div class="col-md-2" style="padding: 0px;">
+		<div class="col-md-1" style="padding: 0px;">
 			<div>
 				<div
 					style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee"
 					ng-if="$index==0">
-					<label></label>
+					<label>Cumulative</label>
 				</div>
 
 				<div
 					style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
-					Number</div>
+					Number (Quantity)</div>
 
 				<div
 					style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
 					Amount</div>
 			</div>
 		</div>
-
+		<div class="col-md-11" style="padding:0px">
 		<div class="col-md-2" style="padding: 0px;"
 			ng-repeat="item in items | orderBy:'order'">
 			<div
 				style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee"
 				ng-if="$parent.$index==0">
 				<label>{{item.description}}</label>
+				<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="{{item.alt}}"></i>
 			</div>
 
 			<div
 				style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
 				<div class="input-group">
-					<input type="number" min="0" step="1" pattern="\d+"
+					<input type="text" min="0" step="1" ng-currency currency-symbol="" fraction="0" style="text-align:right"
 						ng-change="$parent.$parent.$parent.modified=true" class="form-control "
-						ng-model="kpi[item.numberField]" required style="cursor: pointer"
-						data-toggle="tooltip" title="{{item.numberAlt}}" />
+						ng-model="kpi[item.numberField]" required style="cursor: pointer" />
 				</div>
 			</div>
 
 			<div
 				style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
 				<div class="input-group">
-					<input type="number" min="0.00" step="0.01" class="form-control "
+					<input type="text" min="0" step="1" class="form-control " ng-currency currency-symbol="$" fraction="0" style="text-align:right"
 						ng-change="$parent.$parent.$parent.modified=true" 
-						ng-model="kpi[item.amountField]" required style="cursor: pointer"
-						data-toggle="tooltip" title="{{item.amountAlt}}" />
+						ng-model="kpi[item.amountField]" required style="cursor: pointer" />
 				</div>
 			</div>
+		</div>
 		</div>
 	</div>
 </div>

@@ -12,15 +12,17 @@ mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService
 			jobNo: $scope.jobNo,
 			period: moment().format('YYYY-MM'),
 			numberIssued:0,
-			amountIssued:0.00,
+			amountIssued:0,
 			numberSubmitted:0,
-			amountSubmitted: 0.00,
+			amountSubmitted: 0,
 			numberAssessed: 0,
-			amountAssessed: 0.00,
+			amountAssessed: 0,
 			numberApplied: 0,
-			amountApplied: 0.00,
+			amountApplied: 0,
 			numberCertified: 0,
-			amountCertified: 0.00,
+			amountCertified: 0,
+			numberAgreed: 0,
+			amountAgreed: 0,
 			remarks: ""
 			}];
 	

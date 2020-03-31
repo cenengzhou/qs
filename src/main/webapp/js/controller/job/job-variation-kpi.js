@@ -40,7 +40,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			numberField: 'numberIssued',
 			amountField: 'amountIssued',
 			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
-			amountAlt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value'
+			amountAlt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value',
+			alt: 'Variations issued by the Client / Client\'s Rep and Requests for Variations Issued by Gammon to the Client / Client\'s Rep (Budget to be included in "Amount" if pricing is not completed)'
 		},
 		{
 			type: 'Submitted', 
@@ -49,34 +50,46 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			numberField: 'numberSubmitted',
 			amountField: 'amountSubmitted',
 			numberAlt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep', 
-			amountAlt: 'Value of GCL Variations submissions'
+			amountAlt: 'Value of GCL Variations submissions',
+			alt: 'Variations submitted by Gammon to the Client / Client\'s representative'
 		},
 		{
 			type: 'Assessed', 
-			order: 1, 
+			order: 3, 
 			description: 'Assessed', 
 			numberField: 'numberAssessed',
 			amountField: 'amountAssessed',
 			numberAlt: 'Number of Variations were GCL have received the Clients \\ Client\'s Rep assessment', 
-			amountAlt: 'Value of Client\'s Rep Variation Assessments'
+			amountAlt: 'Value of Client\'s Rep Variation Assessments',
+			alt: 'Assessments of submitted Variations received from the Client / Client\'s representative'
+		},
+		{
+			type: 'Agreed',
+			order: 4,
+			description: 'Agreed',
+			numberField: 'numberAgreed',
+			amountField: 'amountAgreed',
+			alt: 'Variations which have been agreed in writing with the Client / Client\'s representative'
 		},
 		{
 			type: 'Applied', 
-			order: 1, 
+			order: 5, 
 			description: 'Applied', 
 			numberField: 'numberApplied',
 			amountField: 'amountApplied',
 			numberAlt: 'Number of Variations were we have included an applied amount within our Application', 
-			amountAlt: 'Value of Variations within GCL Interim Application'
+			amountAlt: 'Value of Variations within GCL Interim Application',
+			alt: 'Variations which Gammon is including in its Interim Application for Payment'
 		},
 		{
 			type: 'Certified', 
-			order: 1, 
+			order: 6, 
 			description: 'Certified', 
 			numberField: 'numberCertified',
 			amountField: 'amountCertified',
 			numberAlt: 'Number of variations were the client has included a certification', 
-			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative'
+			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative',
+			alt: 'Variations which have been certified by the Client / Client Rep in its Interim Payment Certificate'
 		},
 		
 	];

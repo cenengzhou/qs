@@ -49,6 +49,8 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	private BigDecimal amountApplied;
 	private int numberCertified;
 	private BigDecimal amountCertified;
+	private int numberAgreed;
+	private BigDecimal amountAgreed;
 	private String remarks;
 
 	public VariationKpi() {
@@ -184,6 +186,24 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 
 	public void setAmountCertified(BigDecimal amountCertified) {
 		this.amountCertified = amountCertified;
+	}
+	
+	@Column(name = "NUMBER_AGREED")
+	public int getNumberAgreed() {
+		return this.numberAgreed;
+	}
+
+	public void setNumberAgreed(int numberAgreed) {
+		this.numberAgreed = numberAgreed;
+	}
+
+	@Column(name = "AMOUNT_AGREED")
+	public BigDecimal getAmountAgreed() {
+		return this.amountAgreed;
+	}
+
+	public void setAmountAgreed(BigDecimal amountAgreed) {
+		this.amountAgreed = amountAgreed;
 	}
 
 	public String getRemarks() {
