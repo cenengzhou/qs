@@ -5,7 +5,8 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     	saveByJobNo: 	saveByJobNo,
     	saveListByJobNo: saveListByJobNo,
     	deleteByJobNo:	deleteByJobNo,
-    	getByPage:		getByPage
+    	getByPage:		getByPage,
+    	getByJobNoYear:	getByJobNoYear
     });
 	
     function findByJobNo(jobNo) {
@@ -16,6 +17,14 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
+    function getByJobNoYear(jobNo, year, month) {
+		var request = $http({
+			method: "get",
+			url: "service/variationKpi/getByYear/" + jobNo + "/" + year
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     function getByPage(page, size, direction, property,
     		noJob, 
 			year, 

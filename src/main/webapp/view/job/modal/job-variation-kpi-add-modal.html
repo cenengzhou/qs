@@ -3,10 +3,10 @@
 		<div class="col-md-11">
 			
 			<span class="input-group" 
-				moment-picker="kpi.period" format="YYYY-MM"
+				moment-picker="kpiList[0].period" format="YYYY-MM"
 				start-view="year" today="true">
 				<span class="input-group-addon">Month Ending <i class="fa fa-calendar"></i></span>
-				<input class="form-control" required ng-model="kpi.period" ng-model-options="{ updateOn: 'blur' }">
+				<input class="form-control" required ng-model="kpiList[0].period" ng-model-options="{ updateOn: 'blur' }">
 			</span>
 		</div>
 		<div class="col-md-1">
@@ -18,7 +18,6 @@
 	</div>
 </div>
 <div class="modal-body bg-gray-light">
-
 	<div class="animated fadeIn">
 		<div class="row">
 			<div class="col-md-12">
@@ -27,48 +26,9 @@
 						<div class="row">
 							<form name="addForm">
 								<div class="form-group">
-									<div class="col-md-2" style="padding:0px;">
-										<div>
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee"
-												<label ></label>
-											</div> 
+									<div ng-include src="'view/job/modal/kpiRowTemplate.html'"></div>
 
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee">
-												Number
-											</div>
-
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee">
-												Amount
-											</div>
-										</div>
-									</div>
-								
-									<div class="col-md-2" style="padding:0px;"
-										ng-repeat="field in fields | orderBy:'order'">
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee"
-												<label >{{field.description}}</label> 
-											</div> 
-
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee">
-												<div class="input-group">
-												<input
-													type="number" min="0" step="1" pattern="\d+"
-													class="form-control " ng-model="kpi[field.numberField]" required style="cursor: pointer" data-toggle="tooltip" title="{{field.numberAlt}}"/>
-												</div>
-											</div>
-
-											<div style="height:46px;width:100%;padding:5px;border: 1px solid #eee">
-												<div class="input-group">
-												<input
-													type="number" min="0.00" step="0.01"
-													class="form-control " ng-model="kpi[field.amountField]" required style="cursor: pointer" data-toggle="tooltip" title="{{field.amountAlt}}"/>
-												</div>
-											</div>
-											
-										
-									</div>
-
-									<div class="col-md-12" style="width:100%;padding:5px;border: 1px solid #eee">
+									<div class="col-md-12" style="width:100%;padding:5px;border: 0px solid #eee">
 										<div class="form-group">
 											<!-- label>Remarks</label -->
 											<div style="padding: 0px">
@@ -76,7 +36,7 @@
 													<textarea class="form-control" ng-model="kpi.remarks"
 														style="height: 35px"></textarea>
 												</div -->
-												<div class="col-md-12" style="padding-left: 0px"; padding-right: 0px">
+												<div class="col-md-12" style="padding-left: 15px"; padding-right: 0px">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
 														style="color: white" ng-click="onAdd()"
@@ -92,11 +52,7 @@
 							</form>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
-
-
 		</div>
 	</div>

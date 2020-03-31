@@ -16,6 +16,28 @@ public interface VariationKpiRepository extends JpaRepository<VariationKpi, Long
 	
 	@Query("select v from VariationKpi v where "
 			+"v.noJob = :noJob and "
+			+"function('to_number', v.year) = :year "
+			+"order by v.year, v.month"
+	)
+	List<VariationKpi> getByYear(
+			@Param("noJob") String noJob,
+			@Param("year") int year
+	);
+	
+	@Query("select v from VariationKpi v where "
+			+"v.noJob = :noJob and "
+			+"function('to_number', v.year) = :year and "
+			+"function('to_number', v.month) = :month "
+			+"order by v.year, v.month"
+	)
+	List<VariationKpi> getByPeriod(
+			@Param("noJob") String noJob,
+			@Param("year") int year,
+			@Param("month") int month
+	);
+	
+	@Query("select v from VariationKpi v where "
+			+"v.noJob = :noJob and "
 			+"function('to_char', v.year) like :year and "
 			+"function('to_char', v.month) like :month and "
 			+"function('to_char', v.numberIssued) like :numberIssued and "

@@ -44,6 +44,11 @@ public class VariationKpiController {
 		service.delete(jobNo, ids);
 	}
 	
+	@RequestMapping(value = "getByYear/{jobNo}/{year}", method = RequestMethod.GET)
+	public List<VariationKpi> getByYear(@PathVariable String jobNo, @PathVariable int year) {
+		return service.getByYear(jobNo, year);
+	}
+	
 	@RequestMapping(value = "{page}/{size}", method = RequestMethod.GET)
 	public Page<VariationKpi> getByPage(
 			@PathVariable int page, 

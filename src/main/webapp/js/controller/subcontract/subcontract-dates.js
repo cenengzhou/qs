@@ -91,7 +91,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', '$stateParams', '$timeout'
 			.then(function(data) {
 				commentService.find('SUBCONTRACT', $scope.subcontract.id, obj.field)
 				.then(function(newData){
-					$scope.dates.forEach(d => {
+					$scope.dates.forEach(function(d) {
 						if(d.field == obj.field) d.commentList = newData;
 						obj.comment = obj.commentList.length > 0 && !obj.focus ? getFirstComment(obj) : '';
 					});
