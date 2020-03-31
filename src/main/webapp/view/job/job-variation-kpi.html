@@ -1,8 +1,5 @@
-
-<div id="content" class="content">
-
-
-	<div class="m-t-20 m-l-20 m-r-20">
+<div id="content" class="content" style="padding:15px">
+	<div>
 
 		<div class="row">
 			<div class="col-md-12">
@@ -12,34 +9,42 @@
 							<form name="addForm">
 								<div class="form-group">
 									<div class="col-md-12">
-										<div class="form-group">
+										<div>
 											<div style="padding: 0px">
-												<div class="col-md-3" style="padding-right: 0px">
+												<span class="input-group col-md-9" moment-picker="period" ng-model="period"
+													format="YYYY" start-view="year" today="true" change="getPage(newValue, oldValue)" ng-model-options="{ updateOn: 'blur' }"
+													style="float: left"> <span class="input-group-addon">Month
+														Ending <i class="fa fa-calendar"></i>
+												</span> <input class="form-control" required ng-model="period"
+													ng-model-options="{ updateOn: 'blur' }">
+												</span> <span class="col-md-3"
+													style="padding-right: 0px; float: right">
 													<button type="button"
 														class="form-control btn btn-danger btn-block"
-														style="color: white" ng-click="onAdd()"
-														ng-disabled="!addForm.$valid">
+														style="color: white" ng-click="onAdd()">
 														<i class="fa fa-plus"></i> Add
 													</button>
-												</div>
+												</span>
 											</div>
 										</div>
 									</div>
 								</div>
 
+								<div ng-include src="'view/job/modal/kpiRowTemplate.html'"
+									style="padding-top: 50px"></div>
 							</form>
 						</div>
 						<div class="row m-10">
-							<div id="variationKpiGrid" resize ng-style="resizeWithOffset(250)"
+							<!-- <div id="variationKpiGrid" resize ng-style="resizeWithOffset(250)"
 								save-and-restore-grid-state="variationKpi" ui-grid-save-state
 								ui-grid="gridOptions" ui-grid-selection ui-grid-pagination
 								ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit
 								ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid">
-							</div>
+							</div> -->
 						</div>
+						<!-- 
 						<div class="row">
-							<div
-								ng-class="getButtonClass('update')">
+							<div ng-class="getButtonClass('update')">
 								<button type="button"
 									class="form-control btn btn-primary btn-block"
 									style="color: white" ng-click="onUpdate()"
@@ -47,8 +52,7 @@
 									<i class="fa fa-save"></i> Update
 								</button>
 							</div>
-							<div
-								ng-class="getButtonClass('delete')">
+							<div ng-class="getButtonClass('delete')">
 								<button type="button"
 									class="form-control btn btn-success btn-block"
 									style="color: white" ng-click="onDelete()"
@@ -56,14 +60,24 @@
 									<i class="fa fa-remove"></i> Delete
 								</button>
 							</div>
-
 						</div>
+						 -->
 					</div>
 
 
 				</div>
 			</div>
-
-
 		</div>
 	</div>
+	
+	<footer ng-if="modified" 
+		style="position: fixed; top: 92vh; width: 92%; z-index:10000">
+		<md-toolbar class="md-scroll-shrink"
+			style="background-color:rgba(63,81,181, 0)">
+		<div layout="row" layout-align="center center" flex>
+			<md-button ng-click="onUpdate()"
+				class="md-raised md-primary col-md-12">Update</md-button>
+		</div>
+		</md-toolbar>
+	</footer>
+</div>

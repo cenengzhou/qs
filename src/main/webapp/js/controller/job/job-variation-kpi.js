@@ -7,27 +7,15 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 	$scope.gridSelectedRows = [];
 	$scope.isSelected = 0;
 	$scope.isDirty = 0;
-	
+	$scope.showMonthColumn = true;
+	$scope.modified = false;
 	var paginationOptions = {
 		    pageNumber: 1,
 		    pageSize: 10,
 		    sort: null
 		  };
-	$scope.kpi = {
-			jobNo: $scope.jobNo,
-			period: moment().format('YYYY-MM'),
-			numberIssued:0,
-			amountIssued:0.00,
-			numberSubmitted:0,
-			amountSubmitted: 0.00,
-			numberAssessed: 0,
-			amountAssessed: 0.00,
-			numberApplied: 0,
-			amountApplied: 0.00,
-			numberCertified: 0,
-			amountCertified: 0.00,
-			remarks: ""
-			};
+	$scope.period = moment().format('YYYY-MM');
+	$scope.kpiList = [];
 	
 	$scope.fields = [
 		{type: 'job', description: 'Project', field: 'noJob', order: 1},
@@ -43,6 +31,69 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{type: 'number', description: 'Number of Certified', field: 'numberCertified', order: 11, alt: 'Number of variations were the client has included a certification'},
 		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'}
 	];
+	
+	$scope.items = [
+		{
+			type: 'Issued', 
+			order: 1, 
+			description: 'Issued', 
+			numberField: 'numberIssued',
+			amountField: 'amountIssued',
+			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
+			amountAlt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value',
+			alt: 'Variations issued by the Client / Client\'s Rep and Requests for Variations Issued by Gammon to the Client / Client\'s Rep (Budget to be included in "Amount" if pricing is not completed)'
+		},
+		{
+			type: 'Submitted', 
+			order: 2, 
+			description: 'Submitted', 
+			numberField: 'numberSubmitted',
+			amountField: 'amountSubmitted',
+			numberAlt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep', 
+			amountAlt: 'Value of GCL Variations submissions',
+			alt: 'Variations submitted by Gammon to the Client / Client\'s representative'
+		},
+		{
+			type: 'Assessed', 
+			order: 3, 
+			description: 'Assessed', 
+			numberField: 'numberAssessed',
+			amountField: 'amountAssessed',
+			numberAlt: 'Number of Variations were GCL have received the Clients \\ Client\'s Rep assessment', 
+			amountAlt: 'Value of Client\'s Rep Variation Assessments',
+			alt: 'Assessments of submitted Variations received from the Client / Client\'s representative'
+		},
+		{
+			type: 'Agreed',
+			order: 4,
+			description: 'Agreed',
+			numberField: 'numberAgreed',
+			amountField: 'amountAgreed',
+			alt: 'Variations which have been agreed in writing with the Client / Client\'s representative'
+		},
+		{
+			type: 'Applied', 
+			order: 5, 
+			description: 'Applied', 
+			numberField: 'numberApplied',
+			amountField: 'amountApplied',
+			numberAlt: 'Number of Variations were we have included an applied amount within our Application', 
+			amountAlt: 'Value of Variations within GCL Interim Application',
+			alt: 'Variations which Gammon is including in its Interim Application for Payment'
+		},
+		{
+			type: 'Certified', 
+			order: 6, 
+			description: 'Certified', 
+			numberField: 'numberCertified',
+			amountField: 'amountCertified',
+			numberAlt: 'Number of variations were the client has included a certification', 
+			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative',
+			alt: 'Variations which have been certified by the Client / Client Rep in its Interim Payment Certificate'
+		},
+		
+	];
+	
 
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -81,13 +132,25 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 //						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
-	$scope.getPage = function() {
-	    getVariationKpiList(paginationOptions.pageNumber, paginationOptions.pageSize, paginationOptions.direction, paginationOptions.property);
-	};
+	
+	$scope.getPage = function(year) {
+		if(!year) year = moment().year();
+		variationKpiService.getByJobNoYear($scope.jobNo, year)
+		.then(function(data) {
+			$scope.period = moment().year(year).format('YYYY');
+			$scope.kpiList = data;
+		});
+	    //getVariationKpiList(paginationOptions.pageNumber, paginationOptions.pageSize, paginationOptions.direction, paginationOptions.property);
+	}; $scope.getPage();
 		
 	function loadData() {
 		getVariationKpiList(paginationOptions.pageNumber, paginationOptions.pageSize);
-	} loadData();
+	}
+	
+	$scope.getMonthShortName = function(m) {
+		var shortName = moment().month(m-1).format('MMM');
+		return shortName;
+	}
 	
 	function getVariationKpiList(page, size, direction, property){
 		page--;
@@ -146,37 +209,38 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		});
 	}
 	
-	$scope.onDelete = function() {
-		var selectedRows = $scope.gridApi.selection.getSelectedRows();
-		if(selectedRows.length == 0){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select row to delete.");
-			return;
-		}else{
-			const ids = selectedRows.map(function(row){return row.id;});
-			variationKpiService.deleteByJobNo($scope.jobNo, ids)
+	$scope.onDelete = function(kpi) {
+//		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+//		if(selectedRows.length == 0){
+//			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select row to delete.");
+//			return;
+//		}else{
+//			const ids = selectedRows.map(function(row){return row.id;});
+			variationKpiService.deleteByJobNo($scope.jobNo, [kpi.id])
 			.then(function(data) {
-				$scope.gridApi.selection.clearSelectedRows();
-				$scope.gridSelectedRows = [];
+//				$scope.gridApi.selection.clearSelectedRows();
+//				$scope.gridSelectedRows = [];
 				$scope.getPage();
 			});
-		}
+//		}
 	}
 	
 	$scope.onUpdate = function() {
-		if($scope.gridDirtyRows.length > 0){
-			var kpis = [];
-			$scope.gridDirtyRows.forEach(function(row) {
-				kpis.push(row.entity);
-			});
+//		if($scope.gridDirtyRows.length > 0){
+//			var kpis = [];
+//			$scope.gridDirtyRows.forEach(function(row) {
+//				kpis.push(row.entity);
+//			});
 			
-			variationKpiService.saveListByJobNo($scope.jobNo, kpis)
+			variationKpiService.saveListByJobNo($scope.jobNo, $scope.kpiList)
 			.then(function(data) {
-				$scope.gridDirtyRows = [];
+//				$scope.gridDirtyRows = [];
 				if(data) $scope.getPage();
+				$scope.modified = false;
 			}, function(error) {
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to update record");
 			});
-		}
+//		}
 	}
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {

@@ -7,81 +7,35 @@ mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService
 		$uibModalInstance.dismiss("cancel");
 	};
 
-	$scope.kpi = {
+	$scope.showMonthColumn = false;
+	$scope.kpiList = [{
 			jobNo: $scope.jobNo,
 			period: moment().format('YYYY-MM'),
 			numberIssued:0,
-			amountIssued:0.00,
+			amountIssued:0,
 			numberSubmitted:0,
-			amountSubmitted: 0.00,
+			amountSubmitted: 0,
 			numberAssessed: 0,
-			amountAssessed: 0.00,
+			amountAssessed: 0,
 			numberApplied: 0,
-			amountApplied: 0.00,
+			amountApplied: 0,
 			numberCertified: 0,
-			amountCertified: 0.00,
+			amountCertified: 0,
+			numberAgreed: 0,
+			amountAgreed: 0,
 			remarks: ""
-			};
+			}];
 	
 
-	$scope.fields = [
-		{
-			type: 'Issued', 
-			order: 1, 
-			description: 'Issued', 
-			numberField: 'numberIssued',
-			amountField: 'amountIssued',
-			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
-			amountAlt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value'
-		},
-		{
-			type: 'Submitted', 
-			order: 2, 
-			description: 'Submitted', 
-			numberField: 'numberSubmitted',
-			amountField: 'amountSubmitted',
-			numberAlt: 'Number of Variations were a GCL have submitted their assessment to the Client \\ Client\'s Rep', 
-			amountAlt: 'Value of GCL Variations submissions'
-		},
-		{
-			type: 'Assessed', 
-			order: 1, 
-			description: 'Assessed', 
-			numberField: 'numberAssessed',
-			amountField: 'amountAssessed',
-			numberAlt: 'Number of Variations were GCL have received the Clients \\ Client\'s Rep assessment', 
-			amountAlt: 'Value of Client\'s Rep Variation Assessments'
-		},
-		{
-			type: 'Applied', 
-			order: 1, 
-			description: 'Applied', 
-			numberField: 'numberApplied',
-			amountField: 'amountApplied',
-			numberAlt: 'Number of Variations were we have included an applied amount within our Application', 
-			amountAlt: 'Value of Variations within GCL Interim Application'
-		},
-		{
-			type: 'Certified', 
-			order: 1, 
-			description: 'Certified', 
-			numberField: 'numberCertified',
-			amountField: 'amountCertified',
-			numberAlt: 'Number of variations were the client has included a certification', 
-			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative'
-		},
-		
-	]
-	
 	$scope.onAdd = function() {
 		if($scope.addForm.$valid){
-			var period = moment($scope.kpi.period);
-			$scope.kpi.year = period.year();
-			$scope.kpi.month = period.month() + 1;
-			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpi)
+			var period = moment($scope.kpiList[0].period);
+			$scope.kpiList[0].year = period.year();
+			$scope.kpiList[0].month = period.month() + 1;
+			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpiList[0])
 			.then(function(data) {
 				if(data) {
-					$scope.getPage();
+					$scope.getPage($scope.kpiList[0].year);
 					$scope.cancel();
 				}
 			}, function(error){
