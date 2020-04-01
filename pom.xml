@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2020-03-18</version>
+	<version>2020-04-01</version>
 	<packaging>war</packaging>
 
 	<scm>
@@ -25,6 +25,14 @@
 			<id>central</id>
 			<url>https://repo.maven.apache.org/maven2/</url>
 		</repository>
+		<repository>
+			<id>Artifacts</id>
+			<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>mvnrepository</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -38,6 +46,10 @@
 			<releases>
 				<updatePolicy>never</updatePolicy>
 			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>Artifacts</id>
+			<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -158,12 +170,26 @@
 
 	<!-- ========================================== DEPENDENCIES ================================================= -->
 	<dependencies>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
 			<version>8.0.35</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>8.5.53</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-el</artifactId>
+			<version>8.5.53</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>8.5.53</version>
+		</dependency>
 		<!-- redirect all log from tomcat to log4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -209,13 +235,11 @@
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<version>${jsp-api.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet-api.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Spring: application framework and inversion of control container -->
@@ -522,6 +546,18 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp.jstl</groupId>
+			<artifactId>jstl-api</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>taglibs</groupId>
 			<artifactId>standard</artifactId>

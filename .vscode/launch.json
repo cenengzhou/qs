@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring framework",
+            "request": "launch",
+            "mainClass": "com.gammon.pcms.Application",
+            "projectName": "pcms",
+            "args": "-Djavax.net.ssl.trustStore=${workspaceFolder}/src/main/resources/keychain/qsKeystore.jks -Djavax.net.ssl.trustStorePassword=changeit -Dhttps.protocols=TLSv1"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome",
+            "url": "http://localhost:7207/pcms",
+            "webRoot": "${workspaceFolder}/src/main/webapp"
+        }
+    ]
+}
