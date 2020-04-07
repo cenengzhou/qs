@@ -45,6 +45,7 @@ import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -632,7 +633,7 @@ public class MasterListWSDao{
 		requestObj.setJDEnterpriseOneEventPoint01("5");
 		// requestObj.setJDEnterpriseOneEventPoint02();
 		ValidateAccNumResponseObj responseObj = (ValidateAccNumResponseObj) getValidateAccNumWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		return responseObj.getAccountID() != null;
+		return StringUtils.isNotEmpty(responseObj.getAccountID());
 	}
 	
 }
