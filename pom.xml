@@ -1089,6 +1089,9 @@
 						<!-- replace the token in this file -->
 						<include>target/ROOT/home.html</include>
 						<include>target/ROOT/js/app.js</include>
+						<include>target/ROOT/js/controller/job/job-variation-kpi.js</include>
+						<include>target/ROOT/view/job/modal/job-variation-kpi-add-modal.html</include>
+						<include>target/ROOT/view/job/job-variation-kpi.html</include>
 					</includes>
 					<regex>false</regex>
 					<!-- the name of the token to replace -->

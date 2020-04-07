@@ -201,7 +201,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 	$scope.onAdd = function() {
 		$scope.uibModalInstance = $uibModal.open({
 			animation: true,
-			templateUrl: "view/job/modal/job-variation-kpi-add-modal.html",
+			templateUrl: "view/job/modal/job-variation-kpi-add-modal.html?@PROJECT_VERSION@",
 			controller: 'JobVariationKpiAddModalCtrl',
 			size: 'lg',
 			backdrop: 'static',
