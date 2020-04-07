@@ -750,7 +750,13 @@ public class TransitService implements Serializable {
 			
 			for(String accountCode : accountCodes){
 				String[] objSub = accountCode.split("\\.");
-				String validateObjSubError = masterListRepository.validateObjectAndSubsidiaryCodes(objSub[0], objSub[1]);
+				String validateObjSubError = null;
+				
+				if(! masterListRepository.isJobLevelAccExist(jobNumber, objSub[0], objSub[1])) {
+					
+					validateObjSubError = masterListRepository.validateObjectAndSubsidiaryCodes(objSub[0], objSub[1]);
+
+				}
 				if(validateObjSubError != null){
 					errorList.add(validateObjSubError);
 				}
@@ -1477,7 +1483,13 @@ public class TransitService implements Serializable {
 		for(TransitResource resource : resources){
 			String objectCode = resource.getObjectCode();
 			String subsidiaryCode = resource.getSubsidiaryCode();
-			String error = masterListRepository.validateObjectAndSubsidiaryCodes(objectCode, subsidiaryCode);
+			String error = null;
+			
+			if(! masterListRepository.isJobLevelAccExist(jobNumber, objectCode, subsidiaryCode) ){
+
+				error = masterListRepository.validateObjectAndSubsidiaryCodes(objectCode, subsidiaryCode);
+
+			}
 			
 			String packageNo = resource.getPackageNo()!=null?resource.getPackageNo().trim(): "";
 			if(packageNo.length()>0 && !"0".equals(packageNo)){

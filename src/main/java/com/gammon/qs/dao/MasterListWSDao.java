@@ -7,13 +7,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import org.springframework.ws.WebServiceException;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.client.SoapFaultClientException;
-
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddress.GetAddressResponseObj;
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddress.GetContactPersonResponseObj;
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddress.GetGeneralAddressRequestObj;
@@ -37,6 +30,8 @@ import com.gammon.jde.webservice.serviceRequester.GetSubcontractorWorkScopeQuery
 import com.gammon.jde.webservice.serviceRequester.GetSubcontractorWorkScopeQueryManager.getSubContractorWorkScope_Refactor.GetSubcontractorWSResponseObj;
 import com.gammon.jde.webservice.serviceRequester.GetUpdateAccMasterUsingCodeTypeCodeManager.getUpdateAccMasterUsingCodeTypeCode.UpdateAccMasterByObjSubRequestObj;
 import com.gammon.jde.webservice.serviceRequester.GetUpdateAccMasterUsingCodeTypeCodeManager.getUpdateAccMasterUsingCodeTypeCode.UpdateAccMasterByObjSubResponseObj;
+import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
+import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
@@ -49,6 +44,13 @@ import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import org.springframework.ws.WebServiceException;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 @Repository
 public class MasterListWSDao{
 	
@@ -77,6 +79,9 @@ public class MasterListWSDao{
 	@Autowired
 	@Qualifier("getUpdateAccMasterByObjSubWebServiceTemplate")
 	private WebServiceTemplate getUpdateAccMasterByObjSubWebServiceTemplate;
+	@Autowired
+	@Qualifier("getValidateAccNumWebServiceTemplate")
+	private WebServiceTemplate getValidateAccNumWebServiceTemplate;
 	@Autowired
 	private UnitWSDao unitWSDao;
 	@Autowired
@@ -617,6 +622,17 @@ public class MasterListWSDao{
 			}
 		}
 		return true;
+	}
+
+	public boolean validateAccNum(String businessUnit, String objectAccount, String subsidiary){
+		ValidateAccNumRequestObj requestObj = new ValidateAccNumRequestObj();
+		requestObj.setBusinessUnit(businessUnit);
+		requestObj.setObjectAccount(objectAccount);
+		requestObj.setSubsidiary(subsidiary);
+		requestObj.setJDEnterpriseOneEventPoint01("5");
+		// requestObj.setJDEnterpriseOneEventPoint02();
+		ValidateAccNumResponseObj responseObj = (ValidateAccNumResponseObj) getValidateAccNumWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
+		return responseObj.getAccountID() != null;
 	}
 	
 }

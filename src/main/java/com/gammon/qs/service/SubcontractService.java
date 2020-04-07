@@ -3049,21 +3049,24 @@ public class SubcontractService {
 				return error;
 			}
 			
-			if (scDetail.getLineType() != null && subcontractDetail.getSubsidiaryCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
-					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
-				if (masterListService.checkSubsidiaryCodeInUCC(subcontractDetail.getSubsidiaryCode())!=null){
-					error = "Subsidiary Code does not exist in UCC";
-					return error;
+			if(! masterListService.isJobLevelAccExist(jobNo, subcontractDetail.getObjectCode(), subcontractDetail.getSubsidiaryCode())) {
+
+				if (scDetail.getLineType() != null && subcontractDetail.getSubsidiaryCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+						!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
+					if (masterListService.checkSubsidiaryCodeInUCC(subcontractDetail.getSubsidiaryCode())!=null){
+						error = "Subsidiary Code does not exist in UCC";
+						return error;
+					}
 				}
-			}
-			if (scDetail.getLineType() != null && subcontractDetail.getObjectCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
-					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
-				if (masterListService.checkObjectCodeInUCC(subcontractDetail.getObjectCode())!=null){
-					error = "Object Code does not exist in UCC";
-					return error;
+				if (scDetail.getLineType() != null && subcontractDetail.getObjectCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+						!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
+					if (masterListService.checkObjectCodeInUCC(subcontractDetail.getObjectCode())!=null){
+						error = "Object Code does not exist in UCC";
+						return error;
+					}
 				}
+				
 			}
-			
 			/*if (subcontractDetail.getUnit()!=null) 
 				scDetail.setUnit(subcontractDetail.getUnit());*/
 			

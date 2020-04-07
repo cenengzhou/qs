@@ -717,10 +717,11 @@ public class AddendumService{
 				returnErr = "Alternate Object Code must be in Labour Object Code!";
 				return returnErr;
 			}
-
-			returnErr = masterListService.checkObjectCodeInUCC(addendumDetail.getCodeObjectForDaywork());
-			if (returnErr!=null)
-				return returnErr;
+			if(! masterListService.isJobLevelAccExist(addendumDetail.getNoJob(), addendumDetail.getCodeObjectForDaywork(), addendumDetail.getCodeSubsidiary())){
+				returnErr = masterListService.checkObjectCodeInUCC(addendumDetail.getCodeObjectForDaywork());
+				if (returnErr!=null)
+					return returnErr;
+			}
 		}
 		
 		returnErr = masterListService.validateAndCreateAccountCode(addendumDetail.getNoJob().trim(), addendumDetail.getCodeObject().trim(), addendumDetail.getCodeSubsidiary().trim());
