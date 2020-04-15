@@ -483,32 +483,40 @@ public class MasterListService{
 	 */
 	public String validateAndCreateAccountCode(String jobNumber, String objectCode, String subsidiaryCode) {
 		String errorMessage = null;
-		try {
-			// 1. Validate Account Code
-			// 1a. Object Code
-			errorMessage = checkObjectCodeInUCC(objectCode);
-			if (errorMessage != null)
-				return "Invalid object code: " + objectCode;
-			// 1b. Subsidiary Code
-			errorMessage = checkSubsidiaryCodeInUCC(subsidiaryCode);
-			if (errorMessage != null)
-				return "Invalid subsidiary code: " + subsidiaryCode;
-			// 1c. Object+Subsidiary Combination
-			/*if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
-				return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;*/
+		if(! isJobLevelAccExist(jobNumber, objectCode, subsidiaryCode)){
 
-			// 2. Create Account Code
-			if (!masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode))
-				return "Failed: Creating account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
-			else
-				logger.info("Account Code: " + jobNumber + "." + objectCode + "." + subsidiaryCode + " has created successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Failed: Validating/Creating the account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+			try {
+				// 1. Validate Account Code
+				// 1a. Object Code
+				errorMessage = checkObjectCodeInUCC(objectCode);
+				if (errorMessage != null)
+					return "Invalid object code: " + objectCode;
+				// 1b. Subsidiary Code
+				errorMessage = checkSubsidiaryCodeInUCC(subsidiaryCode);
+				if (errorMessage != null)
+					return "Invalid subsidiary code: " + subsidiaryCode;
+				// 1c. Object+Subsidiary Combination
+				/*if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
+					return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;*/
+
+				// 2. Create Account Code
+				if (!masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode))
+					return "Failed: Creating account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+				else
+					logger.info("Account Code: " + jobNumber + "." + objectCode + "." + subsidiaryCode + " has created successfully.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "Failed: Validating/Creating the account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+			}
+			
 		}
 		return errorMessage;
 	}
 	
+	public boolean isJobLevelAccExist(String jobNumber, String objectCode, String subsidiaryCode) {
+		return masterListDao.validateAccNum(jobNumber, objectCode, subsidiaryCode);
+	}
+
 	public List<WorkScopeWrapper> getSubcontractorWorkScope(String vendorNo)throws Exception{
 		return masterListDao.obtainSubcontractorWorkScope(vendorNo);
 	}
