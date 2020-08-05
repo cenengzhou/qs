@@ -80,6 +80,7 @@ mainApp.constant('GlobalParameter', {
 		return newArr;
 	},
 	DATE_FORMAT: 'dd/MM/yyyy',
+	DATE_MONTH_FORMAT: 'dd/MMM/yyyy',
 	DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',
 	MOMENT_DATE_FORMAT: 'YYYY-MM-DD',
 	MOMENT_DATE_REGEX: '\\d{4}-\\d{1,2}-\\d{1,2}',
@@ -437,6 +438,23 @@ mainApp.constant('GlobalParameter', {
     defaultIcon: 'resources/images/profile.png',
 	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/',
 	tinyMceMaxCharLength: 2000,
+	forecast: {
+		Actual: 'Actual',
+		InternalValuation: 'Internal Value',
+		EoJ: 'EoJ',
+		Turnover: 'Turnover',
+		Cost: 'Cost',
+		Contingency: 'Contingency',
+		TenderRisks: 'Tender Risks',
+		TenderOpps: 'Tender Opps',
+		Others: 'Others',
+		Risks: 'Risks',
+		Opps: 'Opps',
+		UnsecuredEoJ: 'Unsecured EoJ',
+		UnsecuredTurnover: 'Unsecured Turnover',
+		UnsecuredCost: 'Unsecured Cost',
+		CriticalProgramme: 'Critical Programme'
+	}
 });
 
 mainApp.constant('GlobalMessage', {

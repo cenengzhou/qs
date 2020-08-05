@@ -72,6 +72,7 @@ public class ADLService {
 	private AdminService adminService;
 	@Autowired
 	private SubcontractorWorkscopeDao subcontractorWorkscopeDao;
+	
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
 	 */
@@ -449,4 +450,6 @@ public class ADLService {
 	public List<SubcontractorWorkscope> getAllWorkScopes() throws DatabaseOperationException{
 		return subcontractorWorkscopeDao.getAllWorkScopes();
 	}
+	
+	
 }

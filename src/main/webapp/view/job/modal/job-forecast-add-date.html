@@ -1,0 +1,86 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h4 class="modal-title">Add New Critical Programmme Date</h4>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+<form name="form-validate" id="form-validate" class="ng-pristine ng-valid">
+    <!-- begin row -->
+	<div class="row">
+			<div class="col-md-4 ">
+
+				<div class="input-group" moment-picker="monthYear" format="YYYY-MM"
+					start-view="year" today="true">
+					<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					<input class="form-control" ng-model="monthYear"
+						ng-model-options="{ updateOn: 'blur' }" required>
+				</div>
+			</div>
+			
+		</div>
+	<div class="row m-t-15">
+			<!-- begin col-10 -->
+			<div class="col-md-12">
+				
+				<div class="panel panel-danger">
+	
+						<div class="table-responsive">
+							<table
+								class="table table-bordered table-hover table-striped table-td-valign-middle">
+								<thead>
+									<tr class="danger">
+										<th class="width-150 text-center">Critical Programme</th>
+										<th class="width-150 text-center">Forecast</th>
+										<th class="width-150 text-center">Explanation</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><div ng-hide="true">{{forecast.noJob = jobNo}} {{forecast.forecastFlag = 'RF'}}  {{forecast.forecastType = GlobalParameter.forecast.CriticalProgramme}} {{forecast.year = year}} {{forecast.month = month}}</div>
+										<textarea type="text" class="form-control" ng-model="forecast.forecastDesc" required/></td>
+										<td class="text-center">
+											<div class="input-group" moment-picker="forecast.date" start-view="day"
+											format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
+											<span class="input-group-addon"> <i
+												class="fa fa-calendar"></i>
+											</span> <input class="form-control" ng-model="forecast.date" required>
+											</div>
+										</td>
+										<td><textarea class="form-control" ng-model="forecast.explanation" required/></td>
+									</tr>
+	
+								</tbody>
+							</table>
+							<div class="height-200"></div>
+						</div>
+					</div>
+				
+			</div>
+			<!-- end col-8 -->
+
+		</div>
+		<!-- end row -->
+		</form>
+</div>
+<div class="modal-footer m-t-100" >
+    <div class="row">
+        <div class="col-md-12" >
+                <button class="btn btn-primary btn-block" type="button"
+                        ng-click="update()">
+                    <span class="fa fa-save"></span> Save
+                </button>
+        </div>
+
+    </div>
+
+</div>
+
+

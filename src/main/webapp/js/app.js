@@ -170,6 +170,24 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.forecast', {
+		url: "/forecast",
+		templateUrl: "view/job/job-forecast.html?@PROJECT_VERSION@",
+		controller: 'JobForecastCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               		 		'js/service/forecast-service.js?@PROJECT_VERSION@',
+               		 		'js/controller/job/job-forecast.js?@PROJECT_VERSION@',
+               		 		'js/controller/job/modal/job-forecast-add-modal.js?@PROJECT_VERSION@',
+               		 		'js/controller/job/modal/job-forecast-add-date-modal.js?@PROJECT_VERSION@'
+                    ] 
+                });
+            }]
+        }
+	})
 	.state('job.attachment', {
 		templateUrl: "view/job/job-attachment.html?@PROJECT_VERSION@",
 	})
@@ -192,7 +210,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/main-cert-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/service/addendum-service.js?@PROJECT_VERSION@',
-                           'js/service/subcontract-service.js?@PROJECT_VERSION@',
+                           'js/service/subcontract-service.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]
