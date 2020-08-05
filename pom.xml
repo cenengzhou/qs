@@ -4,11 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-<<<<<<< HEAD
 	<version>2020-08-05</version>
-=======
-	<version>2020-04-15</version>
->>>>>>> refs/remotes/origin/develop
 	<packaging>war</packaging>
 
 	<scm>
