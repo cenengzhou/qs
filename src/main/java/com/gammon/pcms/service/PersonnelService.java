@@ -123,15 +123,13 @@ public class PersonnelService {
 					}
 					break;
 				case UPDATE:
-					if(personnel.getPersonnelMap().getRequiredApproval().equals("N")){
-						personnelRepository.save(personnel);
-					} else if(StringUtils.isNotBlank(personnel.getUserAdToBeApproved())) {
+					if(StringUtils.isNotBlank(personnel.getUserAdToBeApproved())) {
 						personnel.setUserAdPrevious(personnel.getUserAd());
 						personnel.setUserAd(personnel.getUserAdToBeApproved());
 						personnel.setUserAdToBeApproved(null);
-						personnel.actionNone();
-						personnelRepository.save(personnel);
 					}
+					personnel.actionNone();
+					personnelRepository.save(personnel);
 					break;
 				case DELETE:
 					personnelRepository.delete(personnel);
