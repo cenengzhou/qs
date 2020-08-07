@@ -18,18 +18,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gammon.pcms.application.PcmsPersistedAuditObject;
+import com.gammon.qs.domain.JobInfo;
+
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gammon.pcms.application.PcmsPersistedAuditObject;
-import com.gammon.qs.domain.JobInfo;
 
 
 /**
@@ -88,6 +88,7 @@ public class Personnel extends PcmsPersistedAuditObject implements Serializable 
 	private String userAd;
 	private String userAdPrevious;
 	private String userAdToBeApproved;
+	private String description;
 	private PersonnelMap personnelMap = new PersonnelMap();
 
 	public Personnel() {
@@ -186,6 +187,15 @@ public class Personnel extends PcmsPersistedAuditObject implements Serializable 
 
 	public void setUserAdToBeApproved(String userAdToBeApproved) {
 		this.userAdToBeApproved = userAdToBeApproved;
+	}
+
+	@Column(name="DESCRIPTION", length=255)
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@NotAudited

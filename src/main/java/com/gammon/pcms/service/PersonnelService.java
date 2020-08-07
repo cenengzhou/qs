@@ -123,7 +123,9 @@ public class PersonnelService {
 					}
 					break;
 				case UPDATE:
-					if(StringUtils.isNotBlank(personnel.getUserAdToBeApproved())) {
+					if(personnel.getPersonnelMap().getRequiredApproval().equals("N")){
+						personnelRepository.save(personnel);
+					} else if(StringUtils.isNotBlank(personnel.getUserAdToBeApproved())) {
 						personnel.setUserAdPrevious(personnel.getUserAd());
 						personnel.setUserAd(personnel.getUserAdToBeApproved());
 						personnel.setUserAdToBeApproved(null);

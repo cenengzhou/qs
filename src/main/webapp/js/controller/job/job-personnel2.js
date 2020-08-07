@@ -16,6 +16,7 @@ mainApp.controller('JobPersonnel2Ctrl', [
 			self.selectedItemChange = selectedItemChange;
 			self.searchTextChange = searchTextChange;
 			self.jobNo = $cookies.get("jobNo");
+			self.descriptionChanged = descriptionChanged;
 			
 			if (!Array.prototype.includes) {
 				  Object.defineProperty(Array.prototype, "includes", {
@@ -145,7 +146,8 @@ mainApp.controller('JobPersonnel2Ctrl', [
 						action: 'ADD',
 						personnelMap: $filter('filter')(self.AllMap, {id: item.TITLE})[0],
 						modified: 'ADD',
-						selectedItem: item.selectedItem
+						selectedItem: item.selectedItem,
+						description: item.description
 				}
 				if(person.personnelMap.requiredApproval=='Y') self.requiredApproval++;
 				self.modified++;
@@ -180,7 +182,7 @@ mainApp.controller('JobPersonnel2Ctrl', [
 					self.modified--;
 				}
 			}
-			
+
 			function saveList() {
 				var deferred = $q.defer();
 				var modifiedList = [];
@@ -276,6 +278,12 @@ mainApp.controller('JobPersonnel2Ctrl', [
 				}
 				if((person.personnelMap || {}).requiredApproval=='Y') self.requiredApproval++;
 				self.modified++;
+			}
+
+			function descriptionChanged(person){
+				self.modified++; 
+				person.action='UPDATE'; 
+				person.modified='UPDATE';
 			}
 
 			function selectedItemChange(item, person) {

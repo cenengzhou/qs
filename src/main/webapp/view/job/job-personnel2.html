@@ -123,7 +123,7 @@
   			(	m.mode=='W' && ['NONE'].indexOf(person.action) < 0 && ['ISAPPROVER'].indexOf(person.modified) < 0)
   		)
   	}" >
-    <div class="p-card-title" style="font-size: 12px;padding:5px" 
+    <div class="p-card-title" style="font-size: 12px;padding:5px;" 
     ng-if="person.personnelMap.title != person.personnelMap.userGroup"
     >{{person.personnelMap.title}}</div>
   	<span ng-if="m[0].requiredApproval == 'Y' && person.action!='NONE'">
@@ -149,7 +149,21 @@
   		<span>{{person.currentUser.fullName}}</span><br>
   		{{person.currentUser ? (person.isApprover=='Y' ? 'Approver' : 'Not Approver') : ''}}<br>
   		<md-button ng-click="m.mode='W'"><i class="fa fa-2x fa-edit" style="color:lightgray"></i></md-button>
-  	</span>
+    </span>
+    <style>
+      ::placeholder {
+        color: #ddd;
+      }
+    </style>
+    <span ng-if="person.personnelMap.title=='Budget Owner'">
+      <textarea 
+        ng-model="person.description" 
+        ng-change="ctrl.descriptionChanged(person)"
+        rows="3" 
+        style="resize: none; padding:3px; border: 1px solid #eee" 
+        placeholder="description"
+      ></textarea>
+    </span>
   </div>
 </script>
 
@@ -173,6 +187,10 @@
   	</md-switch>
 
   	<span ng-include src="'user-template'"></span>
+
+    <span ng-if="m[0].title=='Budget Owner'">
+      <textarea ng-model="person.description" rows="3" style="resize: none; padding:3px; border: 1px solid #eee; width:100%" placeholder="description"></textarea>
+    </span>
 
   	<div layout="row" style="display:table-row">
   		<div layout="column">
