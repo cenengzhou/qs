@@ -112,7 +112,7 @@
 <script type="text/ng-template" id="job-person-template">
   <div class="p-card" md-whiteframe="4"
   	ng-class="{
-  		'modified': ctrl.modified && [null, 'NONE', 'LOAD', 'TEMP'].indexOf(person.modified) < 0,
+  		'modified': ctrl.personModified(person) && ctrl.modified && [null, 'NONE', 'LOAD', 'TEMP'].indexOf(person.modified) < 0,
   		'requiredApproval': (
   			(
   				person.userAdToBeApproved != null &&

@@ -17,7 +17,8 @@ mainApp.controller('JobPersonnel2Ctrl', [
 			self.searchTextChange = searchTextChange;
 			self.jobNo = $cookies.get("jobNo");
 			self.descriptionChanged = descriptionChanged;
-			
+			self.personModified = personModified;
+
 			if (!Array.prototype.includes) {
 				  Object.defineProperty(Array.prototype, "includes", {
 				    enumerable: false,
@@ -183,12 +184,18 @@ mainApp.controller('JobPersonnel2Ctrl', [
 				}
 			}
 
+			function personModified(person) {
+				return person.action == 'DELETE' || person.selectedItem != null;
+			}
+
 			function saveList() {
 				var deferred = $q.defer();
 				var modifiedList = [];
 				self.site.forEach(function(c) {
 					var mc = c.filter(function(p){		
-						return (['ADD', 'DELETE', 'UPDATE'].indexOf(p.action) > -1 && p.modified) || p.modified == 'ISAPPROVER';
+						return self.personModified(p) &&
+						(['ADD', 'DELETE', 'UPDATE'].indexOf(p.action) > -1 && p.modified) || 
+						p.modified == 'ISAPPROVER';
 					});
 					modifiedList = modifiedList.concat(mc);
 				});
@@ -270,20 +277,26 @@ mainApp.controller('JobPersonnel2Ctrl', [
 				}, 300);
 			}
 			
-			function searchTextChange(text, person) {
-				person.user = null;
-				if(!text) {
-					person.action = 'DELETE';
-					person.modified = 'DELETE';
-				}
+			function increaseModified(person){	
 				if((person.personnelMap || {}).requiredApproval=='Y') self.requiredApproval++;
 				self.modified++;
 			}
 
+			function searchTextChange(text, person) {
+				person.user = null;
+				if(!text) {
+					person.action = 'DELETE';
+					person.modified = 'DELETE';					
+					increaseModified(person);
+				}
+			}
+
 			function descriptionChanged(person){
-				self.modified++; 
-				person.action='UPDATE'; 
-				person.modified='UPDATE';
+				if(person.selectedItem != null) {
+					self.modified++; 
+					person.action='UPDATE'; 
+					person.modified='UPDATE';
+				}
 			}
 
 			function selectedItemChange(item, person) {
@@ -297,6 +310,8 @@ mainApp.controller('JobPersonnel2Ctrl', [
 						person.modified = 'ADD';
 					}
 				}
+				
+				increaseModified(person);
 				person.user = item;
 			}
 			
