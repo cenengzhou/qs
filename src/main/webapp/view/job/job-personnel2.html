@@ -3,7 +3,7 @@
     <div class="row">
       <div
         style="border-radius: 15px; padding: 0px; padding-bottom: 20px"
-        ng-repeat="m in ctrl.personnelMapList | orderBy: 'requiredApproval':false"
+        ng-repeat="m in ctrl.personnelMapList | orderBy: 'requiredApproval' : false"
         ng-class="{'panel-danger' : m[0].requiredApproval == 'Y' && m.mode == 'W', 'panel-warning' : m[0].requiredApproval != 'Y' || m.mode == 'R' }"
         class="col-md-12 panel"
       >
@@ -112,7 +112,7 @@
 <script type="text/ng-template" id="job-person-template">
   <div class="p-card" md-whiteframe="4"
   	ng-class="{
-  		'modified': ctrl.modified && [null, 'NONE', 'LOAD', 'TEMP'].indexOf(person.modified) < 0,
+  		'modified': ctrl.personModified(person) && ctrl.modified && [null, 'NONE', 'LOAD', 'TEMP'].indexOf(person.modified) < 0,
   		'requiredApproval': (
   			(
   				person.userAdToBeApproved != null &&
@@ -123,7 +123,9 @@
   			(	m.mode=='W' && ['NONE'].indexOf(person.action) < 0 && ['ISAPPROVER'].indexOf(person.modified) < 0)
   		)
   	}" >
-  	<div class="p-card-title" style="font-size: 12px;padding:5px">{{person.personnelMap.title}}</div>
+    <div class="p-card-title" style="font-size: 12px;padding:5px;" 
+    ng-if="person.personnelMap.title != person.personnelMap.userGroup"
+    >{{person.personnelMap.title}}</div>
   	<span ng-if="m[0].requiredApproval == 'Y' && person.action!='NONE'">
   	<small ng-if="m.mode=='W'"><span style="color:red">*</span>Not yet approved</small>
   	</span><br>
@@ -147,30 +149,48 @@
   		<span>{{person.currentUser.fullName}}</span><br>
   		{{person.currentUser ? (person.isApprover=='Y' ? 'Approver' : 'Not Approver') : ''}}<br>
   		<md-button ng-click="m.mode='W'"><i class="fa fa-2x fa-edit" style="color:lightgray"></i></md-button>
-  	</span>
+    </span>
+    <style>
+      ::placeholder {
+        color: #ddd;
+      }
+    </style>
+    <span ng-if="person.personnelMap.title=='Budget Owner'">
+      <textarea 
+        ng-model="person.description" 
+        ng-change="ctrl.descriptionChanged(person)"
+        rows="3" 
+        style="resize: none; padding:3px; border: 1px solid #eee" 
+        placeholder="description"
+      ></textarea>
+    </span>
   </div>
 </script>
 
 <script type="text/ng-template" id="add-personnel-template">
   <div class="col-md-2 add-button"
-  	ng-click="person = {};m.showForm = true"
+  	ng-click="m.showForm = true;"
   	ng-if="!m.showForm">
   	<i class="fa fa-plus"></i>
   </div>
   <div class="p-card col-md-2" ng-if="m.showForm" style="display:table">
   	<md-input-container style="display:table-row">
   		<label style="text-align:left">Title</label>
-  		<md-select style="align:left" ng-model="person.TITLE">
+  		<md-select style="align:left" ng-model="person.TITLE" ng-init="person.TITLE=m.length==1?m[0].id:'None'">
   			<md-option><em>None</em></md-option>
   			<md-option ng-repeat="g in m" ng-value="g.id">{{g.title}}</md-option>
   		</md-select>
-  	</md-input-container>
-
-  	<md-switch ng-init="person.ISAPPROVER= m[0].requiredApproval" ng-model="person.ISAPPROVER" aria-label="Is Approver" ng-true-value="'Y'" ng-false-value="'N'" class="md-warn">
+    </md-input-container>
+    
+  	<md-switch ng-if="m[0].requiredApproval == 'Y'" ng-init="person.ISAPPROVER= m[0].requiredApproval" ng-model="person.ISAPPROVER" aria-label="Is Approver" ng-true-value="'Y'" ng-false-value="'N'" class="md-warn">
       	{{person.ISAPPROVER == 'Y' ? 'Approver' : 'Not Approver'}}
   	</md-switch>
 
   	<span ng-include src="'user-template'"></span>
+
+    <span ng-if="m[0].title=='Budget Owner'">
+      <textarea ng-model="person.description" rows="3" style="resize: none; padding:3px; border: 1px solid #eee; width:100%" placeholder="description"></textarea>
+    </span>
 
   	<div layout="row" style="display:table-row">
   		<div layout="column">

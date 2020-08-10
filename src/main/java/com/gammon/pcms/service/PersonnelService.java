@@ -3,20 +3,12 @@ package com.gammon.pcms.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.Collectors;
 
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.PersonnelMapRepository;
@@ -30,6 +22,16 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.JobInfoService;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
@@ -125,9 +127,9 @@ public class PersonnelService {
 						personnel.setUserAdPrevious(personnel.getUserAd());
 						personnel.setUserAd(personnel.getUserAdToBeApproved());
 						personnel.setUserAdToBeApproved(null);
-						personnel.actionNone();
-						personnelRepository.save(personnel);
 					}
+					personnel.actionNone();
+					personnelRepository.save(personnel);
 					break;
 				case DELETE:
 					personnelRepository.delete(personnel);
@@ -280,10 +282,14 @@ public class PersonnelService {
 //		personnelMapList.forEach(personnelMap -> {
 //			Hibernate.initialize(personnelMap.getPersonnels());
 //		});
-		return personnelMapList;
+		return personnelMapList.stream().sorted(
+			Comparator.comparing(PersonnelMap::getRequiredApproval).reversed()
+			.thenComparing(PersonnelMap::getUserGroup)
+			.thenComparing(PersonnelMap::getUserSequence)
+		)
+		.collect(Collectors.toList());
 	}
 	
-
 	private void inactiveList(List<Personnel> personnelList) {
 		personnelList.forEach(personnel -> {
 			inactive(personnel);

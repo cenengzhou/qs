@@ -415,13 +415,13 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	
 	function setEnv(){
 		var env = [];
-		env['DEV'] = ['localhost', 'erpwls11', 'gambpm11', 'gamerp11:7207'];
-		env['UAT'] = ['erpwls12', 'gambpm12', 'gamerp11:7208'];
+		env['DEV'] = ['localhost', 'erpwls11', 'gambpm11', 'gamerp11:7207', 'dev'];
+		env['UAT'] = ['erpwls12', 'gambpm12', 'gamerp11:7208', 'uat'];
 		env['PRO'] = ['erpwls01', 'erpwls02'];
 		$rootScope.env = 'PRO';
 		for(var key in env){
 			env[key].forEach(function(e){
-				if($window.location.host.indexOf(e) >= 0){
+				if($window.location.host.indexOf(e) >= 0 || $window.location.toString().toUpperCase().indexOf(key) >= 0){
 					$rootScope.env = key;
 					//console.log('Env:'+e + ' ' + $rootScope.env);
 				}
