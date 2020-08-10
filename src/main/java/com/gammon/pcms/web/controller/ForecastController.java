@@ -3,20 +3,14 @@ package com.gammon.pcms.web.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.model.Forecast;
-import com.gammon.pcms.model.VariationKpi;
+
 import com.gammon.pcms.service.ForecastService;
 import com.gammon.pcms.wrapper.ForecastGroupWrapper;
 import com.gammon.pcms.wrapper.ForecastListWrapper;
@@ -29,12 +23,6 @@ public class ForecastController {
 	@Autowired
 	private ForecastService service;
 
-	@RequestMapping(value = "{jobNo}", method = RequestMethod.GET)
-	public List<Forecast> get(@PathVariable String jobNo) {
-		return service.findByJobNo(jobNo);
-	}
-	
-	
 	
 	@RequestMapping(value = "getByTypeDesc/{jobNo}/{year}/{month}/{type}/{desc}", method = RequestMethod.GET)
 	public ForecastWrapper getByTypeDesc(@PathVariable String jobNo, @PathVariable int year, @PathVariable int month, @PathVariable String type, @PathVariable String desc) {
@@ -47,9 +35,14 @@ public class ForecastController {
 	}
 	
 	
-	@RequestMapping(value = "getCriticalProgrammeRFList/{jobNo}/{year}/{month}", method = RequestMethod.GET)
-	public ForecastGroupWrapper getCriticalProgrammeRFList(@PathVariable String jobNo, @PathVariable int year, @PathVariable int month) {
-		return service.getCriticalProgrammeRFList(jobNo, year, month);
+	@RequestMapping(value = "getLatestCriticalProgramList/{jobNo}", method = RequestMethod.GET)
+	public List<Forecast> getLatestCriticalProgramList(@PathVariable String jobNo) {
+		return service.getLatestCriticalProgramList(jobNo);
+	}
+	
+	@RequestMapping(value = "getCriticalProgramRFList/{jobNo}/{year}/{month}", method = RequestMethod.GET)
+	public ForecastGroupWrapper getCriticalProgramRFList(@PathVariable String jobNo, @PathVariable int year, @PathVariable int month) {
+		return service.getCriticalProgramRFList(jobNo, year, month);
 	}
 	
 	@RequestMapping(value = "{jobNo}", method = RequestMethod.POST)
@@ -70,6 +63,12 @@ public class ForecastController {
 	@RequestMapping(value = "addCriticalProgram/{jobNo}", method = RequestMethod.POST)
 	public String addCriticalProgram(@PathVariable String jobNo, @RequestBody Forecast forecast) {
 		return service.addCriticalProgram(jobNo, forecast);
+	}
+	
+	
+	@RequestMapping(value = "updateCriticalProgramDesc", method = RequestMethod.POST)
+	public String updateCriticalProgramDesc(@RequestBody Forecast program) {
+		return service.updateCriticalProgramDesc(program);
 	}
 	
 	@RequestMapping(value = "{jobNo}/{ids}", method = RequestMethod.DELETE)

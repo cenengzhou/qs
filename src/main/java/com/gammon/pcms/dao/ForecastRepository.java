@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -11,24 +12,30 @@ import com.gammon.pcms.model.Forecast;
 
 public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 
-	List<Forecast> findByNoJob(String noJob);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"function('to_number', v.year) = :year "
-			+"order by v.year, v.month"
+	@Query("select f from Forecast f where "
+			+"f.id = :id "
+	)
+	Forecast getByID(
+			@Param("id") Long id
+	);
+	
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"function('to_number', f.year) = :year "
+			+"order by f.year, f.month"
 	)
 	List<Forecast> getByYear(
 			@Param("noJob") String noJob,
 			@Param("year") int year
 	);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"v.forecastFlag = :forecastFlag and "
-			+"function('to_number', v.year) = :year and "
-			+"function('to_number', v.month) = :month "
-			+"order by v.year, v.month"
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"f.forecastFlag = :forecastFlag and "
+			+"function('to_number', f.year) = :year and "
+			+"function('to_number', f.month) = :month "
+			+"order by f.year, f.month"
 	)
 	List<Forecast> getByPeriod(
 			@Param("noJob") String noJob,
@@ -37,14 +44,14 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("forecastFlag") String forecastFlag
 	);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"function('to_number', v.year) = :year and "
-			+"function('to_number', v.month) = :month and "
-			+"v.forecastFlag = :forecastFlag and "
-			+"v.forecastType = :forecastType and "
-			+"v.forecastDesc = :forecastDesc "
-			+"order by v.year, v.month"
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"function('to_number', f.year) = :year and "
+			+"function('to_number', f.month) = :month and "
+			+"f.forecastFlag = :forecastFlag and "
+			+"f.forecastType = :forecastType and "
+			+"f.forecastDesc = :forecastDesc "
+			+"order by f.year, f.month"
 	)
 	Forecast getByTypeDesc(
 			@Param("noJob") String noJob,
@@ -57,13 +64,13 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 	
 	
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"v.forecastFlag = :forecastFlag and "
-			+"v.forecastType = :forecastType and "
-			+"v.forecastDesc = :forecastDesc and "
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"f.forecastFlag = :forecastFlag and "
+			+"f.forecastType = :forecastType and "
+			+"f.forecastDesc = :forecastDesc and "
 			+"ROWNUM <= 1 "
-			+"order by v.year desc, v.month desc"
+			+"order by f.year desc, f.month desc"
 	)
 	
 	Forecast getLatestForecast(
@@ -73,12 +80,12 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("forecastDesc") String forecastDesc
 	);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"v.forecastFlag = :forecastFlag and "
-			+"v.forecastType = :forecastType and "
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"f.forecastFlag = :forecastFlag and "
+			+"f.forecastType = :forecastType and "
 			+"ROWNUM <= 1 "
-			+"order by v.year desc, v.month desc"
+			+"order by f.year desc, f.month desc"
 	)
 	
 	Forecast getLatestProgramPeriod(
@@ -87,11 +94,11 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("forecastType") String forecastType
 	);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"v.forecastFlag = :forecastFlag and "
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"f.forecastFlag = :forecastFlag and "
 			+"ROWNUM <= 1 "
-			+"order by v.year desc, v.month desc"
+			+"order by f.year desc, f.month desc"
 	)
 	
 	Forecast getLatestForecastPeriod(
@@ -99,16 +106,16 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("forecastFlag") String forecastFlag
 	);
 	
-	@Query("select v from Forecast v where "
-			+"v.noJob = :noJob and "
-			+"function('to_number', v.year) = :year and "
-			+"function('to_number', v.month) = :month and "
-			+"v.forecastFlag = :forecastFlag and "
-			+"v.forecastType = :forecastType "
-			+"order by v.year, v.month"
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"function('to_number', f.year) = :year and "
+			+"function('to_number', f.month) = :month and "
+			+"f.forecastFlag = :forecastFlag and "
+			+"f.forecastType = :forecastType "
+			+"order by f.year, f.month"
 	)
 	
-	List<Forecast> getCriticalProgrammeList(
+	List<Forecast> getCriticalProgramList(
 			@Param("noJob") String noJob,
 			@Param("year") int year,
 			@Param("month") int month,
@@ -116,5 +123,13 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("forecastType") String forecastType
 	);
 	
+	
+	@Modifying
+	@Query("update Forecast f set f.forecastDesc = :newForecastDesc where f.noJob = :noJob and f.forecastDesc = :oldForecastDesc")
+	void updateCriticalProgramDesc(
+			@Param("noJob") String noJob,
+			@Param("oldForecastDesc") String oldForecastDesc, 
+			@Param("newForecastDesc") String newForecastDesc
+	);
 	
 }

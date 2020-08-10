@@ -4,14 +4,49 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 	
 	$scope.jobNo = $cookies.get("jobNo");
 
+	getLatestCriticalProgramList();
 	
-	$scope.update = function(){
-		if (false === $('form[name="form-validate"]').parsley().validate()) {
-            event.preventDefault();
+	function getLatestCriticalProgramList(){
+		forecastService.getLatestCriticalProgramList ($scope.jobNo)
+		.then(
+				function( data ) {
+					//console.log(data);
+					$scope.cpList = data;
+				});
+		
+		
+	}
+	
+	$scope.update = function (program){
+		if (program.forecastDesc == undefined) {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input description.");
             return;
         }
 		
-		//console.log($scope.forecast);
+		
+		forecastService.updateCriticalProgramDesc (program)
+		.then(
+				function( result ) {
+					
+					if(result.data != "")
+					{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', result.data);
+					}
+					else
+					{
+						$scope.cancel();
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
+						$state.reload();	
+					}
+				});
+	}
+	
+	$scope.add = function(){
+		if ($scope.forecast.forecastDesc == undefined) {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input description.");
+            return;
+        }
+		
 		forecastService.addCriticalProgram ($scope.jobNo, $scope.forecast)
 		.then(
 				function( result ) {
@@ -30,17 +65,7 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 		
 	}
 	
-	$scope.$watch('monthYear', function(newValue, oldValue) {
-		if(oldValue != newValue){
-			if( newValue != undefined){
-				var period = $scope.monthYear.split("-");
-				$scope.year = period[0];
-				$scope.month = period[1];
-			}
-			
-		}
-
-	}, true);
+	
 
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");

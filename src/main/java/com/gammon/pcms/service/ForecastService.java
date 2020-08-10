@@ -1,6 +1,7 @@
 package com.gammon.pcms.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -36,10 +37,6 @@ public class ForecastService {
 	private JDEForecastRepository jdeForecasRepository;
 	
 	
-	public List<Forecast> findByJobNo(String jobNo) {
-		return repository.findByNoJob(jobNo);
-	}
-	
 	
 	public ForecastWrapper getByTypeDesc(String jobNo, int year, int month, String type, String desc) {
 		ForecastWrapper wrapper  = new ForecastWrapper();
@@ -49,10 +46,8 @@ public class ForecastService {
 			
 			if(type.equals(Forecast.ACTUAL)){
 				List<JDEForecast> forecastList = new ArrayList<JDEForecast>();
-				if(desc.equals(Forecast.INTERNAL_VALUE))
-					forecastList = jdeForecasRepository.getJDEForecast(jobNo, year, month, Forecast.TURNOVER);
-				else
-					forecastList = jdeForecasRepository.getJDEForecast(jobNo, year, month, desc);//Cost
+				
+				forecastList = jdeForecasRepository.getJDEForecast(jobNo, year, month, desc);
 				
 				for(JDEForecast forecast: forecastList){
 					if(JDEForecast.AA.equals(forecast.getAccLedgerType())){
@@ -100,8 +95,11 @@ public class ForecastService {
 			
 			if(year == 0 && month ==0){
 				Forecast latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
-				year = latestForecast.getYear();
-				month = latestForecast.getMonth();
+				
+				if(latestForecast != null){
+					year = latestForecast.getYear();
+					month = latestForecast.getMonth();
+				}
 			}
 				
 			List<Forecast> forecastList = repository.getByPeriod(jobNo, year, month, Forecast.FORECAST);
@@ -137,7 +135,7 @@ public class ForecastService {
 				Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 				
 				if(latestProgram != null){
-					forecastList = repository.getCriticalProgrammeList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+					forecastList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 					
 					for(Forecast forecast: forecastList){
 						
@@ -164,57 +162,100 @@ public class ForecastService {
 		return wrapper;
 	}
 	
+	public List<Forecast> getLatestCriticalProgramList(String jobNo) {
+		
+		List<Forecast> programList = new ArrayList<Forecast>();
+		try {
+			Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			if(latestProgram != null)
+				programList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return programList;
+	}
 	
-	
-	public ForecastGroupWrapper getCriticalProgrammeRFList(String jobNo, int year, int month) {
+	public ForecastGroupWrapper getCriticalProgramRFList(String jobNo, int year, int month) {
 		ForecastGroupWrapper wrapper = new ForecastGroupWrapper();
 		try {
 			
-			List<ForecastWrapper> programmeList = new ArrayList<ForecastWrapper>();
+			List<ForecastWrapper> programmeWrapperList = new ArrayList<ForecastWrapper>();
 			
-			List<Forecast> forecastList = repository.getCriticalProgrammeList(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
-			if(forecastList == null || forecastList.size() == 0){
-				Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
-				
-				if(latestProgram != null){
-					forecastList = repository.getCriticalProgrammeList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			List<Forecast> programList = repository.getCriticalProgramList(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			
+			List<Forecast> latestProgramList = new ArrayList<Forecast>();
+			if(latestProgram != null)
+				latestProgramList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			
+			if(programList == null || programList.size() == 0){
+				for(Forecast program: latestProgramList){
+					ForecastWrapper programWrapper = new ForecastWrapper();
+					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					
-					for(Forecast forecast: forecastList){
-						ForecastWrapper programme = new ForecastWrapper();
-						Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, forecast.getForecastDesc());
-						Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, forecast.getForecastDesc());
-						
-						Forecast cpForecast = new Forecast();
-						cpForecast.setNoJob(jobNo);
-						cpForecast.setYear(year);
-						cpForecast.setMonth(month);
-						cpForecast.setForecastFlag(Forecast.ROLLING_FORECAST);
-						cpForecast.setForecastType(Forecast.CRITICAL_PROGRAMME);
-						cpForecast.setForecastDesc(forecast.getForecastDesc());
-						
-						programme.setForecast(cpForecast);
-						programme.setPreForecast(preForecast);
-						programme.setFirstForecast(firstForecast);
-						
-						programmeList.add(programme);
-					}
+					Forecast cpForecast = new Forecast();
+					cpForecast.setNoJob(jobNo);
+					cpForecast.setYear(year);
+					cpForecast.setMonth(month);
+					cpForecast.setForecastFlag(Forecast.ROLLING_FORECAST);
+					cpForecast.setForecastType(Forecast.CRITICAL_PROGRAMME);
+					cpForecast.setForecastDesc(program.getForecastDesc());
+					
+					programWrapper.setForecast(cpForecast);
+					programWrapper.setPreForecast(preForecast);
+					programWrapper.setFirstForecast(firstForecast);
+					
+					programmeWrapperList.add(programWrapper);
 				}
 			}
 			else{
-				for(Forecast forecast: forecastList){
-					ForecastWrapper programme = new ForecastWrapper();
+				
+				List<String> programNames = new ArrayList<String>();
+				
+				for(Forecast currentProgram: programList){
+					programNames.add(currentProgram.getForecastDesc());
 					
-					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, forecast.getForecastDesc());
-					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, forecast.getForecastDesc());
+					ForecastWrapper programWrapper = new ForecastWrapper();
 					
-					programme.setForecast(forecast);
-					programme.setPreForecast(preForecast);
-					programme.setFirstForecast(firstForecast);
+					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
+					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
 					
-					programmeList.add(programme);
+					programWrapper.setForecast(currentProgram);
+					programWrapper.setPreForecast(preForecast);
+					programWrapper.setFirstForecast(firstForecast);
+					
+					programmeWrapperList.add(programWrapper);
 				}
+				
+				//Group with latest Program forecast 
+				for(Forecast program: latestProgramList){
+					if(programNames.contains(program.getForecastDesc()))
+						continue;
+					
+					ForecastWrapper programWrapper = new ForecastWrapper();
+					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					
+					Forecast cpForecast = new Forecast();
+					cpForecast.setNoJob(jobNo);
+					cpForecast.setYear(year);
+					cpForecast.setMonth(month);
+					cpForecast.setForecastFlag(Forecast.ROLLING_FORECAST);
+					cpForecast.setForecastType(Forecast.CRITICAL_PROGRAMME);
+					cpForecast.setForecastDesc(program.getForecastDesc());
+					
+					programWrapper.setForecast(cpForecast);
+					programWrapper.setPreForecast(preForecast);
+					programWrapper.setFirstForecast(firstForecast);
+					
+					programmeWrapperList.add(programWrapper);
+				}
+				
 			}
-			wrapper.setCriticalProgrammeList(programmeList);
+			wrapper.setCriticalProgrammeList(programmeWrapperList);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -223,6 +264,71 @@ public class ForecastService {
 		return wrapper;
 	}
 	
+	public String addCriticalProgram(String jobNo, Forecast forecast) {
+		String result= "";
+		
+		try {
+			Forecast latestRF = repository.getLatestForecastPeriod(jobNo, Forecast.ROLLING_FORECAST);
+			//Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			
+			if(latestRF != null){
+				Forecast programInDb = repository.getByTypeDesc(jobNo, latestRF.getYear(), latestRF.getMonth(), Forecast.ROLLING_FORECAST, forecast.getForecastType(), forecast.getForecastDesc());
+			
+				if(programInDb !=null)
+					return "Critical Programme: "+forecast.getForecastDesc() +" already exists.";
+				else{
+					forecast.setYear(latestRF.getYear());
+					forecast.setMonth(latestRF.getMonth());
+					repository.save(forecast);
+				}
+			}else{
+				return "Pleae input at least one Rolling Forecast before adding Critical Program.";
+			}
+			
+			//add program to the latest forecast
+			Forecast latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
+			if(latestForecast != null){
+				Forecast forecastInDb = repository.getByTypeDesc(jobNo, latestForecast.getYear(), latestForecast.getMonth(), Forecast.FORECAST, forecast.getForecastType(), forecast.getForecastDesc());
+				
+				if(forecastInDb == null){
+					Forecast newForecast = new Forecast();
+					newForecast.setNoJob(forecast.getNoJob());
+					newForecast.setForecastType(forecast.getForecastType());
+					newForecast.setForecastDesc(forecast.getForecastDesc());
+					newForecast.setForecastFlag(Forecast.FORECAST);
+					newForecast.setYear(latestForecast.getYear());
+					newForecast.setMonth(latestForecast.getMonth());
+					repository.save(newForecast);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	
+	public String updateCriticalProgramDesc(Forecast program) {
+		String result = "";
+
+		try {
+			Forecast programInDB = repository.getByID(program.getId());
+			if(programInDB != null && !programInDB.getForecastDesc().equals(program.getForecastDesc())){
+				repository.updateCriticalProgramDesc(program.getNoJob(), programInDB.getForecastDesc(), program.getForecastDesc());
+				
+				
+			}else{
+				result = "No record has been changed.";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
 	public List<Forecast> saveList(String jobNo, List<Forecast> forecastList) {
 		return repository.save(forecastList);
 	}
@@ -280,40 +386,6 @@ public class ForecastService {
 		return update;
 	}
 	
-	public String addCriticalProgram(String jobNo, Forecast forecast) {
-		String result= "";
-		
-		try {
-			
-			//add rolling forecast
-			Forecast rollingForecastInDb = repository.getByTypeDesc(jobNo, forecast.getYear(), forecast.getMonth(), Forecast.ROLLING_FORECAST, forecast.getForecastType(), forecast.getForecastDesc());
-			if(rollingForecastInDb !=null)
-				return "Critical Programme: "+forecast.getForecastDesc() +" already exists.";
-			else
-				repository.save(forecast);
-			
-			
-			//add program to the latest forecast
-			Forecast latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
-			Forecast forecastInDb = repository.getByTypeDesc(jobNo, latestForecast.getYear(), latestForecast.getMonth(), Forecast.FORECAST, forecast.getForecastType(), forecast.getForecastDesc());
-			
-			if(forecastInDb == null){
-				Forecast newForecast = new Forecast();
-				newForecast.setNoJob(forecast.getNoJob());
-				newForecast.setForecastType(forecast.getForecastType());
-				newForecast.setForecastDesc(forecast.getForecastDesc());
-				newForecast.setForecastFlag(Forecast.FORECAST);
-				newForecast.setYear(latestForecast.getYear());
-				newForecast.setMonth(latestForecast.getMonth());
-				repository.save(newForecast);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
 	
 	
 	

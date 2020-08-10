@@ -3,8 +3,10 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
     return({
     	getByTypeDesc:		getByTypeDesc,
     	getForecastByJobNo: getForecastByJobNo,
-    	getCriticalProgrammeRFList: getCriticalProgrammeRFList,
+    	getLatestCriticalProgramList: getLatestCriticalProgramList,
+    	getCriticalProgramRFList: getCriticalProgramRFList,
     	addCriticalProgram: addCriticalProgram,
+    	updateCriticalProgramDesc: updateCriticalProgramDesc,
     	saveByJobNo: 	saveByJobNo,
     	saveForecastByJobNo: saveForecastByJobNo,
     	deleteByJobNo:	deleteByJobNo
@@ -37,10 +39,18 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
     }
     
     
-    function getCriticalProgrammeRFList(jobNo, year, month) {
+    function getLatestCriticalProgramList(jobNo) {
 		var request = $http({
 			method: "get",
-			url: "service/forecast/getCriticalProgrammeRFList/" + jobNo + "/" + year + "/" + month
+			url: "service/forecast/getLatestCriticalProgramList/" + jobNo
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getCriticalProgramRFList(jobNo, year, month) {
+		var request = $http({
+			method: "get",
+			url: "service/forecast/getCriticalProgramRFList/" + jobNo + "/" + year + "/" + month
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
@@ -74,6 +84,17 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
 		});
 		return request;
     }
+    
+    
+    function updateCriticalProgramDesc(program) {
+		var request = $http({
+			method: "post",
+			url: "service/forecast/updateCriticalProgramDesc",
+			data: program
+		});
+		return request;
+    }
+    
     
     function deleteByJobNo(jobNo, id) {
 		var request = $http({

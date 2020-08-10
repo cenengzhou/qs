@@ -12,8 +12,10 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 		.then(
 				function( data ) {
 					//console.log(data);
+					if(data != null && data.tenderRisk != null){
 						$scope.data = data;
 						$scope.monthYear = $scope.data.tenderRisk.year+'-'+$scope.data.tenderRisk.month;
+					}
 				});
 		
     	

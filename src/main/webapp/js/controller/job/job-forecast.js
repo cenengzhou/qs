@@ -40,13 +40,13 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
     			$scope.data.actualTurnover = data[9];
     			$scope.data.actualCost = data[10];
     			
-    			getCriticalProgrammeRFList(year, month);
+    			getCriticalProgramRFList(year, month);
     	});
     }
 	
 	
-	function getCriticalProgrammeRFList(year, month) {
-		forecastService.getCriticalProgrammeRFList ($scope.jobNo, year, month)
+	function getCriticalProgramRFList(year, month) {
+		forecastService.getCriticalProgramRFList ($scope.jobNo, year, month)
 		.then(
 				function( data ) {
 					$scope.data.criticalProgrammeList = data.criticalProgrammeList;
