@@ -70,10 +70,10 @@
 									{{data.actualTurnover.forecast.forecastDesc = GlobalParameter.forecast.InternalValuation}}</td>
 									<td class="text-center">{{data.actualTurnover.actualMTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualTurnover.forecastMTD.amount |currency:undefined:0}}</td>
-									<td class="text-center">{{data.actualTurnover.actualMTD.amount - data.actualTurnover.forecastMTD.amount |currency:undefined:0}}</td>
+									<td class="text-center">{{(data.actualTurnover.actualMTD.amount - data.actualTurnover.forecastMTD.amount) |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualTurnover.actualCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualTurnover.forecastCTD.amount |currency:undefined:0}}</td>
-									<td class="text-center">{{data.actualTurnover.actualCTD.amount - data.actualTurnover.forecastCTD.amount |currency:undefined:0}}</td>
+									<td class="text-center">{{(data.actualTurnover.actualCTD.amount - data.actualTurnover.forecastCTD.amount) |currency:undefined:0}}</td>
 									<td><textarea
 										class="form-control" ng-model="data.actualTurnover.forecast.explanation"
 										ng-if="editable"/>
@@ -84,10 +84,10 @@
 									{{data.actualCost.forecast.forecastDesc = GlobalParameter.forecast.Cost}}</td>
 									<td class="text-center">{{data.actualCost.actualMTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualCost.forecastMTD.amount |currency:undefined:0}}</td>
-									<td class="text-center">{{data.actualCost.actualMTD.amount - data.actualCost.forecastMTD.amount |currency:undefined:0}}</td>
+									<td class="text-center">{{(data.actualCost.actualMTD.amount - data.actualCost.forecastMTD.amount) |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualCost.actualCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualCost.forecastCTD.amount |currency:undefined:0}}</td>
-									<td class="text-center">{{data.actualCost.actualCTD.amount - data.actualCost.forecastCTD.amount |currency:undefined:0}}</td>
+									<td class="text-center">{{(data.actualCost.actualCTD.amount - data.actualCost.forecastCTD.amount) |currency:undefined:0}}</td>
 									<td><textarea
 										class="form-control" ng-model="data.actualCost.forecast.explanation"
 										ng-if="editable"/>
@@ -95,17 +95,17 @@
 								</tr>
 								<tr>
 									<td><b>Site Profit</b></td>
-									<td class="text-center"><b>{{data.actualTurnover.actualMTD.amount -
-											data.actualCost.actualMTD.amount | currency:undefined:0}} </b></td>
-									<td class="text-center"><b>{{data.actualTurnover.forecastMTD.amount
-											- data.actualCost.forecastMTD.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.actualTurnover.actualMTD.amount -
+											data.actualCost.actualMTD.amount) | currency:undefined:0}} </b></td>
+									<td class="text-center"><b>{{(data.actualTurnover.forecastMTD.amount
+											- data.actualCost.forecastMTD.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.actualTurnover.actualMTD.amount
 											- data.actualTurnover.forecastMTD.amount) - (data.actualCost.actualMTD.amount -
 											data.actualCost.forecastMTD.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.actualTurnover.actualCTD.amount -
-											data.actualCost.actualCTD.amount | currency:undefined:0}} </b></td>
-									<td class="text-center"><b>{{data.actualTurnover.forecastCTD.amount
-											- data.actualCost.forecastCTD.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.actualTurnover.actualCTD.amount -
+											data.actualCost.actualCTD.amount) | currency:undefined:0}} </b></td>
+									<td class="text-center"><b>{{(data.actualTurnover.forecastCTD.amount
+											- data.actualCost.forecastCTD.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.actualTurnover.actualCTD.amount
 											- data.actualTurnover.forecastCTD.amount) - (data.actualCost.actualCTD.amount -
 											data.actualCost.forecastCTD.amount) | currency:undefined:0}}</b></td>
@@ -145,7 +145,7 @@
 									
 									<td><div ng-hide="true">{{data.turnover.forecast.noJob = jobNo}} {{data.turnover.forecast.forecastFlag = 'RF'}}  {{data.turnover.forecast.forecastType = GlobalParameter.forecast.EoJ}} {{data.turnover.forecast.year = year}} {{data.turnover.forecast.month = month}}</div>
 									{{data.turnover.forecast.forecastDesc = GlobalParameter.forecast.Turnover}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.turnover.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.turnover.forecast.amount |
@@ -167,7 +167,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.cost.forecast.noJob = jobNo}} {{data.cost.forecast.forecastFlag = 'RF'}} {{data.cost.forecast.forecastType = GlobalParameter.forecast.EoJ}} {{data.cost.forecast.year = year}} {{data.cost.forecast.month = month}}</div>
 									{{data.cost.forecast.forecastDesc = GlobalParameter.forecast.Cost}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.cost.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.cost.forecast.amount |
@@ -187,15 +187,15 @@
 								</tr>
 								<tr>
 									<td><b>Site Profit</b></td>
-									<td class="text-center"><b>{{data.turnover.forecast.amount -
-											data.cost.forecast.amount | currency:undefined:0}} </b></td>
-									<td class="text-center"><b>{{data.turnover.preForecast.amount
-											- data.cost.preForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.turnover.forecast.amount -
+											data.cost.forecast.amount) | currency:undefined:0}} </b></td>
+									<td class="text-center"><b>{{(data.turnover.preForecast.amount
+											- data.cost.preForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.turnover.forecast.amount
 											- data.turnover.preForecast.amount) - (data.cost.forecast.amount -
 											data.cost.preForecast.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.turnover.jdeForecast.amount
-											- data.cost.jdeForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.turnover.jdeForecast.amount
+											- data.cost.jdeForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.turnover.forecast.amount
 											- data.turnover.jdeForecast.amount) - (data.cost.forecast.amount -
 											data.cost.jdeForecast.amount) | currency:undefined:0}}</b></td>
@@ -232,7 +232,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.tenderRisk.forecast.noJob = jobNo}} {{data.tenderRisk.forecast.forecastFlag = 'RF'}}  {{data.tenderRisk.forecast.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderRisk.forecast.year = year}} {{data.tenderRisk.forecast.month = month}}</div>
 									{{data.tenderRisk.forecast.forecastDesc = GlobalParameter.forecast.TenderRisks}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.tenderRisk.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.tenderRisk.forecast.amount |
@@ -253,7 +253,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.tenderOpps.forecast.noJob = jobNo}} {{data.tenderOpps.forecast.forecastFlag = 'RF'}}  {{data.tenderOpps.forecast.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderOpps.forecast.year = year}} {{data.tenderOpps.forecast.month = month}}</div>
 									{{data.tenderOpps.forecast.forecastDesc = GlobalParameter.forecast.TenderOpps}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.tenderOpps.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.tenderOpps.forecast.amount |
@@ -274,7 +274,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.others.forecast.noJob = jobNo}} {{data.others.forecast.forecastFlag = 'RF'}}  {{data.others.forecast.forecastType = GlobalParameter.forecast.Contingency}} {{data.others.forecast.year = year}} {{data.others.forecast.month = month}}</div>
 									{{data.others.forecast.forecastDesc = GlobalParameter.forecast.Others}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.others.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.others.forecast.amount |
@@ -294,20 +294,20 @@
 								</tr>
 								<tr>
 									<td><b>Total Contingency<b></td>
-									<td class="text-center"><b>{{data.tenderRisk.forecast.amount +
-										data.tenderOpps.forecast.amount + data.others.forecast.amount |
+									<td class="text-center"><b>{{(data.tenderRisk.forecast.amount +
+										data.tenderOpps.forecast.amount + data.others.forecast.amount) |
 										currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.tenderRisk.preForecast.amount
+									<td class="text-center"><b>{{(data.tenderRisk.preForecast.amount
 										+ data.tenderOpps.preForecast.amount +
-										data.others.preForecast.amount | currency:undefined:0}}</b></td>
+										data.others.preForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.tenderRisk.forecast.amount -
 										data.tenderRisk.preForecast.amount) +
 										(data.tenderOpps.forecast.amount -
 										data.tenderOpps.preForecast.amount) + (data.others.forecast.amount -
 										data.others.preForecast.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.tenderRisk.firstForecast.amount
+									<td class="text-center"><b>{{(data.tenderRisk.firstForecast.amount
 										+ data.tenderOpps.firstForecast.amount +
-										data.others.firstForecast.amount | currency:undefined:0}}</b></td>
+										data.others.firstForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.tenderRisk.forecast.amount -
 										data.tenderRisk.firstForecast.amount) +
 										(data.tenderOpps.forecast.amount -
@@ -345,7 +345,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.risk.forecast.noJob = jobNo}} {{data.risk.forecast.forecastFlag = 'RF'}}  {{data.risk.forecast.forecastType = GlobalParameter.forecast.Risks}} {{data.risk.forecast.year = year}} {{data.risk.forecast.month = month}}</div>
 									{{data.risk.forecast.forecastDesc = GlobalParameter.forecast.Risks}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.risk.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.risk.forecast.amount |
@@ -366,7 +366,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.opps.forecast.noJob = jobNo}} {{data.opps.forecast.forecastFlag = 'RF'}}  {{data.opps.forecast.forecastType = GlobalParameter.forecast.Risks}} {{data.opps.forecast.year = year}} {{data.opps.forecast.month = month}}</div>
 									{{data.opps.forecast.forecastDesc = GlobalParameter.forecast.Opps}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.opps.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.opps.forecast.amount |
@@ -386,15 +386,14 @@
 								</tr>
 								<tr>
 									<td><b>Nett R&O</b></td>
-									<td class="text-center"><b>{{data.risk.forecast.amount + data.opps.forecast.amount |
-										currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.risk.preForecast.amount +
-										data.opps.preForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.risk.forecast.amount + data.opps.forecast.amount) | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.risk.preForecast.amount +
+										data.opps.preForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.risk.forecast.amount -
 										data.risk.preForecast.amount) + (data.opps.forecast.amount -
 										data.opps.preForecast.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.risk.firstForecast.amount +
-										data.opps.firstForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.risk.firstForecast.amount +
+										data.opps.firstForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.risk.forecast.amount -
 										data.risk.firstForecast.amount) + (data.opps.forecast.amount -
 										data.opps.firstForecast.amount) | currency:undefined:0}}</b></td>
@@ -429,7 +428,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.unTurnover.forecast.noJob = jobNo}} {{data.unTurnover.forecast.forecastFlag = 'RF'}}  {{data.unTurnover.forecast.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unTurnover.forecast.year = year}} {{data.unTurnover.forecast.month = month}}</div>
 									{{data.unTurnover.forecast.forecastDesc = GlobalParameter.forecast.UnsecuredTurnover}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.unTurnover.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.unTurnover.forecast.amount |
@@ -450,7 +449,7 @@
 								<tr>
 									<td><div ng-hide="true">{{data.unCost.forecast.noJob = jobNo}} {{data.unCost.forecast.forecastFlag = 'RF'}}  {{data.unCost.forecast.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unCost.forecast.year = year}} {{data.unCost.forecast.month = month}}</div>
 									{{data.unCost.forecast.forecastDesc = GlobalParameter.forecast.UnsecuredCost}}</td>
-									<td class="text-center"><input type="text"
+									<td class="text-center"><input type="number"
 										class="form-control" ng-model="data.unCost.forecast.amount"
 										ng-if="editable"  />
 										<div ng-if="!editable">{{data.unCost.forecast.amount |
@@ -470,15 +469,15 @@
 								</tr>
 								<tr>
 									<td><b>Total Unsecured</b></td>
-									<td class="text-center"><b>{{data.unTurnover.forecast.amount -
-										data.unCost.forecast.amount | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.unTurnover.preForecast.amount
-										- data.unCost.preForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.unTurnover.forecast.amount -
+										data.unCost.forecast.amount) | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.unTurnover.preForecast.amount
+										- data.unCost.preForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.unTurnover.forecast.amount -
 										data.unTurnover.preForecast.amount) - (data.unCost.forecast.amount -
 										data.unCost.preForecast.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{data.unTurnover.firstForecast.amount
-										- data.unCost.firstForecast.amount | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.unTurnover.firstForecast.amount
+										- data.unCost.firstForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.unTurnover.forecast.amount -
 										data.unTurnover.firstForecast.amount) - (data.unCost.forecast.amount -
 										data.unCost.firstForecast.amount) | currency:undefined:0}}</b></td>
