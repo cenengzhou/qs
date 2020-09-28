@@ -1,7 +1,6 @@
 package com.gammon.pcms.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -37,6 +36,15 @@ public class ForecastService {
 	private JDEForecastRepository jdeForecasRepository;
 	
 	
+	public Forecast getLatestForecastPeriod(String jobNo){
+		Forecast latestForecast = new Forecast();
+		try {
+			latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return latestForecast;
+	}
 	
 	public ForecastWrapper getByTypeDesc(String jobNo, int year, int month, String type, String desc) {
 		ForecastWrapper wrapper  = new ForecastWrapper();

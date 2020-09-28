@@ -41,6 +41,7 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
     			$scope.data.actualCost = data[10];
     			
     			getCriticalProgramRFList(year, month);
+    			getLatestForecastPeriod();
     	});
     }
 	
@@ -54,6 +55,15 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
 				});
     	
     }
+	
+	function getLatestForecastPeriod(){
+		forecastService.getLatestForecastPeriod ($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.latestForecastPeriod = data;
+				});
+		
+	}
 	
 	$scope.dateDiff = function (date1, date2) {
 		var dateDiff = "";

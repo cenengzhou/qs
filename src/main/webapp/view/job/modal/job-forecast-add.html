@@ -202,7 +202,7 @@
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control" ng-model="cp.date" >
 									</div>
-									<div ng-if="!editable">{{cp.date}}</div>
+									<div ng-if="!editable">{{cp.date | date:'d-MMM-yyyy'}}</div>
 								</td>
 								
 							</tr>

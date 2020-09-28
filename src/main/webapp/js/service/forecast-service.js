@@ -1,6 +1,7 @@
 mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
+    	getLatestForecastPeriod: getLatestForecastPeriod,
     	getByTypeDesc:		getByTypeDesc,
     	getForecastByJobNo: getForecastByJobNo,
     	getLatestCriticalProgramList: getLatestCriticalProgramList,
@@ -12,7 +13,13 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
     	deleteByJobNo:	deleteByJobNo
     });
 	
-
+    function getLatestForecastPeriod(jobNo, year, month) {
+		var request = $http({
+			method: 'GET',
+    		url: "service/forecast/getLatestForecastPeriod/" + jobNo
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
    
   //Asyn Call
     function getByTypeDesc(jobNo, year, month, type, desc) {

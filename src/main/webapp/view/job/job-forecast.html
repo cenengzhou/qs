@@ -55,10 +55,10 @@
 								<tr class="inverse">
 									<th class="width-150 text-center">Month</th>
 									<th class="width-150 text-center">Monthly Actual ({{period}})</th>
-									<th class="width-150 text-center">Monthly Forecast</th>
+									<th class="width-150 text-center">Monthly Forecast {{data.actualTurnover.forecastMTD.year}} {{data.actualTurnover.forecastMTD.latestForecastLedger}}</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">CTD Actual</th>
-									<th class="width-150 text-center">CTD Forecast</th>
+									<th class="width-150 text-center">CTD Actual  </th>
+									<th class="width-150 text-center">CTD Forecast  {{data.actualTurnover.forecastCTD.year}} {{data.actualTurnover.forecastCTD.latestForecastLedger}}</th>
 									<th class="width-150 text-center">CTD Movement</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -134,7 +134,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast</th>
+									<th class="width-150 text-center">Latest Forecast {{data.turnover.jdeForecast.latestForecastLedger}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -222,7 +222,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast</th>
+									<th class="width-150 text-center">Latest Forecast {{latestForecastPeriod.year}}-{{latestForecastPeriod.month}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -335,7 +335,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast</th>
+									<th class="width-150 text-center">Latest Forecast {{latestForecastPeriod.year}}-{{latestForecastPeriod.month}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -418,7 +418,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast</th>
+									<th class="width-150 text-center">Latest Forecast {{latestForecastPeriod.year}}-{{latestForecastPeriod.month}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -502,7 +502,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast</th>
+									<th class="width-150 text-center">Latest Forecast  {{latestForecastPeriod.year}}-{{latestForecastPeriod.month}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -516,14 +516,14 @@
 										format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										 <input class="form-control" ng-model="cp.forecast.date" ng-if="editable">
 										</div>
-										<div ng-if="!editable">{{cp.forecast.date}}</div>
+										<div ng-if="!editable">{{cp.forecast.date | date:'d-MMM-yyyy'}}</div>
 									</td>
 									<td class="text-center">
-										{{cp.preForecast.date}}
+										{{cp.preForecast.date | date:'d-MMM-yyyy'}}
 									</td>
 									<td>{{dateDiff(cp.forecast.date, cp.preForecast.date)}} Days</td>
 									<td class="text-center">
-										 {{cp.firstForecast.date}}
+										 {{cp.firstForecast.date | date:'d-MMM-yyyy'}}
 									</td>
 									<td>{{dateDiff(cp.forecast.date, cp.firstForecast.date)}} Days</td>
 									<td>

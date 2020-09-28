@@ -158,6 +158,31 @@ public class GSFService {
 		return fnStatus;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public boolean isRoleExisted(String ctrl, String method, String... roleNameArray){
+		boolean containRole = false;
+		try{
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Collection<User.Role> userRoles = (Collection<User.Role>) auth.getAuthorities();
+			for(String roleName : roleNameArray){
+				for(GrantedAuthority role : userRoles){
+					if(role.getAuthority().equals("ROLE_" + roleName)) {
+						containRole = true;
+						break;
+					}
+				}
+				if(containRole) break;
+			}
+			if(!containRole){
+				logger.info("Require ROLE_" + Arrays.toString(roleNameArray) + " (" + ctrl + " - " + method + ")");
+			}
+		} catch (Exception e){
+			logger.info("Require ROLE_" + Arrays.toString(roleNameArray) + " (" + ctrl + " - " + method + ")");
+			//e.printStackTrace();
+		}
+		return containRole;
+	}
+	
 	public boolean obtainFnStatus(String fn, String roleName){
 		boolean fnStatus = false;
 		if(fn == null) throw new NullPointerException();
