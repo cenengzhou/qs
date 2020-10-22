@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.pcms.helper.FileHelper;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
@@ -265,7 +266,11 @@ public class TransitService implements Serializable {
 			//temp list to store the headers before you can fill bill/subBill/page, then move to headersList
 			List<TransitBpi> headersTempList = new ArrayList<TransitBpi>(); 
 			
+			logger.info(jobNumber + "Number of  rows for Transit import BQ: " + excelFileProcessor.getNumRow());
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
+				if(i % 100 == 0){
+					logger.info(jobNumber + " Transit import BQ @ row: " + i);
+				}
 				String[] row = excelFileProcessor.readLine(8);
 				if(row == null || isRowEmpty(row))
 					continue;
@@ -445,7 +450,15 @@ public class TransitService implements Serializable {
 	
 	public void unlockTransitHeader(String jobNumber) throws DatabaseOperationException {
 		Transit transit = transitHeaderDao.getTransitHeader(jobNumber);
-		transitHeaderDao.unlock(transit);
+		if(transit != null){
+			if(BasePersistedAuditObject.LOCKED.equals(transit.getSystemStatus())){
+				transitHeaderDao.unlock(transit);
+			} else {
+				logger.info("transit header is not LOCKED: " + jobNumber);
+			}
+		} else {
+			logger.info("transit header not found: " + jobNumber);
+		}
 	}
 	
 	public TransitImportResponse importResources(String jobNumber, byte[] file) throws Exception{
@@ -503,7 +516,12 @@ public class TransitService implements Serializable {
 			//skip the header line
 			excelFileProcessor.readLine(0);
 			resources = new ArrayList<TransitResource>(excelFileProcessor.getNumRow());
+			
+			logger.info(jobNumber + "Number of  rows for Transit import resources: " + excelFileProcessor.getNumRow());
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
+				if(i % 100 == 0){
+					logger.info(jobNumber + " Transit import resources @ row: " + i);
+				}
 				String[] row = excelFileProcessor.readLine(20);
 				if(row == null || isRowEmpty(row))
 					continue;

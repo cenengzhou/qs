@@ -186,4 +186,10 @@ public class TransitController {
 		}
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "unlockTransitAdmin", method = RequestMethod.POST)
+	public void unlockTransitAdmin(@RequestParam(required = true) String jobNumber) throws DatabaseOperationException {
+		transitService.unlockTransitHeader(jobNumber);
+	}
+
 }

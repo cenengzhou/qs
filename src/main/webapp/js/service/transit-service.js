@@ -15,7 +15,8 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     	completeTransit:					completeTransit,
     	saveTransitResources:				saveTransitResources,
     	saveTransitResourcesList:			saveTransitResourcesList,
-    	createOrUpdateTransitHeader: 		createOrUpdateTransitHeader
+			createOrUpdateTransitHeader: 		createOrUpdateTransitHeader,
+			unlockTransitAdmin:				unlockTransitAdmin
     });
    
   //Asyn Call
@@ -186,6 +187,17 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
+    function unlockTransitAdmin(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/unlockTransitAdmin',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
 }]);
 
 

@@ -1,0 +1,15 @@
+<div>
+	<div class="row well">
+		<form name="RevisionsTransit"
+			ng-submit="onUnlockTransit()" class="form">
+			<div class="col-md-6">
+				<input type="number" pattern=".{5,10}" class="form-control" placeholder="Job Number:"
+					id="UnlockTransit_jobNo" ng-model="jobNo">
+			</div>
+			<div class="col-md-6">
+				<button type="submit" class="btn btn-block btn-primary"
+					id="UnlockTransit_submit">Unlock</button>
+			</div>
+		</form>
+	</div>
+</div>
