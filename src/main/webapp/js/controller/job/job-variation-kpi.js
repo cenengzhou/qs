@@ -34,14 +34,14 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 	
 	$scope.items = [
 		{
-			type: 'Issued', 
+			type: 'Total', 
 			order: 1, 
-			description: 'Issued', 
+			description: 'Total', 
 			numberField: 'numberIssued',
 			amountField: 'amountIssued',
 			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
 			amountAlt: 'Value of Variations issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value',
-			alt: 'Variations issued by the Client / Client\'s Rep and Requests for Variations Issued by Gammon to the Client / Client\'s Rep (Budget to be included in "Amount" if pricing is not completed)'
+			alt: 'Total of all Variations inclusive of Requests for Variations (Budget to be included in “Amount” if pricing is not completed'
 		},
 		{
 			type: 'Submitted', 

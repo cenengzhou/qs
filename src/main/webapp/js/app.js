@@ -1597,11 +1597,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-SubcontractStandardTermsAddModal.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-SchedulerMaintenance.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-SystemInformation.js?@PROJECT_VERSION@',
-                           'js/controller/admin/admin-AnnouncementSetting.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-AnnouncementSetting.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-Transit.js?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Subcontract.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Addendum.html?@PROJECT_VERSION@',
-                           'view/admin/admin-Revisions-MainCert.html?@PROJECT_VERSION@'
+													 'view/admin/admin-Revisions-MainCert.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@'
                     ] 
                 });
             }]
@@ -1674,6 +1676,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/Attachment',
 		templateUrl: 'view/admin/admin-Revisions-Attachment.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsAttachmentCtrl'
+	})
+	.state('admin.Revisions.Transit', {
+		url: '/Transit',
+		templateUrl: 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsTransitCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',

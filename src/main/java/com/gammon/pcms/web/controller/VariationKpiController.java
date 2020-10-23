@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,31 +25,37 @@ public class VariationKpiController {
 	@Autowired
 	private VariationKpiService service;
 
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','get', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "{jobNo}", method = RequestMethod.GET)
 	public List<VariationKpi> get(@PathVariable String jobNo) {
 		return service.findByJobNo(jobNo);
 	}
 	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "{jobNo}", method = RequestMethod.POST)
 	public VariationKpi post(@PathVariable String jobNo, @RequestBody VariationKpi kpi) {
 		return service.save(jobNo, kpi);
 	}
 
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "saveList/{jobNo}", method = RequestMethod.POST)
 	public List<VariationKpi> post(@PathVariable String jobNo, @RequestBody List<VariationKpi> kpiList) {
 		return service.save(jobNo, kpiList);
 	}
 	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','delete', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "{jobNo}/{ids}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable String jobNo, @PathVariable Long[] ids) {
 		service.delete(jobNo, ids);
 	}
 	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','getByYear', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getByYear/{jobNo}/{year}", method = RequestMethod.GET)
 	public List<VariationKpi> getByYear(@PathVariable String jobNo, @PathVariable int year) {
 		return service.getByYear(jobNo, year);
 	}
 	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','getByPage', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "{page}/{size}", method = RequestMethod.GET)
 	public Page<VariationKpi> getByPage(
 			@PathVariable int page, 
