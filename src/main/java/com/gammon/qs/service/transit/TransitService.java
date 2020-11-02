@@ -14,7 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -119,7 +120,7 @@ public class TransitService implements Serializable {
 	
 	public static final int RECORDS_PER_PAGE = 200;
 	
-	private transient Logger logger = Logger.getLogger(TransitService.class.getName());
+	private transient Logger logger = LoggerFactory.getLogger(TransitService.class.getName());
 	
 	private BpiItem bqItemFromTransit(TransitBpi transitBq){
 		BpiItem bqItem = new BpiItem();
@@ -219,6 +220,13 @@ public class TransitService implements Serializable {
 		}
 	}
 	
+	private void logInfoSkipLine(int currentLine, String message){
+		int skipAmount = 1000;
+		if(currentLine % skipAmount == 0){
+			logger.info(message + currentLine);
+		}
+	}
+
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
 	public TransitImportResponse importBqItems(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
@@ -266,11 +274,10 @@ public class TransitService implements Serializable {
 			//temp list to store the headers before you can fill bill/subBill/page, then move to headersList
 			List<TransitBpi> headersTempList = new ArrayList<TransitBpi>(); 
 			
-			logger.info(jobNumber + "Number of  rows for Transit import BQ: " + excelFileProcessor.getNumRow());
+			int totalRow = excelFileProcessor.getNumRow();
+			logger.info(jobNumber + "Number of  rows for Transit import BQ: " + totalRow);
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
-				if(i % 100 == 0){
-					logger.info(jobNumber + " Transit import BQ @ row: " + i);
-				}
+				this.logInfoSkipLine(i, jobNumber + " Transit import BQ @ row: ");
 				String[] row = excelFileProcessor.readLine(8);
 				if(row == null || isRowEmpty(row))
 					continue;
@@ -410,20 +417,29 @@ public class TransitService implements Serializable {
 					headersTempList.add(bqItem);
 				}
 			}
+			logger.info(jobNumber + " excelFileProcessor complete " + totalRow);
 		}
 		catch(Exception e){
-			errorList.add("An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage());
-			e.printStackTrace();
+			String message = "An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage();
+			logger.error(message);
+			errorList.add(message);
+			logger.error("import BQ exception:", e);
 		}
 
 		if(errorList.size() == 0){
 			header.setStatus(Transit.BQ_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
+			logger.info("total transitBpiList:" + transitBpiList.size());
+			int logCount = 0;
 			for(TransitBpi transitBpi: transitBpiList){
 				transitBqDao.saveOrUpdate(transitBpi);
+				this.logInfoSkipLine(logCount++, "transitBpi ");
 			}
+			logCount = 0;
+			logger.info("total headersList:" + headersList.size());
 			for(TransitBpi transitBpi: headersList){
 				transitBqDao.saveOrUpdate(transitBpi);
+				this.logInfoSkipLine(logCount++, "transitBpi ");
 			}
 //			response.setNumRecordImported(sequenceNo);
 			// modified by brian on 20110118
@@ -486,6 +502,7 @@ public class TransitService implements Serializable {
 		Map<String, TransitBpi> bqItemMap = new HashMap<String, TransitBpi>(transitBQList.size());
 		String matchingType = header.getMatchingCode();
 		
+		logger.info(jobNumber + "Number of  rows for transitBQList: " + transitBQList.size());
 		for(TransitBpi bqItem : transitBQList){
 			if(bqItem.getItemNo() != null){
 				String bpi = bqItem.getBillNo() + "/" + (bqItem.getSubBillNo() != null ? bqItem.getSubBillNo() : "") + 
@@ -519,9 +536,7 @@ public class TransitService implements Serializable {
 			
 			logger.info(jobNumber + "Number of  rows for Transit import resources: " + excelFileProcessor.getNumRow());
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
-				if(i % 100 == 0){
-					logger.info(jobNumber + " Transit import resources @ row: " + i);
-				}
+				this.logInfoSkipLine(i, jobNumber + " Transit import resources @ row: ");
 				String[] row = excelFileProcessor.readLine(20);
 				if(row == null || isRowEmpty(row))
 					continue;
@@ -765,7 +780,8 @@ public class TransitService implements Serializable {
 				resourceNo++;
 				count++;
 			}
-			
+			int logCount = 0;
+			logger.info(jobNumber + "Number of  accountCodes: " + accountCodes.size());
 			for(String accountCode : accountCodes){
 				String[] objSub = accountCode.split("\\.");
 				String validateObjSubError = null;
@@ -778,10 +794,12 @@ public class TransitService implements Serializable {
 				if(validateObjSubError != null){
 					errorList.add(validateObjSubError);
 				}
+				this.logInfoSkipLine(logCount++, accountCode);
 			}
 		}catch(Exception e){
-			errorList.add("An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage());
-			e.printStackTrace();
+			String message = "An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage();
+			errorList.add(message);
+			logger.error("import resource exception:", e);
 		}
 		transitHeaderDao.unlock(header);
 		if(errorList.size() == 0){
@@ -1229,8 +1247,10 @@ public class TransitService implements Serializable {
 		double totalMarkup = 0;
 		
 		StringBuilder errorMsg = new StringBuilder();
-
+		int logCount = 0;
+		logger.info("confirm budget: number of bqItems " + bqItems.size());
 		for(TransitBpi bqItem : bqItems){
+			this.logInfoSkipLine(logCount++, jobNumber + " bqItem ");
 			double totalResourceValue = 0;
 			List<TransitResource> resources = transitResourceDao.obtainTransitResourceListByTransitBQ(bqItem);
 			for(TransitResource resource : resources){
@@ -1271,6 +1291,7 @@ public class TransitService implements Serializable {
 			bqItem.setAmountBudget(CalculationUtil.roundToBigDecimal(totalResourceValue, 2));
 		}
 		
+		logger.info("confirm budget: accountCodes " + accountCodes.size());
 		for(String accountCode : accountCodes){
 			String[] objSub = accountCode.split("\\.");
 			if(!masterListRepository.createAccountCode(jobNumber, objSub[0], objSub[1])){
@@ -1356,7 +1377,7 @@ public class TransitService implements Serializable {
 		try {
 			transitHeaderDao.lock(header);
 		} catch (IllegalAccessException e1) {
-			e1.printStackTrace();
+			logger.error("completeTransit exception:", e1);
 			return e1.getMessage();
 		}
 		
@@ -1383,7 +1404,10 @@ public class TransitService implements Serializable {
 		Set<String> packageNos = new HashSet<String>();
 		List<BpiItem> bqItems = new ArrayList<BpiItem>();
 		List<BpiItemResource> resourceList = new ArrayList<BpiItemResource>();
+		int logCount = 0;
+		logger.info("completeTransit: number of transitBq " + transitBqItems.size());
 		for(TransitBpi transitBq : transitBqItems){
+			this.logInfoSkipLine(logCount++, "completeTransit");
 			//Create bill, page if necessary
 			if(!billNo.equals(transitBq.getBillNo()) || 
 					(subBillNo != null && !subBillNo.equals(transitBq.getSubBillNo())) || 
@@ -1431,7 +1455,10 @@ public class TransitService implements Serializable {
 		logger.info("saving bqItemResource");
 		bqItemResourceDao.saveBpiItemResources(resourceList);
 		
+		logCount = 0;
+		logger.info("completeTransit: number of packageNos " + packageNos.size());
 		for(String packageNo : packageNos){
+			this.logInfoSkipLine(logCount++, "completeTransit packageNos");
 			Subcontract scPackage = new Subcontract();
 			scPackage.setJobInfo(job);
 			scPackage.setPackageNo(packageNo);
