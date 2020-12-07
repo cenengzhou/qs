@@ -61,6 +61,7 @@ import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -136,6 +137,8 @@ public class HTMLService implements Serializable{
 	private WebServiceConfig webServiceConfig;	
 	@Autowired
 	private HrUserRepository hrUserRepository;
+	@Autowired
+	private MasterListService masterListService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -442,7 +445,7 @@ public class HTMLService implements Serializable{
 	}
 	
 	public String receiveVendorName(String addressNumber) throws Exception {
-		return masterListDao.getVendorNameList(addressNumber).get(0).getVendorName();
+		return masterListService.searchVendorAddressDetails(addressNumber).getVendorName();
 	}
 	
 	@SuppressWarnings("rawtypes")

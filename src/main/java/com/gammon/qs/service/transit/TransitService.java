@@ -1226,7 +1226,7 @@ public class TransitService implements Serializable {
 		try {
 			transitHeaderDao.lock(header);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("lock header", e);
 			return e.getMessage();
 		}
 		//Check that there are no dummy account numbers (obj and sub codes all 0s)

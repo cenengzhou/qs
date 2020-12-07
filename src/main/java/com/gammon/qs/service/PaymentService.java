@@ -137,6 +137,8 @@ public class PaymentService{
 	private SubcontractService subcontractService;
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private MasterListService masterListService;
 
 	static final int RECORDS_PER_PAGE = 100;
 
@@ -197,7 +199,7 @@ public class PaymentService{
 		result.setMainCertNo(scPaymentCert.getMainContractPaymentCertNo()==null? new Integer(0) : scPaymentCert.getMainContractPaymentCertNo());
 		result.setPaymentCertNo(paymentCertNo);
 		result.setSubContractNo(scPackage.getPackageNo());
-		result.setSubcontractorDescription(masterListWSDao.getOneVendor(scPackage.getVendorNo()).getVendorName());
+		result.setSubcontractorDescription(masterListService.searchVendorAddressDetails(scPackage.getVendorNo()).getVendorName());
 
 		result.setSubcontractorNo(scPackage.getVendorNo());
 		result.setSubContractDescription(scPackage.getDescription());
@@ -555,7 +557,7 @@ public class PaymentService{
 			PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
 			String company = paymentCert.getSubcontract().getJobInfo().getCompany();
 			String vendorNo = paymentCert.getSubcontract().getVendorNo();
-			String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
+			String vendorName = masterListService.searchVendorAddressDetails(vendorNo).getVendorName();
 			String approvalType = APPROVALTYPE_PAYMENTREVIEW_FR;
 			String approvalSubType = paymentCert.getSubcontract().getApprovalRoute();
 
@@ -1892,7 +1894,7 @@ public class PaymentService{
 				String resultMsg = null;
 				String company = paymentCert.getSubcontract().getJobInfo().getCompany();
 				String vendorNo = paymentCert.getSubcontract().getVendorNo();
-				String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
+				String vendorName = masterListService.searchVendorAddressDetails(vendorNo).getVendorName();
 				String approvalType = APPROVALTYPE_INTERIMPAYMENT_SP;
 
 				JobInfo job = paymentCert.getSubcontract().getJobInfo();

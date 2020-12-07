@@ -55,6 +55,8 @@ public class SubcontractorService{
 	private SubcontractHBDao scPackageDao;
 	@Autowired
 	private SubcontractorWorkscopeDao subcontractorWorkscopeDao;
+	@Autowired
+	private MasterListService masterListService;
 		
 	/*************************************** FUNCTIONS FOR PCMS       **************************************************************/
 	public List<SubcontractorWrapper> obtainSubcontractorWrappers(String workScope, String subcontractor) throws DatabaseOperationException {
@@ -72,7 +74,7 @@ public class SubcontractorService{
 					if(masterListVendor!=null){
 						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
 						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setSubcontractorName(masterListService.vendorWithDetails(masterListVendor).getVendorName());
 						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
 						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
 						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
@@ -114,7 +116,7 @@ public class SubcontractorService{
 					if(masterListVendor!=null){
 						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
 						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setSubcontractorName(masterListService.vendorWithDetails(masterListVendor).getVendorName());
 						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
 						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
 						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
@@ -130,7 +132,7 @@ public class SubcontractorService{
 						}
 
 						if(subcontractor!=null && !"".equals(subcontractor)){
-							if((masterListVendor.getVendorNo().equals(subcontractor)) || masterListVendor.getVendorName().equals(subcontractor))
+							if((masterListVendor.getVendorNo().equals(subcontractor)) || masterListService.vendorWithDetails(masterListVendor).getVendorName().equals(subcontractor))
 								subcontractorWrapperList.add(subcontractorWrapper);
 						}
 						else
@@ -156,7 +158,7 @@ public class SubcontractorService{
 					if (masterListVendor != null) {
 						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
 						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setSubcontractorName(masterListService.vendorWithDetails(masterListVendor).getVendorName());
 						subcontractorWrapper.setBusinessRegistrationNo(masterListVendor.getVendorRegistrationNo());
 
 						subcontractorWrapperList.add(subcontractorWrapper);

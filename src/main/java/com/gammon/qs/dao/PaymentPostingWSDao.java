@@ -86,6 +86,8 @@ public class PaymentPostingWSDao {
 	private WSConfig wsConfig;
 	@Autowired
 	private EnvironmentConfig environmentConfig;
+	@Autowired
+	private MasterListService masterListService;
 
 	private PaymentCert paymentCert;
 	private JobInfo job;
@@ -153,7 +155,7 @@ public class PaymentPostingWSDao {
 		transactionType = (scPackage.getInternalJobNo()!=null && scPackage.getInternalJobNo().trim().length()>0 ? transactionTypeInternal : transactionTypeOther);
 		batchNumber = getEdiBatchNumber();
 		vendorInvoiceNumber = job.getJobNumber() + "/" + scPackage.getPackageNo() + "/" + String.format("%04d",paymentCert.getPaymentCertNo());
-		MasterListVendor vendor = masterListWSDao.getOneVendor(scPackage.getVendorNo());
+		MasterListVendor vendor = masterListService.searchVendorAddressDetails(scPackage.getVendorNo());
 		vendorName = vendor.getVendorName();
 		
 		//In case the subcontractor name is longer than 30 characters
