@@ -1,6 +1,5 @@
 package com.gammon.qs.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,78 +18,84 @@ import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
+
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
-public class MasterListService{
-	
+public class MasterListService {
+
 	private Logger logger = Logger.getLogger(MasterListService.class.getName());
 	@Autowired
 	private MasterListWSDao masterListDao;
 	@Autowired
 	private AdminService adminService;
-	
-	//server cache
+
+	// server cache
 	private List<MasterListVendor> vendorList;
 	private List<MasterListObject> objectList;
 	private List<MasterListSubsidiary> subsidiaryList;
 	private List<MasterListVendor> clientList;
-	
+
 	public List<MasterListVendor> getClientList() {
 		return clientList;
 	}
+
 	public void setClientList(List<MasterListVendor> clientList) {
 		this.clientList = clientList;
 	}
+
 	public List<MasterListVendor> getVendorList() {
 		return vendorList;
 	}
+
 	public void setVendorList(List<MasterListVendor> vendorList) {
 		this.vendorList = vendorList;
 	}
-	
+
 	public List<MasterListVendor> obtainAllVendorList(String searchStr) throws Exception {
 		logger.info("obtainAllVendorList --> START");
 		boolean isRefreshed = false;
 		List<String> addressBookTypeList = new ArrayList<String>();
 		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
 		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-		
-		if(this.vendorList== null){
+
+		if (this.vendorList == null) {
 			this.vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
 			isRefreshed = true;
 		}
 		List<MasterListVendor> resultList = searchVendorInLocalCacheList(searchStr);
-		
-		if(resultList.size()==0 && !isRefreshed){
+
+		if (resultList.size() == 0 && !isRefreshed) {
 			this.vendorList = this.masterListDao.obtainAddressBookList(addressBookTypeList);
 			resultList = searchVendorInLocalCacheList(searchStr);
 		}
 		return resultList;
 	}
-	
+
 	public List<MasterListVendor> obtainAllClientList(String searchStr) throws Exception {
 		logger.info("obtainAllClientList --> START");
 		boolean isRefreshed = false;
 		List<String> addressBookTypeList = new ArrayList<String>();
 		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.CLIENT_ADDRESS_TYPE);
-		if(this.clientList== null){
+		if (this.clientList == null) {
 			this.clientList = masterListDao.obtainAddressBookList(addressBookTypeList);
 			isRefreshed = true;
 		}
 		List<MasterListVendor> resultList = searchClientInLocalCacheList(searchStr);
-		
-		if(resultList.size()==0 && !isRefreshed){
+
+		if (resultList.size() == 0 && !isRefreshed) {
 			this.clientList = this.masterListDao.obtainAddressBookList(addressBookTypeList);
 			resultList = searchClientInLocalCacheList(searchStr);
 		}
 		return resultList;
 	}
-	
-	public List<MasterListVendor> obtainVendorListByWorkScopeWithUser(String workScope, String username) throws Exception{
+
+	public List<MasterListVendor> obtainVendorListByWorkScopeWithUser(String workScope, String username)
+			throws Exception {
 		return trimVendorListAccessibleByUser(obtainSubcontractorListByWorkScopeCode(workScope), username);
 	}
-	
-	private List<MasterListVendor> trimVendorListAccessibleByUser(List<MasterListVendor> vendors, String username) throws Exception {
+
+	private List<MasterListVendor> trimVendorListAccessibleByUser(List<MasterListVendor> vendors, String username)
+			throws Exception {
 		if (vendors == null || vendors.size() == 0)
 			return vendors;
 
@@ -117,132 +122,127 @@ public class MasterListService{
 
 		return userVendors;
 	}
-	
-	public MasterListVendor searchVendorAddressDetails(String addressNumber) throws Exception{
+
+	public MasterListVendor searchVendorAddressDetails(String addressNumber) throws Exception {
 		List<MasterListVendor> resultList = masterListDao.getVendorDetailsList(addressNumber);
-		if (resultList!=null && resultList.size() > 0){
-			return resultList.get(0);
-		}else{
+		if (resultList != null && resultList.size() > 0) {
+			return vendorWithDetails(resultList.get(0));
+		} else {
 			return new MasterListVendor();
 		}
 	}
-	
-	private List<MasterListVendor> searchVendorInLocalCacheList(String searchStr) throws Exception{
+
+	private List<MasterListVendor> searchVendorInLocalCacheList(String searchStr) throws Exception {
 		List<MasterListVendor> resultVendorList = new ArrayList<MasterListVendor>();
-		for(MasterListVendor curVendor: this.vendorList)
-			if (curVendor.getVendorType()!=null && !"".equals(curVendor.getVendorType().trim()) && Integer.parseInt(curVendor.getVendorType().trim())>0){
-				String curVendorName = curVendor.getVendorName();
+		for (MasterListVendor curVendor : this.vendorList)
+			if (curVendor.getVendorType() != null && !"".equals(curVendor.getVendorType().trim())
+					&& Integer.parseInt(curVendor.getVendorType().trim()) > 0) {
+				String curVendorName = vendorWithDetails(curVendor).getVendorName();
 				String curVendorNumber = curVendor.getVendorNo();
-				
+
 				WildCardStringFinder finder = new WildCardStringFinder();
 				WildCardStringFinder finder2 = new WildCardStringFinder();
-				if(finder.isStringMatching(curVendorName,searchStr)){
+				if (finder.isStringMatching(curVendorName, searchStr)) {
 					resultVendorList.add(curVendor);
-				}
-				else if (finder2.isStringMatching(curVendorNumber, searchStr)){				
+				} else if (finder2.isStringMatching(curVendorNumber, searchStr)) {
 					resultVendorList.add(curVendor);
 				}
 			}
-		logger.info("vendorList.size() : " + vendorList.size()); 
+		logger.info("vendorList.size() : " + vendorList.size());
 		return resultVendorList;
 	}
-	
-	private List<MasterListVendor> searchClientInLocalCacheList(String searchStr) throws Exception{
+
+	private List<MasterListVendor> searchClientInLocalCacheList(String searchStr) throws Exception {
 		List<MasterListVendor> resultClientList = new ArrayList<MasterListVendor>();
-		for(MasterListVendor curVendor: this.clientList){
+		for (MasterListVendor curVendor : this.clientList) {
 			String curVendorName = curVendor.getVendorName();
 			String curVendorNumber = curVendor.getVendorNo();
 
 			WildCardStringFinder finder = new WildCardStringFinder();
 			WildCardStringFinder finder2 = new WildCardStringFinder();
-			if(finder.isStringMatching(curVendorName,searchStr)){
+			if (finder.isStringMatching(curVendorName, searchStr)) {
 				resultClientList.add(curVendor);
-			}
-			else if (finder2.isStringMatching(curVendorNumber, searchStr)){		
+			} else if (finder2.isStringMatching(curVendorNumber, searchStr)) {
 				resultClientList.add(curVendor);
 			}
 		}
-		logger.info("ClientList size : " + clientList.size()); 
+		logger.info("ClientList size : " + clientList.size());
 		return resultClientList;
 	}
 
-	private List<MasterListObject> searchMasterListObjectInLocalCacheList(String searchStr) 
-	{
+	private List<MasterListObject> searchMasterListObjectInLocalCacheList(String searchStr) {
 		List<MasterListObject> resultObjectList = new ArrayList<MasterListObject>();
-		
-		for(MasterListObject curObject: this.objectList)
-		{
+
+		for (MasterListObject curObject : this.objectList) {
 			String curObjectCode = curObject.getObjectCode();
 			String curObjectDesc = curObject.getDescription();
-			
+
 			WildCardStringFinder finder = new WildCardStringFinder();
 			WildCardStringFinder finder2 = new WildCardStringFinder();
-			if(finder.isStringMatching(curObjectCode,searchStr))
+			if (finder.isStringMatching(curObjectCode, searchStr))
 				resultObjectList.add(curObject);
 			else if (finder2.isStringMatching(curObjectDesc, searchStr))
 				resultObjectList.add(curObject);
-			
+
 		}
-		
+
 		return resultObjectList;
 	}
-	
-	
-	
-	private List<MasterListSubsidiary> searchMasterListSubsidiaryInLocalCacheList(String searchStr)
-	{
+
+	private List<MasterListSubsidiary> searchMasterListSubsidiaryInLocalCacheList(String searchStr) {
 		List<MasterListSubsidiary> resultSubsidiaryList = new ArrayList<MasterListSubsidiary>();
-		
-		for(MasterListSubsidiary curSubsidiary: this.subsidiaryList)
-		{
+
+		for (MasterListSubsidiary curSubsidiary : this.subsidiaryList) {
 			String curSubsidiaryCode = curSubsidiary.getSubsidiaryCode();
 			String curSubsidiaryDesc = curSubsidiary.getDescription();
-			
+
 			WildCardStringFinder finder = new WildCardStringFinder();
 			WildCardStringFinder finder2 = new WildCardStringFinder();
-			if(finder.isStringMatching(curSubsidiaryCode,searchStr))
+			if (finder.isStringMatching(curSubsidiaryCode, searchStr))
 				resultSubsidiaryList.add(curSubsidiary);
 			else if (finder2.isStringMatching(curSubsidiaryDesc, searchStr))
 				resultSubsidiaryList.add(curSubsidiary);
-			
+
 		}
-		
+
 		return resultSubsidiaryList;
 	}
 
-	public boolean createAccountCode(String jobNumber, String objectCode, String subsidiaryCode){
+	public boolean createAccountCode(String jobNumber, String objectCode, String subsidiaryCode) {
 		return masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode);
 	}
-	
-	public String validateObjectAndSubsidiaryCodes(String objectCode, String subsidiaryCode) throws Exception{
-		if(objectCode == null || objectCode.length() != 6 || searchObjectList(objectCode).size() == 0)
+
+	public String validateObjectAndSubsidiaryCodes(String objectCode, String subsidiaryCode) throws Exception {
+		if (objectCode == null || objectCode.length() != 6 || searchObjectList(objectCode).size() == 0)
 			return "Invalid object code: " + objectCode;
-		//Replace 2nd char of subsid code with '9' before validating - this allows for location codes
-		//First, make sure that the 2nd char is a digit - if not, it is invalid
+		// Replace 2nd char of subsid code with '9' before validating - this allows for
+		// location codes
+		// First, make sure that the 2nd char is a digit - if not, it is invalid
 		char[] subsidChars = subsidiaryCode.toCharArray();
-		if(!Character.isDigit(subsidChars[1])&&(subsidChars[1]<'A'||subsidChars[1]>'Z') )
+		if (!Character.isDigit(subsidChars[1]) && (subsidChars[1] < 'A' || subsidChars[1] > 'Z'))
 			return "Invalid subsidiary code: " + subsidiaryCode;
 		subsidChars[1] = '9';
-		if(subsidiaryCode == null || subsidiaryCode.length() != 8 || searchSubsidiaryList(String.valueOf(subsidChars)).size() == 0)
+		if (subsidiaryCode == null || subsidiaryCode.length() != 8
+				|| searchSubsidiaryList(String.valueOf(subsidChars)).size() == 0)
 			return "Invalid subsidiary code: " + subsidiaryCode;
 		return null;
 	}
-	
+
 	/**
-	 * @author tikywong
-	 * modified on April 22, 2013
+	 * @author tikywong modified on April 22, 2013
 	 */
-	public List<MasterListVendor> obtainSubcontractorListByWorkScopeCode(String workScopeCode) throws DatabaseOperationException{
+	public List<MasterListVendor> obtainSubcontractorListByWorkScopeCode(String workScopeCode)
+			throws DatabaseOperationException {
 		List<String> subcontractorNumberList = masterListDao.obtainSubcontractorByWorkScope(workScopeCode);
 		List<MasterListVendor> subcontractorList = new ArrayList<MasterListVendor>();
-		for (String subcontractor:subcontractorNumberList)
+		for (String subcontractor : subcontractorNumberList)
 			subcontractorList.add(obtainVendorByVendorNo(subcontractor));
 		return subcontractorList;
 	}
 
 	public String checkObjectCodeInUCC(String objectAcc) throws Exception {
 		boolean refreshed = false;
-		if (objectList==null){
+		if (objectList == null) {
 			try {
 				objectList = masterListDao.obtainObjectCodeList();
 				refreshed = true;
@@ -251,14 +251,14 @@ public class MasterListService{
 				return "Object list cannot be fetched ";
 			}
 		}
-		if (objectAcc==null || objectAcc.length()!=6)
+		if (objectAcc == null || objectAcc.length() != 6)
 			return "Invalid object code";
 		String returnedResult = searchObject(objectList, objectAcc);
-		if (returnedResult==null)
+		if (returnedResult == null)
 			return returnedResult;
 		if (refreshed)
 			return returnedResult;
-		
+
 		try {
 			objectList = masterListDao.obtainObjectCodeList();
 			return searchObject(objectList, objectAcc);
@@ -268,18 +268,18 @@ public class MasterListService{
 		}
 	}
 
-	private String searchObject(List<MasterListObject> objectList,String targetObject){
-		for (MasterListObject aObject:objectList)
-			if(aObject.getObjectCode().equals(targetObject))
+	private String searchObject(List<MasterListObject> objectList, String targetObject) {
+		for (MasterListObject aObject : objectList)
+			if (aObject.getObjectCode().equals(targetObject))
 				return null;
 		return "Object code cannot be found";
 	}
-	
+
 	public String checkSubsidiaryCodeInUCC(String subsidiaryCode) throws Exception {
 		boolean refreshed = false;
 		String message = null;
-		
-		if (subsidiaryList==null){
+
+		if (subsidiaryList == null) {
 			try {
 				subsidiaryList = masterListDao.getAllSubsidiaryList();
 				refreshed = true;
@@ -290,13 +290,13 @@ public class MasterListService{
 				return message;
 			}
 		}
-		if (subsidiaryCode==null || subsidiaryCode.length()!=8){
+		if (subsidiaryCode == null || subsidiaryCode.length() != 8) {
 			message = "Invalid subsidiary code";
 			logger.info(message);
 			return message;
 		}
 		String returnedResult = searchSubidiary(subsidiaryList, subsidiaryCode);
-		if (returnedResult==null)
+		if (returnedResult == null)
 			return returnedResult;
 		if (refreshed)
 			return returnedResult;
@@ -310,42 +310,57 @@ public class MasterListService{
 			return message;
 		}
 	}
-	
-	private String searchSubidiary(List<MasterListSubsidiary> subsidiaryList, String targetSubsidiary){
+
+	private String searchSubidiary(List<MasterListSubsidiary> subsidiaryList, String targetSubsidiary) {
 		String message = null;
-		if (Character.isDigit(targetSubsidiary.charAt(1))||(targetSubsidiary.charAt(1)>='A'&&targetSubsidiary.charAt(1)<='Z') )
-			for (MasterListSubsidiary aSubsidiary:subsidiaryList)
-				if(aSubsidiary.getSubsidiaryCode().equals(targetSubsidiary.substring(0,1)+"9"+targetSubsidiary.substring(2)))
+		if (Character.isDigit(targetSubsidiary.charAt(1))
+				|| (targetSubsidiary.charAt(1) >= 'A' && targetSubsidiary.charAt(1) <= 'Z'))
+			for (MasterListSubsidiary aSubsidiary : subsidiaryList)
+				if (aSubsidiary.getSubsidiaryCode()
+						.equals(targetSubsidiary.substring(0, 1) + "9" + targetSubsidiary.substring(2)))
 					return message;
-		
+
 		message = "Subsidiary code cannot be found";
 		logger.info(message);
 		return message;
 	}
 
-	/*************************************** FUNCTIONS FOR PCMS       **************************************************************/
+	public MasterListVendor vendorWithDetails(MasterListVendor vendor){
+		try {
+			List<MasterListVendor> vendorDetailsList = masterListDao.getVendorDetailsList(vendor.getVendorNo());
+			if(vendorDetailsList != null && vendorDetailsList.get(0) != null){
+				vendor = vendorDetailsList.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return vendor;
+	}
+	/***************************************
+	 * FUNCTIONS FOR PCMS
+	 **************************************************************/
 	/**
-	 * @author tikywong
-	 * modified on April 22, 2013
-	 * Cached a global vendor list, call web service if the global vendor list is null
+	 * @author tikywong modified on April 22, 2013 Cached a global vendor list, call
+	 *         web service if the global vendor list is null
 	 */
-	public MasterListVendor obtainVendorByVendorNo(String vendorNo) throws DatabaseOperationException{
-//		logger.info("Vendor No.: "+vendorNo);
-		boolean refreshed = false; //refreshing cached vendor list
+	public MasterListVendor obtainVendorByVendorNo(String vendorNo) throws DatabaseOperationException {
+		// logger.info("Vendor No.: "+vendorNo);
+		boolean refreshed = false; // refreshing cached vendor list
 		List<String> addressBookTypeList = new ArrayList<String>();
 		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
 		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-		
-		//1. call web service for the whole vendor list
-		if(vendorList == null){
+
+		// 1. call web service for the whole vendor list
+		if (vendorList == null) {
 			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
 			refreshed = true;
 		}
-		
-		//2. loop the vendor list and find the requested vendor
-		for(MasterListVendor vendor : vendorList){
-			if(vendor.getVendorNo().equals(vendorNo))
-				return vendor;
+
+		// 2. loop the vendor list and find the requested vendor
+		for (MasterListVendor vendor : vendorList) {
+			if (vendor.getVendorNo().equals(vendorNo)) {
+				return vendorWithDetails(vendor);
+			}
 		}
 		
 		/*3. if the vendor couldn't be found the vendor list and the vendor list isn't just loading from the web service,
@@ -354,7 +369,7 @@ public class MasterListService{
 			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
 			for(MasterListVendor vendor : vendorList){
 				if(vendor.getVendorNo().equals(vendorNo))
-					return vendor;
+					return vendorWithDetails(vendor);
 			}
 		}
 		

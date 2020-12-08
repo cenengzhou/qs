@@ -167,7 +167,7 @@ public class TenderService implements Serializable {
 
 			
 			if(subcontractorNo != null){
-				MasterListVendor masterListVendor = masterListService.obtainVendorByVendorNo(String.valueOf(subcontractorNo));
+				MasterListVendor masterListVendor = masterListService.searchVendorAddressDetails(String.valueOf(subcontractorNo));
 				tender.setVendorNo(subcontractorNo);
 				tender.setNameSubcontractor(masterListVendor!=null? masterListVendor.getVendorName():"");
 			}else{

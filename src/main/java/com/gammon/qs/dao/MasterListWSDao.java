@@ -330,6 +330,19 @@ public class MasterListWSDao{
 		return resultList;
 	}
 
+	public String combineAlphaNameTitle(GetGeneralAddressResponseObj address){
+		List<GetContactPersonResponseObj> contactPersonList = address.getContactPerson();
+		if(contactPersonList != null){
+			contactPersonList.stream()
+			.filter(p -> address.getAddressName().equals(p.getNameAlpha()))
+			.findFirst()
+			.ifPresent(p -> {
+				address.setAddressName(address.getAddressName().trim() + " " + p.getContactTitle().trim());
+			});
+		}
+		return address.getAddressName().trim();
+	}
+
 	/** @author tikywong
 	 *         modified on April 18, 2013
 	 *         Used by:
@@ -355,8 +368,7 @@ public class MasterListWSDao{
 		// Filling in MasterListVendor
 		for (GetGeneralAddressResponseObj curResponseObj : responseListObj.getGetGeneralAddressResponseObjList()) {
 			MasterListVendor masterListVendor = new MasterListVendor();
-
-			String vendorName = curResponseObj.getAddressName() != null && !curResponseObj.getAddressName().toString().trim().equals("") ? curResponseObj.getAddressName().trim() : " ";
+			String vendorName = combineAlphaNameTitle(curResponseObj);
 			String addressType = curResponseObj.getAddressType() != null && !curResponseObj.getAddressType().toString().trim().equals("") ? curResponseObj.getAddressType().trim() : " ";
 			String costCenter = curResponseObj.getCostCenter() != null && !curResponseObj.getCostCenter().toString().trim().equals("") ? curResponseObj.getCostCenter().trim() : " ";
 			String vendorNo = curResponseObj.getAddressNumber() != null && !curResponseObj.getAddressNumber().toString().trim().equals("") ? curResponseObj.getAddressNumber().trim() : " ";

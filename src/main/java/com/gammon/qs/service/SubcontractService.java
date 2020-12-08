@@ -557,7 +557,7 @@ public class SubcontractService {
 		String currencyCode = getCompanyBaseCurrency(jobNumber);
 		String company = scPackage.getJobInfo().getCompany();
 		String vendorNo = scPackage.getVendorNo();
-		String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
+		String vendorName = masterListService.searchVendorAddressDetails(vendorNo).getVendorName();
 		String approvalType;
 		if(Subcontract.SPLIT.equalsIgnoreCase(splitTerminate))
 			approvalType = "VA";
@@ -2720,7 +2720,7 @@ public class SubcontractService {
 			scListWrapper.setPackageNo(scPackage.getPackageNo());
 			scListWrapper.setVendorNo(scPackage.getVendorNo());
 			
-			MasterListVendor vendor = masterListService.obtainVendorByVendorNo(scPackage.getVendorNo());
+			MasterListVendor vendor = masterListService.searchVendorAddressDetails(scPackage.getVendorNo());
 			scListWrapper.setVendorName(vendor != null ? vendor.getVendorName() : "");
 			scListWrapper.setDescription(scPackage.getDescription());
 			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum().doubleValue());
@@ -2840,7 +2840,7 @@ public class SubcontractService {
 			scListWrapper.setPackageNo(scPackageSnapshot.getPackageNo());
 			scListWrapper.setVendorNo(scPackageSnapshot.getVendorNo());
 			
-			MasterListVendor vendor = masterListService.obtainVendorByVendorNo(scPackageSnapshot.getVendorNo());
+			MasterListVendor vendor = masterListService.searchVendorAddressDetails(scPackageSnapshot.getVendorNo());
 			scListWrapper.setVendorName(vendor != null ? vendor.getVendorName() : "");
 			scListWrapper.setDescription(scPackageSnapshot.getDescription());
 			scListWrapper.setRemeasuredSubcontractSum(scPackageSnapshot.getRemeasuredSubcontractSum().doubleValue());
@@ -3358,7 +3358,7 @@ public class SubcontractService {
 			for(int i = 0; i < dataWrapperList.size(); i++){
 				for(int j = 0; j < vendorNameList.size(); j++){
 					if(vendorNameList.get(j).getVendorNo().equals(dataWrapperList.get(i).getVendorNumber().toString())){
-						dataWrapperList.get(i).setVendorName(vendorNameList.get(j).getVendorName());
+						dataWrapperList.get(i).setVendorName(masterListService.vendorWithDetails(vendorNameList.get(j)).getVendorName());
 					}
 				}
 			}
