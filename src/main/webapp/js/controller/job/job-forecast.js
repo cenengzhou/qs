@@ -95,6 +95,11 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
 						getData($scope.year, $scope.month);
 					}
+				}, function(error){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
+					.closed.then(function(){
+						$state.reload();
+					});
 				});
 		
 	}

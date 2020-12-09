@@ -74,7 +74,7 @@
 									<td class="text-center">{{data.actualTurnover.actualCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualTurnover.forecastCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{(data.actualTurnover.actualCTD.amount - data.actualTurnover.forecastCTD.amount) |currency:undefined:0}}</td>
-									<td><textarea
+									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.actualTurnover.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.actualTurnover.forecast.explanation}}</div></td>
@@ -88,7 +88,7 @@
 									<td class="text-center">{{data.actualCost.actualCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualCost.forecastCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{(data.actualCost.actualCTD.amount - data.actualCost.forecastCTD.amount) |currency:undefined:0}}</td>
-									<td><textarea
+									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.actualCost.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.actualCost.forecast.explanation}}</div></td>
@@ -159,7 +159,7 @@
 									<td class="text-center">{{data.turnover.forecast.amount -
 										data.turnover.jdeForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.turnover.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.turnover.forecast.explanation}}</div></td>
@@ -180,7 +180,7 @@
 										currency:undefined:0}}</td>
 									<td class="text-center">{{data.cost.forecast.amount -
 										data.cost.jdeForecast.amount | currency:undefined:0}}</td>
-									<td><textarea
+									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.cost.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.cost.forecast.explanation}}</div></td>
@@ -245,7 +245,7 @@
 									<td class="text-center">{{data.tenderRisk.forecast.amount -
 										data.tenderRisk.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.tenderRisk.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.tenderRisk.forecast.explanation}}</div></td>
@@ -266,7 +266,7 @@
 									<td class="text-center">{{data.tenderOpps.forecast.amount -
 										data.tenderOpps.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.tenderOpps.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.tenderOpps.forecast.explanation}}</div></td>
@@ -287,7 +287,7 @@
 									<td class="text-center">{{data.others.forecast.amount -
 										data.others.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.others.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.others.forecast.explanation}}</div></td>
@@ -358,7 +358,7 @@
 									<td class="text-center">{{data.risk.forecast.amount -
 										data.risk.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.risk.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.risk.forecast.explanation}}</div></td>
@@ -379,7 +379,7 @@
 									<td class="text-center">{{data.opps.forecast.amount -
 										data.opps.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.opps.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.opps.forecast.explanation}}</div></td>
@@ -441,7 +441,7 @@
 									<td class="text-center">{{data.unTurnover.forecast.amount -
 										data.unTurnover.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.unTurnover.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.unTurnover.forecast.explanation}}</div></td>
@@ -462,7 +462,7 @@
 									<td class="text-center">{{data.unCost.forecast.amount -
 										data.unCost.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
-									<textarea
+									<textarea maxlength="200"
 										class="form-control" ng-model="data.unCost.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.unCost.forecast.explanation}}</div></td>
@@ -527,7 +527,7 @@
 									</td>
 									<td>{{dateDiff(cp.forecast.date, cp.firstForecast.date)}} Days</td>
 									<td>
-									<textarea 
+									<textarea maxlength="200"
 										class="form-control" ng-model="cp.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{cp.forecast.explanation}}</div></td>
