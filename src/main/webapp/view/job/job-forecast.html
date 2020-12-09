@@ -88,7 +88,7 @@
 									<td class="text-center">{{data.actualCost.actualCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{data.actualCost.forecastCTD.amount |currency:undefined:0}}</td>
 									<td class="text-center">{{(data.actualCost.actualCTD.amount - data.actualCost.forecastCTD.amount) |currency:undefined:0}}</td>
-									<td><textarea
+									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.actualCost.forecast.explanation"
 										ng-if="editable"/>
 										<div ng-if="!editable">{{data.actualCost.forecast.explanation}}</div></td>
