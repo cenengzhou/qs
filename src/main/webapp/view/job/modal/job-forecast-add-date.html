@@ -43,7 +43,7 @@
 								<tbody>
 									<tr>
 										<td><div ng-hide="true">{{forecast.noJob = jobNo}} {{forecast.forecastFlag = 'RF'}}  {{forecast.forecastType = GlobalParameter.forecast.CriticalProgramme}} </div>
-										<textarea type="text" class="form-control" ng-model="forecast.forecastDesc" rows = "2" required/></td>
+										<textarea maxlength="150" type="text" class="form-control" ng-model="forecast.forecastDesc" rows = "2" required/></td>
 										<!-- <td class="text-center">
 											<div class="input-group" moment-picker="forecast.date" start-view="day"
 											format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
@@ -52,7 +52,7 @@
 											</span> <input class="form-control" ng-model="forecast.date" required>
 											</div>
 										</td>
-										<td><textarea class="form-control" ng-model="forecast.explanation" required/></td> -->
+										<td><textarea  maxlength="200" class="form-control" ng-model="forecast.explanation" required/></td> -->
 										<td>
 											 <button class="btn btn-danger btn-block" type="button"
 							                        ng-click="add()">
