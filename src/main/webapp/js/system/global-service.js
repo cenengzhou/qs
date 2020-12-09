@@ -20,6 +20,7 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 					}
 				}
 			});
+			return modalInstance;
 		}
 	};
 }]);

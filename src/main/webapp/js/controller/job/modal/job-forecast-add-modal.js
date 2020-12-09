@@ -55,7 +55,10 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 						$state.reload();
 					}
 				}, function(error){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error ); 
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
+					.closed.then(function(){
+						$state.reload();
+					});
 			});
 		
 	}
