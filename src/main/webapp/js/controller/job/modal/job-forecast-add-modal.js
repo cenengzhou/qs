@@ -38,6 +38,16 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 		$scope.editable = true;
 	}
 	
+	$scope.delete = function(jobNo, year, month){
+		var param = {noJob: jobNo, year: year, month: month, forecastFlag: 'F'};
+		forecastService.deleteBy('YEAR_MONTH_FLAG', param)
+		.then(function(){
+			Success();
+		}, function(error){
+			Error(error);
+		});
+	}
+
 	$scope.update = function(){
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
             event.preventDefault();
@@ -48,22 +58,16 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 		//console.log($scope.data);
 		forecastService.saveForecastByJobNo ($scope.jobNo, $scope.data)
 		.then(
-				function( data ) {
-					if(data = 'true'){
-						$scope.cancel();
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
-						$state.reload();
-					}
-				}, function(error){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
-					.closed.then(function(){
-						$state.reload();
-					});
-			});
+			function( data ) {
+				if(data = 'true'){
+					Success();
+				}
+			}, function(error){
+				Error(error);
+			}
+		);
 		
 	}
-	
-	
 	
 	$scope.$watch('monthYear', function(newValue, oldValue) {
 		if(oldValue != newValue){
@@ -87,4 +91,17 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 		$uibModalInstance.dismiss("cancel");
 	};
 	
+	function Success(){
+		$scope.cancel();
+		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
+		$state.reload();
+	}
+
+	function Error(error){
+		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
+		.closed.then(function(){
+			$state.reload();
+		});
+	}
+
 }]);

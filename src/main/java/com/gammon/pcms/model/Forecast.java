@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
@@ -37,7 +38,10 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = 7517505028363979338L;
 
-	
+	public enum DeleteByEnum {
+		YEAR_MONTH_FLAG,
+		FORECAST_DESC
+	}
 
 	public static final String ROLLING_FORECAST = "RF";
 	public static final String FORECAST = "F";
@@ -98,7 +102,7 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 	//@Min(value = 1970, message = "Year out of range")
 	//@Max(value = 2999, message = "Year out of range")
 	@Column(name = "YEAR")
-	public int getYear() {
+	public Integer getYear() {
 		return this.year;
 	}
 
@@ -109,7 +113,7 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 	//@Min(value = 1, message = "Month out of range")
 	//@Max(value = 12, message = "Month out of range")
 	@Column(name = "MONTH")
-	public int getMonth() {
+	public Integer getMonth() {
 		return this.month;
 	}
 
@@ -179,6 +183,7 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 	@Override
 	public String toString() {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		String jsonString = null;
 		try {
 			jsonString = mapper.writeValueAsString(this);

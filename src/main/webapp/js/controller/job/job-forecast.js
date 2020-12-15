@@ -10,7 +10,7 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
 	$scope.year = today.getUTCFullYear();
 	$scope.monthYear = $scope.year+'-'+$scope.month;
 
-
+	getData($scope.year, $scope.month);
 	
 	function getData(year, month) {
     	var turnover = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.EoJ, GlobalParameter.forecast.Turnover);

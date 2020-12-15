@@ -10,7 +10,8 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
     	updateCriticalProgramDesc: updateCriticalProgramDesc,
     	saveByJobNo: 	saveByJobNo,
     	saveForecastByJobNo: saveForecastByJobNo,
-    	deleteByJobNo:	deleteByJobNo
+			deleteByJobNo:	deleteByJobNo,
+			deleteBy: deleteBy
     });
 	
     function getLatestForecastPeriod(jobNo, year, month) {
@@ -109,5 +110,15 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
 			url: "service/forecast/" + jobNo + "/" + id
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
+		}
+		
+		function deleteBy(by, forecast) {
+			var request = $http({
+				method: "post",
+				url: "service/forecast/deleteBy/" + by,
+				data: forecast
+			});
+			return request;
+			}
+
 }]);

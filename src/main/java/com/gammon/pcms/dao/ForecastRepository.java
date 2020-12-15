@@ -131,5 +131,7 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("oldForecastDesc") String oldForecastDesc, 
 			@Param("newForecastDesc") String newForecastDesc
 	);
-	
+
+	Long deleteByNoJobAndYearAndMonthAndForecastFlag(String noJob, Integer year, Integer month, String forecastFlag);
+	Long deleteByNoJobAndForecastDesc(String noJob, String forecastDesc);
 }

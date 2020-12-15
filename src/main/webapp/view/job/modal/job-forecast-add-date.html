@@ -78,9 +78,14 @@
 								<tbody>
 									<tr ng-repeat="cp in cpList">
 									<td><textarea type="text" class="form-control" ng-model="cp.forecastDesc" rows = "2" required/></td>
-									<td><button type="button" class="btn btn-primary btn-block " 
-										ng-click="update(cp)">
-										<i class="fa fa-save"></i> Save
+									<td>
+										<button type="button" class="btn btn-primary btn-block " 
+											ng-click="update(cp)">
+											<i class="fa fa-save"></i> Save
+										</button>
+										<button type="button" class="btn btn-warning btn-block " 
+											ng-click="delete(jobNo, cp.forecastDesc)">
+											<i class="fa fa-trash"></i> Delete
 										</button>
 									</td>
 								</tr>
