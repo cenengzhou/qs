@@ -427,7 +427,7 @@ public class ForecastService {
 			itemDeleted = repository.deleteByNoJobAndYearAndMonthAndForecastFlag(jobNo, year, month, flag);
 			break;
 			case FORECAST_DESC:
-			itemDeleted = repository.deleteByNoJobAndForecastDesc(jobNo, forecastDesc);
+			itemDeleted = repository.deleteByNoJobAndForecastDescIgnoreCase(jobNo, forecastDesc);
 			break;
 			default:
 				logger.error(by + " not supported");	
