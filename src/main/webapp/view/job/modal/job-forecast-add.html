@@ -16,7 +16,6 @@
     <!-- begin row -->
 	<div class="row">
 			<div class="col-md-4 ">
-
 				<div class="input-group" moment-picker="monthYear" format="YYYY-MM"
 					start-view="year" today="true">
 					<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -25,7 +24,12 @@
 						
 				</div>
 			</div>
-			<div class="col-md-4"></div>
+			<div class="col-md-4" >
+				<button type="button" class="btn btn-danger btn-block " ng-if = "data.tenderRisk.id"
+					ng-click="delete(jobNo, year, month)">
+					<i class="fa fa-trash"></i> Delete
+				</button>
+			</div>
 			<div class="col-md-4" >
 				<button type="button" class="btn btn-success btn-block " ng-if = "!editable"
 					ng-click="edit()">

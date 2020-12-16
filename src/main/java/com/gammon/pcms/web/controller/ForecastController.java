@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.model.Forecast;
-
+import com.gammon.pcms.model.Forecast.DeleteByEnum;
 import com.gammon.pcms.service.ForecastService;
 import com.gammon.pcms.wrapper.ForecastGroupWrapper;
 import com.gammon.pcms.wrapper.ForecastListWrapper;
@@ -90,6 +90,10 @@ public class ForecastController {
 		service.delete(jobNo, ids);
 	}
 	
-	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','delete', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@RequestMapping(value = "deleteBy/{by}", method = RequestMethod.POST)
+	public void deleteBy(@PathVariable DeleteByEnum by, @RequestBody Forecast forecast) {
+		service.deleteBy(by, forecast);
+	}
 	
 }

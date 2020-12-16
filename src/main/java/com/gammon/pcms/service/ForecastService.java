@@ -3,7 +3,6 @@ package com.gammon.pcms.service;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,13 @@ import com.gammon.pcms.dao.ForecastRepository;
 import com.gammon.pcms.dao.adl.JDEForecastEOJRepository;
 import com.gammon.pcms.dao.adl.JDEForecastRepository;
 import com.gammon.pcms.model.Forecast;
+import com.gammon.pcms.model.Forecast.DeleteByEnum;
 import com.gammon.pcms.model.adl.JDEForecast;
 import com.gammon.pcms.model.adl.JDEForecastEOJ;
 import com.gammon.pcms.wrapper.ForecastGroupWrapper;
 import com.gammon.pcms.wrapper.ForecastListWrapper;
 import com.gammon.pcms.wrapper.ForecastWrapper;
+import com.gammon.qs.service.admin.AdminService;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -34,7 +35,8 @@ public class ForecastService {
 	private JDEForecastEOJRepository jdeForecastEOJRepository;
 	@Autowired
 	private JDEForecastRepository jdeForecasRepository;
-	
+	@Autowired
+	private AdminService adminService;
 	
 	public Forecast getLatestForecastPeriod(String jobNo){
 		Forecast latestForecast = new Forecast();
@@ -411,4 +413,27 @@ public class ForecastService {
 		});
 	}
 	
+	public void deleteBy(DeleteByEnum by, Forecast forecast){
+		logger.info("delete by:" + by + " " + forecast);	
+		String jobNo = forecast.getNoJob();
+		Integer year = forecast.getYear();
+		Integer month = forecast.getMonth();
+		String flag = forecast.getForecastFlag();
+		String forecastDesc = forecast.getForecastDesc();
+		long itemDeleted = 0;
+		adminService.canAccessJob(jobNo);
+		switch(by){
+			case YEAR_MONTH_FLAG:
+			itemDeleted = repository.deleteByNoJobAndYearAndMonthAndForecastFlag(jobNo, year, month, flag);
+			break;
+			case FORECAST_DESC:
+			itemDeleted = repository.deleteByNoJobAndForecastDescIgnoreCase(jobNo, forecastDesc);
+			break;
+			default:
+				logger.error(by + " not supported");	
+			break;
+		}
+		logger.info("item deleted:" + itemDeleted);	
+	}
+
 }

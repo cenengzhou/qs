@@ -50,7 +50,7 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			+"function('to_number', f.month) = :month and "
 			+"f.forecastFlag = :forecastFlag and "
 			+"f.forecastType = :forecastType and "
-			+"f.forecastDesc = :forecastDesc "
+			+"trim(lower(f.forecastDesc)) = trim(lower(:forecastDesc)) "
 			+"order by f.year, f.month"
 	)
 	Forecast getByTypeDesc(
@@ -68,11 +68,10 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			+"f.noJob = :noJob and "
 			+"f.forecastFlag = :forecastFlag and "
 			+"f.forecastType = :forecastType and "
-			+"f.forecastDesc = :forecastDesc and "
+			+"trim(lower(f.forecastDesc)) = trim(lower(:forecastDesc)) and "
 			+"ROWNUM <= 1 "
 			+"order by f.year desc, f.month desc"
 	)
-	
 	Forecast getLatestForecast(
 			@Param("noJob") String noJob,
 			@Param("forecastFlag") String forecastFlag,
@@ -100,7 +99,6 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			+"ROWNUM <= 1 "
 			+"order by f.year desc, f.month desc"
 	)
-	
 	Forecast getLatestForecastPeriod(
 			@Param("noJob") String noJob,
 			@Param("forecastFlag") String forecastFlag
@@ -114,7 +112,6 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			+"f.forecastType = :forecastType "
 			+"order by f.year, f.month"
 	)
-	
 	List<Forecast> getCriticalProgramList(
 			@Param("noJob") String noJob,
 			@Param("year") int year,
@@ -125,11 +122,13 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 	
 	
 	@Modifying
-	@Query("update Forecast f set f.forecastDesc = :newForecastDesc where f.noJob = :noJob and f.forecastDesc = :oldForecastDesc")
+	@Query("update Forecast f set f.forecastDesc = :newForecastDesc where f.noJob = :noJob and trim(lower(f.forecastDesc)) = trim(lower(:oldForecastDesc))")
 	void updateCriticalProgramDesc(
 			@Param("noJob") String noJob,
 			@Param("oldForecastDesc") String oldForecastDesc, 
 			@Param("newForecastDesc") String newForecastDesc
 	);
-	
+
+	Long deleteByNoJobAndYearAndMonthAndForecastFlag(String noJob, Integer year, Integer month, String forecastFlag);
+	Long deleteByNoJobAndForecastDescIgnoreCase(String noJob, String forecastDesc);
 }

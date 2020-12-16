@@ -1,5 +1,5 @@
-mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibModalInstance', '$cookies', 'modalService', '$state', 'GlobalParameter', '$q',
-                                   function($scope, forecastService, $uibModalInstance, $cookies, modalService, $state, GlobalParameter, $q) {
+mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibModalInstance', '$cookies', 'modalService', 'confirmService', '$state', 'GlobalParameter', 'GlobalMessage', '$q',
+                                   function($scope, forecastService, $uibModalInstance, $cookies, modalService, confirmService, $state, GlobalParameter, GlobalMessage, $q) {
 	$scope.GlobalParameter = GlobalParameter;
 	
 	$scope.jobNo = $cookies.get("jobNo");
@@ -17,6 +17,22 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 		
 	}
 	
+	$scope.delete = function(jobNo, forecastDesc){
+		confirmService.show({}, {bodyText:GlobalMessage.deleteForecastCP})
+		.then(function(response){
+			if(response === 'Yes'){
+				var param = {noJob: jobNo, forecastDesc: forecastDesc}
+				forecastService.deleteBy('FORECAST_DESC', param)
+				.then(function(){
+					Success();
+				}, function(error){
+					Error(error);
+				})
+			}
+		});
+		
+	}
+
 	$scope.update = function (program){
 		if (program.forecastDesc == undefined) {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input description.");
@@ -34,15 +50,10 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 					}
 					else
 					{
-						$scope.cancel();
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
-						$state.reload();	
+						Success();	
 					}
 				}, function(error){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
-					.closed.then(function(){
-						$state.reload();
-					});
+					Error(error);
 			});
 	}
 	
@@ -62,15 +73,10 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 					}
 					else
 					{
-						$scope.cancel();
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
-						$state.reload();
+						Success();
 					}
 				}, function(error){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
-					.closed.then(function(){
-						$state.reload();
-					});
+					Error(error)
 			});
 		
 	}
@@ -80,5 +86,19 @@ mainApp.controller('JobForecastAddDateCtrl', ['$scope','forecastService', '$uibM
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");
 	};
+
+	function Success(){
+		$scope.cancel();
+		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
+		$state.reload();
+	}
+
+	function Error(error){
+		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error.data.message )
+		.closed.then(function(){
+			$state.reload();
+		});
+	}
+
 	
 }]);
