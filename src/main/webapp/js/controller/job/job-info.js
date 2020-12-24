@@ -25,6 +25,11 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					else
 						$scope.job.innovationApplicable = false;
 					
+					if($scope.job.provision == "Y")
+						$scope.job.provision = true;
+					else
+						$scope.job.provision = false;
+					
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
@@ -135,6 +140,11 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 		else{
 			$scope.job.innovationApplicable = "0";
 		}
+		
+		if($scope.job.provision == true)
+			$scope.job.provision = "Y";
+		else
+			$scope.job.provision = "N";
 		
 		updateJobInfoAndDates($scope.job, $scope.jobDates)
 		
