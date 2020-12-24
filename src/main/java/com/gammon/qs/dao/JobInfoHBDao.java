@@ -79,6 +79,31 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		return result;
 	}
 	
+	/**
+	 * Obtain all jobs that will run for provision
+	 *
+	 * @return
+	 * @throws DatabaseOperationException
+	 * @author	koeyyeung
+	 * @since	Dec 24, 2020 11:37:19 AM
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JobInfo> obtainAllProvisionJobs() throws DatabaseOperationException {
+
+		List<JobInfo> result = new ArrayList<JobInfo>();
+		try {
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			criteria.add(Restrictions.eq("provision", "Y"));
+			criteria.addOrder(Order.asc("jobNumber"));
+			result = (List<JobInfo>) criteria.list();
+
+		} catch (HibernateException he) {
+			throw new DatabaseOperationException(he);
+		}
+		return result;
+	}
+	
 	public JobInfo obtainJobInfo(String jobNumber) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());			

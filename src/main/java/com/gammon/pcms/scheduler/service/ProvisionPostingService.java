@@ -171,7 +171,7 @@ public class ProvisionPostingService {
 		            " Overwrite Previous Posting: " + overwritePreviousProvisionPosting + 
 		            " Username: " + username);		
 		try {
-			postProvisionByJobs(jobHBDao.obtainAllJobs(), glDate, overwritePreviousProvisionPosting, username);
+			postProvisionByJobs(jobHBDao.obtainAllProvisionJobs(), glDate, overwritePreviousProvisionPosting, username);
 		} catch (Exception e) {
 			e.printStackTrace();
 			sendEmailForErrorFoundInProvisionPosting(e);
@@ -211,6 +211,8 @@ public class ProvisionPostingService {
 			companyGLDateCachedMap = new HashMap<String, Date>();
 		// --------------------- END: Setup ---------------------
 
+		logger.info("-------------------------------- PROVISION - TOTAL NO. of JOBS: " + jobList.size()+" --------------------------------------");
+		
 		// Calculate provision job by job
 		for (JobInfo job : jobList) {
 			logger.info("Start Job: " + job.getJobNumber() + " Company: " + job.getCompany());
