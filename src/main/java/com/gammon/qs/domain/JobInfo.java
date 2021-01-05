@@ -65,6 +65,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		S, JV
 	}
 	
+	
 	@Transient
 	public void approvalPending() {
 		this.statusApproval = APPROVAL_STATUS.PENDING.name();
@@ -202,6 +203,9 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Double innovationPercent;
 	
 	private Integer paymentTermFromClient;
+	
+	private String provision = "Y";
+	
 	
 	public JobInfo() {}
 	
@@ -1188,6 +1192,14 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	}
 	public void setPaymentTermFromClient(Integer paymentTermFromClient) {
 		this.paymentTermFromClient = paymentTermFromClient;
+	}
+	
+	@Column(name = "PROVISION")
+	public String getProvision() {
+		return provision;
+	}
+	public void setProvision(String provision) {
+		this.provision = provision;
 	}
 	
 	@Override

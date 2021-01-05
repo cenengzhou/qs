@@ -452,8 +452,25 @@
 					</div>
 					<!-- /.box -->
 
+					<!-- Provision -->
+					<div class="box box-default" ng-if="isQsAdmin">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Provision Posting</label>
+
+								<div class="col-md-6" >
+									<input type="checkbox" data-ios-toggle="toggle"
+										data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="Allow Posting"
+										data-off="No Posting" ng-model="job.provision">
+								</div>
+
+							</div>
+						</div>
+					</div>
+
 					<!-- Innovation -->
-					<div class="box box-default">
+					<div class="box box-default" ng-if="isQsAdmin">
 						<div class="box-body">
 							<div class="row">
 								<label class="col-md-4">Innovation Charge</label>
