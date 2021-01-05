@@ -1,10 +1,21 @@
+<style>
+	.singleRowClass {
+		height: 30px; width: 100%; padding: 2px; border: 1px solid #eee
+	}
+	.singleRowClass input {
+		height: 22px;
+	}
+	.doubleRowClass {
+		height: 60px; width: 100%; padding: 2px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 42px; color: #ddd
+	}
+</style>
 <div ng-repeat="kpi in kpiList">
 	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">
 		<div>
-			<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee" ng-if="$index==0">
-				<label>Month</label>
+			<div class="singleRowClass" ng-if="$index==0">
+				<label style="padding-top: 5px">Month</label>
 			</div>
-			<div style="height: 92px; width: 100%; padding: 5px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 50px; color: #ddd" ng-style="{color: kpi.deleteColor}">
+			<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">
 				<div style="position: absolute; padding-left: 20%">{{getMonthShortName(kpi.month)}}</div>
 				<div ng-click="onDelete(kpi)" ng-mouseenter="kpi.deleteColor='#cdcdcd'" ng-mouseleave="kpi.deleteColor='#ddd'"
 					style="position: absolute; left: 18px; top: -8px; font-size: 10px" ng-style="{top:$index==0 ? '38px' : '-8px'}">
@@ -16,27 +27,27 @@
 	<div ng-class="{'col-md-10': showMonthColumn, 'col-md-12': !showMonthColumn}" ng-style="{'padding-left': showMonthColumn ? '0px' : '15px'}">
 		<div class="col-md-1" style="padding: 0px;">
 			<div>
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee" ng-if="$index==0">
-					<label>Cumulative</label>
+				<div class="singleRowClass" ng-if="$index==0">
+					<label style="padding-top: 5px">Cumulative</label>
 				</div>
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">Number (Quantity)</div>
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">Amount</div>
+				<div class="singleRowClass">Number&nbsp;(Quantity)</div>
+				<div class="singleRowClass">Amount</div>
 			</div>
 		</div>
 		<div class="col-md-11" style="padding:0px">
 			<div class="col-md-2" style="padding: 0px;" ng-repeat="item in items | orderBy:'order'">
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee" ng-if="$parent.$index==0">
+				<div class="singleRowClass" ng-if="$parent.$index==0">
 					<label>{{item.description}}</label>
-					<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="{{item.alt}}"></i>
+					<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer; padding-top:0px" data-toggle="tooltip" title="{{item.alt}}"></i>
 				</div>
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
+				<div class="singleRowClass">
 					<div class="input-group">
 						<input type="text" style="text-align:right"
 							ng-change="$parent.$parent.$parent.modified=true" class="form-control "
 							ng-model="kpi[item.numberField]" required style="cursor: pointer" />
 					</div>
 				</div>
-				<div style="height: 46px; width: 100%; padding: 5px; border: 1px solid #eee">
+				<div class="singleRowClass">
 					<div class="input-group">
 						<input type="text" class="form-control " ng-currency currency-symbol="$" fraction="0" style="text-align:right"
 							ng-change="$parent.$parent.$parent.modified=true" 
