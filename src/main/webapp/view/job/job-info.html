@@ -453,7 +453,7 @@
 					<!-- /.box -->
 
 					<!-- Provision -->
-					<div class="box box-default" ng-if="isQsAdmin">
+					<div class="box box-default" >
 						<div class="box-body">
 							<div class="row">
 								<label class="col-md-4">Provision Posting</label>
@@ -462,7 +462,7 @@
 									<input type="checkbox" data-ios-toggle="toggle"
 										data-style="ios" data-onstyle="primary"
 										data-offstyle="warning" data-on="Allow Posting"
-										data-off="No Posting" ng-model="job.provision">
+										data-off="No Posting" ng-model="job.provision" ng-disabled="!isQsAdmin">
 								</div>
 
 							</div>

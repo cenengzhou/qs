@@ -121,8 +121,8 @@
 							</a>
 						</div>
 						<h3 class="panel-title">Certificate No. {{payment.paymentCertNo}}
-							- Certificate Amount {{payment.certAmount| currency}}</h3>
-
+							- Certificate Amount {{payment.certAmount| currency}}       <b ng-show="payment.bypassPaymentTerms == 'Y'"> (Early Release of Payment)</b></h3>
+							
 					</div>
 					<!-- /.box-header -->
 					<div class="panel-body"
@@ -153,9 +153,9 @@
 							<div class="col-xs-12 col-md-12 col-lg-5">
 								<dl class="dl-horizontal">
 
-									<!-- <dt>Created by:</dt> <dd>Koey Yeung</dd> -->
-									<dt>Main Certificate No.:</dt>
-									<dd>{{payment.mainContractPaymentCertNo}}</dd>
+									<!-- <dt>Created by:</dt> <dd></dd> -->
+									<dt ng-show="paymentTermsCode== 'QS1' || paymentTermsCode== 'QS2' || paymentTermsCode =='QS8'">Main Certificate No.:</dt>
+									<dd ng-show="paymentTermsCode== 'QS1' || paymentTermsCode== 'QS2' || paymentTermsCode =='QS8'">{{payment.mainContractPaymentCertNo}}</dd>
 									<dt>Due Date:</dt>
 									<dd>{{payment.dueDate | jsonDate : 'ddMMM,yyyy'}}</dd>
 									<dt>As At Date:</dt>
@@ -166,11 +166,11 @@
 							</div>
 							<div class="col-xs-12 col-md-12 col-lg-7">
 								<dl class="dl-horizontal">
-									<dt>Payment Type:</dt>
+									<dt>Payment Type: </dt>
 									<dd>{{payment.intermFinalPayment==='F' ? 'Final':'Interim'}}</dd>
-									<dt ng-show="paymentTerms== 'QS3' || paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
-										<label ng-hide="paymentTerms== 'QS3'">Invoice Received Date</label>
-										<label ng-show="paymentTerms== 'QS3'"> IPA Received Date</label>
+									<dt ng-show="paymentTermsCode== 'QS3' || paymentTermsCode== 'QS4' || paymentTermsCode =='QS5' || paymentTermsCode =='QS6' || paymentTermsCode =='QS7'">
+										<label ng-hide="paymentTermsCode== 'QS3'">Invoice Received Date: </label>
+										<label ng-show="paymentTermsCode== 'QS3'"> IPA Received Date: </label>
 									</dt>
 									<dd>{{payment.ipaOrInvoiceReceivedDate}}</dd>
 									<dt>Payment Requisition:</dt>

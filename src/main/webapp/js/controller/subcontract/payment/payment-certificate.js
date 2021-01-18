@@ -43,6 +43,14 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 			}
 		}
 	}
+	
+	$scope.updateBypassPaymentTerms = function (checkedPaymentTerms){
+    	if(checkedPaymentTerms == true)
+    		$scope.payment.bypassPaymentTerms ="Y";    		
+    	else
+    		$scope.payment.bypassPaymentTerms ="N";	
+
+    }
 
 	$scope.update = function(){
 		if($scope.payment.paymentStatus == "PND"){
@@ -71,7 +79,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 	}
 
 	$scope.calculatePaymentDueDate = function() {
-		if($scope.paymentTerms != "QS0"){
+		if($scope.paymentTerms != "QS0" && $scope.payment.bypassPaymentTerms =="N"){
 			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
 			.then(
 					function( data ) {
@@ -92,13 +100,21 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 	}
 
 	$scope.updatePaymentType = function(paymentType){
+		
 		if(!$scope.disableButtons)
 					
+			
 			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, paymentType)
 			.then(
 					function( data ) {
 						if(data.length != 0){
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+							
+							if($scope.payment.intermFinalPayment == 'I')
+								$scope.payment.intermFinalPayment = 'F';
+							else
+								$scope.payment.intermFinalPayment = 'I';
+							
 						}else{
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate has been updated.");
 							loadData();
@@ -120,6 +136,11 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 					$scope.payment = data;
 					$scope.paymentCertNo = $scope.payment.paymentCertNo;
 					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
+
+					if($scope.payment.bypassPaymentTerms == "Y")
+						$scope.checkedPaymentTerms = true;   		
+			    	else
+			    		$scope.checkedPaymentTerms = false;
 					
 					//Get GST value for Singapore jobs
 					if($scope.jobNo.indexOf("14") > -1){
