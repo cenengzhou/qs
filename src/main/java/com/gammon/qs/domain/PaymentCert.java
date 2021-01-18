@@ -48,6 +48,12 @@ public class PaymentCert extends BasePersistedObject {
 	public static final String INTERIM_PAYMENT = "Interim";
 	public static final String FINAL_PAYMENT = "Final";
 	
+	public static final String APPROVALTYPE_INTERIM_PAYMENT_SP = "SP";
+	public static final String APPROVALTYPE_FINAL_PAYMENT_SF = "SF";
+	public static final String APPROVALTYPE_DIRECT_PAYMENT_NP = "NP";
+	public static final String APPROVALTYPE_PAYMENT_REVIEW_FR = "FR";
+	public static final String APPROVALTYPE_EARLY_PAYMENT_EP = "EP";
+
 	public static final int PAYMENT_TERM_DATE_QS1=7;
 	public static final int PAYMENT_TERM_DATE_QS2=14;
 	public static final int PAYMENT_TERM_DATE_QS3=56;
@@ -96,6 +102,9 @@ public class PaymentCert extends BasePersistedObject {
 		
 	}
 	
+	//Bypass Payment Terms
+	public enum BYPASS_PAYMENT_TERMS {Y, N};
+	
 	private Subcontract subcontract;
 
 	private Integer paymentCertNo;
@@ -115,7 +124,8 @@ public class PaymentCert extends BasePersistedObject {
 	private String jobNo;
 	private String packageNo;
 	
-
+	private String bypassPaymentTerms = "N";
+	
 	public PaymentCert() {
 		super();
 	}
@@ -274,6 +284,15 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	public void setDirectPayment(String directPayment) {
 		this.directPayment = directPayment;
+	}
+	
+	@Column(name = "BYPASS_PAYMENT_TERMS", length = 1)
+	public String getBypassPaymentTerms() {
+		return bypassPaymentTerms;
+	}
+
+	public void setBypassPaymentTerms(String bypassPaymentTerms) {
+		this.bypassPaymentTerms = bypassPaymentTerms;
 	}
 	
 	@ManyToOne

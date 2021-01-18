@@ -295,7 +295,8 @@ public class PaymentPostingService {
 																					paymentCert.getMainContractPaymentCertNo(),
 																					paymentCert.getAsAtDate(),
 																					paymentCert.getIpaOrInvoiceReceivedDate(),
-																					paymentCert.getDueDate());
+																					paymentCert.getDueDate(),
+																					paymentCert.getBypassPaymentTerms());
 
 		if (wrapper.isvalid())
 			paymentCert.setDueDate(wrapper.getDueDate());
@@ -318,7 +319,7 @@ public class PaymentPostingService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 9:35:33 AM
 	 */
-	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, Date asAtDate, Date ipaOrInvoiceDate, Date dueDate) {
+	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, Date asAtDate, Date ipaOrInvoiceDate, Date dueDate, String bypassPaymentTerms) {
 		PaymentDueDateAndValidationResponseWrapper responseWrapper = new PaymentDueDateAndValidationResponseWrapper();
 		Subcontract scPackage = null;
 
@@ -337,7 +338,7 @@ public class PaymentPostingService {
 			 * modified on 29-08-2019
 			 * **/
 			// 1. QS1 or QS2 or QS8
-			if ("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms()) || "QS8".equals(scPackage.getPaymentTerms())) {
+			if (("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms()) || "QS8".equals(scPackage.getPaymentTerms())) && PaymentCert.BYPASS_PAYMENT_TERMS.N.toString().equals(bypassPaymentTerms)) {
 				logger.info("Calculating Due Date: "+jobNumber + "-SC" + packageNo + "-MainCert " +mainCertNo + "-" + scPackage.getPaymentTerms());
 				// 1a. Obtain Main Certificate's As At Date
 				ParentJobMainCertReceiveDateWrapper mainCertAsAtRecDateWrapper = null;
@@ -488,7 +489,7 @@ public class PaymentPostingService {
 				
 				
 			}
-			// 4a. QS0 - User entered Due Date has to be before today
+			// 4a. QS0 - User entered Due Date has to be before today ; OR byPassPaymentTerms (QS1, 2, 8)
 			else if (dueDate != null) {
 				// earlier than today
 				if (dueDate.before(new Date())) 

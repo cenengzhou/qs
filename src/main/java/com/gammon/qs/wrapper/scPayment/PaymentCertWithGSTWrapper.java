@@ -26,6 +26,7 @@ public class PaymentCertWithGSTWrapper implements Serializable {
 	private String jobNo;
 	private String packageNo;
 	
+	private String bypassPaymentTerms;
 	
 	public Double getGstPayable() {
 		return gstPayable;
@@ -122,5 +123,11 @@ public class PaymentCertWithGSTWrapper implements Serializable {
 	}
 	public String getDirectPayment() {
 		return directPayment;
+	}
+	public String getBypassPaymentTerms() {
+		return bypassPaymentTerms;
+	}
+	public void setBypassPaymentTerms(String bypassPaymentTerms) {
+		this.bypassPaymentTerms = bypassPaymentTerms;
 	}
 }

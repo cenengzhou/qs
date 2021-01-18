@@ -11,8 +11,17 @@
 							No.{{paymentCertNo}}</small>
 					</h3>
 
-					<p class="m-b-20">Please input the required fields below.</p>
+					<div class="row">
+						<div class="col-md-6 m-l-20">
+							<p class="m-b-20">Please input the required fields below.</p>
+						</div>
 
+						<div class="col-md-4" ng-if="(paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8') && payment.directPayment=='N' && payment.intermFinalPayment =='I'">
+							<input type="checkbox" name="iCheck" ng-change="updateBypassPaymentTerms(checkedPaymentTerms)" ng-model="checkedPaymentTerms" ng-icheck /> 
+								<b>Bypass Payment Terms for Early Release of Payment</b>
+								<label class="text-red" ng-if="payment.bypassPaymentTerms=='Y'">Approval of Executive Director is required.</label>
+						</div>
+					</div>
 
 					<div class="col-md-6" id="paymentCertificateData">
 
@@ -28,7 +37,7 @@
 							</div>
 						</div>
 					<div>
-						<div class="form-group" ng-show="paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8'">
+						<div class="form-group" ng-if="paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8'">
 							<label>Main Certificate No.</label>
 							<div class="controls">
 								<select class="form-control " ng-model="mainCertNo.selected"
@@ -47,8 +56,8 @@
 										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
-										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons || paymentTerms != 'QS0'" 
-											 ng-required = "paymentTerms == 'QS0'">
+										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons || paymentTerms != 'QS0' || payment.bypassPaymentTerms=='N'" 
+											 ng-required = "payment.bypassPaymentTerms=='Y' || paymentTerms == 'QS0'">
 											
 									</div>
 								</div>

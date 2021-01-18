@@ -142,12 +142,6 @@ public class PaymentService{
 
 	static final int RECORDS_PER_PAGE = 100;
 
-	private static final String APPROVALTYPE_INTERIMPAYMENT_SP = "SP";
-	private static final String APPROVALTYPE_FINALPAYMENT_SF = "SF";
-	private static final String APPROVALTYPE_DIRECTPAYMENT_NP = "NP";
-	private static final String APPROVALTYPE_PAYMENTREVIEW_FR = "FR";
-
-
 	/**
 	 * @author koeyyeung
 	 * created on 09 Qct, 2013
@@ -178,6 +172,8 @@ public class PaymentService{
 			wrapper.setAddendumAmount(scPaymentCert.getAddendumAmount());
 			wrapper.setRemeasureContractSum(scPaymentCert.getRemeasureContractSum());
 
+			wrapper.setBypassPaymentTerms(scPaymentCert.getBypassPaymentTerms());
+			
 			/*Double certGSTPayable = scPaymentDetailDao.getCertGstPayable(scPaymentCert);
 			Double certGSTReceivable = scPaymentDetailDao.getCertGstReceivable(scPaymentCert);
 			wrapper.setGstPayable(certGSTPayable);
@@ -558,7 +554,7 @@ public class PaymentService{
 			String company = paymentCert.getSubcontract().getJobInfo().getCompany();
 			String vendorNo = paymentCert.getSubcontract().getVendorNo();
 			String vendorName = masterListService.searchVendorAddressDetails(vendorNo).getVendorName();
-			String approvalType = APPROVALTYPE_PAYMENTREVIEW_FR;
+			String approvalType = PaymentCert.APPROVALTYPE_PAYMENT_REVIEW_FR;
 			String approvalSubType = paymentCert.getSubcontract().getApprovalRoute();
 
 			String currencyCode = null;
@@ -788,7 +784,7 @@ public class PaymentService{
 		return result;
 	}
 
-	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, String asAtDateString, String ipaOrInvoiceDateString, String dueDateString) {
+	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, String asAtDateString, String ipaOrInvoiceDateString, String dueDateString, String bypassPaymentTerms) {
 		Date asAtDate = null;
 		Date ipaOrInvoiceDate = null;
 		Date dueDate = null;
@@ -803,7 +799,7 @@ public class PaymentService{
 			dueDate = DateHelper.parseDate("yyyy-MM-dd", dueDateString);
 		
 		
-		return paymentPostingService.calculatePaymentDueDate(jobNumber, packageNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
+		return paymentPostingService.calculatePaymentDueDate(jobNumber, packageNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate, bypassPaymentTerms);
 	}
 
 	// added by brian on 20110401
@@ -1384,18 +1380,22 @@ public class PaymentService{
 				logger.info(error);
 				return error;
 			}
-			else if (paymentCert != null && ("PCS".equals(paymentCert.getPaymentStatus()) || "UFR".equals(paymentCert.getPaymentStatus()) || "SBM".equals(paymentCert.getPaymentStatus()))) {
+			else if ("PCS".equals(paymentCert.getPaymentStatus()) || "UFR".equals(paymentCert.getPaymentStatus()) || "SBM".equals(paymentCert.getPaymentStatus())) {
 				error = "Subcontract: " + subcontractNo + " - has payment submitted for approval";
 				logger.info(error);
 				return error;
 			}
-			else if (paymentCert != null && paymentType!=null && (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "F".equals(paymentType))) {
+			else if (paymentType!=null && (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "F".equals(paymentType))) {
 				error = "Payment Requisition cannot be set as Final Payment.";
 				logger.info(error);
 				return error;
 			}
 			else if(!"PND".equals(paymentCert.getPaymentStatus())){
 				error = "Cannot update Job: " + jobNo + " - Subcontract: " + subcontractNo + " - Payment No. " + paymentCertNo + " with Payment Status: "+ paymentCert.getPaymentStatus();
+				return error;
+			}else if ("F".equals(paymentType) && PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString().equals(paymentCert.getBypassPaymentTerms())){
+				error = "Bypass Payment Terms is not applicable to Final Payment.";
+				return error;
 			}
 
 			if(paymentType!=null && paymentType.trim().length()==0){
@@ -1695,7 +1695,8 @@ public class PaymentService{
 				paymentCert.getMainContractPaymentCertNo(),
 				paymentCert.getAsAtDate(),
 				paymentCert.getIpaOrInvoiceReceivedDate(),
-				paymentCert.getDueDate());
+				paymentCert.getDueDate(),
+				paymentCert.getBypassPaymentTerms());
 
 		
 		if (wrapper.isvalid()){
@@ -1716,8 +1717,8 @@ public class PaymentService{
 			if(	job!=null &&
 					(job.getDivision().equals("SGP") || job.getJobNumber().startsWith("14"))){
 				if(!Subcontract.INTERNAL_TRADING.equals(scPaymentCert.getSubcontract().getFormOfSubcontract())){
-					// 5a. Obtain GST from DB
-					logger.info("5. Insert & Update GST Payable & GST Receivable");
+					// 4a. Obtain GST from DB
+					logger.info("4. Insert & Update GST Payable & GST Receivable");
 					PaymentCertDetail gstPayableInDB = null;
 					PaymentCertDetail gstReceivableInDB = null;
 					try {
@@ -1748,7 +1749,7 @@ public class PaymentService{
 						return error;
 					}
 
-					// 5b. Insert new GST Payable
+					// 4b. Insert new GST Payable
 					if (gstPayableInDB == null) {
 						gstPayableInDB = new PaymentCertDetail();
 						gstPayableInDB.setBillItem("");
@@ -1766,7 +1767,7 @@ public class PaymentService{
 						}
 					}
 
-					// 5c. Insert new GST Receivable
+					// 4c. Insert new GST Receivable
 					if (gstReceivableInDB == null) {
 						gstReceivableInDB = new PaymentCertDetail();
 						gstReceivableInDB.setBillItem("");
@@ -1784,7 +1785,7 @@ public class PaymentService{
 						}
 					}
 
-					// 5d. Calculate GST Cumulative Amount & GST Movement Amount
+					// 4d. Calculate GST Cumulative Amount & GST Movement Amount
 					if(gstPayable!=null){
 						gstPayableInDB.setCumAmount(gstPayableInDB.getCumAmount().doubleValue() - 
 								gstPayableInDB.getMovementAmount().doubleValue() + gstPayable);
@@ -1796,7 +1797,7 @@ public class PaymentService{
 						gstReceivableInDB.setMovementAmount(gstReceivable);
 					}
 
-					// 5f. Update GST
+					// 4f. Update GST
 					try {
 						paymentDetailDao.update(gstPayableInDB);
 						paymentDetailDao.update(gstReceivableInDB);
@@ -1813,7 +1814,7 @@ public class PaymentService{
 			}
 
 			//5. Update SC Payment Certificate
-			logger.info("4. Update SC Payment Certificate");
+			logger.info("5. Update SC Payment Certificate");
 			try {
 				scPaymentCert.setMainContractPaymentCertNo(mainCertNo);
 				if (paymentCert.getAsAtDate() != null)
@@ -1822,6 +1823,9 @@ public class PaymentService{
 					scPaymentCert.setDueDate(paymentCert.getDueDate());
 				if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
 					scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
+				
+				//update bypassPaymentTerms
+				scPaymentCert.setBypassPaymentTerms(paymentCert.getBypassPaymentTerms());
 				
 				paymentCertDao.update(scPaymentCert);
 			} catch (DataAccessException e) {
@@ -1895,9 +1899,9 @@ public class PaymentService{
 				String company = paymentCert.getSubcontract().getJobInfo().getCompany();
 				String vendorNo = paymentCert.getSubcontract().getVendorNo();
 				String vendorName = masterListService.searchVendorAddressDetails(vendorNo).getVendorName();
-				String approvalType = APPROVALTYPE_INTERIMPAYMENT_SP;
+				String approvalType = PaymentCert.APPROVALTYPE_INTERIM_PAYMENT_SP;
 
-				JobInfo job = paymentCert.getSubcontract().getJobInfo();
+				//JobInfo job = paymentCert.getSubcontract().getJobInfo();
 				/*AppSubcontractStandardTerms systemConstant = null;
 				if (company != null)
 					systemConstant = systemConstantDao.getSystemConstant(company);
@@ -1905,13 +1909,18 @@ public class PaymentService{
 					systemConstant = systemConstantDao.getSystemConstant("00000");*/
 
 				//Determine Special Approval Type (Initialized as SP)
+				if(PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString().equals(paymentCert.getBypassPaymentTerms())){
+					approvalType = PaymentCert.APPROVALTYPE_EARLY_PAYMENT_EP;
+				}
+				
 				if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
-					approvalType = APPROVALTYPE_DIRECTPAYMENT_NP;
+					approvalType = PaymentCert.APPROVALTYPE_DIRECT_PAYMENT_NP;
 				}
 				else if ("F".equals(paymentCert.getIntermFinalPayment()))
-					approvalType = APPROVALTYPE_FINALPAYMENT_SF;
+					approvalType = PaymentCert.APPROVALTYPE_FINAL_PAYMENT_SF;
 
-				logger.info("PaymentStatus: " + paymentCert.getPaymentStatus() + " ApprovalType: " + approvalType);
+				
+				logger.info("Job: "+ jobNo + "SC: "+ subcontractNo.toString() + "PN: "+ paymentCertNo + "PaymentStatus: " + paymentCert.getPaymentStatus() + " ApprovalType: " + approvalType);
 
 				String approvalSubType = paymentCert.getSubcontract().getApprovalRoute();
 				String currencyCode = null;
@@ -2005,7 +2014,8 @@ public class PaymentService{
 						paymentCert.getMainContractPaymentCertNo(),
 						paymentCert.getAsAtDate(),
 						paymentCert.getIpaOrInvoiceReceivedDate(),
-						paymentCert.getDueDate());
+						paymentCert.getDueDate(),
+						paymentCert.getBypassPaymentTerms());
 				
 				if (wrapper.isvalid())
 					paymentCert.setDueDate(wrapper.getDueDate());

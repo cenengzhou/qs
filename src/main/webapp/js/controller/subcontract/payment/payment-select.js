@@ -63,6 +63,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', 'modalService', '$cookies', '
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
+					$scope.paymentTermsCode = data.paymentTerms;
 					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
 					if(data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.submittedAddendum ==1){
 						$scope.disableButton = true;

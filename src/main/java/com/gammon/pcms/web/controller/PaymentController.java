@@ -127,7 +127,7 @@ public class PaymentController {
 															@RequestParam(required = false) String dueDate){
 		PaymentDueDateAndValidationResponseWrapper paymentCertViewWrapper = null;
 		
-		paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
+		paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate, PaymentCert.BYPASS_PAYMENT_TERMS.N.toString());
 		return paymentCertViewWrapper;
 	}
 	

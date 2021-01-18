@@ -143,6 +143,7 @@ mainApp.constant('GlobalParameter', {
                {id:'SP', value:'Interim Payment', details:'For interim payment of awarded subcontract'},
                {id:'SF', value:'Final Account', details:'For final account of awarded subcontract'},
                {id:'NP', value:'Payment Requisition for subcontract not yet awarded', details:'For non-awarded subcontract'},
+               {id:'EP', value:'Early Release of Payment', details:'Bypass Payment Terms - Pay when Paid to release payment to Subcontractor. Approval of Executive Director is required.'},
                {id:'SM', value:'Variation to SC Award (Cumulative amount)', details:'For addendum'},
                {id:'SL', value:'SC Addendum (> 25% of Original SC Sum or HKD$250,000)', details:'For addendum with amount >25% of Original SC Sum or >HKD$250,000'},
                {id:'VA', value:'Split Subcontract', details:'For split subcontract'},
