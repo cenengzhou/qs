@@ -29,12 +29,22 @@
 			<label><b>Work Scope: {{subcontract.workscope}} - {{workscopeDescription}}</b></label>
 		</div>
 		<div class="col-md-12">
+			<label><b>Subcontractor Nature: </b>
+				<b ng-if="subcontract.subcontractorNature == 'DSC'"> DOMESTIC SUB-CONTRACTOR</b>
+				<b ng-if="subcontract.subcontractorNature == 'NDSC'"> NAMED SUB-CONTRACTOR</b>
+				<b ng-if="subcontract.subcontractorNature == 'NSC'"> NOMINATED SUB-CONTRACTOR</b>
+			</label>
+		</div>
+		<div class="col-md-12">
+			<label><b>Form of Subcontract: {{subcontract.formOfSubcontract}}</b></label>
+		</div>
+		<div class="col-md-12">
 			<label><b>Payment Terms: {{paymentTerms}}</b></label>
 		</div>
+		
 	</div>
 	
-	<h5 class= "invoice-title invoice-underline" align="center" ng-if="subcontract.subcontractorNature != 'NSC'">DOMESTIC SUB-CONTRACT TENDER ANALYSIS</h5>
-	<h5 class= "invoice-title invoice-underline" align="center" ng-if="subcontract.subcontractorNature == 'NSC'">NOMINATED SUB-CONTRACT TENDER ANALYSIS</h5>
+	<h5 class= "invoice-title invoice-underline" align="center" >TENDER ANALYSIS</h5>
 	<label>TENDER RESULTS AFTER CHECKING</label>
 
 

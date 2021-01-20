@@ -1394,7 +1394,7 @@ public class PaymentService{
 				error = "Cannot update Job: " + jobNo + " - Subcontract: " + subcontractNo + " - Payment No. " + paymentCertNo + " with Payment Status: "+ paymentCert.getPaymentStatus();
 				return error;
 			}else if ("F".equals(paymentType) && PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString().equals(paymentCert.getBypassPaymentTerms())){
-				error = "Bypass Payment Terms is not applicable to Final Payment.";
+				error = "Request for Early Release of Payment is not applicable to Final Payment.";
 				return error;
 			}
 

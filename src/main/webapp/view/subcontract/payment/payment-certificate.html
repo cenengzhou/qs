@@ -16,9 +16,9 @@
 							<p class="m-b-20">Please input the required fields below.</p>
 						</div>
 
-						<div class="col-md-4" ng-if="(paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8') && payment.directPayment=='N' && payment.intermFinalPayment =='I'">
+						<div class="col-md-4" ng-if="(paymentTerms!= 'QS0') && payment.directPayment=='N' && payment.intermFinalPayment =='I'">
 							<input type="checkbox" name="iCheck" ng-change="updateBypassPaymentTerms(checkedPaymentTerms)" ng-model="checkedPaymentTerms" ng-icheck /> 
-								<b>Bypass Payment Terms for Early Release of Payment</b>
+								<b>Request for Early Release of Payment</b>
 								<label class="text-red" ng-if="payment.bypassPaymentTerms=='Y'">Approval of Executive Director is required.</label>
 						</div>
 					</div>

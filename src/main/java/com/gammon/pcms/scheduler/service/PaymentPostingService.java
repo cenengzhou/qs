@@ -404,7 +404,7 @@ public class PaymentPostingService {
 
 			}
 			// 2. QS3
-			else if ("QS3".equals(scPackage.getPaymentTerms())) {
+			else if ("QS3".equals(scPackage.getPaymentTerms()) && PaymentCert.BYPASS_PAYMENT_TERMS.N.toString().equals(bypassPaymentTerms)) {
 				logger.info("Calculating Due Date: QS3");
 				if (ipaOrInvoiceDate == null) {
 					responseWrapper.setErrorMsg("Subcontract's IPA Received Date does not exist");
@@ -436,7 +436,8 @@ public class PaymentPostingService {
 				}
 			}
 			// 3. QS4-QS7
-			else if ("QS4".equals(scPackage.getPaymentTerms()) ||"QS5".equals(scPackage.getPaymentTerms()) ||"QS6".equals(scPackage.getPaymentTerms()) ||"QS7".equals(scPackage.getPaymentTerms())) {
+			else if (("QS4".equals(scPackage.getPaymentTerms()) ||"QS5".equals(scPackage.getPaymentTerms()) ||"QS6".equals(scPackage.getPaymentTerms()) ||"QS7".equals(scPackage.getPaymentTerms()))
+					&& PaymentCert.BYPASS_PAYMENT_TERMS.N.toString().equals(bypassPaymentTerms)) {
 				logger.info("Calculating Due Date: QS4-QS7");
 				if (ipaOrInvoiceDate == null) {
 					responseWrapper.setErrorMsg("Payment Invoice Received Date does not exist");
