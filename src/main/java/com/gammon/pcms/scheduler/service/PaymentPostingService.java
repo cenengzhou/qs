@@ -490,7 +490,7 @@ public class PaymentPostingService {
 				
 				
 			}
-			// 4a. QS0 - User entered Due Date has to be before today ; OR byPassPaymentTerms (QS1, 2, 8)
+			// 4a. QS0 - User entered Due Date has to be before today
 			else if (dueDate != null) {
 				// earlier than today
 				if (dueDate.before(new Date())) 
