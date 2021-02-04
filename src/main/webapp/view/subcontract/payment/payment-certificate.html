@@ -20,6 +20,7 @@
 							<input type="checkbox" name="iCheck" ng-change="updateBypassPaymentTerms(checkedPaymentTerms)" ng-model="checkedPaymentTerms" ng-icheck /> 
 								<b>Request for Early Release of Payment</b>
 								<label class="text-red" ng-if="payment.bypassPaymentTerms=='Y'">Approval of Executive Director is required.</label>
+								<label class="text-red" ng-if="(paymentTerms== 'QS1' || paymentTerms =='QS2' || paymentTerms =='QS8') && payment.bypassPaymentTerms=='Y'">Subject to receipt by Gammon for Pay-When-Paid payment terms.</label>
 						</div>
 					</div>
 

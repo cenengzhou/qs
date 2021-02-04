@@ -50,6 +50,15 @@ public class ForecastService {
 	
 	public ForecastWrapper getByTypeDesc(String jobNo, int year, int month, String type, String desc) {
 		ForecastWrapper wrapper  = new ForecastWrapper();
+		
+		int preYear = year;
+		int preMonth = month -1;
+		
+		if(month == 1){
+			preYear = year - 1;
+			preMonth = 12;
+		}
+		
 		try {
 			Forecast currentForecast = repository.getByTypeDesc(jobNo, year, month, Forecast.ROLLING_FORECAST, type, desc);
 			wrapper.setForecast(currentForecast);
@@ -74,7 +83,7 @@ public class ForecastService {
 				}
 			}
 			else if(type.equals(Forecast.EOJ)){
-				Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, type, desc);
+				Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, type, desc);
 				wrapper.setPreForecast(preForecast);
 				
 				JDEForecastEOJ jdeForecast =  jdeForecastEOJRepository.getLatestForecastEOJ(jobNo, desc);
@@ -83,7 +92,7 @@ public class ForecastService {
 					wrapper.setJdeForecast(jdeForecast);
 				
 			}else{
-				Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, type, desc);
+				Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, type, desc);
 				Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, type, desc);
 				
 				wrapper.setPreForecast(preForecast);
@@ -190,6 +199,13 @@ public class ForecastService {
 	public ForecastGroupWrapper getCriticalProgramRFList(String jobNo, int year, int month) {
 		ForecastGroupWrapper wrapper = new ForecastGroupWrapper();
 		try {
+			int preYear = year;
+			int preMonth = month - 1;
+			
+			if(month == 1){
+				preYear = year - 1;
+				preMonth = 12;
+			}
 			
 			List<ForecastWrapper> programmeWrapperList = new ArrayList<ForecastWrapper>();
 			
@@ -203,7 +219,7 @@ public class ForecastService {
 			if(programList == null || programList.size() == 0){
 				for(Forecast program: latestProgramList){
 					ForecastWrapper programWrapper = new ForecastWrapper();
-					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					
 					Forecast cpForecast = new Forecast();
@@ -230,7 +246,7 @@ public class ForecastService {
 					
 					ForecastWrapper programWrapper = new ForecastWrapper();
 					
-					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
+					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
 					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
 					
 					programWrapper.setForecast(currentProgram);
@@ -246,7 +262,7 @@ public class ForecastService {
 						continue;
 					
 					ForecastWrapper programWrapper = new ForecastWrapper();
-					Forecast preForecast = repository.getByTypeDesc(jobNo, year, month-1, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					
 					Forecast cpForecast = new Forecast();
