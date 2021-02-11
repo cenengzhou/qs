@@ -301,7 +301,11 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'jdeServ
 		.then(
 				function( data ) {
 					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data)
+						.closed.then(function(){
+							$uibModalInstance.close();
+							$state.reload();
+						});
 						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
@@ -337,4 +341,3 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'jdeServ
 		template: '<select class="form-control input-sm" ng-model="colFilter.term" ng-options="option.id as option.value for option in colFilter.options"></select>'
 	};
 });
-
