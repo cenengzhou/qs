@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2021-02-04</version>
+	<version>2021-03-05</version>
 	<packaging>war</packaging>
 
 	<scm>
@@ -78,7 +78,7 @@
 		<commons-lang.version>2.6</commons-lang.version>
 		<commons-validator.version>1.4.1</commons-validator.version>
 		<cxf.version>3.1.0</cxf.version>
-		<freemarker.version>2.3.23</freemarker.version>
+		<freemarker.version>2.3.28</freemarker.version>
 		<groovy.version>2.3.0</groovy.version>
 		<gson.version>2.4</gson.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>

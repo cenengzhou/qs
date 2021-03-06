@@ -2034,6 +2034,17 @@ public class SubcontractService {
 				newSubcontract.setMaterialIncludedContract(subcontract.getMaterialIncludedContract());
 				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
 				newSubcontract.setWorkscope(subcontract.getWorkscope());
+				newSubcontract.setPaymentMethod(subcontract.getPaymentMethod());
+				newSubcontract.setPeriodForPayment(subcontract.getPeriodForPayment());
+				newSubcontract.setAmountPackageStretchTarget(subcontract.getAmountPackageStretchTarget());
+				newSubcontract.setReasonLoa(subcontract.getReasonLoa());
+				newSubcontract.setDateScExecutionTarget(subcontract.getDateScExecutionTarget());
+				newSubcontract.setExecutionMethodMainContract(subcontract.getExecutionMethodMainContract());
+				newSubcontract.setExecutionMethodPropsed(subcontract.getExecutionMethodPropsed());
+				newSubcontract.setDurationFrom(subcontract.getDurationFrom());
+				newSubcontract.setDurationTo(subcontract.getDurationTo());
+				newSubcontract.setReasonQuotation(subcontract.getReasonQuotation());
+				newSubcontract.setReasonManner(subcontract.getReasonManner());
 				
 				/*if("NSC".equals(subcontract.getSubcontractorNature()))
 					newSubcontract.setApprovalRoute("NSC");*/
@@ -2070,6 +2081,17 @@ public class SubcontractService {
 				subcontractInDB.setCpfCalculation(subcontract.getCpfCalculation());
 				subcontractInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
 				subcontractInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
+				subcontractInDB.setPaymentMethod(subcontract.getPaymentMethod());
+				subcontractInDB.setPeriodForPayment(subcontract.getPeriodForPayment());
+				subcontractInDB.setAmountPackageStretchTarget(subcontract.getAmountPackageStretchTarget());
+				subcontractInDB.setReasonLoa(subcontract.getReasonLoa());
+				subcontractInDB.setDateScExecutionTarget(subcontract.getDateScExecutionTarget());
+				subcontractInDB.setExecutionMethodMainContract(subcontract.getExecutionMethodMainContract());
+				subcontractInDB.setExecutionMethodPropsed(subcontract.getExecutionMethodPropsed());
+				subcontractInDB.setDurationFrom(subcontract.getDurationFrom());
+				subcontractInDB.setDurationTo(subcontract.getDurationTo());
+				subcontractInDB.setReasonQuotation(subcontract.getReasonQuotation());
+				subcontractInDB.setReasonManner(subcontract.getReasonManner());
 				
 				/*if("NSC".equals(subcontract.getSubcontractorNature()))
 					subcontractInDB.setApprovalRoute("NSC");*/

@@ -486,3 +486,9 @@ md-autocomplete.personnel-user-template md-autocomplete-wrap {
           position: relative;
           z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
         }
+
+
+.disabled-picker {
+  opacity: 0.7;
+  pointer-events: none;
+}

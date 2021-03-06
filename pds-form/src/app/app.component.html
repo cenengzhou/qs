@@ -1,0 +1,8 @@
+
+<a routerLink="form4">Form4</a><br>
+<button (click)="toggle()" [innerHTML]="modeDesc[mode]"></button>&nbsp;
+<button (click)="download()">Download</button>
+
+<div class="appContainer">
+<router-outlet (activate)="onActivate($event)"></router-outlet>
+</div>

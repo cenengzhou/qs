@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
+import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -421,7 +422,11 @@ public class ResourceSummaryService implements Serializable {
 		try {
 			for(ResourceSummary resourceSummary : oldResources){
 				ResourceSummary resourceInDB = resourceSummaryHBDao.get(resourceSummary.getId()); 
-				if(resourceInDB.getPackageNo()!=null && !"".equals(resourceInDB.getPackageNo())){
+				if(!resourceInDB.getSystemStatus().equals(BasePersistedObject.ACTIVE)){
+					wrapper.setError("This line has been split/merged by " + resourceInDB.getLastModifiedUser());
+					return wrapper;
+				}
+				if(resourceInDB.getPackageNo()!=null && !"".equals(resourceInDB.getPackageNo())){ 
 					PaymentCert latestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(resourceInDB.getJobInfo().getJobNumber(), resourceInDB.getPackageNo());
 					SubcontractDetail scDetail = scDetailsHBDaoImpl.obtainSCDetailsByResourceNo(resourceInDB.getJobInfo().getJobNumber(), resourceInDB.getPackageNo(), Integer.valueOf(resourceInDB.getId().toString()));
 					if(latestPaymentCert!=null &&
