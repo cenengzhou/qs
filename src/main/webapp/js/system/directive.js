@@ -340,7 +340,7 @@ mainApp.directive('dateRangePicker', function(){
 				<label ng-if="model.showTitle !== false" for="{{model.name}}">{{model.title}}</label>\
 				<div class="input-group">\
 					<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>\
-					<input class="form-control" type="text" name="{{model.name}}" ng-model="model.range"/>\
+					<input class="form-control" type="text" name="{{model.name}}" id="{{model.name}}" ng-model="model.range"/>\
 				</div>\
 			</div>',
 		scope:{

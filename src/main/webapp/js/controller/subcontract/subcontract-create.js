@@ -47,6 +47,8 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			mosRetentionPercentage : 10
 	};
 
+	$scope.duration = {showTitle : false};
+
 	//Rentention
 	$scope.percentageOption= "Revised";
 	
@@ -132,6 +134,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			$scope.subcontract.retentionTerms = "No Retention";
 			$scope.subcontract.paymentTerms = "QS1";
 		}
+		else if(formOfSubcontract == 'Others'){
+			$scope.subcontract.retentionTerms = "";
+			$scope.subcontract.paymentTerms = "";
+		}
 		$scope.resetRetentionOptions();
 		$scope.setPaymentTermsDescription($scope.subcontract.paymentTerms);
 	}
@@ -154,14 +160,18 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			return;
 		}
 
-		
+		if($scope.subcontract.paymentMethod == null || $scope.subcontract.paymentMethod.trim().length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select Payment Method.");
+			return;
+		}
+
 		$scope.subcontractToUpdate = {
 				id:  $scope.subcontract.id,
 				packageNo : $scope.subcontract.packageNo,
 				description: $scope.subcontract.description,
 				subcontractorNature: $scope.subcontract.subcontractorNature,
 				subcontractTerm: $scope.subcontract.subcontractTerm,
-				formOfSubcontract: $scope.subcontract.formOfSubcontract,
+				formOfSubcontract: $scope.isOtherFormOfContract() ? $scope.subcontract.otherFormDescription : $scope.subcontract.formOfSubcontract,
 				internalJobNo: $scope.subcontract.internalJobNo,
 				retentionTerms: $scope.subcontract.retentionTerms,
 				paymentTerms: $scope.subcontract.paymentTerms,
@@ -178,7 +188,18 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 				cpfCalculation : $scope.subcontract.cpfCalculation,
 				cpfBasePeriod : $scope.subcontract.cpfBasePeriod,
 				cpfBaseYear: $scope.subcontract.cpfBaseYear,
-				workscope: $scope.subcontract.workscope
+				workscope: $scope.subcontract.workscope,
+				paymentMethod: $scope.subcontract.paymentMethod,
+				periodForPayment: $scope.subcontract.periodForPayment,
+				amountPackageStretchTarget: $scope.subcontract.amountPackageStretchTarget,
+				reasonLoa: $scope.subcontract.reasonLoa,
+				dateScExecutionTarget: $scope.subcontract.dateScExecutionTarget,
+				executionMethodMainContract: $scope.subcontract.executionMethodMainContract,
+				executionMethodPropsed: $scope.subcontract.executionMethodPropsed,
+				durationFrom: $scope.duration.startDate,
+				durationTo: $scope.duration.endDate,
+				reasonQuotation: $scope.subcontract.reasonQuotation,
+				reasonManner: $scope.subcontract.reasonManner
 		}
 		
 		
@@ -241,6 +262,19 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 							$scope.disableButtons = false;
 						
 						$scope.disableSubcontactNo = true;
+
+						if($scope.isOtherFormOfContract()){
+							$scope.subcontract.otherFormDescription = $scope.subcontract.formOfSubcontract;
+						}
+
+						if($scope.subcontract.durationFrom) {
+							$scope.duration.startDate = $scope.subcontract.durationFrom;
+							$('#dateRangePicker').data('daterangepicker').setStartDate($scope.duration.startDate);
+						}
+						if($scope.subcontract.durationTo) {
+							$scope.duration.endDate = $scope.subcontract.durationTo;
+							$('#dateRangePicker').data('daterangepicker').setEndDate($scope.duration.endDate);
+						}
 					}else
 						$scope.disableSubcontactNo = false;
 					
@@ -342,6 +376,15 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 					}
 				});
 	}
+
+	$scope.isOtherFormOfContract = function() {
+		return $scope.subcontract.formOfSubcontract &&
+		[
+			'major', 
+			'minor', 
+			'consultancy agreement', 
+			'internal trading'
+		].indexOf($scope.subcontract.formOfSubcontract.toLowerCase()) == -1;
+	}
 	
 }]);
-

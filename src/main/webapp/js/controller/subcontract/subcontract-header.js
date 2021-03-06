@@ -5,8 +5,7 @@ mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$c
 
 	//Rentention
 	$scope.percentageOption= "Revised";
-	
-	
+		
 	
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
@@ -53,4 +52,3 @@ mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$c
 	
 
 }]);
-

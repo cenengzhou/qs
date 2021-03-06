@@ -1,1030 +1,608 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml"
-	xmlns:o="urn:schemas-microsoft-com:office:office"
-	xmlns:w="urn:schemas-microsoft-com:office:word"
-	xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
-	xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
-<meta name=Generator content="Microsoft Word 14 (filtered medium)">
-<!--[if !mso]>
-<style>v\:* {behavior:url(#default#VML);}
-o\:* {behavior:url(#default#VML);}
-w\:* {behavior:url(#default#VML);}
-.shape {behavior:url(#default#VML);}
-hideFromOutlook {
-        overflow: visible !important;
-        float: none !important;
-        display: block !important;
-        line-height:100% !important;
-};
-a:link, span.MsoHyperlink {
-	mso-style-priority: 99;
-	color: white;
-	text-decoration: none none;
-}
+[#ftl]
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <style>
+			#form4-container { min-width: 750px; max-width: 894px; height: 100%; padding-right: 15px; vertical-align: middle; border: 0px dotted red; font-size: 85%; }
+			#form4-container table { width: 100%; padding: 0px; margin: 0px; border: none; box-sizing: border-box; border-spacing: 0px; border-collapse: collapse; }
+			#form4-container table th, #form4-container table td { padding: 0px; border: none; vertical-align: top; }
+			#form4-container table.border2, #form4-container table.border2 > tbody > tr > th, #form4-container table.border2 > tbody > tr > td { border: 2px solid black; }
+			#form4-container > table > tbody > tr > th, #form4-container > table > tbody > tr > td { padding: 5px; vertical-align: top; }
+			#form4-container .border1b { border-bottom: 1px solid black; line-height: 2em; white-space: normal; padding-left: 3px; }
+			#form4-container .border1t { border-top: 1px dotted black; }
+			#form4-container .em2 { font-size: 2em; }
+			#form4-container .line1-5 { line-height: 1.5em; }
+			#form4-container .line2 { line-height: 2em; }
+			#form4-container .pl5 { padding-left: 5px; }
+			#form4-container .pr5 { padding-right: 5px; }
+			#form4-container .th { font-weight: 700; text-align: center; background-color: rgb(221, 221, 221); }
+			#form4-container .GammonLogo { width: 123px; height: 31px; }
+			#form4-container .pds { color: dodgerblue; }
+			#form4-container .nowrap { white-space: nowrap; }
+			#form4-container .yesno { width: 30px; color: rgb(221, 75, 57); text-align: center; }
+			#form4-container .yesno td { padding: 5px; }
+			#form4-container .footerComment { font-size: 90%; }
+			#form4-container .approvedBy { border-collapse: separate; border-spacing: 10px; }
+			#form4-container .typebox { padding-right: 5px; }
+			#form4-container #tableHead .headertitle { vertical-align: bottom; font-size: 125%; font-weight: 700; }
+			#form4-container #tableHead td:first-child + td { text-align: center; }
+			#form4-container #tableHead td:first-child + td + td { text-align: right; }
+			#form4-container #table3Q .headertitle, #form4-container #tableVariances .headertitle, #form4-container #tableChange .headertitle { font-weight: 700; }
+			#form4-container #tableTenderJob tr { line-height: 2em; }
+			#form4-container #tableTenderJob .border1b { width: 650px; padding-left: 10px; }
+			#form4-container #table3Q table tr:first-child td:first-child + td { width: 1px; }
+			#form4-container #table3Q .border1b { width: 750px; }
+			#form4-container #tableChange .mainCertLeft { width: 60px; }
+			#form4-container #tableChange .mainCertLeftInput { width: 300px; }
+			#form4-container #tableChange .mainCertRight { width: 220px; }
+			#form4-container #tableChange .mainCertRightInput { width: 200px; }
+			#form4-container #tableChange .loaLeft { width: 130px; }
+			#form4-container #tableChange .loaLeftInput { width: 200px; }
+			#form4-container #tableChange .loaRight { width: 220px; }
+			#form4-container #tableChange .loaRightInput { width: 200px; }
+			#form4-container #tableTenderBy td:first-child + td { width: 120px; }
+			#form4-container #tableTenderBy td:first-child + td + td + td { width: 100px; }
+			#form4-container #tableTenderRcm table td:first-child { width: 30px; }
+			#form4-container #tableTenderRcm table td:first-child + td { width: 120px; }
+			#form4-container #tableTenderRcm table td:first-child + td + td { width: 1px; }
+			#form4-container #tableTenderRcm td:first-child + td { width: 120px; }
+			#form4-container #tableTenderRmk td:first-child { width: 200px; }
+			#form4-container #tableTenderType td:first-child { width: 150px; }
+			#form4-container #tableTenderType td:first-child + td + td { width: 100px; }
+			#form4-container #tableTenderType td:first-child + td + td + td + td { width: 150px; }
+			#form4-container #tableTenderTypeContract td:first-child { width: 200px; }
+			#form4-container #tableTenderTypeContract td:first-child + td, #form4-container #tableTenderTypeContract td:first-child + td + td + td { width: 50px; }
+			#form4-container #tableTenderTypeContract td:first-child + td + td { width: 150px; }
+			#form4-container #tableTenderTypeContract td:first-child + td + td + td + td { width: 150px; }
+			#form4-container #cdate { width: 100%; padding: 40px; }
+			#form4-container #cdate table { width: 650px; }
+			#form4-container #cdate td { padding: 10px; border-bottom: 1px solid rgb(221, 221, 221); }
 
-a:visited, span.MsoHyperlinkFollowed {
-	mso-style-priority: 99;
-	color: white;
-	text-decoration: none none;
-}
-
-</style>
-<![endif]-->
-<!--[if mso]>
-<style>
-a:link, span.MsoHyperlink {
-	mso-style-priority: 99;
-	color: #2184DA;
-	text-decoration: none none;
-}
-
-a:visited, span.MsoHyperlinkFollowed {
-	mso-style-priority: 99;
-	color: #2184DA;
-	text-decoration: none none;
-}
-hideFromOutlook {
-	display: none; 
-	font-size: 0; 
-	max-height: 0; 
-	line-height: 0;
-	mso-hide:all;
-};
-</style>
-<![endif]-->
-<style>
-<!-- /* Font Definitions */
-@font-face {
-	font-family: \65B0\7D30\660E\9AD4;
-	panose-1: 2 2 5 0 0 0 0 0 0 0;
-}
-
-@font-face {
-	font-family: \65B0\7D30\660E\9AD4;
-	panose-1: 2 2 5 0 0 0 0 0 0 0;
-}
-
-@font-face {
-	font-family: Calibri;
-	panose-1: 2 15 5 2 2 2 4 3 2 4;
-}
-
-@font-face {
-	font-family: Tahoma;
-	panose-1: 2 11 6 4 3 5 4 4 2 4;
-}
-
-@font-face {
-	font-family: "\@\65B0\7D30\660E\9AD4";
-	panose-1: 2 2 5 0 0 0 0 0 0 0;
-}
-
-@font-face {
-	font-family: Arial;
-}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal {
-	margin: 0in;
-	margin-bottom: .0001pt;
-	font-size: 11.0pt;
-	font-family: "Calibri", "sans-serif";
-}
-
-h5 {
-	mso-style-priority: 9;
-	mso-style-link: "Heading 5 Char";
-	mso-margin-top-alt: auto;
-	margin-right: 0in;
-	mso-margin-bottom-alt: auto;
-	margin-left: 0in;
-	font-size: 10.0pt;
-	font-family: "Arial", "serif";
-}
-
-a:link, span.MsoHyperlink {
-	mso-style-priority: 99;
-	color: blue;
-	text-decoration: underline;
-}
-
-a:visited, span.MsoHyperlinkFollowed {
-	mso-style-priority: 99;
-	color: purple;
-	text-decoration: underline;
-}
-
-p.MsoAcetate, li.MsoAcetate, div.MsoAcetate {
-	mso-style-priority: 99;
-	mso-style-link: "Balloon Text Char";
-	margin: 0in;
-	margin-bottom: .0001pt;
-	font-size: 8.0pt;
-	font-family: "Tahoma", "sans-serif";
-}
-
-span.EmailStyle17 {
-	mso-style-type: personal-compose;
-	font-family: "Calibri", "sans-serif";
-	color: windowtext;
-}
-
-span.Heading5Char {
-	mso-style-name: "Heading 5 Char";
-	mso-style-priority: 9;
-	mso-style-link: "Heading 5";
-	font-family: "Arial", "serif";
-	font-weight: bold;
-}
-
-span.apple-converted-space {
-	mso-style-name: apple-converted-space;
-}
-
-span.invoice-underline {
-	mso-style-name: invoice-underline;
-}
-
-span.text-primary {
-	mso-style-name: text-primary;
-}
-
-span.BalloonTextChar {
-	mso-style-name: "Balloon Text Char";
-	mso-style-priority: 99;
-	mso-style-link: "Balloon Text";
-	font-family: "Tahoma", "sans-serif";
-}
-
-.MsoChpDefault {
-	mso-style-type: export-only;
-}
-
-@page WordSection1 {
-	size: 8.5in 11.0in;
-	margin: 1.0in 1.25in 1.0in 1.25in;
-}
-
-div.WordSection1 {
-	page: WordSection1;
-}
--->
-</style>
-<!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext="edit" spidmax="1026" />
-</xml><![endif]-->
-<!--[if gte mso 9]><xml>
-<o:shapelayout v:ext="edit">
-<o:idmap v:ext="edit" data="1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=EN-US link=blue vlink=purple>
-	<div class=WordSection1>
-		<p class=MsoNormal>
-			<o:p>&nbsp;</o:p>
-		</p>
-		<table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-			style='background: white; border-collapse: collapse; border: none'>
-			<tr>
-				<td width=590 valign=top
-					style='width: 6.15in; padding: .2in .2in .2in .2in'>
-					
-					<table
-						class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-						style='border-collapse: collapse; border: none'>
-						<tr>
-							<td width=358 valign=top
-								style='width: 500pt; padding: 0in 5.4pt 0in 5.4pt'><p
-									class=MsoNormal style='line-height: 27.0pt'>
-									<span
-										style='font-size: 15.0pt; font-family: Arial; color: #30373E'><o:p>&nbsp;</o:p></span>
-								</p>
-								<p class=MsoNormal style='line-height: 27.0pt'>
-									<span
-										style='font-size: 15.0pt; font-family: Arial; color: #30373E'><img
-										width=154 height=41 id="Picture_x0020_12" 
-src="${logo!""}"
-										alt="Gammon"></span><span
-										style='font-size: 15.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal>
-									<b><span style='font-size: 10.0pt; font-family: Arial; color: #30373E'>
-${companyName!""}
-										</span></b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal>
-									<b><span style='font-size: 10.0pt; font-family: Arial; color: #30373E'>
-Job No.: ${job.jobNumber!""} - ${job.description!""}
-										</span></b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal>
-									<b><span style='font-size: 10.0pt; font-family: Arial; color: #30373E'>
-TRADE: Subcontract ${subcontract.packageNo!""} - ${subcontract.description!""}
-										</span></b><u><span
-										style='font-size: 11.5pt; font-family: Arial; color: #30373E'><o:p></o:p></span></u>
-								</p>
-								<p class=MsoNormal>
-									<b><span style='font-size: 10.0pt; font-family: Arial; color: #30373E'>
-Work Scope: ${workScopeDescription!""}
-										</span></b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal>
-									<b><span style='font-size: 10.0pt; font-family: Arial; color: #30373E'>
-Payment Terms: ${paymentTerms!""}
-										</span></b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-								
-								</td>
-							<td width=357 valign=top
-								style='width: 268.1pt; padding: 0in 5.4pt 0in 5.4pt'><p
-									class=MsoNormal>
-									<span
-										style='font-size: 11.0pt; font-family: "Calibri", "sans-serif"; color: #1F497D'><o:p>&nbsp;</o:p></span>
-								</p>
-								<div align=right>
-									<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-										style='margin-left: 45.45pt; border-collapse: collapse; border: none'>
-										<tr style='height: 36.75pt'>
-											<td width=134 valign=top style='width: 100.15pt; padding: 0in 5.4pt 0in 5.4pt; height: 36.75pt'>
-											<!-- div class="hideFromOutlook" style="mso-hide: all">
-												<p class=MsoNormal style='margin-bottom: 3.0pt; line-height: 15.5pt'>
-													<span class="pull-right hidden-print"> <a href="javascript:;"
-														onclick="window.print()"
-														class="btn btn-sm width-100 btn-rounded btn-danger pull-right hidden-print" style="										
-background: #F04B46;
-    -webkit-box-shadow: 0 1px #902d2a;
-    box-shadow: 0 1px #902d2a;
-	    border-radius: 60px;
-		    border: none;
-    font-weight: 300;width:100px !important;
-	padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-	color: #fff;
-	display: inline-block;
-	    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-	    cursor: pointer;">
-															<i class="fa fa-print m-r-3"></i> Print
-													</a>
-													</span>
-												</p>
-											</div -->
-											</td>
-										</tr>
-										<#if subcontract.subcontractorNature != "NSC">				
-										<tr style='height: 36.75pt'>
-											<td width=134 valign=top
-												style='width: 100.15pt; padding: 0in 5.4pt 0in 5.4pt; height: 36.75pt'><p
-													class="MsoNormal pull-right" style='background: white'>
-													<b><span
-														style='font-size: 10.0pt; font-family: Arial; color: #30373E'>PDS/07/Form
-															4</span></b><span
-														style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-												</p></td>
-										</tr>
-										</#if>
-									</table>
-								</div>
-								<p class=MsoNormal
-									style='margin-bottom: 3.0pt; line-height: 15.5pt'>
-									<u><span
-										style='font-size: 11.5pt; font-family: Arial; color: #1F497D'>
-										<o:p></o:p></span></u>
-								</p></td>
-						</tr>
-					</table>
-					<br>
-					<#if subcontract.subcontractorNature != "NSC">
-					<u><b><p align=center style="font-size: 11.5pt; font-family: Arial, serif; color: #30373E">DOMESTIC SUB-CONTRACT TENDER ANALYSIS</p></b></u>
-					</#if>
-					<#if subcontract.subcontractorNature == "NSC">
-					<u><b><p align=center style="font-size: 11.5pt; font-family: Arial, serif; color: #30373E">NOMINATED SUB-CONTRACT TENDER ANALYSIS</p></b></u>
-					</#if>
-					<p style="font-size: 9.5pt; font-family: Arial, serif; color: #30373E">TENDER RESULTS AFTER CHECKING</p>
-					<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
-						width=715
-						style='width: 536.25pt; border-collapse: collapse; border: none'>
-						<thead>
-							<tr>
-								<td width=256 valign=bottom
-									style='width: 192.2pt; border: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>TENDERER<o:p></o:p></span></b>
-									</p></td>
-								<td width=246 valign=bottom
-									style='width: 184.5pt; border: solid windowtext 1.5pt; border-left: none; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>AMOUNT<o:p></o:p></span></b>
-									</p></td>
-								<td width=213 valign=bottom
-									style='width: 159.55pt; border: solid windowtext 1.5pt; border-left: none; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>REMARKS<o:p></o:p></span></b>
-									</p></td>
-							</tr>
-						</thead>
-<#list tenderList as tenderer>
-						<tr>
-							<td width=256 valign=top
-								style='width: 192.2pt; border: solid windowtext 1.5pt; border-top: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'>
-${tenderer.nameSubcontractor!""}								
-								</td>
-							<td width=246 valign=top
-								style='width: 184.5pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-${companyCurrencyCode!""} ${((tenderer.budgetAmount!0) - (tenderer.amtBuyingGainLoss!0))?string["#,##0.00"]}
-									<o:p></o:p>
-									</span>
-									<#if companyCurrencyCode!=tenderer.currencyCode>
-									<span style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-										(${tenderer.currencyCode!""} ${(((tenderer.budgetAmount!0)-(tenderer.amtBuyingGainLoss!0))/(tenderer.exchangeRate!1)) ?string["#,##0.00"]})
-									<o:p></o:p>
-									</span>
-									</#if>
-								</p></td>
-							<td width=213 valign=top
-								style='width: 159.55pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'>
-${tenderer.remarks!""}
-								</td>
-						</tr>
-</#list>
-						<tr>
-							<td width=256 valign=top
-								style='width: 192.2pt; border: solid windowtext 1.5pt; border-top: none; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>RECOMMENDATION
-											FOR AWARD:<o:p></o:p>
-									</span></b>
-								</p></td>
-							<td width=246 valign=top
-								style='width: 184.5pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-${companyCurrencyCode!""} ${((rcmTenderer.budgetAmount!0) - (rcmTenderer.amtBuyingGainLoss!0))?string["#,##0.00"]}
-								<o:p></o:p></span>
-								<#if companyCurrencyCode!=rcmTenderer.currencyCode!"">
-								<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-(${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]})
-								<o:p></o:p></span>
-								</#if>
-								</b>
-								</p></td>
-							<td width=213 valign=top
-								style='width: 159.55pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'></td>
-						</tr>
-						<tr>
-							<td width=256 valign=top
-								style='width: 192.2pt; border: solid windowtext 1.5pt; border-top: none; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>${companyName!""}
-											Budget:<o:p></o:p>
-									</span></b>
-								</p></td>
-							<td width=246 valign=top
-								style='width: 184.5pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-${budgetTender.currencyCode!""} ${(budgetTender.budgetAmount!0)?string["#,##0.00"]}
-								<o:p></o:p>
-									</span></b>
-								</p></td>
-							<td width=213 valign=top
-								style='width: 159.55pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'></td>
-						</tr>
-						<tr>
-							<td width=256 valign=top
-								style='width: 192.2pt; border: solid windowtext 1.5pt; border-top: none; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>BUYING
-											GAIN/(LOSS):<o:p></o:p>
-									</span></b>
-								</p></td>
-							<td width=246 valign=top
-								style='width: 184.5pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<b><u><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-${companyCurrencyCode!""} <span class="invoice-underline">${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</span>
-										</span></u></b><b><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span></b>
-								</p></td>
-							<td width=213 valign=top
-								style='width: 159.55pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 3.75pt 15.0pt 3.75pt 15.0pt'></td>
-						</tr>
-					</table>
-					<p class=MsoNormal>
-						<span
-							style='font-size: 8pt; font-family: Arial; color: #DD4B39'>REQUEST
-							FOR APPROVAL TO CHANGE THE MANNER OF EXECUTION OF SUBCONTRACT
-							FROM MAIN CONTRACT(PDS/07/4.5.23. Insert yes or no) <o:p></o:p>
-						</span>
-					</p>
-
-					
-					<table class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border: none;width: 32px;height: 25px;">
-							<tbody><tr>
-								<td valign="middle" style="border: solid windowtext 1.5pt; " align="center"><p class="MsoNormal">
-										<span style="font-size: 10.0pt; font-family: Arial; color: #DD4B39">
-${rcmTenderer.statusChangeExecutionOfSC!""}
-									<o:p></o:p></span>
-									</p></td>
-							</tr>
-						</tbody></table>
-					<br>
-					<p class=MsoNormal>
-						<span
-							style='font-size: 10.0pt; font-family: Arial; color: #30373E'>APPROVAL
-							OF VARIANCES TO STANDARD FORMS OF SUBCONTRACT (</span><span
-							style='font-size: 10.0pt; font-family: Arial; color: #1E77C5'>PDS/07/4.5.17</span><span
-							style='font-size: 10.0pt; font-family: Arial; color: #30373E'>)<o:p></o:p></span>
-					</p>
-					<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
-						width=715
-						style='width: 536.25pt; border-collapse: collapse; border: none'>
-						<thead>
-							<tr>
-								<td colspan=4 valign=bottom
-									style='border: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal style='margin-bottom: 7.5pt'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>TENDERER:
-${rcmTenderer.nameSubcontractor!""}
-									<o:p></o:p></span></b>
-									</p></td>
-							</tr>
-							<tr>
-								<td valign=bottom
-									style='border: solid windowtext 1.5pt; border-top: none; padding: 9.0pt 15.0pt 6.0pt 15.0pt'></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>General
-												Condition of Sub-Contract<o:p></o:p>
-										</span></b>
-									</p></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>Proposed
-												Variance to the General Condition<o:p></o:p>
-										</span></b>
-									</p></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'>Reason
-												for the Variance<o:p></o:p>
-										</span></b>
-									</p></td>
-							</tr>
-						</thead>
-							
-
-<#if tenderVarianceList??>
-<#list tenderVarianceList as variance>							
-							<tr>
-								<td valign=bottom
-									style='border: solid windowtext 1.5pt; border-top: none; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p>
-${variance.clause!""}
-										</o:p></span></b>
-									</p></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p>
-${variance.generalCondition!""}
-										</o:p></span></b>
-									</p></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p>
-${variance.proposedVariance!""}
-										</o:p></span></b>
-									</p></td>
-								<td valign=bottom
-									style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 9.0pt 15.0pt 6.0pt 15.0pt'><p
-										class=MsoNormal align=center
-										style='margin-bottom: 7.5pt; text-align: center'>
-										<b><span
-											style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p>
-${variance.reason!""}
-									</o:p></span></b>
-									</p></td>
-							</tr>
-</#list>
-</#if>				
-							
-							
-							
-							
-					</table>
-					<table>
+    </style>
+    
+		<div id="form4-container">
+			<table id="tableHead">
+				<tbody>
 					<tr>
-					<td>
-					<table class="MsoTableGrid"  cellspacing="0" cellpadding="0" style="border-collapse: collapse;border: none;width: 32px;height: 25px;">
-							<tbody><tr>
-								<td valign="middle" align="center"><p class="MsoNormal">
-										<span style="font-size: 30.0pt; font-family: Arial; color: #30373E">
-<#if subcontract.preAwardMeetingDate??>&#9745<#else>&#9746</#if>
-									<o:p></o:p></span>
-									</p></td>
-							</tr>
-						</tbody></table>
-					</td>
-					<td style="padding-left:5px">
-						<p class=MsoNormal>
-							<span
-								style='font-size: 10.0pt; font-family: Arial; color: #30373E'>Confirmation
-								that the Subcontract Pre-Award Finalization Meeting has been held
-								and minutes recorded (</span><span
-								style='font-size: 10.0pt; font-family: Arial; color: #1E77C5'>PDS/07/4.5.18/Form
-								5</span><span
-								style='font-size: 10.0pt; font-family: Arial; color: #30373E'>)<o:p></o:p></span>
-						</p>
-					</td>
+						<td>
+							<img class="GammonLogo" src="
+  data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALkAAAAvCAYAAAC/kmsCAAAACXBIWX
+  MAAAsSAAALEgHS3X78AAAGbUlEQVR42u1dTW7bRhT+UmRZQKrWNawCdTZcRNl2I+YEli9A0yewUh
+  4gygGIKDegeIEyJwh1AtMouKkWpSGguwrSCdyFntzxZIYcUiQlJe8DjDjKcH7efPPeN29GzIvHx0
+  dUxerswq76bG+5iMFgtIAXVUm+OrsIAFzv0fast1y4PAWMpvHDgQgOANdUD4NxXCSvieBMdMZxkr
+  xmgjPRGcdF8oYIzkRnHAfJGyY4E51xWJK3RHAmOuMwJG+Z4Ex0RrskPxDBmeiM2qE8DDowwUXMAY
+  x6y8Wap4pRG8mPiOA73AOwmeiMWuTKERIcAF4DiFdnF12eLsZeJD9Sgj8jOk8Xo7JcOXKCi/ilt1
+  xkPG2MMni5OrsY10DwBwARgCZ1c8IEZ1SVK/tq3XcA3IYJDgCD1dlFn6eMUdqT7/n8HEAG4EtL/R
+  2vzi7s3nKR8NQxSm88KyIAMG6xvx2KGgxGayQ/hEYe8LQx2iQ5g8EkZzCY5AwGk5zB2A8vv4dBWo
+  4/wDYrMwAwVBTZAEiwPdAK0tDjy2DsyU+G3H3L8WMAdwBuNQQHtqnJIYCPADLL8cdMDSb5qXjvJI
+  fYyCH8R8vxXaYHk/zYCR4TYatiSvUwvnOSj3CcV2CnOQSfA7gC8Jb+nOV49AlThDeeLgCbfrcNnx
+  k2OSDL8e2cNm7S0AukzyLL8dek2WVcMkWY5B3y5EEJr7cC8Duau7+u2zTOFQQXPf9tiYXUpSg2wN
+  fXDGJsrztEqiwNSSDx5meWhl4m/PtIqnNNdWVSPXK5vDb7APriZ2noxVKfRvLiT0MvUfS9sFyO8x
+  Ft1sH2ina245A8RsHW4jh/BPBnGnoP0lzYNMaE6nzKkr349+dfu9TI65YW1oYigFvRU857y4WdY8
+  y1RqpcpaEX1RAp3AI5JI5zLC8syvYMpXK78QSaeXiqi4gWATg3jVaW408AvJfKzdLQcy3HD3Iczq
+  5Ml/qmm6/PANycRT01jOAzGudaWqB/S+X+AfAbgDfUr47GZnYaesnum0FtE31OA/+jTpKTQe80z/
+  20b/6bvFHZa8XPFpeC5LsJgcHCeWO4oX5GdA3Jge2XxIvm/AN5yKLIO09Dz64hAXBP5BSJrnq/+F
+  8AXhk4msFLAOgtF2t6oX5bRB82tKnTfQFkIxNcIRtUWEuhWCeFrqgulYcPDNoxJcGdYbkJtStKGR
+  VM5nps2L+h5fi2KIM09thQnRlFsPeKPk1QfIX7lUGfOgAmT9kVeuWDTSvpVKFL+SUaHf6l4GdqsI
+  g+paEXkefsqwxNEcBExr2jBfOpoOwnyg7dCFFAxLmU/swKJMJbanuTswA/U9+ucjhiS05EJVHGae
+  gFaejFaehNNNktt8Sc7/qvs5n9bON5AI/elievc1Pb1S2gNPTWluNXzlQJsiYiLXqpWVRjiUy3FW
+  0xS0NvR6jYcvxMIyEf0tAbCW0mCp0sZ9hGqgYVm3/VnqCjiApKKSJsVmNyJjJvz7/Kk5+4R9cZRe
+  Vhg7KVp6GXkOF3NhoTIePdT9WOKzbFuoxFVPD3oqiW18bapJwqC2Jo87li3FVtlij6obSF8jDoG5
+  EucvjuKjzKDRl+brjxHAh3Yd6Tpx1KP6cU1RJDwlX5Tm2/IelZGtoTz1MkeoFXGKlCZxp6tpwV0B
+  C8T5FiqMkIzCgTwcjZyGs+f6hpYZUj+Ql79M85GYd99bgu/z5IQ8+ljRSjfHQ5b7LRwrsrJ0j0KE
+  eyBLJs2TN8zqUcOF/oyt8f9TURslEYHeufUtaFTgUnGu9wDWBEp3yxED6rGlp+zmVuPyHTOJq+tG
+  G0SzzfHMlPjej4/3akSl50sE253VaYtKFi0mJqawD9sfcA398LSyOoD4OmluO7lG7tamTk3DCDU4
+  9caUi6PKD6a+UKB0+nlDbUhxtVMdV8PhQyLZs9Mh3fFOiEWWWzSwAJOYdME3Fr3duUvk9eE9EDet
+  VblToCQyMnJCdmNU1agm3KsWhzOmuZTwkOs1+6MbDZBOqTyHNyDqoj/5s9cueRytFUumorSJcq34
+  VMestFJOgxt4Sni8q8B5G8iUsaXbyOqZNb9xRhdl4mUej9jMY9oMl6oPJTWggBnQh2NZuwwFC6xC
+  aRjMK+ai5i6ZkPhlHxg0lfyBZrfH3dVy43thw/ov7p5NyGCDrRyBSjvqehlwhXep+g/D+DGIymoL
+  jHsza5j74P/gNbfsKHnURBMgAAAABJRU5ErkJggg==">
+						</td>
+						<td class="headertitle">TENDER ANALYSIS</td>
+						<td> PDS/07/Form 4  <!-- PCMS start <br><span class="pull-right hidden-print"><a class="btn btn-sm width-100 btn-rounded btn-danger hidden-print" href="javascript:;" id="printBtn" onclick="window.print()"><i class="fa fa-print m-r-3"></i> Print </a></span> PCMS end -->
+</td>
 					</tr>
-					</table>
+				</tbody>
+			</table>
+			<br>
+			<table class="border2">
+				<tbody>
+					<tr>
+						<td colspan="12">
+							<table id="tableTenderJob">
+								<tbody>
+									<tr>
+										<td class="nowrap">Project Job Number &amp; Title:</td>
+										<td class="border1b">${job.jobNumber!""} - ${job.description!"&nbsp;"}</td>
+									</tr>
+									<tr>
+										<td class="nowrap">Package Number &amp; Description:</td>
+										<td class="border1b">${subcontract.packageNo!""} - ${subcontract.description!"&nbsp;"}</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="th" colspan="6">TYPE</td>
+						<td class="th" colspan="6">FORM OF CONTRACT</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<table class="footerComment" id="tableTenderType">
+								<tbody>
+									<tr>
+										<td class="nowrap">Domestic Sub-Contractor</td>
+										<td class="typebox">[#if subcontract.subcontractorNature == "DSC"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="nowrap">Internal Business</td>
+										<td class="typebox">[#if subcontract.subcontractorNature == "IB"]&#9745;[#else]&#9744;[/#if]</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="nowrap">Nominated Sub-Contractor</td>
+										<td class="typebox">[#if subcontract.subcontractorNature == "NDSC"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="nowrap">Consultant</td>
+										<td class="typebox">[#if subcontract.subcontractorNature == "C"]&#9745;[#else]&#9744;[/#if]</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="nowrap">Named Sub-Contractor</td>
+										<td class="typebox">[#if subcontract.subcontractorNature == "NSC"]&#9745;[#else]&#9744;[/#if]</td>
+										<td colspan="3">
+											<table>
+												<tbody>
+													<tr>
+														<td class="nowrap" style="width: 50px;">Others</td>
+														<td class="typebox" style="width: 10px;">[#if subcontract.subcontractorNature != "DSC" \and subcontract.subcontractorNature != "IB" \and subcontract.subcontractorNature != "NDSC" \and subcontract.subcontractorNature != "C"]&#9745;[#else]&#9744;[/#if]</td>
+														<td class="border1b" style="width: 150px;">[#if subcontract.subcontractorNature != "DSC" \and subcontract.subcontractorNature != "IB" \and subcontract.subcontractorNature != "NDSC" \and subcontract.subcontractorNature != "C"]${subcontract.subcontractorNature!""}[#else]&nbsp;[/#if]</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td colspan="6">
+							<table class="footerComment" id="tableTenderTypeContract">
+								<tbody>
+									<tr>
+										<td class="nowrap">Major Form of Sub-Contract</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Major"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="nowrap">Consultancy Agreement</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Consultancy Agreement"]&#9745;[#else]&#9744;[/#if]</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="nowrap">Minor Form of Sub-Contract</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Minor"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="nowrap" colspan="2">Design \ Checking \ Other *</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="nowrap">Internal Works Order (IWO)[#if subcontract.formOfSubcontract == "Internal Trading"]
+											<br>(${subcontract.internalJobNo})[/#if]
+										</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Internal Trading"]&#9745;[#else]&#9744;[/#if]</td>
+										<td colspan="3">
+											<table>
+												<tbody>
+													<tr>
+														<td class="nowrap" style="width: 50px;">Others</td>
+														<td class="typebox" style="width: 10px;">[#if subcontract.formOfSubcontract != "Major" \and subcontract.formOfSubcontract != "Minor" \and subcontract.formOfSubcontract != "Consultancy Agreement" \and subcontract.formOfSubcontract != "Internal Trading"]&#9745;[#else]&#9744;[/#if]</td>
+														<td class="border1b" style="width: 150px;">[#if subcontract.formOfSubcontract != "Major" \and subcontract.formOfSubcontract != "Minor" \and subcontract.formOfSubcontract != "Consultancy Agreement" \and subcontract.formOfSubcontract != "Internal Trading"]${subcontract.formOfSubcontract!""}[#else]&nbsp;[/#if]</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" class="th" ng-reflect-ng-class="[object Object]">TENDERER</td>
+						<td colspan="2" class="th" ng-reflect-ng-class="[object Object]">AMOUNT</td>
+						<td colspan="6" class="th" ng-reflect-ng-class="[object Object]">REMARKS</td>
+					</tr> [#list tenderList as tenderer] 
+					<tr>
+						<td colspan="4">${tenderer.nameSubcontractor!"&nbsp;"}</td>
+						<td colspan="2"> ${companyCurrencyCode!""} ${((tenderer.budgetAmount!0) - (tenderer.amtBuyingGainLoss!0))?string["#,##0.00"]} </td>
+						<td colspan="6">${tenderer.remarks!"&nbsp;"}</td>
+					</tr> [/#list]
 
-					<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
-						width=715 style='width: 536.25pt; border-collapse: collapse'>
-						<tr>
-							<td valign=top style='padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'>Prepared
-										by:
-<span class="invoice-underline">${rcmTenderer.usernamePrepared!""}</span>
-										<o:p></o:p>
-									</span>
-								</p></td>
-							<td valign=top style='padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'>Date:
-<span class="invoice-underline">${rcmTenderer.datePrepared!""}</span>
-										<o:p></o:p></span>
-								</p></td>
-						</tr>
-					</table>
-					<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
-						width=715
-						style='width: 536.25pt; border-collapse: collapse; border: none'>
-						<tr>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal>
-									<b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'>ACTION
-											DECIDED:</span></b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p>
-									<b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'>Award
-											to</span>
-				<span class="invoice-underline" ng-show="subcontract.scStatus==500">${rcmTenderer.nameSubcontractor!""}</span>
-											</b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p></td>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; border-left: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal>
-									<b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'>NOTES:</span>
-<div>${subcontract.notes!""}</div>
-										</b><span
-										style='font-size: 10.0pt; font-family: Arial; color: #30373E'><o:p></o:p></span>
-								</p></td>
-						</tr>
-					</table>
-					<br>
-					<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
-						width=715
-						style='width: 536.25pt; border-collapse: collapse; border: none'>
-						<tr>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Reviewed
-										by:<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Managing
-										Quantity Surveyor<o:p></o:p>
-									</span>
-								</p></td>
-							<td colspan=2 valign=top
-								style='border: solid windowtext 1.5pt; border-left: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Senior
-										Project Manager<o:p></o:p>
-									</span>
-								</p></td>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; border-left: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Estimating
-										Manager<o:p></o:p>
-									</span>
-								</p></td>
-						</tr>
-						<tr>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; border-top: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Approvals
-										by:<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Commercial
-										Team Leader<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<u></u>
-									<o:p></o:p></span>
-								</p></td>
-							<td colspan=2 valign=top
-								style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Project
-										Leader<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<o:p></o:p></span>
-								</p></td>
-							<td valign=top
-								style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>BU
-										Commercial Manager<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<o:p></o:p></span>
-								</p></td>
-						</tr>
-						<#if subcontract.subcontractorNature != "NSC">	
-						<tr>
-							<td valign=top
-								style='border: solid windowtext 1.5pt; border-top: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Extended
-										Approval by:<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>[Required
-										only where different manner of<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>execution
-										of Subcontract is requested<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>above
-										(<span style='color: #1E77C5'>PDS/07/4.5.23)</span>]<o:p></o:p>
-									</span>
-								</p></td>
-							<td width=175 valign=top
-								style='width: 131.5pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>BU
-										Commercial Manager<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<u></u>
-									<o:p></o:p></span>
-								</p></td>
-							<td width=157 valign=top
-								style='width: 117.6pt; border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Extended
-										Approval by:<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>[Required
-										only for Variances to<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Standard
-										Forms of Subcontract<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>(<span
-										style='color: #1E77C5'>PDS/07/4.5.15 &amp; 17)</span>]<o:p></o:p></span>
-								</p></td>
-							<td valign=top
-								style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>BU
-										Commercial Manager<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<o:p></o:p></span>
-								</p></td>
-						</tr>
-						
-						<tr>
-							<td colspan=3 valign=top
-								style='border: solid windowtext 1.5pt; border-top: none; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Extended
-										Approval by:<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>[Required
-										only for Buying Loss / Waiver to Bond or Parent Company
-										Guarantee on S/C sum &gt; HK$10M (<span style='color: #1E77C5'>PDS/07/4.5.17</span>)]<o:p></o:p>
-									</span>
-								</p></td>
-							<td valign=top
-								style='border-top: none; border-left: none; border-bottom: solid windowtext 1.5pt; border-right: solid windowtext 1.5pt; padding: 1.5pt 15.0pt 1.5pt 15.0pt'><p
-									class=MsoNormal style='margin-top: 17pt'>
-									<u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>___________________
-											</span></u><span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'><o:p></o:p></span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Commercial
-										Director<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>
-										<o:p></o:p>
-									</span>
-								</p>
-								<p class=MsoNormal style='margin-bottom: 7.5pt'>
-									<span
-										style='font-size: 9.0pt; font-family: "Arial", "serif"'>Date:&nbsp;<o:p></o:p></span>
-								</p></td>
-						</tr>
-						</#if>
-						<tr height=0>
-							<td width=201 style='border: none'></td>
-							<td width=193 style='border: none'></td>
-							<td width=172 style='border: none'></td>
-							<td width=149 style='border: none'></td>
-						</tr>
-					</table>
-					<p class=MsoNormal>
-						<o:p></o:p>
-					</p>
-					
-					</td>
-			</tr>
-		</table>
-		<p class=MsoNormal>
-			<o:p>&nbsp;</o:p>
-		</p>
-	<!-- PCMS start 
-	 <button class="btn btn-primary btn-block hidden-print" ng-click="submit()" ng-hide = "disableButtons" ng-disabled="disableButtons"><span class="fa fa-save"></span> <b>Submit</b></button>
-	 PCMS end -->
-	 
-	 <!-- AP start --><!-- AP end -->
-	 
-	 
-<table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;mso-yfti-tbllook:1184;mso-padding-alt:0in 5.4pt 0in 5.4pt;mso-border-insideh:none;mso-border-insidev:none'>
-<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
-<td width=304 valign=top style='width:227.8pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal>
-<b style='mso-bidi-font-weight:normal'>
-<span style='font-size:14.0pt;font-family:"Arial","sans-serif";color:#444444;background:white'>Contractual Date</span>
-</b>
-<b style='mso-bidi-font-weight:normal'>
-<span style='font-size:14.0pt'>
-<o:p>
-</o:p>
-</span>
-</b>
-</p>
-</td>
-<td width=247 valign=top style='width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal>
-<o:p>&nbsp;</o:p>
-</p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:1'>
-<td width=304 valign=top style='width:227.8pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal>
-<o:p>&nbsp;</o:p>
-</p>
-</td>
-<td width=247 valign=top style='width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal>
-<o:p>&nbsp;</o:p>
-</p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:2'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Requisition Approved Date</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.requisitionApprovedDate??>${subcontract.requisitionApprovedDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:3'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Tender Analysis Approved Date</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.tenderAnalysisApprovedDate??>${subcontract.tenderAnalysisApprovedDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:4'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>Pre-Award Finalization Meeting Date<span class=apple-converted-space>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>&nbsp;</span>
-</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.preAwardMeetingDate??>${subcontract.preAwardMeetingDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:5'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Letter of Acceptance Signed by Subcontractor Date</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.loaSignedDate??>${subcontract.loaSignedDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:6'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Document Executed by Subcontractor Date<o:p>
-</o:p>
-</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.scDocScrDate??>${subcontract.scDocScrDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:7'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Document Executed by Legal Date<o:p>
-</o:p>
-</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.scDocLegalDate??>${subcontract.scDocLegalDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:8'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Works Commencement Date<o:p>
-</o:p>
-</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.workCommenceDate??>${subcontract.workCommenceDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-<tr style='mso-yfti-irow:9;mso-yfti-lastrow:yes'>
-<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:250.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontractor Start on-site Date<o:p>
-</o:p>
-</span>
-</p>
-</td>
-<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-<p class=MsoNormal align=right style='text-align:right'><#if subcontract.onSiteStartDate??>${subcontract.onSiteStartDate?date?string("dd/MM/yyyy")}</#if></p>
-</td>
-</tr>
-</table>
+					<tr>
+						<td colspan="6">
+							<table class="line2" id="tableTenderRcm">
+								<tbody>
+									<tr>
+										<td colspan="2">Recommendation</td>
+									</tr>
+									<tr>
+										<td>
+											<table>
+												<tbody>
+													<tr>
+														<td>Award to</td>
+														<td class="border1b">${rcmTenderer.nameSubcontractor!""}</td>
+														<td>for</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+										<td>(${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]})</td>
+									</tr>
+									<tr>
+										<td>Tender &amp; \ or Latest Forecast Budget *</td>
+										<td>${rcmTenderer.currencyCode!""} ${(budgetTender.budgetAmount!0)?string["#,##0.00"]}</td>
+									</tr>
+									<tr>
+										<td>Buying Gain \ (Loss)</td>
+										<td>${rcmTenderer.currencyCode!""} ${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</td>
+									</tr>
+									<tr class="border1t">
+										<td>Package Stretch Target ([#if subcontract.amountPackageStretchTarget?? \and subcontract.amountPackageStretchTarget &gt; 0 \and rcmTenderer.budgetAmount &gt; 0]${((1 - (subcontract.amountPackageStretchTarget / rcmTenderer.budgetAmount))  * 100)?string["0.##"]}[#else]&nbsp;[/#if]% )</td>
+										<td>${rcmTenderer.currencyCode!""} ${subcontract.amountPackageStretchTarget!0}</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td colspan="6">
+							<table class="line1-5" id="tableTenderRmk">
+								<tbody>
+									<tr>
+										<td colspan="2">Remarks</td>
+									</tr>
+									<tr>
+										<td>Basis of Price</td>
+										<td>[#if subcontract.subcontractTerm =="Lump Sum"]Lump-Sum[#else]Remeasure[/#if]</td>
+									</tr>
+									<tr>
+										<td>CPF</td>
+										<td>[#if subcontract.cpfCalculation??]Applicable[#else]Not Applicable[/#if]</td>
+									</tr>
+									<tr>
+										<td>Payment Method</td>
+										<td>[#if subcontract.paymentMethod?? \and subcontract.paymentMethod == "IPS"]IPS[#elseif subcontract.paymentMethod?? \and subcontract.paymentMethod == "Work Done"]Work Done[#elseif subcontract.paymentMethod?? \and subcontract.paymentMethod == "Milestone"]Milestone[#else]&nbsp;[/#if]</td>
+									</tr>
+									<tr>
+										<td>Period for Payment</td>
+										<td>${subcontract.periodForPayment!"&nbsp;"}</td>
+									</tr>
+									<tr>
+										<td>Limit of Retention</td>
+										<td>${subcontract.retentionAmount!0}</td>
+									</tr>
+									<tr>
+										<td>Sub-Contract Duration</td>
+										<td>[#if subcontract.durationFrom??]${subcontract.durationFrom!"&nbsp;"} to ${subcontract.durationTo!"&nbsp;"}[#else]&nbsp;[/#if]</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6" style="width: 50%">
+							<table class="footerComment" id="tableTenderBy">
+								<tbody>
+									<tr>
+										<td class="pr5">Tender Analysis Package prepared by</td>
+										<td class="border1b">${rcmTenderer.usernamePrepared!"&nbsp;"}</td>
+										<td class="pl5 pr5">Date</td>
+										<td class="border1b">${rcmTenderer.datePrepared!"&nbsp;"}</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td colspan="6" style="width: 50%">
+							<table class="footerComment">
+								<tbody>
+									<tr>
+										<td> Pre-Award Finalization Meeting held &amp; minuted(
+											<span class="pds">PDS/07/4.5.18/Form 5</span>) 
+										</td>
+										<td class="em2">[#if subcontract.preAwardMeetingDate??]&#9745;[#else]&#9744;[/#if]</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<table class="approvedBy">
+								<tbody>
+									<tr>
+										<td colspan="2">Reviewed by:</td>
+									</tr>
+									<tr>
+										<td class="border1b">&nbsp;</td>
+										<td class="border1b">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Managing Quantity Surveyor</td>
+										<td>Date</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td colspan="6">
+							<table class="approvedBy">
+								<tbody>
+									<tr>
+										<td colspan="2">&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="border1b">&nbsp;</td>
+										<td class="border1b">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Senior Project Manager</td>
+										<td>Date</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<table class="approvedBy">
+								<tbody>
+									<tr>
+										<td colspan="2">Approved by:</td>
+									</tr>
+									<tr>
+										<td class="border1b">&nbsp;</td>
+										<td class="border1b">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Commercial Lead</td>
+										<td>Date</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+						<td colspan="6">
+							<table class="approvedBy">
+								<tbody>
+									<tr>
+										<td colspan="2">&nbsp;</td>
+									</tr>
+									<tr>
+										<td class="border1b">&nbsp;</td>
+										<td class="border1b">&nbsp;</td>
+									</tr>
+									<tr>
+										<td>Project-In-Charge</td>
+										<td>Date</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="footerComment" colspan="12"> Other approvals via ERP Approval System as per Delegated Levels of Authority (DLOA) and Project Delivery System (PDS) **
+							<br>Estimating Manager &amp; BU Commercial Lead (All) \ Director (Award &gt; $5M or loss &gt;$0.5M) \ Executive Director (Award &gt; $15M or loss &gt;$1.5M) \ Chief Executive (Award &gt; $25M or loss &gt;$2.5M) 
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<table class="border2" id="table3Q">
+				<tbody>
+					<tr>
+						<td>
+							<table>
+								<tbody>
+									<tr>
+										<td class="headertitle" colspan="2"> APPROVAL OF RELAXATION TO THREE MINIMUM QUOTATIONS REQUIREMENT(
+											<span class="pds">PDS/07/4.5.10</span>) 
+										</td>
+										<td rowspan="2">*</td>
+										<td class="yesno" rowspan="2">
+											<table class="border2">
+												<tbody>
+													<tr>
+														<td>[#if tenderList?size lt 3]No[#else]Yes[/#if]</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>Reason:</td>
+										<td class="border1b">${subcontract.reasonQuotation!"&nbsp;"}</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="footerComment"> **BU Commercial Lead &amp; Director (All) \ Commercial Director (Package &gt; $0.5M) </td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<table class="border2" id="tableVariances">
+				<tbody>
+					<tr>
+						<td colspan="12">
+							<table>
+								<tbody>
+									<tr>
+										<td class="headertitle" colspan="2"> APPROVAL OF VARIANCES TO STANDARD FORMS(
+											<span class="pds">PDS/07/4.5.17</span>) 
+										</td>
+										<td rowspan="2">*</td>
+										<td class="yesno" rowspan="2">
+											<table class="border2">
+												<tbody>
+													<tr>
+														<td>[#if tenderVarianceList?size gt 0]Yes[#else]No[/#if]</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" class="th" ng-reflect-ng-class="[object Object]">TERM</td>
+						<td colspan="3" class="th" ng-reflect-ng-class="[object Object]">GENERAL CONDITION</td>
+						<td colspan="3" class="th" ng-reflect-ng-class="[object Object]">PROPOSED VARIANCE</td>
+						<td colspan="4" class="th" ng-reflect-ng-class="[object Object]">REASON FOR VARIANCE</td>
+					</tr> [#if tenderVarianceList??] [#list tenderVarianceList as variance] 
+					<tr>
+						<td colspan="2">${variance.clause!"&nbsp;"}</td>
+						<td colspan="3"> ${variance.generalCondition!"&nbsp;"} </td>
+						<td colspan="3"> ${variance.proposedVariance!"&nbsp;"} </td>
+						<td colspan="4"> ${variance.reason!"&nbsp;"} </td>
+					</tr> [/#list] [/#if]
 
+					<tr>
+						<td class="footerComment" colspan="12"> **BU Commercial Lead (All) \ Executive Commercial Director (Award &gt; $10M) </td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<table class="border2" id="tableChange">
+				<tbody>
+					<tr>
+						<td>
+							<table>
+								<tbody>
+									<tr>
+										<td class="headertitle" colspan="3"> APPROVAL TO CHANGE MANNER OF EXECUTION FROM MAIN CONTRACT (
+											<span class="pds">PDS/07/4.5.23</span>) 
+										</td>
+										<td rowspan="1">*</td>
+										<td class="yesno" rowspan="1">
+											<table class="border2">
+												<tbody>
+													<tr>
+														<td>${rcmTenderer.statusChangeExecutionOfSC!"N/A"}</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5">
+											<table>
+												<tbody>
+													<tr>
+														<td class="mainCertLeft" rowspan="2">Reason:</td>
+														<td class="border1b mainCertLeftInput" rowspan="2">${subcontract.reasonManner!"&nbsp;"}</td>
+														<td class="mainCertRight pl5 pr5"> Method of Execution of Main Contract </td>
+														<td class="border1b" colspan="2">${subcontract.executionMethodMainContract!"&nbsp;"}</td>
+													</tr>
+													<tr>
+														<td class="pl5 pr5">Proposed Method of Execution</td>
+														<td class="border1b" colspan="2">${subcontract.executionMethodPropsed!"&nbsp;"}</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table>
+								<tbody>
+									<tr>
+										<td class="headertitle" colspan="3"> APPROVAL TO USE LETTER OF ACCEPTANCE(
+											<span class="pds">PDS/07/4.5.25</span>) 
+										</td>
+										<td rowspan="1">*</td>
+										<td class="yesno" rowspan="1">
+											<table class="border2">
+												<tbody>
+													<tr>
+														<td>[#if subcontract.reasonLoa??]Yes[#else]No[/#if]</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5">
+											<table>
+												<tbody>
+													<tr>
+														<td class="loaLeft pr5">Reason for use of LoA:</td>
+														<td class="loaLeftInput border1b">${subcontract.reasonLoa!"&nbsp;"}</td>
+														<td class="loaRight pl5 pr5"> Target Date for Sub-Contract Execution </td>
+														<td class="border1b" colspan="2">${subcontract.dateScExecutionTarget!"&nbsp;"}</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="footerComment">**BU Commercial Lead (All)</td>
+					</tr>
+				</tbody>
+			</table>
+			<br> <!-- PCMS start <br><button class="btn btn-primary btn-block hidden-print" ng-click="submit()" ng-disabled="disableButtons" ng-hide="disableButtons"><span class="fa fa-save"></span><b>Submit</b></button> PCMS end -->
 
+			<br> <!-- AP start --> 
+			<div id="cdate">
+				<table>
+					<tbody>
+						<tr>
+							<th colspan="2">Contractual Date</th>
+						</tr>
+						<tr>
+							<td>Subcontract Requisition Approved Date</td>
+							<td>[#if subcontract.requisitionApprovedDate??]${subcontract.requisitionApprovedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Subcontract Tender Analysis Approved Date</td>
+							<td>[#if subcontract.tenderAnalysisApprovedDate??]${subcontract.tenderAnalysisApprovedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Pre-Award Finalization Meeting Date</td>
+							<td>[#if subcontract.preAwardMeetingDate??]${subcontract.preAwardMeetingDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Letter of Acceptance Signed by Subcontractor Date</td>
+							<td>[#if subcontract.loaSignedDate??]${subcontract.loaSignedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Subcontract Document Executed by Subcontractor Date</td>
+							<td>[#if subcontract.scDocScrDate??]${subcontract.scDocScrDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Subcontract Document Executed by Legal Date</td>
+							<td>[#if subcontract.scDocLegalDate??]${subcontract.scDocLegalDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Works Commencement Date</td>
+							<td>[#if subcontract.workCommenceDate??]${subcontract.workCommenceDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+						<tr>
+							<td>Subcontractor Start on-site Date</td>
+							<td>[#if subcontract.onSiteStartDate??]${subcontract.onSiteStartDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- AP end -->
 
-
-	</div>
-</body>
+		</div>
+	
+  </body>
 </html>

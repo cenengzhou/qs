@@ -1,0 +1,17 @@
+<table class="approvedBy">
+    <tr>
+        <td colspan="3" class="title">{{approver.sTitle ? approver.title + ":" : "&nbsp;"}}</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="width: 1%"colspan="1" class="position">{{approver.position}}:</td>
+        <td style="width: 59%" class="fullname">{{approver.fullname}}</td>
+        <td style="width: 40%">Date</td>
+    </tr>
+    <tr ng-if="approver.sRemark">
+        <td colspan="3" class="remark" ng-bind-html="approver.sRemark ? approver.remark : '&nbsp;'"></td>
+    </tr>
+</table>
