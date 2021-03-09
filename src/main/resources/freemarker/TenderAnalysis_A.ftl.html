@@ -236,7 +236,7 @@
 												</tbody>
 											</table>
 										</td>
-										<td>(${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]})</td>
+										<td>${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]}</td>
 									</tr>
 									<tr>
 										<td>Tender &amp; \ or Latest Forecast Budget *</td>
@@ -265,7 +265,7 @@
 									</tr>
 									<tr>
 										<td>CPF</td>
-										<td>[#if subcontract.cpfCalculation??]Applicable[#else]Not Applicable[/#if]</td>
+										<td>[#if subcontract.cpfCalculation?? && (subcontract.cpfCalculation == "1" || subcontract.cpfCalculation == "Subject to CPF")]CPF Base Period: ${subcontract.cpfBasePeriod!0} CPF Base Year: ${subcontract.cpfBaseYear!0}[#else]No CPF[/#if]</td>
 									</tr>
 									<tr>
 										<td>Payment Method</td>
@@ -273,11 +273,11 @@
 									</tr>
 									<tr>
 										<td>Period for Payment</td>
-										<td>${subcontract.periodForPayment!"&nbsp;"}</td>
+										<td>[#assign paymentTermDesc = {"QS0":"Manual Input Due Date", "QS1":"Pay when Paid + 7 days", "QS2":"Pay when Paid + 14 days", "QS3":"Pay when IPA Received + 56 days", "QS4":"Pay when Invoice Received + 28 days", "QS5":"Pay when Invoice Received + 30 days", "QS6":"Pay when Invoice Received + 45 days", "QS7":"Pay when Invoice Received + 60 days", "QS8":"Pay when Paid + 0 day"} /]${subcontract.paymentTerms} - ${paymentTermDesc[subcontract.paymentTerms]!""}</td>
 									</tr>
 									<tr>
 										<td>Limit of Retention</td>
-										<td>${subcontract.retentionAmount!0}</td>
+										<td>[#if subcontract.retentionTerms?starts_with("Percentage")]${subcontract.retentionTerms} Max:${subcontract.maxRetentionPercentage}% Interm:${subcontract.interimRentionPercentage}% MOS:${subcontract.mosRetentionPercentage}%[#elseif subcontract.retentionTerms!"" == "Lump Sum Amount Retention"]${subcontract.retentionAmount!0}[#else]No Retention[/#if]</td>
 									</tr>
 									<tr>
 										<td>Sub-Contract Duration</td>
