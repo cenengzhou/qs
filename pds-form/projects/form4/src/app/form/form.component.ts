@@ -83,7 +83,7 @@ export class FormComponent implements OnInit {
     changeMainCertProposed: { h: 'sth propose', f: '${subcontract.executionMethodPropsed!"&nbsp;"}' },
     loaReason: { h: 'loa reason', f: '${subcontract.reasonLoa!"&nbsp;"}' },
     loaExecution: { h: '2020-02-02', f: '${subcontract.dateScExecutionTarget!"&nbsp;"}' },
-    yesno3q: {h : 'Yes', f: '[#if tenderList?size lt 3]No[#else]Yes[/#if]' },
+    yesno3q: {h : 'Yes', f: '[#if tenderList?size lt 3]Yes[#else]No[/#if]' },
     yesnoVariance: {h : 'No', f: '[#if tenderVarianceList?size gt 0]Yes[#else]No[/#if]' },
     yesnoManner: {h : 'Yes', f: '${rcmTenderer.statusChangeExecutionOfSC!"N/A"}' },
     yesnoLoa: {h : 'No', f: '[#if subcontract.reasonLoa??]Yes[#else]No[/#if]' },
