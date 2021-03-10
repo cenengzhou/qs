@@ -267,14 +267,16 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 							$scope.subcontract.otherFormDescription = $scope.subcontract.formOfSubcontract;
 						}
 
-						if($scope.subcontract.durationFrom) {
-							$scope.duration.startDate = $scope.subcontract.durationFrom;
-							$('#dateRangePicker').data('daterangepicker').setStartDate($scope.duration.startDate);
-						}
-						if($scope.subcontract.durationTo) {
-							$scope.duration.endDate = $scope.subcontract.durationTo;
-							$('#dateRangePicker').data('daterangepicker').setEndDate($scope.duration.endDate);
-						}
+						setTimeout(function(){
+							if($scope.subcontract.durationFrom) {
+								$scope.duration.startDate = $scope.subcontract.durationFrom;
+								$('#dateRangePicker').data('daterangepicker').setStartDate($scope.duration.startDate);
+							}
+							if($scope.subcontract.durationTo) {
+								$scope.duration.endDate = $scope.subcontract.durationTo;
+								$('#dateRangePicker').data('daterangepicker').setEndDate($scope.duration.endDate);
+							}
+						}, 300);
 					}else
 						$scope.disableSubcontactNo = false;
 					
