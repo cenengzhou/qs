@@ -263,7 +263,7 @@ public class SubcontractController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateWDandIV', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateWDandIV', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateWDandIV", method = RequestMethod.POST)
 	public String updateWDandIV(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
@@ -279,7 +279,7 @@ public class SubcontractController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateWDandIVList', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateWDandIVList', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateWDandIVList", method = RequestMethod.POST)
 	public String updateWDandIVList(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
@@ -294,7 +294,7 @@ public class SubcontractController {
 			return message;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateFilteredWDandIVByPercent', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateFilteredWDandIVByPercent', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateFilteredWDandIVByPercent", method = RequestMethod.POST)
 	public String updateFilteredWDandIVByPercent(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,

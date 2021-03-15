@@ -104,7 +104,7 @@ public class TransitController {
 		return dataList;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','confirmResourcesAndCreatePackages', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','confirmResourcesAndCreatePackages', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
 	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber, @RequestParam Boolean createPackage) throws DatabaseOperationException{
 		String msg = transitService.confirmResourcesAndCreatePackages(jobNumber, createPackage);
@@ -112,7 +112,7 @@ public class TransitController {
 		return msg;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','completeTransit', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','completeTransit', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "completeTransit", method = RequestMethod.POST)
 	public String completeTransit(@RequestParam String jobNumber) throws DatabaseOperationException{
 		String msg = transitService.completeTransit(jobNumber);
@@ -120,7 +120,7 @@ public class TransitController {
 		return msg;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResourcesList', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResourcesList', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "saveTransitResourcesList", method = RequestMethod.POST)
 	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList) throws Exception{
 		String result = null;
@@ -128,7 +128,7 @@ public class TransitController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResources', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResources', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "saveTransitResources", method = RequestMethod.POST)
 	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources) throws Exception{
 		String result = null;
@@ -136,7 +136,7 @@ public class TransitController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','createOrUpdateTransitHeader', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','createOrUpdateTransitHeader', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "createOrUpdateTransitHeader", method = RequestMethod.POST)
 	public String createOrUpdateTransitHeader(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String estimateNo, 
@@ -147,7 +147,7 @@ public class TransitController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','uploadTransit', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','uploadTransit', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "transitUpload", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "type") String type,

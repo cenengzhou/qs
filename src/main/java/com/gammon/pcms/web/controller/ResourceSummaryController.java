@@ -180,7 +180,7 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVAmount', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVAmount', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
 	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -194,7 +194,7 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','postIVAmounts', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','postIVAmounts', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "postIVAmounts", method = RequestMethod.POST)
 	public String postIVAmounts(@RequestParam(required =true) String jobNo, @RequestParam(required =true) boolean finalized){
 		String result = "";
@@ -224,7 +224,7 @@ public class ResourceSummaryController {
 	}
 
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVForSubcontract', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVForSubcontract', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateIVForSubcontract", method = RequestMethod.POST)
 	public String updateIVForSubcontract(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -249,7 +249,7 @@ public class ResourceSummaryController {
 		return resultList;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
 	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
 		boolean result = false;
@@ -271,4 +271,3 @@ public class ResourceSummaryController {
 		return result;
 	}
 }
-
