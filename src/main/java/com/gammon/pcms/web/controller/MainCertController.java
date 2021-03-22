@@ -109,7 +109,7 @@ public class MainCertController {
 	}
 	
 	// ---------------- update / calculate ----------------
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','createMainCert', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','createMainCert', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "createMainCert",	method = RequestMethod.POST)
 	public String createMainCert(@Valid @RequestBody MainCert mainCert) {
 		String result = "";
@@ -140,7 +140,7 @@ public class MainCertController {
 		
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateRetentionRelease', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateRetentionRelease', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateRetentionRelease", method = RequestMethod.POST)
 	public PCMSDTO updateRetentionRelease(	@RequestParam(required = true) String noJob,
 											@Valid @RequestBody List<MainCertRetentionRelease> retentionReleaseList) {
@@ -165,37 +165,37 @@ public class MainCertController {
 			return mainCertService.getMainCertReceiveDateAndAmount(company, refDocNo);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateCertificate', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateCertificate', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateCertificate", method = RequestMethod.POST)
 	public String updateCertificate(@RequestBody MainCert mainCert){
 		return mainCertService.updateMainContractCert(mainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','insertIPA', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','insertIPA', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "insertIPA", method = RequestMethod.POST)
 	public String insertIPA(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
 		return mainCertService.insertIPAAndUpdateMainContractCert(mainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','confirmIPC', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','confirmIPC', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "confirmIPC", method = RequestMethod.POST)
 	public String confirmIPC(@Valid @RequestBody MainCert mainCert){
 		return mainCertService.confirmMainContractCert(mainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','resetIPC', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','resetIPC', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "resetIPC", method = RequestMethod.POST)
 	public String resetIPC(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
 		return mainCertService.resetMainContractCert(mainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','postIPC', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','postIPC', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "postIPC", method = RequestMethod.POST)
 	public String postIPC(@RequestParam(required = true) String noJob, @RequestParam(required = true) Integer noMainCert) throws DatabaseOperationException{
 		return mainCertService.insertAndPostMainContractCert(noJob, noMainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','submitNegativeMainCertForApproval', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','submitNegativeMainCertForApproval', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "submitNegativeMainCertForApproval", method = RequestMethod.POST)
 	public String submitNegativeMainCertForApproval(@RequestParam(required = true) String noJob, 
 													@RequestParam(required = true) Integer noMainCert,
@@ -212,7 +212,7 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.getCalculatedRetentionRelease(noJob, noMainCert);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateMainCertContraChargeList', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateMainCertContraChargeList', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateMainCertContraChargeList", method = RequestMethod.POST)
 	public String updateMainCertContraChargeList(@RequestParam(required = true) String noJob, 
 																	@RequestParam(required = true) Integer noMainCert,
@@ -221,7 +221,7 @@ public class MainCertController {
 		return mainCertContraChargeService.updateMainCertContraChargeList(noJob, noMainCert, contraChargeList);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','deleteMainCertContraCharge', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','deleteMainCertContraCharge', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "deleteMainCertContraCharge", method = RequestMethod.POST)
 	public String deleteMainCertContraCharge(@Valid @RequestBody MainCertContraCharge mainCertContraCharge) throws DatabaseOperationException{
 		return mainCertContraChargeService.deleteMainCertContraCharge(mainCertContraCharge);
