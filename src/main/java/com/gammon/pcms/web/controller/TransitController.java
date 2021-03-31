@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,7 @@ import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitCodeMatch;
 import com.gammon.qs.domain.TransitResource;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;
 import com.google.gson.Gson;
@@ -42,6 +44,8 @@ import com.google.gson.Gson;
 public class TransitController {
 	@Autowired
 	private TransitService transitService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	private Logger logger = Logger.getLogger(getClass());
 	private String RESPONSE_CONTENT_TYPE_TEXT_HTML = "text/html";
 	private String RESPONSE_HEADER_NAME_CACHE_CONTROL = "Cache-Control";
@@ -188,8 +192,13 @@ public class TransitController {
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "unlockTransitAdmin", method = RequestMethod.POST)
-	public void unlockTransitAdmin(@RequestParam(required = true) String jobNumber) throws DatabaseOperationException {
-		transitService.unlockTransitHeader(jobNumber);
+	public void unlockTransitAdmin(@RequestParam(required = true) String jobNumber) throws Exception {
+		String result = jobInfoService.canAdminJob(jobNumber);
+		if(StringUtils.isEmpty(result)){
+			transitService.unlockTransitHeader(jobNumber);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 
 }

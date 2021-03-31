@@ -2,7 +2,6 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 										function($scope, resourceSummaryService, modalService, GlobalHelper, GlobalParameter, rootscopeService){
 	$scope.onSubmitResourceSummarySearch = onSubmitResourceSummarySearch;
 	$scope.onUpdateResourceSummaryRecord = onUpdateResourceSummaryRecord;
-
 	rootscopeService.gettingUser()
 	.then(function (response){
 		$scope.isEditable =  GlobalHelper.containRole('ROLE_QS_QS_ADM', response.user.UserRoles);

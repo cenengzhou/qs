@@ -1,6 +1,6 @@
 mainApp.controller('AdminRevisionsSubcontractCtrl',
-		['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 
-		function($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, subcontractService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 'rootscopeService',
+		function($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, subcontractService,rootscopeService) {
 	$scope.GlobalParameter = GlobalParameter;
 	rootscopeService.gettingWorkScopes()
 	.then(function(response){

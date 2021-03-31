@@ -9,7 +9,7 @@
 			<form name="{{list.name}}Form">
 				<span class="col-md-4 p-t-20" ng-repeat="param in list.params | filter: {type:'text'}">
 					<label for="{{list.name + param.name}}">{{GlobalHelper.camelToNormalString(param.name)}}</label>
-					<input class="form-control" type="text" ng-model="param.value" required>
+					<input class="form-control" type="text" ng-model="param.value" required ng-change="canAdminJob(param.value, param.name)" >
 				</span>
 				<span class="col-md-4 p-t-20" ng-repeat="param in list.params | filter: {type:'select'}">
 					<label for="{{list.name + param.name}}">{{GlobalHelper.camelToNormalString(param.name)}}</label>
@@ -18,7 +18,7 @@
 					</select>
 				</span>
 				<span class="col-md-12 p-t-20" >
-					<button ng-show="showQSAdmin" class="form-control btn btn-primary" type="submit" ng-click="onUpdate(list.fn, list.params)" style="color:white">Update</button>
+					<button ng-show="showQSAdmin" class="form-control btn btn-primary" type="submit" ng-click="onUpdate(list.fn, list.params)" style="color:white" ng-disabled="!adminSearchBtn">Update</button>
 				</span>
 			</form>
 		</div>

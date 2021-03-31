@@ -1,6 +1,5 @@
-mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'GlobalHelper', 'GlobalParameter', 'addendumService',
-										function($scope, modalService, GlobalHelper, GlobalParameter, addendumService) {
-
+mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'GlobalHelper', 'GlobalParameter', 'addendumService','rootscopeService',
+										function($scope, modalService, GlobalHelper, GlobalParameter, addendumService,rootscopeService) {
 	Field.count = 0;
 	Field.prototype.getNextOrder = fieldGetNextOrder;
 	Field.prototype.setOrderNo = fieldSetOrderNo;

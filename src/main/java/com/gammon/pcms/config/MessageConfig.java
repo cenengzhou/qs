@@ -12,6 +12,8 @@ public class MessageConfig {
 	private String subcontractHoldMessage;
 	@Value("${payment.hold.message}")
 	private String paymentHoldMessage;
+	@Value("${revision.sod.message}")
+	private String revisionSodMessage;
 	
 	public String getSubcontractHoldMessage() {
 		return subcontractHoldMessage;
@@ -19,6 +21,10 @@ public class MessageConfig {
 	
 	public String getPaymentHoldMessage() {
 		return paymentHoldMessage;
+	}
+
+	public String getRevisioSodMessage(){
+		return revisionSodMessage;
 	}
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertContraCharge;
 import com.gammon.qs.domain.MainCertRetentionRelease;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertContraChargeService;
 import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
@@ -37,6 +39,8 @@ public class MainCertController {
 
 	@Autowired
 	private MainCertService mainCertService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	@Autowired
 	private MainCertRetentionReleaseService mainCertRetentionReleaseService;
 	@Autowired
@@ -155,8 +159,14 @@ public class MainCertController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateCertificateByAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateCertificateByAdmin", method = RequestMethod.POST)
-	public String updateCertificateByAdmin(@RequestBody MainCert mainCert){
-		return mainCertService.updateMainContractCert(mainCert);
+	public String updateCertificateByAdmin(@RequestBody MainCert mainCert) throws Exception{
+		String result = jobInfoService.canAdminJob(mainCert.getJobNo());
+		if(StringUtils.isEmpty(result)){
+			result = mainCertService.updateMainContractCert(mainCert);
+		} else {
+			throw new IllegalAccessException(result);
+		}
+		return result;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','getMainCertReceiveDateAndAmount', @securityConfig.getRolePcmsEnq())")

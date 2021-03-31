@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -36,6 +37,7 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailVO;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
@@ -47,6 +49,8 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	@Autowired
 	private PackageSnapshotGenerationService packageSnapshotGenerationService;
 	
@@ -416,28 +420,45 @@ public class SubcontractController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractAdmin", method = RequestMethod.POST)
-	public String updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
+	public String updateSubcontractAdmin(@RequestBody Subcontract subcontract) throws Exception {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
-		return subcontractService.updateSubcontractAdmin(subcontract);
+		String result = jobInfoService.canAdminJob(subcontract.getJobInfo().getJobNumber());
+		if(StringUtils.isEmpty(result)){
+			result = subcontractService.updateSubcontractAdmin(subcontract);
+		} else {
+			throw new IllegalAccessException(result);
+		}
+		return result;
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractDetailAdmin", method = RequestMethod.POST)
 	public void updateSubcontractDetailAdmin(@RequestBody SubcontractDetailVO subcontractDetail) throws Exception {
 		if((subcontractDetail).getId() == null) throw new IllegalArgumentException("Invalid Subcontract Detail");
-		subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
+		String result = jobInfoService.canAdminJob(subcontractDetail.getJobNo());
+		if(StringUtils.isEmpty(result)){
+			subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractDetailListAdmin", method = RequestMethod.POST)
 	public void updateSubcontractDetailListAdmin(@RequestBody List<SubcontractDetailVO> subcontractDetailList) throws Exception {
-		subcontractDetailList.forEach(subcontractDetail -> {
-			try {
-				updateSubcontractDetailAdmin(subcontractDetail);
-			} catch (Exception e) {
-				logger.error("error", e);
-			}
-		});
+		String jobNumber = subcontractDetailList.get(0).getJobNo();
+		String result = jobInfoService.canAdminJob(jobNumber);
+		if(StringUtils.isEmpty(result)){
+			subcontractDetailList.forEach(subcontractDetail -> {
+				try {
+						updateSubcontractDetailAdmin(subcontractDetail);
+				} catch (Exception e) {
+					logger.error("error", e);
+				}
+			});
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getPerforamceAppraisalsList', @securityConfig.getRolePcmsEnq())")

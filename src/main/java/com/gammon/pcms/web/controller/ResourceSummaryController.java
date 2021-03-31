@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.IVPostingHistService;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
@@ -41,6 +43,8 @@ public class ResourceSummaryController {
 	private ResourceSummaryService resourceSummaryService;
 	@Autowired
 	private IVPostingHistService ivPostingHistService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	@Autowired
 	private ObjectMapper objectMapper;
 	
@@ -168,7 +172,12 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "updateResourceSummariesForAdmin", method = RequestMethod.POST)
 	public void updateResourceSummariesForAdmin(@RequestParam(required =true) String jobNo, 
 									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
-		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+		String result = jobInfoService.canAdminJob(jobNo);
+		if(StringUtils.isEmpty(result)){
+			resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 		
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','splitOrMergeResources', @securityConfig.getRolePcmsQs())")

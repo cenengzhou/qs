@@ -2,7 +2,7 @@
 	<form name="RevisionsAddendumSearch"
 		ng-submit="onAddendumSearch()" class="form">
 		<div class="col-md-3">
-			<input type="number" class="form-control" placeholder="Job Number:" required
+			<input type="text" class="form-control" placeholder="Job Number:" required pattern="[0-9]{5,5}" ng-change="canAdminJob(addendumSearch.jobNo)" 
 				id="AddendumSearch_jobNo" ng-model="addendumSearch.jobNo">
 		</div>
 		<div class="col-md-3">
@@ -15,7 +15,7 @@
 		</div>
 		<div class="col-md-3">
 			<button type="submit" class="btn btn-block btn-primary"
-				id="AddendumSearch_submit">Search</button>
+				id="AddendumSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
 		</div>
 	</form>
 </div>
@@ -44,7 +44,7 @@
 			</div>
 		</span>
 		<span class="col-md-12 p-t-20" >
-			<button class="form-control btn btn-primary" ng-show="showQSAdmin" type="submit" ng-click="onAddendumUpdate()" style="color:white">Update</button>
+			<button class="form-control btn btn-primary" ng-show="showQSAdmin" type="submit" ng-click="onAddendumUpdate()" style="color:white" ng-disabled="!adminSearchBtn">Update</button>
 		</span>
 	</div>
 </div>

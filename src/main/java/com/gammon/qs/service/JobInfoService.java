@@ -1,18 +1,18 @@
 package com.gammon.qs.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 
+import com.gammon.pcms.application.User;
 import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
+import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -26,12 +26,23 @@ import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JobInfoService {	
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+	private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 	@Autowired
 	private JobInfoHBDao jobHBDao;
@@ -45,6 +56,14 @@ public class JobInfoService {
 	private AdminService adminService;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private FilterBasedLdapUserSearch userSearchBean;
+	@Autowired
+	private WebServiceConfig webServiceConfig;
+	@Autowired
+	private MessageConfig messageConfig;
+	
+	private List<String> adminDivisionListOne = Arrays.asList("BDG", "IB", "FDN");
 	
 	public JobInfoHBDao getJobHBDao() {
 		return jobHBDao;
@@ -267,6 +286,46 @@ public class JobInfoService {
 	
 	public JobInfo getByRefNo(Long refNo) {
 		return jobHBDao.getByRefNo(refNo);
+	}
+
+	public String canAdminJob(String jobNo) throws Exception{
+		return this.canAdminJob(jobNo, "");
+	}
+	public String canAdminJob(String jobNo, String adminJobNo) throws Exception{
+		User currentUser = (User) securityService.getCurrentUser();
+		logger.info(currentUser.getUsername() + " revision job:" + jobNo);
+		String message = "";
+		JobInfo adminJob;
+		if(StringUtils.isNotEmpty(adminJobNo) && webServiceConfig.isAllowAsJob()){
+			// adminJobNo for UI
+		} else {
+			DirContextOperations ctx = userSearchBean.searchForUser(currentUser.getUsername());
+			Attributes atts = ctx.getAttributes();
+			Attribute office = atts.get("physicaldeliveryofficename");
+			String adminOffice = (String) office.get(0);
+			adminJobNo = adminOffice.substring(0, 5);
+		}
+		
+		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
+		adminJob = jobHBDao.obtainJobInfo(adminJobNo);
+
+		boolean isAdminInGroupOne = this.isJobInDivision(adminJob, adminDivisionListOne);
+		boolean isJobInGroupOne = this.isJobInDivision(job, adminDivisionListOne);
+		if(job == null) {
+			message = jobNo + " not found";
+			logger.info(message);
+			return message;
+		}
+		logger.info("Job Division:" + job.getDivision() + " " + 
+		currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionListOne) + " :" + isAdminInGroupOne);
+		return (isAdminInGroupOne != isJobInGroupOne) 
+					 || "90023".equals(adminJobNo)
+						? "" 
+						: messageConfig.getRevisioSodMessage().replace("{division}", job.getDivision());
+	}
+
+	private Boolean isJobInDivision(JobInfo job, List<String> divsions){
+		return job != null ? divsions.contains(job.getDivision()) : false;
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

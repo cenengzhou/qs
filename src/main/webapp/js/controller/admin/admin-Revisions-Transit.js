@@ -1,6 +1,6 @@
 mainApp.controller('AdminRevisionsTransitCtrl',
-		['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'transitService', 
-		function($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, transitService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'transitService', 'rootscopeService',
+		function($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, transitService,rootscopeService) {
 
 	$scope.onUnlockTransit = function() {
 		if ($scope.jobNo > 10000 && $scope.jobNo < 99999) {

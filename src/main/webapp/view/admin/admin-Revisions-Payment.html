@@ -3,7 +3,7 @@
 		<form name="RevisionsPaymentCertSearch"
 			ng-submit="onSubmitPaymentCertSearch()" class="form">
 			<div class="col-md-3">
-				<input type="number" class="form-control" placeholder="Job Number:"
+				<input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}" ng-change="canAdminJob(PaymentCertSearch.jobNo)" 
 					id="PaymentCertSearch_jobNo" ng-model="PaymentCertSearch.jobNo">
 			</div>
 			<div class="col-md-3">
@@ -19,7 +19,7 @@
 			</div>
 			<div class="col-md-3">
 				<button type="submit" class="btn btn-block btn-primary"
-					id="PaymentCertSearch_submit">Search</button>
+					id="PaymentCertSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
 			</div>
 		</form>
 	</div>
@@ -260,10 +260,10 @@
 			<div class="row"
 				ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
 				<div ng-show="showQSAdmin" ng-class="{'col-md-6':PaymentCertRecord.paymentStatus == 'PND', 'col-md-12':PaymentCertRecord.paymentStatus != 'PND'}">
-					<button ng-click="onSubmitPaymentCertRecord()" type="button" class="btn btn-block btn-primary"">Update</button>
+					<button ng-click="onSubmitPaymentCertRecord()" type="button" class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Update</button>
 				</div>
 				<div class="col-md-6" ng-show="showQSAdmin && PaymentCertRecord.paymentStatus == 'PND'" >
-					<button ng-click="deletePendingPaymentAndDetails()" type="button" class="btn btn-block btn-danger">Delete</button>
+					<button ng-click="deletePendingPaymentAndDetails()" type="button" class="btn btn-block btn-danger" ng-disabled="!adminSearchBtn">Delete</button>
 				</div>
 			</div>
 

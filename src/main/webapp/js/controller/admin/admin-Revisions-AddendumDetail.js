@@ -1,6 +1,5 @@
 mainApp.controller('AdminRevisionsAddendumDetailCtrl', ['$scope', 'modalService', 'GlobalHelper', 'GlobalParameter', 'addendumService', 'rootscopeService',
 										function($scope, modalService, GlobalHelper, GlobalParameter, addendumService, rootscopeService) {
-
 	$scope.onSubmitAddendumDetailSearch = onSubmitAddendumDetailSearch;
 
 	rootscopeService.gettingUser()

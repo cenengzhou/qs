@@ -10,6 +10,7 @@ package com.gammon.pcms.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
@@ -36,6 +38,7 @@ public class PaymentController {
 	
 	@Autowired
 	private PaymentService paymentService;
+	@Autowired JobInfoService jobInfoService;
 	@Autowired
 	private PaymentPostingService paymentPostingService;	
 	
@@ -184,9 +187,14 @@ public class PaymentController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updatePaymentCert', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updatePaymentCert", method = RequestMethod.POST)
-	public String updatePaymentCert(@RequestBody PaymentCert paymentCert) {
+	public String updatePaymentCert(@RequestBody PaymentCert paymentCert) throws Exception {
 		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
-		String result = paymentService.updateSCPaymentCertAdmin(paymentCert);
+		String result = jobInfoService.canAdminJob(paymentCert.getJobNo());
+		if(StringUtils.isEmpty(result)){
+			result = paymentService.updateSCPaymentCertAdmin(paymentCert);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 		return result;
 	}
 

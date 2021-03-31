@@ -10,7 +10,8 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	updateJobInfoAndDates: updateJobInfoAndDates,
     	getJobDetailList: 	getJobDetailList,
     	obtainAllJobCompany: obtainAllJobCompany,
-    	obtainAllJobDivision: obtainAllJobDivision
+    	obtainAllJobDivision: obtainAllJobDivision,
+        canAdminJob: canAdminJob
     });
 	
     function getJob(jobNo) {
@@ -107,7 +108,17 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
+    function canAdminJob(jobNo, adminJobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/job/canAdminJob",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+                adminJobNo: adminJobNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
 }]);
-
-
-

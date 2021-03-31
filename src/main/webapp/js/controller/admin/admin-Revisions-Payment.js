@@ -1,6 +1,6 @@
 mainApp.controller('AdminRevisionsPaymentCtrl',
-		['$scope', '$http', 'modalService', 'GlobalParameter', 'blockUI', 'GlobalHelper', 'paymentService',
-		function($scope, $http, modalService, GlobalParameter, blockUI, GlobalHelper, paymentService) {
+		['$scope', '$http', 'modalService', 'GlobalParameter', 'blockUI', 'GlobalHelper', 'paymentService','rootscopeService',
+		function($scope, $http, modalService, GlobalParameter, blockUI, GlobalHelper, paymentService,rootscopeService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.PaymentCertSearch = {};
 	$scope.onSubmitPaymentCertSearch = function() {

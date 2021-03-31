@@ -1,6 +1,6 @@
 mainApp.controller('AdminRevisionsMainCertCtrl',
-		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'mainCertService',
-		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, mainCertService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'mainCertService','rootscopeService',
+		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, mainCertService,rootscopeService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.MainCertSearch = {};
 	$scope.onSubmitMainCertSearch = function() {
