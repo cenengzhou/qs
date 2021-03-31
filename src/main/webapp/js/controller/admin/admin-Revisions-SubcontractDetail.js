@@ -2,7 +2,7 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 										function($scope, modalService, GlobalHelper, GlobalParameter, subcontractService, rootscopeService) {
 
 	$scope.onSubmitSubcontractDetailSearch = onSubmitSubcontractDetailSearch;
-
+	
 	rootscopeService.gettingUser()
 	.then(function (response){
 		$scope.isEditable =  GlobalHelper.containRole('ROLE_QS_QS_ADM', response.user.UserRoles);

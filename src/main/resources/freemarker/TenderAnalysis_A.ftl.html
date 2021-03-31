@@ -277,7 +277,7 @@
 									</tr>
 									<tr>
 										<td>Limit of Retention</td>
-										<td>[#if subcontract.retentionTerms?starts_with("Percentage")]${subcontract.retentionTerms} Max:${subcontract.maxRetentionPercentage}% Interm:${subcontract.interimRentionPercentage}% MOS:${subcontract.mosRetentionPercentage}%[#elseif subcontract.retentionTerms!"" == "Lump Sum Amount Retention"]${subcontract.retentionAmount!0}[#else]No Retention[/#if]</td>
+										<td>[#if subcontract.retentionTerms?starts_with("Percentage")]${subcontract.retentionTerms} Max:${subcontract.maxRetentionPercentage}% Interm:${subcontract.interimRentionPercentage}% MOS:${subcontract.mosRetentionPercentage}%[#elseif subcontract.retentionTerms == "Lump Sum Amount Retention"]${subcontract.retentionAmount!0}[#else]No Retention[/#if]</td>
 									</tr>
 									<tr>
 										<td>Sub-Contract Duration</td>

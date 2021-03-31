@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.IVPostingHistService;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
@@ -41,6 +43,8 @@ public class ResourceSummaryController {
 	private ResourceSummaryService resourceSummaryService;
 	@Autowired
 	private IVPostingHistService ivPostingHistService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	@Autowired
 	private ObjectMapper objectMapper;
 	
@@ -168,7 +172,12 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "updateResourceSummariesForAdmin", method = RequestMethod.POST)
 	public void updateResourceSummariesForAdmin(@RequestParam(required =true) String jobNo, 
 									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
-		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+		String result = jobInfoService.canAdminJob(jobNo);
+		if(StringUtils.isEmpty(result)){
+			resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 		
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','splitOrMergeResources', @securityConfig.getRolePcmsQs())")
@@ -180,7 +189,7 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVAmount', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVAmount', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
 	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -194,7 +203,7 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','postIVAmounts', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','postIVAmounts', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "postIVAmounts", method = RequestMethod.POST)
 	public String postIVAmounts(@RequestParam(required =true) String jobNo, @RequestParam(required =true) boolean finalized){
 		String result = "";
@@ -224,7 +233,7 @@ public class ResourceSummaryController {
 	}
 
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVForSubcontract', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVForSubcontract', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateIVForSubcontract", method = RequestMethod.POST)
 	public String updateIVForSubcontract(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -249,7 +258,7 @@ public class ResourceSummaryController {
 		return resultList;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
 	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
 		boolean result = false;
@@ -271,4 +280,3 @@ public class ResourceSummaryController {
 		return result;
 	}
 }
-

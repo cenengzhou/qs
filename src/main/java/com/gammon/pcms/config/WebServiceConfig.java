@@ -1,6 +1,7 @@
 package com.gammon.pcms.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -56,6 +57,9 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	@Value("${peopleDirectory.picture.url}")
 	private String peopDirectoryPictureUrl;
 	
+	@Value("${revision.allowAsJob}")
+	private String asJob;
+
 	public static final String GSF_APPLICATION_CODE = "QS";
 	public static final String GSF_GETROLE = "GetRole";
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
@@ -64,7 +68,9 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-	    return new PropertySourcesPlaceholderConfigurer();
+		PropertySourcesPlaceholderConfigurer bean = new PropertySourcesPlaceholderConfigurer();
+		bean.setIgnoreUnresolvablePlaceholders(true);
+		return bean;
 	}
 	
 	@Bean(name = "webservicePasswordConfig")
@@ -256,6 +262,10 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	 */
 	public String getPeopDirectoryPictureUrl() {
 		return peopDirectoryPictureUrl;
+	}
+
+	public Boolean isAllowAsJob(){
+		return Arrays.asList("true", "yes","1").contains(asJob.toLowerCase());
 	}
 
 	@Override

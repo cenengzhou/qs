@@ -2,7 +2,7 @@
 	<form name="RevisionsResourceSummarySearch"
 		ng-submit="onSubmitResourceSummarySearch()" class="form">
 		<div class="col-md-8">
-			<input type="number" class="form-control" placeholder="Job Number:"
+			<input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}" ng-change="canAdminJob(resourceSummarySearch.jobNo)" 
 				id="ResourceSummarySearch_jobNo" ng-model="resourceSummarySearch.jobNo">
 		</div>
 		<div ng-if="false" class="col-md-4">
@@ -13,7 +13,7 @@
 		</div>
 		<div class="col-md-4">
 			<button type="submit" class="btn btn-block btn-primary"
-				id="resourceSummarySearch_submit">Search</button>
+				id="resourceSummarySearch_submit" ng-disabled="!adminSearchBtn">Search</button>
 		</div>
 	</form>
 </div>
@@ -23,6 +23,6 @@
 		resize ng-style="resizeWithOffset(365)">
 	</div>
 	<div class="row">
-		<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary">Update Resource Summary</button>
+		<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Update Resource Summary</button>
 	</div>
 </div>

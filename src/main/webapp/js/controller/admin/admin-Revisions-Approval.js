@@ -1,5 +1,5 @@
-mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'GlobalParameter', 'apService', 'modalService',
-									function($scope, GlobalHelper, GlobalParameter, apService, modalService){
+mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'GlobalParameter', 'apService', 'modalService', 'rootscopeService',
+									function($scope, GlobalHelper, GlobalParameter, apService, modalService,rootscopeService){
 	$scope.GlobalHelper = GlobalHelper;
 	ApiParam.prototype.setOptions = setApiOptions;
 	$scope.toCompleteSubcontractAwardParams = [

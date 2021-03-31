@@ -8,7 +8,7 @@
 				id="AttachmentSearch_vendorNo" ng-model="attachmentSearch.vendorNo">
 		</div>
 		<div class="col-md-2" ng-if="showJobParam">
-			<input type="number" class="form-control" placeholder="Job Number:" ng-required="showJobParam" 
+			<input type="text" class="form-control" placeholder="Job Number:" ng-required="showJobParam" pattern="[0-9]{5,5}" ng-change="canAdminJob(attachmentSearch.jobNo)" 
 				id="AttachmentSearch_jobNo" ng-model="attachmentSearch.jobNo">
 		</div>
 		<div class="col-md-2" ng-if="showSubParam">
@@ -21,7 +21,7 @@
 		</div>
 		<div ng-class="{'col-md-4': show4Col, 'col-md-6': show6Col, 'col-md-8': show8Col}">
 			<button type="submit" class="btn btn-block btn-primary"
-				id="AttachmentSearch_submit">Search</button>
+				id="AttachmentSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
 		</div>
 	</form>
 </div>
@@ -31,6 +31,6 @@
 		resize ng-style="resizeWithOffset(365)">
 	</div>
 	<div class="row">
-		<button ng-show="showQSAdmin && selected" ng-click="onDeleteAttachmentRecord()" type="button" class="btn btn-block btn-primary">Delete</button>
+		<button ng-show="showQSAdmin && selected" ng-click="onDeleteAttachmentRecord()" type="button" class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Delete</button>
 	</div>
 </div>

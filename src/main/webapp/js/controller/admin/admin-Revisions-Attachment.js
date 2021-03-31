@@ -1,5 +1,5 @@
-mainApp.controller('AdminRevisionsAttachmentCtrl', ['$q', '$scope', '$filter', 'GlobalHelper', 'GlobalParameter', 'attachmentService', 'repackagingService',
-										function($q, $scope, $filter, GlobalHelper, GlobalParameter, attachmentService, repackagingService){
+mainApp.controller('AdminRevisionsAttachmentCtrl', ['$q', '$scope', '$filter', 'GlobalHelper', 'GlobalParameter', 'attachmentService', 'repackagingService','rootscopeService',
+										function($q, $scope, $filter, GlobalHelper, GlobalParameter, attachmentService, repackagingService,rootscopeService){
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.attachmentSearch = {};
 	$scope.attachmentSearch.nameObject = 'GT58010';

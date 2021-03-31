@@ -92,7 +92,7 @@ public class JdeController {
 	}
 	
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','createAccountMasterByGroup', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','createAccountMasterByGroup', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "createAccountMasterByGroup", method = RequestMethod.POST)
 	public String createAccountMasterByGroup(@RequestParam(required = true) String jobNo,
 										@RequestParam(required = false) Boolean resourceCheck, 
@@ -138,7 +138,7 @@ public class JdeController {
 		return masterListSubsidiary;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','validateAndCreateAccountCode', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','validateAndCreateAccountCode', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "validateAndCreateAccountCode", method = RequestMethod.POST)
 	public String validateAndCreateAccountCode(@RequestParam String jobNo, @RequestParam String objectCode, @RequestParam String subsidiaryCode) throws Exception{
 		return masterListService.validateAndCreateAccountCode(jobNo, objectCode, subsidiaryCode);

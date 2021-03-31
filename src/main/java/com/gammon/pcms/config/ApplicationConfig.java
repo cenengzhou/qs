@@ -71,6 +71,7 @@ public class ApplicationConfig implements InitializingBean{
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer bean = new PropertySourcesPlaceholderConfigurer();
+		bean.setIgnoreUnresolvablePlaceholders(true);
 		return bean;
 	}
 

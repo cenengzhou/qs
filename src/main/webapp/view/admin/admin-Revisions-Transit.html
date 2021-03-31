@@ -3,12 +3,12 @@
 		<form name="RevisionsTransit"
 			ng-submit="onUnlockTransit()" class="form">
 			<div class="col-md-6">
-				<input type="number" pattern=".{5,10}" class="form-control" placeholder="Job Number:"
+				<input type="text" pattern=".{5,10}" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}" ng-change="canAdminJob(jobNo)" 
 					id="UnlockTransit_jobNo" ng-model="jobNo">
 			</div>
 			<div class="col-md-6">
 				<button type="submit" class="btn btn-block btn-primary"
-					id="UnlockTransit_submit">Unlock</button>
+					id="UnlockTransit_submit" ng-disabled="!adminSearchBtn">Unlock</button>
 			</div>
 		</form>
 	</div>

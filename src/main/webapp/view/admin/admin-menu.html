@@ -10,13 +10,13 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-if="showIMSEnquiry || showIMSAdmin" >
 				<a ui-sref="admin.session">
 					<i class="glyphicon glyphicon-random"></i>
 					<span>Session</span>
 				</a>
 			</li>
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-if="showIMSEnquiry || showIMSAdmin" >
 				<a ui-sref="admin.ManualProcedures">
 					<i class="glyphicon glyphicon-tasks"></i>
 					<span>Manual Procedures</span>
@@ -64,13 +64,13 @@
 			</li>		
 			</ul>
 			</li>
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-if="showIMSEnquiry || showIMSAdmin">
 				<a ui-sref="admin.SchedulerMaintenance">
 					<i class="glyphicon glyphicon-calendar"></i>
 					<span>Scheduler Maintenance</span>
 				</a>
 			</li>
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-if="showIMSEnquiry || showIMSAdmin" >
 				<a ui-sref="admin.announcementSetting">
 					<i class="icofont icofont-alarm"></i>
 					<span>Announcement Setting</span>
@@ -110,5 +110,3 @@
 		handleSidebarMenu();
 	});
 </script>
-
-

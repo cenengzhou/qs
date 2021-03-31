@@ -1,5 +1,5 @@
-mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', 'GlobalParameter', '$rootScope', 'jobService', 'jdeService', 'adlService', 'hrService', 'SessionHelper', '$state', '$cookies',
-	function($http, $q, $window, GlobalHelper, GlobalParameter, $rootScope, jobService, jdeService, adlService, hrService, SessionHelper, $state, $cookies){
+mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', 'GlobalParameter', '$rootScope', 'jobService', 'jdeService', 'adlService', 'hrService', 'SessionHelper', '$state', '$cookies','modalService',
+	function($http, $q, $window, GlobalHelper, GlobalParameter, $rootScope, jobService, jdeService, adlService, hrService, SessionHelper, $state, $cookies,modalService){
 	hasRole('QS_ENQ')
 	.then(function(){
 		hasRole('QS_DLOA')
@@ -10,6 +10,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 			});
 		});
 	});
+	
+	$rootScope.canAdminJob = canAdminJob;
 	// Return public API.
     return({
     	gettingJob:			gettingJob,
@@ -36,8 +38,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	checkMaintenance:	checkMaintenance,
     	hasRole:			hasRole,
     	defaultRoute:		defaultRoute,
+			canAdminJob:		canAdminJob
     });
-    
     function gettingJob(jobNo){
     	var deferral = $q.defer();
     	if(!$rootScope.jobDetails) $rootScope.jobDetails = {};
@@ -503,8 +505,18 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	}
     }
 
+		function canAdminJob(jobNo, param){
+			if(jobNo && jobNo.length == 5 && (!param || param == 'jobNumber')){
+				jobService.canAdminJob(jobNo)
+				.then(function(data){
+					if(data){
+						$rootScope.adminSearchBtn = false;
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+					} else {
+						$rootScope.adminSearchBtn = true;
+					}
+				});
+			}
+		}
+
 }]);
-
-
-
-

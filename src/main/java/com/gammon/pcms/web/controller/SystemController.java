@@ -386,5 +386,4 @@ public class SystemController {
 		return subcontractService.getSCStandardTermsList();
 	}
 
-
 }

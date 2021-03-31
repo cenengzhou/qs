@@ -72,6 +72,11 @@ public class JobController {
 		return job;
 	}
 	
+	@RequestMapping(value = "canAdminJob", method = RequestMethod.GET)
+	public String canAdminJob(String jobNo, String adminJobNo) throws Exception {
+		return jobService.canAdminJob(jobNo, adminJobNo);
+	}
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobDates', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getJobDates", method = RequestMethod.GET)
 	public JobDates getJobDates(@RequestParam(name="jobNo") String jobNo) throws Exception{
