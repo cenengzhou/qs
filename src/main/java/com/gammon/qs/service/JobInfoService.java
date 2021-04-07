@@ -1,7 +1,6 @@
 package com.gammon.qs.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import com.gammon.pcms.application.User;
 import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -62,8 +62,8 @@ public class JobInfoService {
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private MessageConfig messageConfig;
-	
-	private List<String> adminDivisionListOne = Arrays.asList("BDG", "IB", "FDN");
+	@Autowired
+	private SecurityConfig securityConfig;
 	
 	public JobInfoHBDao getJobHBDao() {
 		return jobHBDao;
@@ -309,15 +309,18 @@ public class JobInfoService {
 		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
 		adminJob = jobHBDao.obtainJobInfo(adminJobNo);
 
-		boolean isAdminInGroupOne = this.isJobInDivision(adminJob, adminDivisionListOne);
-		boolean isJobInGroupOne = this.isJobInDivision(job, adminDivisionListOne);
+		List<String> adminDivisionGroupOne = securityConfig.getAdminDivisionGroupOne();
+
+		boolean isAdminInGroupOne = this.isJobInDivision(adminJob, adminDivisionGroupOne);
+		boolean isJobInGroupOne = this.isJobInDivision(job, adminDivisionGroupOne);
+
 		if(job == null) {
 			message = jobNo + " not found";
 			logger.info(message);
 			return message;
 		}
 		logger.info("Job Division:" + job.getDivision() + " " + 
-		currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionListOne) + " :" + isAdminInGroupOne);
+		currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionGroupOne) + " :" + isAdminInGroupOne);
 		return (isAdminInGroupOne != isJobInGroupOne) 
 					 || "90023".equals(adminJobNo)
 						? "" 

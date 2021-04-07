@@ -1,6 +1,7 @@
 package com.gammon.pcms.config;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -93,9 +94,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("#{${cacheKey.prefix}}")
 	private Map<String, String> cacheKeyPrefix;
 	
+	@Value("#{'${security.admin.divisionGroupOne}'.split(',')}")
+	private List<String> adminDivisionGroupOne;
+
 	public static final String FN_ENABLE = "Enable";
 	public static final String FN_DISABLE = "Disable";
 	
+	
+	public List<String> getAdminDivisionGroupOne(){
+		return this.adminDivisionGroupOne;
+	}
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
