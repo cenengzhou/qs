@@ -85,7 +85,7 @@ export class FormComponent implements OnInit {
     loaExecution: { h: '2020-02-02', f: '${subcontract.dateScExecutionTarget!"&nbsp;"}' },
     yesno3q: {h : 'Yes', f: '[#if tenderList?size lt 3]Yes[#else]No[/#if]' },
     yesnoVariance: {h : 'No', f: '[#if tenderVarianceList?size gt 0]Yes[#else]No[/#if]' },
-    yesnoManner: {h : 'Yes', f: '${rcmTenderer.statusChangeExecutionOfSC!"N/A"}' },
+    yesnoManner: {h : 'Yes', f: '[#if subcontract.reasonManner??]Yes[#else]No[/#if]' },
     yesnoLoa: {h : 'No', f: '[#if subcontract.reasonLoa??]Yes[#else]No[/#if]' },
     dateList: [
       { title: 'Subcontract Requisition Approved Date', h: '2020-01-01', f: '[#if subcontract.requisitionApprovedDate??]${subcontract.requisitionApprovedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
