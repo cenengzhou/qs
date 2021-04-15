@@ -247,7 +247,7 @@
 										<td>${rcmTenderer.currencyCode!""} ${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</td>
 									</tr>
 									<tr class="border1t">
-										<td>Package Stretch Target ([#if subcontract.amountPackageStretchTarget?? \and subcontract.amountPackageStretchTarget &gt; 0 \and rcmTenderer.budgetAmount &gt; 0]${((1 - (subcontract.amountPackageStretchTarget / rcmTenderer.budgetAmount))  * 100)?string["0.##"]}[#else]&nbsp;[/#if]% )</td>
+										<td>Package Stretch Target ([#if subcontract.amountPackageStretchTarget?? \and subcontract.amountPackageStretchTarget &gt; 0 \and rcmTenderer.budgetAmount?? \and rcmTenderer.budgetAmount &gt; 0]${((1 - (subcontract.amountPackageStretchTarget / rcmTenderer.budgetAmount))  * 100)?string["0.##"]}[#else]&nbsp;[/#if]% )</td>
 										<td>${rcmTenderer.currencyCode!""} ${subcontract.amountPackageStretchTarget!0}</td>
 									</tr>
 								</tbody>
@@ -265,7 +265,7 @@
 									</tr>
 									<tr>
 										<td>CPF</td>
-										<td>[#if subcontract.cpfCalculation?? && (subcontract.cpfCalculation == "1" || subcontract.cpfCalculation == "Subject to CPF")]CPF Base Period: ${subcontract.cpfBasePeriod!0} CPF Base Year: ${subcontract.cpfBaseYear!0}[#else]No CPF[/#if]</td>
+										<td>[#if subcontract.cpfCalculation?? \and (subcontract.cpfCalculation == "1" || subcontract.cpfCalculation == "Subject to CPF")]CPF Base Period: ${subcontract.cpfBasePeriod!0} CPF Base Year: ${subcontract.cpfBaseYear!0}[#else]No CPF[/#if]</td>
 									</tr>
 									<tr>
 										<td>Payment Method</td>
@@ -277,7 +277,7 @@
 									</tr>
 									<tr>
 										<td>Limit of Retention</td>
-										<td>[#if subcontract.retentionTerms?starts_with("Percentage")]${subcontract.retentionTerms} Max:${subcontract.maxRetentionPercentage}% Interm:${subcontract.interimRentionPercentage}% MOS:${subcontract.mosRetentionPercentage}%[#elseif subcontract.retentionTerms == "Lump Sum Amount Retention"]${subcontract.retentionAmount!0}[#else]No Retention[/#if]</td>
+										<td>[#if subcontract.retentionTerms?? \and subcontract.retentionTerms?starts_with("Percentage")]${subcontract.retentionTerms} Max:${subcontract.maxRetentionPercentage}% Interm:${subcontract.interimRentionPercentage}% MOS:${subcontract.mosRetentionPercentage}%[#elseif subcontract.retentionTerms?? \and subcontract.retentionTerms == "Lump Sum Amount Retention"]${subcontract.retentionAmount!0}[#else]No Retention[/#if]</td>
 									</tr>
 									<tr>
 										<td>Sub-Contract Duration</td>
