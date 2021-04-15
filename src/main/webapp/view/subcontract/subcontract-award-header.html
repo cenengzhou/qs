@@ -313,16 +313,22 @@
 
                     <div
                       class="row"
-                      ng-hide="disableButtons && !duration.startDate"
                     >
                       <div class="col-md-3">
                         <label>Subcontract duration</label>
                       </div>
                       <div class="form-group col-md-9">
-                        <date-range-picker
+                        <date-range-picker ng-hide="disableButtons && !duration.startDate"
                           ng-model="duration"
                           ng-class="{'disabled-picker': disableButtons}"
                         ></date-range-picker>
+                        <div class="input-group col-md-12">
+                          <input ng-show="disableButtons && !duration.startDate"
+                            type="number"
+                            class="form-control"
+                            ng-class="{'disabled-picker': disableButtons}"
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -830,10 +836,7 @@
                           </div>
                         </div>
                       </div>
-                      <div
-                        class="row"
-                        ng-hide="disableButtons && !subcontract.dateScExecutionTarget"
-                      >
+                      <div class="row">
                         <div class="col-md-3">
                           <label>Target date for subcontract execution</label>
                         </div>
