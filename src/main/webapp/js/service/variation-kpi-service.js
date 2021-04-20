@@ -39,7 +39,11 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 			amountApplied, 
 			numberCertified, 
 			amountCertified, 
-			remarks
+			remarks,
+		    eojSecured,
+		    eojUnsecured,
+		    eojTotal,
+		    exceptionComment
 		) {
 		var request = $http({
 			method: "get",
@@ -60,7 +64,11 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 				amountApplied: amountApplied, 
 				numberCertified: numberCertified, 
 				amountCertified: amountCertified, 
-				remarks: remarks
+				remarks: remarks,
+				eojSecured: eojSecured,
+				eojUnsecured: eojUnsecured,
+				eojTotal: eojTotal,
+				exceptionComment: exceptionComment
 			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

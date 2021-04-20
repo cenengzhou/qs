@@ -23,7 +23,11 @@ mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService
 			amountCertified: 0,
 			numberAgreed: 0,
 			amountAgreed: 0,
-			remarks: ""
+			remarks: "",
+			eojSecured: 0,
+			eojUnsecured: 0,
+			eojTotal: 0,
+			exceptionComment: ""
 			}];
 	
 

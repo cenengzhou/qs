@@ -52,6 +52,10 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	private int numberAgreed;
 	private BigDecimal amountAgreed;
 	private String remarks;
+	private BigDecimal eojSecured;
+	private BigDecimal eojUnsecured;
+	private BigDecimal eojTotal;
+	private String exceptionComment;
 
 	public VariationKpi() {
 	}
@@ -226,4 +230,39 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 		return jsonString;
 	}
 
+	@Column(name = "EOJ_SECURED")
+	public BigDecimal getEojSecured() {
+		return eojSecured;
+	}
+
+	public void setEojSecured(BigDecimal eojSecured) {
+		this.eojSecured = eojSecured;
+	}
+
+	@Column(name = "EOJ_UNSECURED")
+	public BigDecimal getEojUnsecured() {
+		return eojUnsecured;
+	}
+
+	public void setEojUnsecured(BigDecimal eojUnsecured) {
+		this.eojUnsecured = eojUnsecured;
+	}
+
+	@Column(name = "EOJ_TOTAL")
+	public BigDecimal getEojTotal() {
+		return eojTotal;
+	}
+
+	public void setEojTotal(BigDecimal eojTotal) {
+		this.eojTotal = eojTotal;
+	}
+
+	@Column(name = "EXCEPTION_COMMENT")
+	public String getExceptionComment() {
+		return exceptionComment;
+	}
+
+	public void setExceptionComment(String exceptionComment) {
+		this.exceptionComment = exceptionComment;
+	}
 }

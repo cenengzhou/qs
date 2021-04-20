@@ -29,14 +29,18 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{type: 'number', description: 'Number of Applied', field: 'numberApplied', order: 9, alt: 'Number of Variations were we have included an applied amount within our Application'},
 		{type: 'amount', description: 'Amount of Applied', field: 'amountApplied', order: 10, alt: 'Value of Variations within GCL Interim Application'},
 		{type: 'number', description: 'Number of Certified', field: 'numberCertified', order: 11, alt: 'Number of variations were the client has included a certification'},
-		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'}
+		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'},
+		{type: 'amount', description: 'Secured EOJ', field: 'eojSecured', order: 13, alt: 'alt (TBC)'},
+		{type: 'amount', description: 'Unsecured EOJ', field: 'eojUnsecured', order: 14, alt: 'alt (TBC)'},
+		{type: 'amount', description: 'Total EOJ', field: 'eojTotal', order: 15, alt: 'alt (TBC)'},
+		{type: 'text', description: 'Exception Comment', field: 'exceptionComment', order: 16, alt: 'alt (TBC)'}
 	];
 	
 	$scope.items = [
 		{
 			type: 'Total', 
 			order: 1, 
-			description: 'Total', 
+			description: 'Total',
 			numberField: 'numberIssued',
 			amountField: 'amountIssued',
 			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
@@ -91,7 +95,35 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative',
 			alt: 'Variations which have been certified by the Client / Client Rep in its Interim Payment Certificate'
 		},
-		
+		{
+			type: 'Secured',
+			order: 7,
+			description: 'Secured EOJ',
+			amountField: 'eojSecured',
+			amountAlt: 'amountAlt (TBC)',
+		},
+		{
+			type: 'Unsecured',
+			order: 8,
+			description: 'Unsecured EOJ',
+			amountField: 'eojUnsecured',
+			amountAlt: ' amountAlt (TBC)',
+		},
+		{
+			type: 'Total_EOJ',
+			order: 9,
+			description: 'Total EOJ',
+			amountField: 'eojTotal',
+			amountAlt: 'amountAlt (TBC)',
+		},
+		{
+			type: 'Exception_Comment',
+			order: 10,
+			description: 'Comments',
+			// description: 'Monthly Comments by Exception',
+			exceptionCommentField: 'exceptionComment',
+			exceptionCommentAlt: 'exceptionCommentAlt (TBC)',
+		}
 	];
 	
 
@@ -129,6 +161,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[12].field, width:150, displayName: $scope.fields[12].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[13].field, width:150, displayName: $scope.fields[13].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[14].field, width:150, displayName: $scope.fields[14].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[15].field, width:150, displayName: $scope.fields[15].description, enableCellEdit: true, type: 'text'},
 //						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
@@ -168,6 +204,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		var numberCertified = $scope.gridApi ? $scope.gridApi.grid.columns[13].filters[0].term : ""; 
 		var amountCertified = $scope.gridApi ? $scope.gridApi.grid.columns[14].filters[0].term : "";
 		var remarks = '';//$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var eojSecured = $scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var eojUnsecured = $scope.gridApi ? $scope.gridApi.grid.columns[16].filters[0].term : "";
+		var eojTotal = $scope.gridApi ? $scope.gridApi.grid.columns[17].filters[0].term : "";
+		var exceptionComment = $scope.gridApi ? $scope.gridApi.grid.columns[18].filters[0].term : "";
 		variationKpiService.getByPage(page, size, direction, property,
 				noJob, 
 				year, 
@@ -182,7 +222,11 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				amountApplied, 
 				numberCertified, 
 				amountCertified, 
-				remarks
+				remarks,
+				eojSecured,
+				eojUnsecured,
+				eojTotal,
+				exceptionComment
 		)
 		.then(function(data){
 			$scope.gridSelectedRows = [];
