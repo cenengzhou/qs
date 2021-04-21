@@ -6,7 +6,7 @@
 		height: 22px;
 	}
 	.doubleRowClass {
-		height: 60px; width: 100%; padding: 2px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 42px; color: #ddd
+		height: 60px; width: 100%; padding: 2px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 15px; color: #ddd
 	}
 	.headerRowClass {
 		height: 70px; width: 100%; padding: 2px; border: 1px solid #eee
@@ -19,28 +19,38 @@
 	}
 </style>
 <div ng-repeat="kpi in kpiList">
-	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">
-		<div>
-			<div class="headerRowClass" ng-if="$index==0">
-				<label style="padding-top: 5px">Month</label>
-			</div>
-			<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">
-				<div style="position: absolute; padding-left: 20%">{{getMonthShortName(kpi.month)}}</div>
-				<div ng-click="onDelete(kpi)" ng-mouseenter="kpi.deleteColor='#cdcdcd'" ng-mouseleave="kpi.deleteColor='#ddd'"
-					class="deleteBtn" >
-					<i class="fa fa-2x fa-trash"></i>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div ng-class="{'col-md-10': showMonthColumn, 'col-md-12': !showMonthColumn}" ng-style="{'padding-left': showMonthColumn ? '0px' : '15px'}">
+<!--	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">-->
+<!--		<div>-->
+<!--			<div class="headerRowClass" ng-if="$index==0">-->
+<!--				<label style="padding-top: 5px">Month</label>-->
+<!--			</div>-->
+<!--			<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">-->
+<!--				<div style="position: absolute; padding-left: 20%">{{getMonthShortName(kpi.month)}}</div>-->
+<!--				<div ng-click="onDelete(kpi)" ng-mouseenter="kpi.deleteColor='#cdcdcd'" ng-mouseleave="kpi.deleteColor='#ddd'"-->
+<!--					class="deleteBtn" >-->
+<!--					<i class="fa fa-2x fa-trash"></i>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+	<div ng-class="{'col-md-12': showMonthColumn, 'col-md-12': !showMonthColumn}" ng-style="{'padding-left': showMonthColumn ? '15px' : '15px'}">
 		<div class="col-md-2" style="padding: 0px;">
 			<div>
 				<div class="headerRowClass" ng-if="$index==0">
 					<label style="padding-top: 5px">Cumulative</label>
 				</div>
-				<div class="singleRowClass">Number&nbsp;(Quantity)</div>
-				<div class="singleRowClass">Amount</div>
+				<div class=" col-md-12" style="padding: 0px; ">
+					<div class="col-md-4"  style="padding: 0px;" ng-if="showMonthColumn">
+						<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">
+							<div style="position: absolute; padding-left: 10%" ng-click="onDelete(kpi)"><span class="icofont icofont-bin icofont-1x"></span>{{getMonthShortName(kpi.month)}}</div>
+
+						</div>
+					</div>
+					<div ng-class="{'col-md-8': showMonthColumn, 'col-md-auto': !showMonthColumn}"  style="padding: 0px;">
+						<div class="singleRowClass">Number&nbsp;(Quantity)</div>
+						<div class="singleRowClass">Amount</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col-md-10" style="padding:0px">
