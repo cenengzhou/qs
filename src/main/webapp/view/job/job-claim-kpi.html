@@ -1,0 +1,45 @@
+<div id="content" class="content" style="padding:15px">
+	<div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-body">
+						<div class="row">
+							<form name="addForm">
+								<div class="form-group">
+									<div class="col-md-12">
+										<div>
+											<div style="padding: 0px">
+												<span class="input-group col-md-9" moment-picker="period" ng-model="period"
+													format="YYYY" start-view="year" today="true" change="getPage(newValue, oldValue)" 
+													ng-model-options="{ updateOn: 'blur' }" style="float: left"> 
+													<span class="input-group-addon">Month Ending <i class="fa fa-calendar"></i>
+												</span> 
+												<input class="form-control" required ng-model="period" ng-model-options="{ updateOn: 'blur' }">
+												</span> <span class="col-md-3" style="padding-right: 0px; float: right">
+													<button type="button" class="form-control btn btn-danger btn-block" style="color: white" ng-click="onAdd()">
+														<i class="fa fa-plus"></i> Add
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div ng-include src="'view/job/modal/kpiRowTemplate.html?@PROJECT_VERSION@'" style="padding-top: 50px"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<footer ng-if="modified" 
+		style="position: fixed; top: 92vh; width: 92%; z-index:10000">
+		<md-toolbar class="md-scroll-shrink" style="background-color:rgba(63,81,181, 0)">
+		<div layout="row" layout-align="center center" flex>
+			<md-button ng-click="onUpdate()" class="md-raised md-primary col-md-12">Update</md-button>
+		</div>
+		</md-toolbar>
+	</footer>
+</div>
