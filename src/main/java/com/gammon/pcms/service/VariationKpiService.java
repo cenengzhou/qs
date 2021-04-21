@@ -71,7 +71,12 @@ public class VariationKpiService {
 			String amountApplied,
 			String numberCertified,
 			String amountCertified,
-			String remarks) {
+			String remarks,
+			String eojSecured,
+			String eojUnsecured,
+			String eojTotal,
+			String exceptionComment
+			) {
 		return repository.filterPagination(
 				pageable, 
 				noJob, 
@@ -87,7 +92,11 @@ public class VariationKpiService {
 				amountApplied  + "%", 
 				numberCertified  + "%", 
 				amountCertified  + "%", 
-				"%" + remarks + "%"
+				remarks  + "%",
+				eojSecured  + "%",
+				eojUnsecured  + "%",
+				eojTotal  + "%",
+				"%" + exceptionComment + "%"
 				);
 	}
 }

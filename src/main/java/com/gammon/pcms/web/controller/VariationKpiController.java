@@ -75,7 +75,11 @@ public class VariationKpiController {
 			@RequestParam(defaultValue = "") String amountApplied,
 			@RequestParam(defaultValue = "") String numberCertified,
 			@RequestParam(defaultValue = "") String amountCertified,
-			@RequestParam(defaultValue = "") String remarks
+			@RequestParam(defaultValue = "") String remarks,
+			@RequestParam(defaultValue = "") String eojSecured,
+			@RequestParam(defaultValue = "") String eojUnsecured,
+			@RequestParam(defaultValue = "") String eojTotal,
+			@RequestParam(defaultValue = "") String exceptionComment
 			) {
 		Pageable pageable = new PageRequest(
 				page, 
@@ -97,7 +101,11 @@ public class VariationKpiController {
 				amountApplied, 
 				numberCertified, 
 				amountCertified, 
-				remarks
+				remarks,
+				eojSecured,
+				eojUnsecured,
+				eojTotal,
+				exceptionComment
 				);
 		return pageData;
 	}
