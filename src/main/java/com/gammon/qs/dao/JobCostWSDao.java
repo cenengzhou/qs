@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.SoapFaultClientException;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListRequestObj;
 import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListResponseObj;
@@ -97,6 +98,10 @@ public class JobCostWSDao {
 
 			logger.info("call WS(getAccountIDListByJobWebServiceTemplate): Request Object -"+
 						" JobNumber: "+requestObj.getJobNumber());
+			HttpComponentsMessageSender messageSender =  new HttpComponentsMessageSender();
+			messageSender.setReadTimeout(60000);
+			messageSender.setConnectionTimeout(60000);
+			getAccountIDListByJobWebServiceTemplate.setMessageSender(messageSender);
 			GetAccountIDListByJobResponseListObj responseListObj = (GetAccountIDListByJobResponseListObj) getAccountIDListByJobWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 	
 			JobInfo job = new JobInfo();
