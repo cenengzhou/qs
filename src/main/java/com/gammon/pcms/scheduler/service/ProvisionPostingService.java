@@ -194,12 +194,7 @@ public class ProvisionPostingService {
 		this.username = username;
 
 		// --------------------- START: Setup ---------------------
-		// JDE EDI Batch No. & EDI Transaction No.
-		try {
-			ediBatchNo = createGLDao.getEdiBatchNumber();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+
 		ediTransactionNo = 10000;
 
 		// Counters
@@ -216,8 +211,14 @@ public class ProvisionPostingService {
 		// Calculate provision job by job
 		for (JobInfo job : jobList) {
 			logger.info("Start Job: " + job.getJobNumber() + " Company: " + job.getCompany());
-			try {
+			try {		
+				// JDE EDI Batch No. & EDI Transaction No.
+				ediBatchNo = createGLDao.getEdiBatchNumber();
 				calculateAndInsertProvisionByJob(job, glDate);
+				if (needToPost)
+					createGLDao.postGLByEdiBatchNo(ediBatchNo, username);
+				else
+					logger.info("No Provision record to be posted.");
 			} catch (Exception e) {
 				logger.info("Failed Job: " + job.getJobNumber());
 				e.printStackTrace();
@@ -229,14 +230,7 @@ public class ProvisionPostingService {
 
 		// After processing calculation of provision for all jobs, post the provision records that have inserted earlier
 		logger.info("Provision records start posting... " + "ediBatchNo: " + ediBatchNo + " username: " + username);
-		if (needToPost)
-			try {
-				createGLDao.postGLByEdiBatchNo(ediBatchNo, username);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		else
-			logger.info("No Provision record to be posted.");
+
 	}
 	
 	/**
