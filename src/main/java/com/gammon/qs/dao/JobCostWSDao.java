@@ -101,8 +101,9 @@ public class JobCostWSDao {
 	
 			JobInfo job = new JobInfo();
 			job.setJobNumber(jobNumber);
-
-			for(GetAccountIDListByJobResponseObj responseObj : responseListObj.getGetAccountIDListByJobResponseObjList()){
+			List<GetAccountIDListByJobResponseObj> responseList = responseListObj.getGetAccountIDListByJobResponseObjList();
+			logger.info("responseList:" + responseList.size());
+			for(GetAccountIDListByJobResponseObj responseObj : responseList){
 				AccountMaster curAccountMaster = new AccountMaster();
 				
 				curAccountMaster.setAccountID(responseObj.getAccountId());
@@ -115,14 +116,15 @@ public class JobCostWSDao {
 					curAccountMaster.setDescription(responseObj.getDescription());
 					
 					resultList.add(curAccountMaster);
-				}catch(NumberFormatException e){
+				} catch(NumberFormatException e){
 					logger.log(Level.SEVERE,"Invalid Object/Subsidiary Code Exception: Object Code-"+responseObj.getObjectCode()+" Subsidiary Code-"+responseObj.getSubsidaryCode(), e);
 					numberOfInvalidAccount++;
 				}
-				
 			}	
-		}catch (SoapFaultClientException e){
+		} catch (SoapFaultClientException e){
 			logger.log(Level.SEVERE, "DAO Exception:", e);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		logger.info("RETURNED ACCOUNTID(BY JOBNUMBER) RECORDS TOTAL SIZE: " + resultList.size());
 		if(numberOfInvalidAccount>0)
