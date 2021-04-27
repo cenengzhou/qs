@@ -72,8 +72,7 @@ public class ClaimKpiController {
 			@RequestParam(defaultValue = "") String remarks,
 			@RequestParam(defaultValue = "") String eojSecured,
 			@RequestParam(defaultValue = "") String eojUnsecured,
-			@RequestParam(defaultValue = "") String eojTotal,
-			@RequestParam(defaultValue = "") String exceptionComment
+			@RequestParam(defaultValue = "") String eojTotal
 			) {
 		Pageable pageable = new PageRequest(
 				page, 
@@ -98,8 +97,7 @@ public class ClaimKpiController {
 				remarks,
 				eojSecured,
 				eojUnsecured,
-				eojTotal,
-				exceptionComment
+				eojTotal
 				);
 		return pageData;
 	}

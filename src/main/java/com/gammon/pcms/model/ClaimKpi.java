@@ -55,7 +55,6 @@ public class ClaimKpi extends PcmsPersistedAuditObject implements Serializable {
 	private BigDecimal eojSecured;
 	private BigDecimal eojUnsecured;
 	private BigDecimal eojTotal;
-	private String exceptionComment;
 
 	public ClaimKpi() {
 	}
@@ -210,6 +209,7 @@ public class ClaimKpi extends PcmsPersistedAuditObject implements Serializable {
 		this.amountAgreed = amountAgreed;
 	}
 
+	@Column(name = "REMARKS")
 	public String getRemarks() {
 		return this.remarks;
 	}
@@ -257,12 +257,4 @@ public class ClaimKpi extends PcmsPersistedAuditObject implements Serializable {
 		this.eojTotal = eojTotal;
 	}
 
-	@Column(name = "EXCEPTION_COMMENT")
-	public String getExceptionComment() {
-		return exceptionComment;
-	}
-
-	public void setExceptionComment(String exceptionComment) {
-		this.exceptionComment = exceptionComment;
-	}
 }

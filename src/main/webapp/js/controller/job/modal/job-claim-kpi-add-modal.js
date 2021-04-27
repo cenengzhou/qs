@@ -26,8 +26,7 @@ mainApp.controller('JobClaimKpiAddModalCtrl', ['$scope','claimKpiService', '$uib
 			remarks: "",
 			eojSecured: 0,
 			eojUnsecured: 0,
-			eojTotal: 0,
-			exceptionComment: ""
+			eojTotal: 0
 			}];
 	
 

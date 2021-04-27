@@ -54,12 +54,12 @@
 			</div>
 		</div>
 		<div class="col-md-10" style="padding:0px">
-			<div ng-class="{'col-md-1': item.type!='Exception_Comment', 'col-md-3': item.type=='Exception_Comment'}" style="padding: 0px;" ng-repeat="item in items | orderBy:'order'">
+			<div ng-class="{'col-md-1': item.type!='Remark', 'col-md-3': item.type=='Remark'}" style="padding: 0px;" ng-repeat="item in items | orderBy:'order'">
 				<div class="headerRowClass" ng-if="$parent.$index==0">
 					<label>{{item.description}}</label>
 					<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer; padding-top:0px" data-toggle="tooltip" title="{{item.alt}}" ng-if="item.alt"></i>
 				</div>
-				<ng-container ng-if="item.type!='Exception_Comment'">
+				<ng-container ng-if="item.type!='Remark'">
 					<div class="singleRowClass">
 						<div class="input-group">
 							<input type="text" style="text-align:right"
@@ -75,12 +75,12 @@
 						</div>
 					</div>
 				</ng-container>
-				<ng-container ng-if="item.type=='Exception_Comment'">
+				<ng-container ng-if="item.type=='Remark'">
 					<div class="doubleRowClass">
 						<div class="input-group" style="display: block">
 							<textarea class="form-control "
 								   ng-change="$parent.$parent.$parent.$parent.modified=true"
-								   ng-model="kpi[item.exceptionCommentField]" required rows="2" maxlength="255" />
+								   ng-model="kpi[item.remarkField]" required rows="2" maxlength="255" />
 						</div>
 					</div>
 				</ng-container>

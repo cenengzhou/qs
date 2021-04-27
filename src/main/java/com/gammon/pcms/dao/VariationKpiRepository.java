@@ -53,8 +53,7 @@ public interface VariationKpiRepository extends JpaRepository<VariationKpi, Long
 			+"(v.remarks like :remarks or v.remarks is null) and "
 			+"function('to_char', v.eojSecured) like :eojSecured and "
 			+"function('to_char', v.eojUnsecured) like :eojUnsecured and "
-			+"function('to_char', v.eojTotal) like :eojTotal and "
-			+"(v.exceptionComment like :exceptionComment or v.exceptionComment is null) "
+			+"function('to_char', v.eojTotal) like :eojTotal"
 	)
 	Page<VariationKpi> filterPagination(
 			Pageable pageable,
@@ -74,7 +73,6 @@ public interface VariationKpiRepository extends JpaRepository<VariationKpi, Long
 			@Param("remarks") String remarks,
 			@Param("eojSecured") String eojSecured,
 			@Param("eojUnsecured") String eojUnsecured,
-			@Param("eojTotal") String eojTotal,
-			@Param("exceptionComment") String exceptionComment
+			@Param("eojTotal") String eojTotal
 	);
 }

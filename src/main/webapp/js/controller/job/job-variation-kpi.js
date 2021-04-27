@@ -33,7 +33,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{type: 'amount', description: 'Secured EOJ', field: 'eojSecured', order: 13, alt: 'alt (TBC)'},
 		{type: 'amount', description: 'Unsecured EOJ', field: 'eojUnsecured', order: 14, alt: 'alt (TBC)'},
 		{type: 'amount', description: 'Total EOJ', field: 'eojTotal', order: 15, alt: 'alt (TBC)'},
-		{type: 'text', description: 'Exception Comment', field: 'exceptionComment', order: 16, alt: 'alt (TBC)'}
+		{type: 'text', description: 'Remarks', field: 'remarks', order: 16, alt: 'alt (TBC)'}
 	];
 	
 	$scope.items = [
@@ -117,12 +117,11 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			amountAlt: 'amountAlt (TBC)',
 		},
 		{
-			type: 'Exception_Comment',
+			type: 'Remark',
 			order: 10,
-			description: 'Comments',
-			// description: 'Monthly Comments by Exception',
-			exceptionCommentField: 'exceptionComment',
-			exceptionCommentAlt: 'exceptionCommentAlt (TBC)',
+			description: 'Remarks',
+			remarkField: 'remarks',
+			remarkAlt: 'remarkAlt (TBC)',
 		}
 	];
 	
@@ -203,11 +202,11 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		var amountApplied = $scope.gridApi ? $scope.gridApi.grid.columns[12].filters[0].term : "";
 		var numberCertified = $scope.gridApi ? $scope.gridApi.grid.columns[13].filters[0].term : ""; 
 		var amountCertified = $scope.gridApi ? $scope.gridApi.grid.columns[14].filters[0].term : "";
-		var remarks = '';//$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		//var remarks = '';$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
 		var eojSecured = $scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
 		var eojUnsecured = $scope.gridApi ? $scope.gridApi.grid.columns[16].filters[0].term : "";
 		var eojTotal = $scope.gridApi ? $scope.gridApi.grid.columns[17].filters[0].term : "";
-		var exceptionComment = $scope.gridApi ? $scope.gridApi.grid.columns[18].filters[0].term : "";
+		var remarks = $scope.gridApi ? $scope.gridApi.grid.columns[18].filters[0].term : "";
 		variationKpiService.getByPage(page, size, direction, property,
 				noJob, 
 				year, 
@@ -225,8 +224,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				remarks,
 				eojSecured,
 				eojUnsecured,
-				eojTotal,
-				exceptionComment
+				eojTotal
 		)
 		.then(function(data){
 			$scope.gridSelectedRows = [];

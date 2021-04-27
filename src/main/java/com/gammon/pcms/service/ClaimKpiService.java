@@ -78,8 +78,7 @@ public class ClaimKpiService {
 			String remarks,
 			String eojSecured,
 			String eojUnsecured,
-			String eojTotal,
-			String exceptionComment
+			String eojTotal
 			) {
 		return repository.filterPagination(
 				pageable, 
@@ -99,8 +98,7 @@ public class ClaimKpiService {
 				remarks  + "%",
 				eojSecured  + "%",
 				eojUnsecured  + "%",
-				eojTotal  + "%",
-				"%" + exceptionComment + "%"
+				eojTotal  + "%"
 				);
 	}
 }

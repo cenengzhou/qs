@@ -42,8 +42,7 @@ mainApp.service('claimKpiService', ['$http', '$q', '$log', 'GlobalHelper',  func
 			remarks,
 		    eojSecured,
 		    eojUnsecured,
-		    eojTotal,
-		    exceptionComment
+		    eojTotal
 		) {
 		var request = $http({
 			method: "get",
@@ -67,8 +66,7 @@ mainApp.service('claimKpiService', ['$http', '$q', '$log', 'GlobalHelper',  func
 				remarks: remarks,
 				eojSecured: eojSecured,
 				eojUnsecured: eojUnsecured,
-				eojTotal: eojTotal,
-				exceptionComment: exceptionComment
+				eojTotal: eojTotal
 			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
