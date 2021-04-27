@@ -249,6 +249,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.commercialAction', {
+		url: "/commercialAction",
+		templateUrl: "view/job/job-commercial-action.html?@PROJECT_VERSION@",
+		controller: 'JobCommercialActionCtrl as ctrl',
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/service/jde-service.js?@PROJECT_VERSION@',
+						'js/controller/job/job-commercial-action.js?@PROJECT_VERSION@',
+						'js/service/commercial-action-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		}
+	})
 	.state('job.personnel', {
 		url: "/personnel",
 		templateUrl: "view/job/job-personnel2.html?@PROJECT_VERSION@",
