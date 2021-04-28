@@ -1,4 +1,4 @@
-mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
+mainApp.service('claimKpiService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
     	findByJobNo:	findByJobNo,
@@ -12,7 +12,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     function findByJobNo(jobNo) {
 		var request = $http({
 			method: "get",
-			url: "service/variationKpi/" + jobNo
+			url: "service/claimKpi/" + jobNo
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
@@ -20,7 +20,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     function getByJobNoYear(jobNo, year, month) {
 		var request = $http({
 			method: "get",
-			url: "service/variationKpi/getByYear/" + jobNo + "/" + year
+			url: "service/claimKpi/getByYear/" + jobNo + "/" + year
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
@@ -46,7 +46,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
 		) {
 		var request = $http({
 			method: "get",
-			url: "service/variationKpi/" + page + "/" + size,
+			url: "service/claimKpi/" + page + "/" + size,
 			params: {
 				direction: direction,
 				property: property,
@@ -75,7 +75,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     function saveByJobNo(jobNo, kpi) {
 		var request = $http({
 			method: "post",
-			url: "service/variationKpi/" + jobNo,
+			url: "service/claimKpi/" + jobNo,
 			data: kpi
 		});
 //		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
@@ -85,7 +85,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     function saveListByJobNo(jobNo, kpiList) {
 		var request = $http({
 			method: "post",
-			url: "service/variationKpi/saveList/" + jobNo,
+			url: "service/claimKpi/saveList/" + jobNo,
 			data: kpiList
 		});
 //		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
@@ -95,7 +95,7 @@ mainApp.service('variationKpiService', ['$http', '$q', '$log', 'GlobalHelper',  
     function deleteByJobNo(jobNo, id) {
 		var request = $http({
 			method: "delete",
-			url: "service/variationKpi/" + jobNo + "/" + id
+			url: "service/claimKpi/" + jobNo + "/" + id
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

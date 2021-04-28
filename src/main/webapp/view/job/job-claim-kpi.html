@@ -11,10 +11,10 @@
 										<div>
 											<div style="padding: 0px">
 												<span class="input-group col-md-8" moment-picker="period" ng-model="period"
-													format="YYYY" start-view="year" today="true" change="getPage(newValue, oldValue)" 
-													ng-model-options="{ updateOn: 'blur' }" style="float: left"> 
+													  format="YYYY" start-view="year" today="true" change="getPage(newValue, oldValue)"
+													  ng-model-options="{ updateOn: 'blur' }" style="float: left">
 													<span class="input-group-addon">Year <i class="fa fa-calendar"></i>
-												</span> 
+												</span>
 												<input class="form-control" required ng-model="period" ng-model-options="{ updateOn: 'blur' }">
 												</span>
 												<span class="col-md-2" style="padding-right: 0px; ">
@@ -40,13 +40,13 @@
 			</div>
 		</div>
 	</div>
-	
-	<footer ng-if="modified" 
-		style="position: fixed; top: 92vh; width: 92%; z-index:10000">
+
+	<footer ng-if="modified"
+			style="position: fixed; top: 92vh; width: 92%; z-index:10000">
 		<md-toolbar class="md-scroll-shrink" style="background-color:rgba(63,81,181, 0)">
-		<div layout="row" layout-align="center center" flex>
-			<md-button ng-click="onUpdate()" class="md-raised md-primary col-md-12">Update</md-button>
-		</div>
+			<div layout="row" layout-align="center center" flex>
+				<md-button ng-click="onUpdate()" class="md-raised md-primary col-md-12">Update</md-button>
+			</div>
 		</md-toolbar>
 	</footer>
 </div>

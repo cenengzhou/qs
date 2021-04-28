@@ -22,16 +22,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
 
 /**
- * The persistent class for the VARIATION_KPI database table.
+ * The persistent class for the CLAIM_KPI database table.
  * 
  */
 @Audited
 @AuditOverride(forClass = PcmsPersistedAuditObject.class)
 @Entity
-@Table(name = "VARIATION_KPI")
-@SequenceGenerator(name = "VARIATION_KPI_GEN", sequenceName = "VARIATION_KPI_SEQ", allocationSize = 1)
-@NamedQuery(name = "VariationKpi.findAll", query = "SELECT v FROM VariationKpi v")
-public class VariationKpi extends PcmsPersistedAuditObject implements Serializable {
+@Table(name = "CLAIM_KPI")
+@SequenceGenerator(name = "CLAIM_KPI_GEN", sequenceName = "CLAIM_KPI_SEQ", allocationSize = 1)
+@NamedQuery(name = "ClaimKpi.findAll", query = "SELECT v FROM ClaimKpi v")
+public class ClaimKpi extends PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = 7517505028363979338L;
 
@@ -56,11 +56,11 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	private BigDecimal eojUnsecured;
 	private BigDecimal eojTotal;
 
-	public VariationKpi() {
+	public ClaimKpi() {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VARIATION_KPI_GEN")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CLAIM_KPI_GEN")
 	@Column(name = "ID", unique = true, nullable = false, scale = 0)
 	public Long getId() {
 		return this.id;
@@ -256,4 +256,5 @@ public class VariationKpi extends PcmsPersistedAuditObject implements Serializab
 	public void setEojTotal(BigDecimal eojTotal) {
 		this.eojTotal = eojTotal;
 	}
+
 }

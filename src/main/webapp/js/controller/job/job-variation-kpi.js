@@ -16,7 +16,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		  };
 	$scope.period = moment().format('YYYY-MM');
 	$scope.kpiList = [];
-	
+	$scope.isExpand = false;
+
 	$scope.fields = [
 		{type: 'job', description: 'Project', field: 'noJob', order: 1},
 		{type: 'month', description: 'Month Ending', field: 'month', order: 2},
@@ -29,14 +30,18 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{type: 'number', description: 'Number of Applied', field: 'numberApplied', order: 9, alt: 'Number of Variations were we have included an applied amount within our Application'},
 		{type: 'amount', description: 'Amount of Applied', field: 'amountApplied', order: 10, alt: 'Value of Variations within GCL Interim Application'},
 		{type: 'number', description: 'Number of Certified', field: 'numberCertified', order: 11, alt: 'Number of variations were the client has included a certification'},
-		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'}
+		{type: 'amount', description: 'Amount of Certified', field: 'amountCertified', order: 12, alt: 'Value of Variations certified by Client \\ Client\'s Representative'},
+		{type: 'amount', description: 'Secured EOJ', field: 'eojSecured', order: 13, alt: 'alt (TBC)'},
+		{type: 'amount', description: 'Unsecured EOJ', field: 'eojUnsecured', order: 14, alt: 'alt (TBC)'},
+		{type: 'amount', description: 'Total EOJ', field: 'eojTotal', order: 15, alt: 'alt (TBC)'},
+		{type: 'text', description: 'Comments', field: 'remarks', order: 16, alt: 'alt (TBC)'}
 	];
 	
 	$scope.items = [
 		{
 			type: 'Total', 
 			order: 1, 
-			description: 'Total', 
+			description: 'Total',
 			numberField: 'numberIssued',
 			amountField: 'amountIssued',
 			numberAlt: 'Number of Variations issued by the Client \\ Client\'s Rep. (Includes requests for Variations)', 
@@ -91,7 +96,34 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			amountAlt: 'Value of Variations certified by Client \\ Client\'s Representative',
 			alt: 'Variations which have been certified by the Client / Client Rep in its Interim Payment Certificate'
 		},
-		
+		{
+			type: 'Secured',
+			order: 7,
+			description: 'Secured EOJ',
+			amountField: 'eojSecured',
+			amountAlt: 'amountAlt (TBC)',
+		},
+		{
+			type: 'Unsecured',
+			order: 8,
+			description: 'Unsecured EOJ',
+			amountField: 'eojUnsecured',
+			amountAlt: ' amountAlt (TBC)',
+		},
+		{
+			type: 'Total_EOJ',
+			order: 9,
+			description: 'Total EOJ',
+			amountField: 'eojTotal',
+			amountAlt: 'amountAlt (TBC)',
+		},
+		{
+			type: 'Remark',
+			order: 10,
+			description: 'Comments',
+			remarkField: 'remarks',
+			remarkAlt: 'remarkAlt (TBC)',
+		}
 	];
 	
 
@@ -129,6 +161,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 						 { field: $scope.fields[9].field, width:150, displayName: $scope.fields[9].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[10].field, width:150, displayName: $scope.fields[10].description, enableCellEdit: true, type: 'number'},
 						 { field: $scope.fields[11].field, width:150, displayName: $scope.fields[11].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[12].field, width:150, displayName: $scope.fields[12].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[13].field, width:150, displayName: $scope.fields[13].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[14].field, width:150, displayName: $scope.fields[14].description, enableCellEdit: true, type: 'number'},
+						 { field: $scope.fields[15].field, width:150, displayName: $scope.fields[15].description, enableCellEdit: true, type: 'text'},
 //						 { field: 'remarks', width:250, displayName: 'Remark', enableCellEdit: true}
 			           ]
 	};
@@ -167,7 +203,11 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		var amountApplied = $scope.gridApi ? $scope.gridApi.grid.columns[12].filters[0].term : "";
 		var numberCertified = $scope.gridApi ? $scope.gridApi.grid.columns[13].filters[0].term : ""; 
 		var amountCertified = $scope.gridApi ? $scope.gridApi.grid.columns[14].filters[0].term : "";
-		var remarks = '';//$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		//var remarks = '';$scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var eojSecured = $scope.gridApi ? $scope.gridApi.grid.columns[15].filters[0].term : "";
+		var eojUnsecured = $scope.gridApi ? $scope.gridApi.grid.columns[16].filters[0].term : "";
+		var eojTotal = $scope.gridApi ? $scope.gridApi.grid.columns[17].filters[0].term : "";
+		var remarks = $scope.gridApi ? $scope.gridApi.grid.columns[18].filters[0].term : "";
 		variationKpiService.getByPage(page, size, direction, property,
 				noJob, 
 				year, 
@@ -182,7 +222,10 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				amountApplied, 
 				numberCertified, 
 				amountCertified, 
-				remarks
+				remarks,
+				eojSecured,
+				eojUnsecured,
+				eojTotal
 		)
 		.then(function(data){
 			$scope.gridSelectedRows = [];
@@ -241,6 +284,26 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail to update record");
 			});
 //		}
+	}
+
+	$scope.onExpand = function() {
+		$scope.isExpand = !$scope.isExpand;
+		var taList = document.getElementsByClassName("kpi-row-template-textarea");
+
+		if (!$scope.isExpand) {
+			for (var i=0; i < taList.length; i++) {
+				var ta = taList[i];
+				ta.style.cssText = 'height: auto';
+			}
+		} else {
+			for (var i=0; i < taList.length; i++) {
+				var ta = taList[i];
+				ta.style.cssText = 'height: auto';
+				var height = ta.scrollHeight + 20;
+				ta.style.cssText = 'height: ' + height + 'px';
+			}
+		}
+
 	}
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
@@ -306,4 +369,25 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				type == 'delete' ? $scope.gridDirtyRows.length > 0 ? 'col-md-6' : 'col-md-12' 
 				: 'col-md-12';
 	}
+
+	$scope.autosize = function (event){
+		$scope.isExpand = true;
+		var el = event.currentTarget;
+		setTimeout(function () {
+			el.style.cssText = 'height: auto';
+			// for box-sizing other than "content-box" use:
+			// el.style.cssText = '-moz-box-sizing:content-box';
+
+			var height = el.scrollHeight + 20;
+			el.style.cssText = 'height: ' + height + 'px';
+		}, 0);
+	}
+
+	$scope.resetTextarea = function (event) {
+		var el = event.currentTarget;
+		setTimeout(function () {
+			el.style.cssText =  'height: auto';
+		}, 0);
+	}
+
 }]);

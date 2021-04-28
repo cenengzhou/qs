@@ -170,6 +170,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.claim', {
+		url: "/claim",
+		templateUrl: "view/job/job-claim-kpi.html?@PROJECT_VERSION@",
+		controller: 'JobClaimKpiCtrl',
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/job/job-claim-kpi.js?@PROJECT_VERSION@',
+						'js/controller/job/modal/job-claim-kpi-add-modal.js?@PROJECT_VERSION@',
+						'js/service/claim-kpi-service.js?@PROJECT_VERSION@',
+					]
+				});
+			}]
+		}
+	})
 	.state('job.forecast', {
 		url: "/forecast",
 		templateUrl: "view/job/job-forecast.html?@PROJECT_VERSION@",

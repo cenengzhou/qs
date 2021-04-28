@@ -1,5 +1,5 @@
-mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService', '$uibModalInstance', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout',
-                                   function($scope, variationKpiService, $uibModalInstance, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout) {
+mainApp.controller('JobClaimKpiAddModalCtrl', ['$scope','claimKpiService', '$uibModalInstance', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout',
+                                   function($scope, claimKpiService, $uibModalInstance, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout) {
 	$scope.GlobalParameter = GlobalParameter;
 
 	$scope.jobNo = $cookies.get("jobNo");
@@ -28,13 +28,13 @@ mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService
 			eojUnsecured: 0,
 			eojTotal: 0
 			}];
-	
+
 
 	$scope.onAdd = function() {
 		var period = moment($scope.kpiList[0].period);
 		$scope.kpiList[0].year = period.year();
 		$scope.kpiList[0].month = period.month() + 1;
-		variationKpiService.saveByJobNo($scope.jobNo, $scope.kpiList[0])
+		claimKpiService.saveByJobNo($scope.jobNo, $scope.kpiList[0])
 		.then(function(data) {
 			if(data) {
 				$scope.getPage($scope.kpiList[0].year);

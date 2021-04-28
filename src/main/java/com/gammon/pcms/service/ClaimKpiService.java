@@ -1,7 +1,8 @@
 package com.gammon.pcms.service;
 
-import java.util.List;
-
+import com.gammon.pcms.dao.ClaimKpiRepository;
+import com.gammon.pcms.model.ClaimKpi;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,34 +11,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.pcms.dao.VariationKpiRepository;
-import com.gammon.pcms.model.VariationKpi;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.List;
 
 @Transactional
 @Service
-public class VariationKpiService {
+public class ClaimKpiService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private VariationKpiRepository repository;
+	private ClaimKpiRepository repository;
 	
-	public List<VariationKpi> findByJobNo(String jobNo) {
+	public List<ClaimKpi> findByJobNo(String jobNo) {
 		return repository.findByNoJob(jobNo);
 	}
 	
-	public List<VariationKpi> getByYear(String jobNo, int year) {
+	public List<ClaimKpi> getByYear(String jobNo, int year) {
 		return repository.getByYear(jobNo, year);
 	}
 	
-	public VariationKpi save(String jobNo, VariationKpi kpi) {
-		kpi.setNoJob(jobNo);
-		return repository.save(kpi);
+	public ClaimKpi save(String jobNo, ClaimKpi kpi) {
+		ClaimKpi claimKpi = new ClaimKpi();
+		try {
+			kpi.setNoJob(jobNo);
+			claimKpi = repository.save(kpi);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return claimKpi;
 	}
 	
-	public List<VariationKpi> save(String jobNo, List<VariationKpi> kpiList) {
+	public List<ClaimKpi> save(String jobNo, List<ClaimKpi> kpiList) {
 		kpiList.forEach(kpi -> {
 			kpi.setNoJob(jobNo);
 		});
@@ -47,16 +51,16 @@ public class VariationKpiService {
 	public void delete(String jobNo, Long[] ids) {
 		List<Long> idList = Arrays.asList(ids);
 		idList.forEach(id -> {
-			VariationKpi kpiDb = repository.getOne((Long)id);
+			ClaimKpi kpiDb = repository.getOne((Long)id);
 			if(kpiDb.getNoJob().equals(jobNo)) {
 				repository.delete(kpiDb);
 			} else {
-				throw new IllegalAccessError("cannot delete variation kpi");
+				throw new IllegalAccessError("cannot delete claim kpi");
 			}
 		});
 	}
 	
-	public Page<VariationKpi> filterPagination(
+	public Page<ClaimKpi> filterPagination(
 			Pageable pageable,
 			String noJob,
 			String year, 

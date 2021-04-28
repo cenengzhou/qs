@@ -6,54 +6,89 @@
 		height: 22px;
 	}
 	.doubleRowClass {
-		height: 60px; width: 100%; padding: 2px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 42px; color: #ddd
+		height: 60px; width: 100%; padding: 2px; border: 1px solid #eee; text-align: center; font-weight: 700; font-size: 15px; color: #ddd
+	}
+	.headerRowClass {
+		height: 70px; width: 100%; padding: 2px; border: 1px solid #eee
+	}
+	.headerRowClass label {
+		word-wrap: break-word
+	}
+	.kpi-row-template-textarea {
+		overflow: hidden;
+		box-sizing: border-box;
+		font-weight: 300;
 	}
 </style>
-<div ng-repeat="kpi in kpiList">
-	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">
-		<div>
-			<div class="singleRowClass" ng-if="$index==0">
-				<label style="padding-top: 5px">Month</label>
-			</div>
-			<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">
-				<div style="position: absolute; padding-left: 20%">{{getMonthShortName(kpi.month)}}</div>
-				<div ng-click="onDelete(kpi)" ng-mouseenter="kpi.deleteColor='#cdcdcd'" ng-mouseleave="kpi.deleteColor='#ddd'"
-					style="position: absolute; left: 18px; top: -8px; font-size: 10px" ng-style="{top:$index==0 ? '38px' : '-8px'}">
-					<i class="fa fa-2x fa-trash"></i>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div ng-class="{'col-md-10': showMonthColumn, 'col-md-12': !showMonthColumn}" ng-style="{'padding-left': showMonthColumn ? '0px' : '15px'}">
+<div ng-repeat="(kpiIndex, kpi) in kpiList">
+<!--	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">-->
+<!--		<div>-->
+<!--			<div class="headerRowClass" ng-if="$index==0">-->
+<!--				<label style="padding-top: 5px">Month</label>-->
+<!--			</div>-->
+<!--			<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">-->
+<!--				<div style="position: absolute; padding-left: 20%">{{getMonthShortName(kpi.month)}}</div>-->
+<!--				<div ng-click="onDelete(kpi)" ng-mouseenter="kpi.deleteColor='#cdcdcd'" ng-mouseleave="kpi.deleteColor='#ddd'"-->
+<!--					class="deleteBtn" >-->
+<!--					<i class="fa fa-2x fa-trash"></i>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+	<div ng-class="{'col-md-12': showMonthColumn, 'col-md-12': !showMonthColumn}" ng-style="{'padding-left': showMonthColumn ? '15px' : '15px'}">
 		<div class="col-md-2" style="padding: 0px;">
 			<div>
-				<div class="singleRowClass" ng-if="$index==0">
+				<div class="headerRowClass" ng-if="$index==0">
 					<label style="padding-top: 5px">Cumulative</label>
 				</div>
-				<div class="singleRowClass">Number&nbsp;(Quantity)</div>
-				<div class="singleRowClass">Amount</div>
+				<div class=" col-md-12" style="padding: 0px; ">
+					<div class="col-md-4"  style="padding: 0px;" ng-if="showMonthColumn">
+						<div class="doubleRowClass" ng-style="{color: kpi.deleteColor}">
+							<div style="position: absolute; padding-left: 10%" ng-click="onDelete(kpi)"><span class="icofont icofont-bin icofont-1x"></span>{{getMonthShortName(kpi.month)}}</div>
+
+						</div>
+					</div>
+					<div ng-class="{'col-md-8': showMonthColumn, 'col-md-auto': !showMonthColumn}"  style="padding: 0px;">
+						<div class="singleRowClass">Number&nbsp;(Quantity)</div>
+						<div class="singleRowClass">Amount</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col-md-10" style="padding:0px">
-			<div class="col-md-2" style="padding: 0px;" ng-repeat="item in items | orderBy:'order'">
-				<div class="singleRowClass" ng-if="$parent.$index==0">
+			<div ng-class="{'col-md-1': item.type!='Remark', 'col-md-3': item.type=='Remark'}" style="padding: 0px;" ng-repeat="item in items | orderBy:'order'">
+				<div class="headerRowClass" ng-if="$parent.$index==0">
 					<label>{{item.description}}</label>
-					<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer; padding-top:0px" data-toggle="tooltip" title="{{item.alt}}"></i>
+					<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer; padding-top:0px" data-toggle="tooltip" title="{{item.alt}}" ng-if="item.alt"></i>
 				</div>
-				<div class="singleRowClass">
-					<div class="input-group">
-						<input type="text" style="text-align:right"
-							ng-change="$parent.$parent.$parent.modified=true" class="form-control "
-							ng-model="kpi[item.numberField]" required style="cursor: pointer" />
+				<ng-container ng-if="item.type!='Remark'">
+					<div class="singleRowClass">
+						<div class="input-group">
+							<input type="text" style="text-align:right"
+								   ng-change="$parent.$parent.$parent.$parent.$parent.modified=true" class="form-control "
+								   ng-model="kpi[item.numberField]" required style="cursor: pointer" ng-if="item.numberField" />
+						</div>
 					</div>
-				</div>
-				<div class="singleRowClass">
-					<div class="input-group">
-						<input type="text" class="form-control " ng-currency currency-symbol="$" fraction="0" style="text-align:right"
-							ng-change="$parent.$parent.$parent.modified=true" 
-							ng-model="kpi[item.amountField]" required style="cursor: pointer" />
+					<div class="singleRowClass">
+						<div class="input-group">
+							<input type="text" class="form-control " ng-currency currency-symbol="" fraction="0" style="text-align:right"
+								   ng-change="$parent.$parent.$parent.$parent.$parent.modified=true"
+								   ng-model="kpi[item.amountField]" required style="cursor: pointer" ng-if="item.amountField" />
+						</div>
 					</div>
-				</div>
+				</ng-container>
+				<ng-container ng-if="item.type=='Remark'">
+					<div class="doubleRowClass">
+						<div class="input-group" style="display: block">
+							<textarea class="form-control kpi-row-template-textarea"
+									  ng-style="{'height': 'auto'}"
+									  ng-mousedown="autosize($event)"
+									  ng-keydown="autosize($event)"
+								   ng-change="$parent.$parent.$parent.$parent.modified=true"
+								   ng-model="kpi[item.remarkField]" rows="2" maxlength="255" />
+						</div>
+					</div>
+				</ng-container>
 			</div>
 		</div>
 	</div>

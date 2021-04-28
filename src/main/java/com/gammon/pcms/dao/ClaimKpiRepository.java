@@ -1,42 +1,41 @@
 package com.gammon.pcms.dao;
 
-import java.util.List;
-
+import com.gammon.pcms.model.ClaimKpi;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.gammon.pcms.model.VariationKpi;
+import java.util.List;
 
-public interface VariationKpiRepository extends JpaRepository<VariationKpi, Long>{
+public interface ClaimKpiRepository extends JpaRepository<ClaimKpi, Long>{
 
-	List<VariationKpi> findByNoJob(String noJob);
+	List<ClaimKpi> findByNoJob(String noJob);
 	
-	@Query("select v from VariationKpi v where "
+	@Query("select v from ClaimKpi v where "
 			+"v.noJob = :noJob and "
 			+"function('to_number', v.year) = :year "
 			+"order by v.year, v.month"
 	)
-	List<VariationKpi> getByYear(
+	List<ClaimKpi> getByYear(
 			@Param("noJob") String noJob,
 			@Param("year") int year
 	);
 	
-	@Query("select v from VariationKpi v where "
+	@Query("select v from ClaimKpi v where "
 			+"v.noJob = :noJob and "
 			+"function('to_number', v.year) = :year and "
 			+"function('to_number', v.month) = :month "
 			+"order by v.year, v.month"
 	)
-	List<VariationKpi> getByPeriod(
+	List<ClaimKpi> getByPeriod(
 			@Param("noJob") String noJob,
 			@Param("year") int year,
 			@Param("month") int month
 	);
 	
-	@Query("select v from VariationKpi v where "
+	@Query("select v from ClaimKpi v where "
 			+"v.noJob = :noJob and "
 			+"function('to_char', v.year) like :year and "
 			+"function('to_char', v.month) like :month and "
@@ -55,7 +54,7 @@ public interface VariationKpiRepository extends JpaRepository<VariationKpi, Long
 			+"function('to_char', v.eojUnsecured) like :eojUnsecured and "
 			+"function('to_char', v.eojTotal) like :eojTotal"
 	)
-	Page<VariationKpi> filterPagination(
+	Page<ClaimKpi> filterPagination(
 			Pageable pageable,
 			@Param("noJob") String noJob,
 			@Param("year") String year, 

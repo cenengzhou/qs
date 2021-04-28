@@ -1,63 +1,57 @@
 package com.gammon.pcms.web.controller;
 
-import java.util.List;
-
+import com.gammon.pcms.model.ClaimKpi;
+import com.gammon.pcms.service.ClaimKpiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.gammon.pcms.model.VariationKpi;
-import com.gammon.pcms.service.VariationKpiService;
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "service/variationKpi/")
-public class VariationKpiController {
+@RequestMapping(value = "service/claimKpi/")
+public class ClaimKpiController {
 	
 	@Autowired
-	private VariationKpiService service;
+	private ClaimKpiService service;
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','get', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','get', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "{jobNo}", method = RequestMethod.GET)
-	public List<VariationKpi> get(@PathVariable String jobNo) {
+	public List<ClaimKpi> get(@PathVariable String jobNo) {
 		return service.findByJobNo(jobNo);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "{jobNo}", method = RequestMethod.POST)
-	public VariationKpi post(@PathVariable String jobNo, @RequestBody VariationKpi kpi) {
+	public ClaimKpi post(@PathVariable String jobNo, @RequestBody ClaimKpi kpi) {
 		return service.save(jobNo, kpi);
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','post', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "saveList/{jobNo}", method = RequestMethod.POST)
-	public List<VariationKpi> post(@PathVariable String jobNo, @RequestBody List<VariationKpi> kpiList) {
+	public List<ClaimKpi> post(@PathVariable String jobNo, @RequestBody List<ClaimKpi> kpiList) {
 		return service.save(jobNo, kpiList);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','delete', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','delete', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "{jobNo}/{ids}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable String jobNo, @PathVariable Long[] ids) {
 		service.delete(jobNo, ids);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','getByYear', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','getByYear', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getByYear/{jobNo}/{year}", method = RequestMethod.GET)
-	public List<VariationKpi> getByYear(@PathVariable String jobNo, @PathVariable int year) {
+	public List<ClaimKpi> getByYear(@PathVariable String jobNo, @PathVariable int year) {
 		return service.getByYear(jobNo, year);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isRoleExisted('VariationKpiController','getByPage', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ClaimKpiController','getByPage', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "{page}/{size}", method = RequestMethod.GET)
-	public Page<VariationKpi> getByPage(
+	public Page<ClaimKpi> getByPage(
 			@PathVariable int page, 
 			@PathVariable int size, 
 			@RequestParam(defaultValue = "ASC") String direction, 
@@ -85,7 +79,7 @@ public class VariationKpiController {
 				size, 
 				Enum.valueOf(Sort.Direction.class, direction),
 				property);
-		Page<VariationKpi> pageData = service.filterPagination(
+		Page<ClaimKpi> pageData = service.filterPagination(
 				pageable, 
 				noJob, 
 				year, 
