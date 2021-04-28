@@ -14,11 +14,13 @@
 	.headerRowClass label {
 		word-wrap: break-word
 	}
-	.deleteBtn {
-		position: absolute; float: left;font-size: 10px
+	.kpi-row-template-textarea {
+		overflow: hidden;
+		box-sizing: border-box;
+		font-weight: 300;
 	}
 </style>
-<div ng-repeat="kpi in kpiList">
+<div ng-repeat="(kpiIndex, kpi) in kpiList">
 <!--	<div class="col-md-2" ng-if="showMonthColumn" style="padding-right: 0px">-->
 <!--		<div>-->
 <!--			<div class="headerRowClass" ng-if="$index==0">-->
@@ -78,9 +80,12 @@
 				<ng-container ng-if="item.type=='Remark'">
 					<div class="doubleRowClass">
 						<div class="input-group" style="display: block">
-							<textarea class="form-control "
+							<textarea class="form-control kpi-row-template-textarea"
+									  ng-style="{'height': 'auto'}"
+									  ng-mousedown="autosize($event)"
+									  ng-keydown="autosize($event)"
 								   ng-change="$parent.$parent.$parent.$parent.modified=true"
-								   ng-model="kpi[item.remarkField]" required rows="2" maxlength="255" />
+								   ng-model="kpi[item.remarkField]" rows="2" maxlength="255" />
 						</div>
 					</div>
 				</ng-container>

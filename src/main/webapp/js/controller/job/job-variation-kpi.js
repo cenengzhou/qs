@@ -16,7 +16,8 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		  };
 	$scope.period = moment().format('YYYY-MM');
 	$scope.kpiList = [];
-	
+	$scope.isExpand = false;
+
 	$scope.fields = [
 		{type: 'job', description: 'Project', field: 'noJob', order: 1},
 		{type: 'month', description: 'Month Ending', field: 'month', order: 2},
@@ -33,7 +34,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{type: 'amount', description: 'Secured EOJ', field: 'eojSecured', order: 13, alt: 'alt (TBC)'},
 		{type: 'amount', description: 'Unsecured EOJ', field: 'eojUnsecured', order: 14, alt: 'alt (TBC)'},
 		{type: 'amount', description: 'Total EOJ', field: 'eojTotal', order: 15, alt: 'alt (TBC)'},
-		{type: 'text', description: 'Remarks', field: 'remarks', order: 16, alt: 'alt (TBC)'}
+		{type: 'text', description: 'Comments', field: 'remarks', order: 16, alt: 'alt (TBC)'}
 	];
 	
 	$scope.items = [
@@ -119,7 +120,7 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 		{
 			type: 'Remark',
 			order: 10,
-			description: 'Remarks',
+			description: 'Comments',
 			remarkField: 'remarks',
 			remarkAlt: 'remarkAlt (TBC)',
 		}
@@ -284,6 +285,26 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 			});
 //		}
 	}
+
+	$scope.onExpand = function() {
+		$scope.isExpand = !$scope.isExpand;
+		var taList = document.getElementsByClassName("kpi-row-template-textarea");
+
+		if (!$scope.isExpand) {
+			for (var i=0; i < taList.length; i++) {
+				var ta = taList[i];
+				ta.style.cssText = 'height: auto';
+			}
+		} else {
+			for (var i=0; i < taList.length; i++) {
+				var ta = taList[i];
+				ta.style.cssText = 'height: auto';
+				var height = ta.scrollHeight + 20;
+				ta.style.cssText = 'height: ' + height + 'px';
+			}
+		}
+
+	}
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
@@ -348,4 +369,25 @@ mainApp.controller('JobVariationKpiCtrl', ['$scope','variationKpiService', '$uib
 				type == 'delete' ? $scope.gridDirtyRows.length > 0 ? 'col-md-6' : 'col-md-12' 
 				: 'col-md-12';
 	}
+
+	$scope.autosize = function (event){
+		$scope.isExpand = true;
+		var el = event.currentTarget;
+		setTimeout(function () {
+			el.style.cssText = 'height: auto';
+			// for box-sizing other than "content-box" use:
+			// el.style.cssText = '-moz-box-sizing:content-box';
+
+			var height = el.scrollHeight + 20;
+			el.style.cssText = 'height: ' + height + 'px';
+		}, 0);
+	}
+
+	$scope.resetTextarea = function (event) {
+		var el = event.currentTarget;
+		setTimeout(function () {
+			el.style.cssText =  'height: auto';
+		}, 0);
+	}
+
 }]);

@@ -10,15 +10,22 @@
 									<div class="col-md-12">
 										<div>
 											<div style="padding: 0px">
-												<span class="input-group col-md-9" moment-picker="period" ng-model="period"
+												<span class="input-group col-md-8" moment-picker="period" ng-model="period"
 													format="YYYY" start-view="year" today="true" change="getPage(newValue, oldValue)" 
 													ng-model-options="{ updateOn: 'blur' }" style="float: left"> 
-													<span class="input-group-addon">Month Ending <i class="fa fa-calendar"></i>
+													<span class="input-group-addon">Year <i class="fa fa-calendar"></i>
 												</span> 
 												<input class="form-control" required ng-model="period" ng-model-options="{ updateOn: 'blur' }">
-												</span> <span class="col-md-3" style="padding-right: 0px; float: right">
+												</span>
+												<span class="col-md-2" style="padding-right: 0px; ">
 													<button type="button" class="form-control btn btn-danger btn-block" style="color: white" ng-click="onAdd()">
 														<i class="fa fa-plus"></i> Add
+													</button>
+												</span>
+												<span class="col-md-2" style="padding-right: 0px; ">
+													<button type="button" class="form-control btn btn-success btn-block" style="color: white" ng-click="onExpand()">
+														<ng-container ng-if="!isExpand"><i class="fa fa-chevron-down"></i> Expand Remarks</ng-container>
+														<ng-container ng-if="isExpand"><i class="fa fa-chevron-up"></i> Collapse Remarks</ng-container>
 													</button>
 												</span>
 											</div>

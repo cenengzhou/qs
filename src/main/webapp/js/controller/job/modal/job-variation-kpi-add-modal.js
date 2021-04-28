@@ -31,20 +31,18 @@ mainApp.controller('JobVariationKpiAddModalCtrl', ['$scope','variationKpiService
 	
 
 	$scope.onAdd = function() {
-		if($scope.addForm.$valid){
-			var period = moment($scope.kpiList[0].period);
-			$scope.kpiList[0].year = period.year();
-			$scope.kpiList[0].month = period.month() + 1;
-			variationKpiService.saveByJobNo($scope.jobNo, $scope.kpiList[0])
-			.then(function(data) {
-				if(data) {
-					$scope.getPage($scope.kpiList[0].year);
-					$scope.cancel();
-				}
-			}, function(error){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'Record for Month Ending ' + period.format('YYYY-MM') + ' already exists');
-			});
-		}
+		var period = moment($scope.kpiList[0].period);
+		$scope.kpiList[0].year = period.year();
+		$scope.kpiList[0].month = period.month() + 1;
+		variationKpiService.saveByJobNo($scope.jobNo, $scope.kpiList[0])
+		.then(function(data) {
+			if(data) {
+				$scope.getPage($scope.kpiList[0].year);
+				$scope.cancel();
+			}
+		}, function(error){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'Record for Month Ending ' + period.format('YYYY-MM') + ' already exists');
+		});
 	}
 	
 }]);
