@@ -2,6 +2,7 @@ package com.gammon.qs.service;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -556,7 +557,12 @@ public class ResourceSummaryService implements Serializable {
 		 * Fixing: To handle special Case that user is splitting or terminating a sub-contract with resource budget = 0
 		 * Modified on 30 April 2014 by Tiky Wong
 		 */
-		double proportion = CalculationUtil.round(((newAmount!=0 && totalAmountofSameAccountCode!=0) ? newAmount/totalAmountofSameAccountCode:0.0), 4);
+		Double newResourceAmtQty = totalAmountofSameAccountCode - newAmount;
+		double proportion = new BigDecimal(
+			(newAmount!=0 && totalAmountofSameAccountCode!=0) 
+			? newAmount / totalAmountofSameAccountCode 
+			: 0.0
+			).setScale(4, RoundingMode.DOWN).doubleValue();
 		if (proportion==1){
 			logger.info(job.getJobNumber()+"."+objectCode+"."+subsidiaryCode+" X "+packageNo+" No changes in amount. No Resource Summary was saved.");
 			return Boolean.FALSE;
@@ -569,21 +575,19 @@ public class ResourceSummaryService implements Serializable {
 		 * modified on 2nd Dec,2015
 		 * Fix the proportion issue in split
 		 * **/
-		double remainder = newAmount - CalculationUtil.round((totalAmountofSameAccountCode*proportion),4);
-		logger.info("remainder: "+remainder);
-		double quantityRemainder = CalculationUtil.round(remainder / totalAmountofSameAccountCode, 4);
+		double newAmtRemain = newAmount;
 		//ResourceSummary of BQs which created before contract award
 		String message = "";
 		int counter = 1;
 		for (ResourceSummary resourceSummary : resourceSummariesOfBQs) {
 			Double newQuantity = CalculationUtil.round((resourceSummary.getQuantity() * proportion), 4);
-			logger.info("newQuantity: "+newQuantity);
+			newAmtRemain -= newQuantity;
 			if(counter==resourceSummariesOfBQs.size()){
-				newQuantity += quantityRemainder;
-				quantityRemainder = 0;//reset remainder
-				//logger.info("newQuantity+remainder: "+newQuantity);
+				logger.info("remainder " + newAmtRemain + " add to " + format.format(newQuantity));
+				newQuantity += newAmtRemain;
 			}
-			message += "Resource Summary id: " + resourceSummary.getId() + " New Quantity: " + newQuantity + " for BQ\n";
+			logger.info("newQuantity: "+ format.format(newQuantity));
+			message += "Resource Summary id: " + resourceSummary.getId() + " New Quantity: " + format.format(newQuantity) + " for BQ\n";
 			resourceSummary.setQuantity(newQuantity);
 			resourceSummary.setAmountBudget(CalculationUtil.round(newQuantity* resourceSummary.getRate(), 2));
 			resourceSummaryHBDao.saveOrUpdate(resourceSummary);
@@ -600,9 +604,9 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setResourceDescription("Split from SC " + packageNo + " " + (count+1));
 		newResource.setUnit("AM");
 		newResource.setRate(Double.valueOf(1));
-		newResource.setQuantity(totalAmountofSameAccountCode - newAmount + remainder);
+		newResource.setQuantity(newResourceAmtQty);
 		newResource.setSplitFrom(resourceSummaries.get(0));
-		newResource.setAmountBudget(CalculationUtil.round(newResource.getQuantity()*newResource.getRate(), 2));
+		newResource.setAmountBudget(newResourceAmtQty);
 		if (newResource.getQuantity().doubleValue()!=0){
 			resourceSummaryHBDao.saveOrUpdate(newResource);
 			logger.info(job.getJobNumber()+"."+objectCode+"."+subsidiaryCode+" X "+packageNo+" new Resource summary saved.");
@@ -630,19 +634,22 @@ public class ResourceSummaryService implements Serializable {
 		}
 		
 		
-		double amount = resourceSummary.getQuantity() * resourceSummary.getRate();
-		Double newAmount = scDetail.getCostRate()*scDetail.getNewQuantity();
+		double amount = resourceSummary.getAmountBudget();
+		Double newAmount = scDetail.getAmountSubcontractNew().doubleValue() / scDetail.getScRate() * scDetail.getCostRate();
 		if(amount == 0.0 && newAmount.doubleValue() != 0.0){
 			logger.info("amount:"+amount+"  newAmount"+newAmount.doubleValue()+" id:"+scDetail.getResourceNo());
 			//return Boolean.FALSE;
 			return null;
 		}
 		resourceSummary.setQuantity(scDetail.getNewQuantity());
-		resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getQuantity()*resourceSummary.getRate(),2));
+		resourceSummary.setAmountBudget(newAmount);
 		resourceSummaryHBDao.saveOrUpdate(resourceSummary);
 		logger.info("Update resource[VO]. Quantity: "+scDetail.getNewQuantity());
 		
-		Integer count = resourceSummaryHBDao.getCountOfSCSplitResources(job, packageNo, resourceSummary.getObjectCode(), resourceSummary.getSubsidiaryCode());
+		Integer count = resourceSummaryHBDao.getCountOfSCSplitResources(
+			job, packageNo, resourceSummary.getObjectCode(), resourceSummary.getSubsidiaryCode()
+		);
+		Double newResourceAmtQty = amount - newAmount;
 		ResourceSummary newResource = new ResourceSummary();
 		newResource.setJobInfo(job);
 		newResource.setObjectCode(resourceSummary.getObjectCode());
@@ -650,10 +657,10 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setResourceDescription("Split from SC " + packageNo + " " + (count+1));
 		newResource.setUnit(resourceSummary.getUnit());
 		newResource.setRate(Double.valueOf(1));
-		newResource.setQuantity(amount - newAmount);
-		newResource.setAmountBudget(CalculationUtil.round(newResource.getQuantity()*newResource.getRate(), 2));
+		newResource.setQuantity(newResourceAmtQty);
+		newResource.setAmountBudget(newResourceAmtQty);
 		resourceSummaryHBDao.saveOrUpdate(newResource);
-		logger.info("Add new resource[VO]. Quantity: "+(amount - newAmount));
+		logger.info("Add new resource[VO]. Quantity: "+ newResourceAmtQty);
 		
 		//return Boolean.TRUE;
 		return resourceSummary;

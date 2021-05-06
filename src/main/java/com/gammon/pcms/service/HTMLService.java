@@ -342,10 +342,16 @@ public class HTMLService implements Serializable{
 			for (SubcontractDetail scDetail: subcontractDetailHBDao.getSCDetails(scPackage)){
 //				if (scDetail instanceof SCDetailsBQ && !(scDetail instanceof SCDetailsVO)){
 				if (scDetail instanceof SubcontractDetailBQ && SubcontractDetail.APPROVED.equals(scDetail.getApproved()) && scDetail.getSystemStatus().equals(SubcontractDetail.ACTIVE)){
-					if ((!(scDetail instanceof SubcontractDetailVO))||Math.abs(((SubcontractDetailBQ)scDetail).getCostRate()==null?0:((SubcontractDetailBQ)scDetail).getCostRate())>0)
-						newSCSum = newSCSum + ((scDetail.getNewQuantity()!=null?scDetail.getNewQuantity():0)*scDetail.getScRate());
-					else
-						newSCSum = newSCSum + ((scDetail.getQuantity()!=null?scDetail.getQuantity():0)*scDetail.getScRate());
+					Double costRate = ((SubcontractDetailBQ)scDetail).getCostRate();
+					if ((!(scDetail instanceof SubcontractDetailVO)) || (costRate != null && costRate > 0)) {
+						newSCSum += scDetail.getAmountSubcontractNew()!=null 
+											? scDetail.getAmountSubcontractNew().doubleValue()
+											: 0;
+					} else {
+						newSCSum += scDetail.getAmountSubcontract()!=null
+											? scDetail.getAmountSubcontract().doubleValue()
+											: 0;
+					}
 				}
 			}
 			//newSCSum = packageDao.getSCSumOfSplitSC(jobNumber, Integer.parseInt(subcontractNumber));

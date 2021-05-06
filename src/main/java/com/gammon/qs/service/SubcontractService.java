@@ -906,7 +906,7 @@ public class SubcontractService {
 
 				if ("BQ".equalsIgnoreCase(scDetail.getLineType())){
 					scDetailBQList.add(scDetail);
-					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"+format.format(scDetail.getCostRate())+" Quantity:"+ format.format(scDetail.getQuantity()) + " NewQuantity:" + format.format(scDetail.getNewQuantity()));
+					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"+format.format(scDetail.getCostRate())+" AmountSubcontract:"+ format.format(scDetail.getAmountSubcontract()) + " AmountSubcontractNew:" + format.format(scDetail.getAmountSubcontractNew()));
 				}
 				else if (("V1".equalsIgnoreCase(scDetail.getLineType()) || "V3".equalsIgnoreCase(scDetail.getLineType())) && 
 						scDetail.getResourceNo()!=null && scDetail.getResourceNo()!=0){ 
@@ -947,20 +947,20 @@ public class SubcontractService {
 			
 			//2. Release VO Resource Summaries
 			for (SubcontractDetail scDetail:scDetailVOList){
-				if (Math.abs(scDetail.getNewQuantity().doubleValue()-scDetail.getQuantity().doubleValue())>0){
+				if (Math.abs(scDetail.getAmountSubcontractNew().doubleValue()-scDetail.getAmountSubcontract().doubleValue())>0){
 					try{
 						ResourceSummary bqResourceSummary = resourceSummaryService.releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(job, packageNo, scDetail);
 						
 						logger.info("VO Resources Summary of " +
 									" SCDetails ID:" + scDetail.getId() +
-									" New Quantity:" + format.format(scDetail.getNewQuantity()) +
+									" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
 									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
 									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
 									" has "+ (bqResourceSummary!=null?"":"NOT ") +"been released.");
 					}catch(ValidateBusinessLogicException ve){
 						message = 	"VO Resources Summary of " +
 									" SCDetails ID:" + scDetail.getId() +
-									" New Quantity:" + format.format(scDetail.getNewQuantity()) +
+									" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
 									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
 									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
 									" has NOT been released.";
@@ -984,7 +984,9 @@ public class SubcontractService {
 			for (SubcontractDetail scDetail: scDetailBQList){
 				if(scDetail.getCostRate()==0)
 					continue;
-				double scDetailNewCostAmount = CalculationUtil.round(scDetail.getNewQuantity()*scDetail.getCostRate(), 2);
+				double scDetailNewCostAmount = CalculationUtil.round(
+					scDetail.getAmountSubcontractNew().doubleValue() / scDetail.getScRate() *scDetail.getCostRate()
+				, 2);
 
 				//Group the amounts with the same object and subsidiary code
 				logger.info("SCDetails Object Code: "+scDetail.getObjectCode()+" Subsidiary Code: "+scDetail.getSubsidiaryCode()+" Last Object Code: "+lastObjCode+" Last Subidiary Code: "+lastSubsidCode);
