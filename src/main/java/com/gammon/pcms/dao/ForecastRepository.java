@@ -64,46 +64,47 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 	
 	
 	
-	@Query("select f from Forecast f where "
-			+"f.noJob = :noJob and "
-			+"f.forecastFlag = :forecastFlag and "
-			+"f.forecastType = :forecastType and "
-			+"trim(lower(f.forecastDesc)) = trim(lower(:forecastDesc)) and "
-			+"ROWNUM <= 1 "
-			+"order by f.year desc, f.month desc"
-	)
-	Forecast getLatestForecast(
-			@Param("noJob") String noJob,
-			@Param("forecastFlag") String forecastFlag,
-			@Param("forecastType") String forecastType,
-			@Param("forecastDesc") String forecastDesc
-	);
+	// @Query("select f from Forecast f where "
+	// 		+"f.noJob = :noJob and "
+	// 		+"f.forecastFlag = :forecastFlag and "
+	// 		+"f.forecastType = :forecastType and "
+	// 		+"trim(lower(f.forecastDesc)) = trim(lower(:forecastDesc)) and "
+	// 		+"ROWNUM <= 1 "
+	// 		+"order by f.year desc, f.month desc"
+	// )
+	// Forecast getLatestForecast(
+	// 		@Param("noJob") String noJob,
+	// 		@Param("forecastFlag") String forecastFlag,
+	// 		@Param("forecastType") String forecastType,
+	// 		@Param("forecastDesc") String forecastDesc
+	// );
+	Forecast findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(String noJob, String forecastFlag, String forecastType, String forecastDesc);
 	
-	@Query("select f from Forecast f where "
-			+"f.noJob = :noJob and "
-			+"f.forecastFlag = :forecastFlag and "
-			+"f.forecastType = :forecastType and "
-			+"ROWNUM <= 1 "
-			+"order by f.year desc, f.month desc"
-	)
+	// @Query("select f from Forecast f where "
+	// 		+"f.noJob = :noJob and "
+	// 		+"f.forecastFlag = :forecastFlag and "
+	// 		+"f.forecastType = :forecastType and "
+	// 		+"ROWNUM <= 1 "
+	// 		+"order by f.year desc, f.month desc"
+	// )
+	// Forecast getLatestProgramPeriod(
+	// 		@Param("noJob") String noJob,
+	// 		@Param("forecastFlag") String forecastFlag,
+	// 		@Param("forecastType") String forecastType
+	// );
+	Forecast findTopByNoJobAndForecastFlagAndForecastTypeOrderByYearDescMonthDesc(String noJob, String forecastFlag, String forecastType);
 	
-	Forecast getLatestProgramPeriod(
-			@Param("noJob") String noJob,
-			@Param("forecastFlag") String forecastFlag,
-			@Param("forecastType") String forecastType
-	);
-	
-	@Query("select f from Forecast f where "
-			+"f.noJob = :noJob and "
-			+"f.forecastFlag = :forecastFlag and "
-			+"ROWNUM <= 1 "
-			+"order by f.year desc, f.month desc"
-	)
-	Forecast getLatestForecastPeriod(
-			@Param("noJob") String noJob,
-			@Param("forecastFlag") String forecastFlag
-	);
-	
+	// @Query("select f from Forecast f where "
+	// 		+"f.noJob = :noJob and "
+	// 		+"f.forecastFlag = :forecastFlag and "
+	// 		+"ROWNUM <= 1 "
+	// 		+"order by f.year desc, f.month desc"
+	// )
+	// Forecast getLatestForecastPeriod(
+	// 		@Param("noJob") String noJob,
+	// 		@Param("forecastFlag") String forecastFlag
+	// );
+	Forecast findTopByNoJobAndForecastFlagOrderByYearDescMonthDesc(String noJob, String forecastFlag);
 	@Query("select f from Forecast f where "
 			+"f.noJob = :noJob and "
 			+"function('to_number', f.year) = :year and "

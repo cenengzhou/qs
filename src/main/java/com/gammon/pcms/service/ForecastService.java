@@ -41,7 +41,7 @@ public class ForecastService {
 	public Forecast getLatestForecastPeriod(String jobNo){
 		Forecast latestForecast = new Forecast();
 		try {
-			latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
+			latestForecast = repository.findTopByNoJobAndForecastFlagOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,7 +93,7 @@ public class ForecastService {
 				
 			}else{
 				Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, type, desc);
-				Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, type, desc);
+				Forecast firstForecast = repository.findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST, type, desc);
 				
 				wrapper.setPreForecast(preForecast);
 				wrapper.setFirstForecast(firstForecast);
@@ -113,7 +113,7 @@ public class ForecastService {
 		try {
 			
 			if(year == 0 && month ==0){
-				Forecast latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
+				Forecast latestForecast = repository.findTopByNoJobAndForecastFlagOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST);
 				
 				if(latestForecast != null){
 					year = latestForecast.getYear();
@@ -151,7 +151,7 @@ public class ForecastService {
 					}
 				}
 			}else{
-				Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+				Forecast latestProgram = repository.findTopByNoJobAndForecastFlagAndForecastTypeOrderByYearDescMonthDesc(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 				
 				if(latestProgram != null){
 					forecastList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
@@ -185,7 +185,7 @@ public class ForecastService {
 		
 		List<Forecast> programList = new ArrayList<Forecast>();
 		try {
-			Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			Forecast latestProgram = repository.findTopByNoJobAndForecastFlagAndForecastTypeOrderByYearDescMonthDesc(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 			if(latestProgram != null)
 				programList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 		
@@ -210,7 +210,7 @@ public class ForecastService {
 			List<ForecastWrapper> programmeWrapperList = new ArrayList<ForecastWrapper>();
 			
 			List<Forecast> programList = repository.getCriticalProgramList(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
-			Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+			Forecast latestProgram = repository.findTopByNoJobAndForecastFlagAndForecastTypeOrderByYearDescMonthDesc(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 			
 			List<Forecast> latestProgramList = new ArrayList<Forecast>();
 			if(latestProgram != null)
@@ -220,7 +220,7 @@ public class ForecastService {
 				for(Forecast program: latestProgramList){
 					ForecastWrapper programWrapper = new ForecastWrapper();
 					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
-					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast firstForecast = repository.findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					
 					Forecast cpForecast = new Forecast();
 					cpForecast.setNoJob(jobNo);
@@ -247,7 +247,7 @@ public class ForecastService {
 					ForecastWrapper programWrapper = new ForecastWrapper();
 					
 					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
-					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
+					Forecast firstForecast = repository.findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, currentProgram.getForecastDesc());
 					
 					programWrapper.setForecast(currentProgram);
 					programWrapper.setPreForecast(preForecast);
@@ -263,7 +263,7 @@ public class ForecastService {
 					
 					ForecastWrapper programWrapper = new ForecastWrapper();
 					Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
-					Forecast firstForecast = repository.getLatestForecast(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
+					Forecast firstForecast = repository.findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST, Forecast.CRITICAL_PROGRAMME, program.getForecastDesc());
 					
 					Forecast cpForecast = new Forecast();
 					cpForecast.setNoJob(jobNo);
@@ -294,7 +294,7 @@ public class ForecastService {
 		String result= "";
 		
 		try {
-			Forecast latestRF = repository.getLatestForecastPeriod(jobNo, Forecast.ROLLING_FORECAST);
+			Forecast latestRF = repository.findTopByNoJobAndForecastFlagOrderByYearDescMonthDesc(jobNo, Forecast.ROLLING_FORECAST);
 			//Forecast latestProgram = repository.getLatestProgramPeriod(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 			
 			if(latestRF != null){
@@ -312,7 +312,7 @@ public class ForecastService {
 			}
 			
 			//add program to the latest forecast
-			Forecast latestForecast = repository.getLatestForecastPeriod(jobNo, Forecast.FORECAST);
+			Forecast latestForecast = repository.findTopByNoJobAndForecastFlagOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST);
 			if(latestForecast != null){
 				Forecast forecastInDb = repository.getByTypeDesc(jobNo, latestForecast.getYear(), latestForecast.getMonth(), Forecast.FORECAST, forecast.getForecastType(), forecast.getForecastDesc());
 				
