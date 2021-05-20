@@ -60,6 +60,9 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	@Value("${revision.allowAsJob}")
 	private String asJob;
 
+	@Value("#{'${delayPostProvisionJobList}'.split(',')}")
+	private List<String> delayPostProvisionJobList;
+
 	public static final String GSF_APPLICATION_CODE = "QS";
 	public static final String GSF_GETROLE = "GetRole";
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
@@ -274,6 +277,10 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		// require compile all JDE/AP library or...below is quickfix
 		System.setProperty("ws.ap.server.url", getWsAp("URL"));
 		System.setProperty("ws.jde.server.url", getWsJde("URL"));
+	}
+
+	public List<String> getDelayPostProvisionJobList(){
+		return this.delayPostProvisionJobList;
 	}
 
 }

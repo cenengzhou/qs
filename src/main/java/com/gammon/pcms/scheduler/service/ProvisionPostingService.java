@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +172,27 @@ public class ProvisionPostingService {
 		            " Overwrite Previous Posting: " + overwritePreviousProvisionPosting + 
 		            " Username: " + username);		
 		try {
-			postProvisionByJobs(jobHBDao.obtainAllProvisionJobs(), glDate, overwritePreviousProvisionPosting, username);
+			List<JobInfo> allProvisionJobList = jobHBDao.obtainAllProvisionJobs();
+			List<String> delayPostProvisionJobList = webServiceConfig.getDelayPostProvisionJobList();
+			List<JobInfo> earlyPostList = new ArrayList<>();
+			List<JobInfo> delayPostList = new ArrayList<>();
+			allProvisionJobList.forEach(job -> {
+				if(delayPostProvisionJobList.contains(job.getJobNumber())) {
+					delayPostList.add(job);
+				} else {
+					earlyPostList.add(job);
+				}
+			});
+			logger.info(
+				"allProvisionJobList:" + allProvisionJobList.size() +
+				" earlyPostList:" + earlyPostList.size() +
+				" delayPostList:" + delayPostList.size()
+			);
+			logger.info("delayPostList:" 
+			+ delayPostList.stream().map(d -> d.getJobNumber()).collect(Collectors.toList())
+			);
+			if(earlyPostList.size() > 0) postProvisionByJobs(earlyPostList, glDate, overwritePreviousProvisionPosting, username);
+			if(delayPostList.size() > 0) postProvisionByJobs(delayPostList, glDate, overwritePreviousProvisionPosting, username);
 		} catch (Exception e) {
 			e.printStackTrace();
 			sendEmailForErrorFoundInProvisionPosting(e);
