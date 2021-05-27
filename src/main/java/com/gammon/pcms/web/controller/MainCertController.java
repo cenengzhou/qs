@@ -7,11 +7,11 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -90,14 +90,10 @@ public class MainCertController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','getCertificateDashboardData', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getCertificateDashboardData", method = RequestMethod.GET)
-	public List<BigDecimal> getCertificateDashboardData(@RequestParam(required = true) String noJob,
-														@RequestParam(	required = true) String type,
-														@RequestParam(	required = false,
-														defaultValue = "0") BigDecimal year,
-														@RequestParam(	required = false,
-														defaultValue = "0") BigDecimal month 
+	public List<MainCertDashboardDTO> getCertificateDashboardData(@RequestParam(required = true) String noJob,
+																  @RequestParam(required = true, defaultValue = "0") String year
 														) {
-		return mainCertService.getCertificateDashboardData(year, month, noJob, type);
+		return mainCertService.getCertificateDashboardData(noJob, year);
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','getLatestMainCert', @securityConfig.getRolePcmsEnq())")

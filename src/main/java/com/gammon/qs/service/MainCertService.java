@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
+import com.gammon.pcms.model.adl.AccountBalanceFigure;
+import com.gammon.pcms.wrapper.DashboardDataRange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +21,7 @@ import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
-import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertFigure;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -669,92 +672,130 @@ public class MainCertService {
 		return wrapperList;
 	}
 
+	private List<BigDecimal> computeContractReceivableList(List<AccountBalanceFigure> contractReceivableList, List<AccountBalanceFigure> contractReceivableOutstandingList) {
+		List<BigDecimal> result = new ArrayList<>();
+		for(int i=0 ; i < contractReceivableList.size(); i++){
+			if(contractReceivableList.size()>i && contractReceivableOutstandingList.size() > i){
+				if(contractReceivableList.get(i) != null && contractReceivableOutstandingList.get(i) != null) {
+					BigDecimal outstandingCumAmt = contractReceivableOutstandingList.get(i).getAmount();
+					BigDecimal cumAmt = contractReceivableList.get(i).getAmount();
+					BigDecimal newAmt = cumAmt.subtract(outstandingCumAmt).negate();
+					result.add(newAmt);
+				}
+			}
+		}
+		return result;
+	}
+
+	private List<BigDecimal> adaptMainCertFigureToDashboardDataList(List<MainCertFigure> mainCertFigureList, String noJob, String type, DashboardDataRange dashboardDataRange) {
+		List<BigDecimal> result = new ArrayList<>();
+		if(mainCertFigureList !=null && mainCertFigureList.size() >0)
+			result = convertToDashboardData(mainCertFigureList, dashboardDataRange);
+		else{
+			//Get latest cert amount if current year has no data to show
+			BigDecimal netAmount = new BigDecimal(0);
+			MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob, "300");
+			if(mainCert != null) {
+				if (type.equals("IPA"))
+					netAmount = new BigDecimal(mainCert.calculateAppliedNetAmount()); // IPA
+				else
+					netAmount = new BigDecimal(mainCert.calculateCertifiedNetAmount()); // IPC
+
+			}
+			result.add(netAmount);
+		}
+		return result;
+	}
+
 	/**
 	 * Main Cert Dash Board
-	 * @param year
-	 * @param month
-	 * @param type
 	 * @param noJob
+	 * @param item
 	 * @return
 	 * @author koeyyeung
 	 * @since Jul 12, 2016 2:16:59 PM
 	 */
-	public List<BigDecimal> getCertificateDashboardData(BigDecimal year,
-									           	BigDecimal month,
-												String noJob, 
-												String type) {
-		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
-		try {
-			if("ContractReceivable".equals(type)){
-				//Actual receipt
-				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-				List<BigDecimal> contractReceivableOutstandingList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-				for(int i=0 ; i < contractReceivableList.size(); i++){
-					if(i<12 && contractReceivableList.size()>i && contractReceivableOutstandingList.size() > i){
-						if(contractReceivableList.get(i) != null && contractReceivableOutstandingList.get(i) != null)
-						dataList.add(contractReceivableList.get(i).subtract(contractReceivableOutstandingList.get(i)).negate());
-					}
-				}
-				
-			}else if("IPA".equals(type)){
-				List<MainCertDashboardDTO> ipaList = mainCertHBDao.getMonthlySummayIPA(noJob, year.toString());
-				if(ipaList !=null && ipaList.size() >0)
-					dataList = convertToDashboardData(ipaList);
-				else{
-					//Get latest cert amount if current year has no data to show
-					BigDecimal netIPAamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob, "300");
-					if(mainCert != null)
-						netIPAamount = new BigDecimal(mainCert.calculateAppliedNetAmount());
-					dataList.add(netIPAamount);
-				}
-			}else if("IPC".equals(type)){
-				List<MainCertDashboardDTO> ipcList = mainCertHBDao.getMonthlySummayIPC(noJob, year.toString());
-				if(ipcList !=null && ipcList.size() >0)
-					dataList = convertToDashboardData(ipcList);
-				else{
-					//Get latest cert amount if current year has no data to show
-					BigDecimal netIPCamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob, "300");
-					if(mainCert != null)
-						netIPCamount = new BigDecimal(mainCert.calculateCertifiedNetAmount());
-					dataList.add(netIPCamount);
-				}
-			}
-			
-			if (dataList != null && dataList.size()>0){
-				while(dataList.size()<12){
-					dataList.add(dataList.get(dataList.size()-1));
-				}
-			}else{
-				while(dataList.size()<12){
-					dataList.add(new BigDecimal(0));
+	public List<MainCertDashboardDTO> getCertificateDashboardData(String noJob, String item) {
+		DashboardDataRange dashboardDataRange = new DashboardDataRange(item);
 
-				}
-			}
+		BigDecimal startYearMonth = dashboardDataRange.getStartYYMM();
+		BigDecimal endYearMonth = dashboardDataRange.getEndYYMM();
+
+		List<MainCertDashboardDTO> result = new ArrayList<>();
+		try {
+			List<AccountBalanceFigure> contractReceivableList = accountBalanceDao.findFiguresByRangeYearMonth(startYearMonth, endYearMonth, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<AccountBalanceFigure> contractReceivableOutstandingList = accountBalanceDao.findFiguresByRangeYearMonth(startYearMonth, endYearMonth, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<BigDecimal> crDataList = computeContractReceivableList(contractReceivableList, contractReceivableOutstandingList);
+
+			String startYear = dashboardDataRange.getStartYear();
+			String startMonth = dashboardDataRange.getStartMonth();
+			String endYear = dashboardDataRange.getEndYear();
+			String endMonth = dashboardDataRange.getEndMonth();
+
+			List<MainCertFigure> ipaList = mainCertHBDao.getMonthlySummaryIPAByYearMonth(noJob, startYear, startMonth, endYear, endMonth);
+			List<BigDecimal> ipaDataList = adaptMainCertFigureToDashboardDataList(ipaList, noJob, "IPA", dashboardDataRange);
+
+			List<MainCertFigure> ipcList = mainCertHBDao.getMonthlySummaryIPCByYearMonth(noJob, startYear, startMonth, endYear, endMonth);
+			List<BigDecimal> ipcDataList = adaptMainCertFigureToDashboardDataList(ipcList, noJob, "IPC", dashboardDataRange);
+
+			MainCertDashboardDTO contractReceivableWrapper = new MainCertDashboardDTO();
+			contractReceivableWrapper.setCategory("CR");
+			contractReceivableWrapper.setStartYear(dashboardDataRange.getStartYear());
+			contractReceivableWrapper.setEndYear(dashboardDataRange.getEndYear());
+			contractReceivableWrapper.setMonthList(dashboardDataRange.toMonthList());
+			contractReceivableWrapper.setDetailList(packDataListTo12Months(crDataList));
+
+			MainCertDashboardDTO ipaWrapper = new MainCertDashboardDTO();
+			ipaWrapper.setCategory("IPA");
+			ipaWrapper.setStartYear(dashboardDataRange.getStartYear());
+			ipaWrapper.setEndYear(dashboardDataRange.getEndYear());
+			ipaWrapper.setMonthList(dashboardDataRange.toMonthList());
+			ipaWrapper.setDetailList(packDataListTo12Months(ipaDataList));
+
+			MainCertDashboardDTO ipcWrapper = new MainCertDashboardDTO();
+			ipcWrapper.setCategory("IPC");
+			ipcWrapper.setStartYear(dashboardDataRange.getStartYear());
+			ipcWrapper.setEndYear(dashboardDataRange.getEndYear());
+			ipcWrapper.setMonthList(dashboardDataRange.toMonthList());
+			ipcWrapper.setDetailList(packDataListTo12Months(ipcDataList));
+
+			result.add(contractReceivableWrapper);
+			result.add(ipaWrapper);
+			result.add(ipcWrapper);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} 
-		
+		return result;
+	}
+
+	private List<BigDecimal> packDataListTo12Months(List<BigDecimal> dataList) {
+		if (dataList != null && dataList.size()>0){
+			while(dataList.size()<12){
+				dataList.add(dataList.get(dataList.size()-1));
+			}
+		}else{
+			while(dataList.size()<12){
+				dataList.add(new BigDecimal(0));
+			}
+		}
 		return dataList;
 	}
 	
-	private List<BigDecimal> convertToDashboardData(List<MainCertDashboardDTO> certList){
-		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
-		int counter = 1;
+	private List<BigDecimal> convertToDashboardData(List<MainCertFigure> certList, DashboardDataRange dashboardDataRange){
+		List<BigDecimal> dataList = new ArrayList<>();
+		int counter = Integer.parseInt(dashboardDataRange.getStartMonth());
 		
-		for(MainCertDashboardDTO cert: certList){
+		for(MainCertFigure cert: certList){
 			while(Integer.valueOf(cert.getMonth()) != counter){
 				if(dataList.size()>0)
 					dataList.add(dataList.get(dataList.size()-1));
 				else
 					dataList.add(cert.getAmount());
-				counter += 1;
+				counter = (counter%12) + 1;
 			}
 			dataList.add(cert.getAmount());
-			counter += 1;
+			counter = (counter%12) + 1;
 		}
-		
 		return dataList;
 	}
 	

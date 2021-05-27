@@ -115,18 +115,16 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
     
     
     //Asyn Call
-    function getCertificateDashboardData(noJob, type, year, month){
+    function getCertificateDashboardData(noJob, year){
     	var deferred = $q.defer();
     	$http({
     		method: 'GET',
     		url: 'service/mainCert/getCertificateDashboardData',
     		 params: {
-             	noJob: noJob,
-             	type: type,
-             	year: year,
-             	month: month
+             	 noJob: noJob,
+                 year: year
              }
-    	}).success(function(data) { 
+    	}).success(function(data) {
     		deferred.resolve(data);
     	}).error(function(msg, code) {
     		deferred.reject(msg);

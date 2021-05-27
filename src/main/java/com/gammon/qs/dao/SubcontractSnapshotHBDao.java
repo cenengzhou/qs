@@ -96,12 +96,14 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			ProjectionList projectionList = Projections.projectionList();
 			projectionList.add(Projections.sum("totalPostedCertifiedAmount"), "totalPostedCertifiedAmount");
 			projectionList.add(Projections.sum("totalPostedWorkDoneAmount"), "totalPostedWorkDoneAmount");
-			
+			projectionList.add(Projections.sum("totalCumCertifiedAmount"), "totalCumCertifiedAmount");
+			projectionList.add(Projections.sum("totalCumWorkDoneAmount"), "totalCumWorkDoneAmount");
+
 			projectionList.add(Projections.groupProperty("snapshotDate"), "snapshotDate");
 			criteria.setProjection(projectionList);
 			
 			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotDTO.class));
-			
+
 			return criteria.list();
 		}catch (HibernateException he){
 			throw new DatabaseOperationException(he);

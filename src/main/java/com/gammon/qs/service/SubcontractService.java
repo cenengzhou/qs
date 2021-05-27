@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gammon.qs.shared.GlobalParameter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
@@ -1184,7 +1185,6 @@ public class SubcontractService {
 	 * @param jobNumber
 	 * @param glDate
 	 * @param overrideOldPosting
-	 * @param username
 	 * @throws Exception
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 3:04:29 PM
@@ -1766,21 +1766,9 @@ public class SubcontractService {
 		String startYear = "";
 		String endMonth = "";
 		String endYear = "";
-		
-		HashMap<Integer, String> monthHashMap = new HashMap<Integer, String>();
-		monthHashMap.put(1, "Jan");
-		monthHashMap.put(2, "Feb");
-		monthHashMap.put(3, "Mar");
-		monthHashMap.put(4, "Apr");
-		monthHashMap.put(5, "May");
-		monthHashMap.put(6, "Jun");
-		monthHashMap.put(7, "Jul");
-		monthHashMap.put(8, "Aug");
-		monthHashMap.put(9, "Sep");
-		monthHashMap.put(10, "Oct");
-		monthHashMap.put(11, "Nov");
-		monthHashMap.put(12, "Dec");
-		
+
+		HashMap<Integer, String> monthHashMap = GlobalParameter.getMonthHashMap();
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		
@@ -1806,6 +1794,8 @@ public class SubcontractService {
 			List<String> monthList = new ArrayList<String>();
 			List<Double> certList = new ArrayList<Double>();
 			List<Double> wdList = new ArrayList<Double>();
+			List<Double> cumCertList = new ArrayList<Double>();
+			List<Double> cumWdList = new ArrayList<Double>();
 
 			for (SubcontractSnapshotDTO result: snapshotWrapperList){
 				Calendar calendar = Calendar.getInstance();
@@ -1816,6 +1806,8 @@ public class SubcontractService {
 				monthList.add(monthHashMap.get(month));
 				certList.add(result.getTotalPostedCertifiedAmount().doubleValue());
 				wdList.add(result.getTotalPostedWorkDoneAmount().doubleValue());
+				cumCertList.add(result.getTotalCumCertifiedAmount().doubleValue());
+				cumWdList.add(result.getTotalCumWorkDoneAmount().doubleValue());
 			}
 			
 			if(monthList.size()<12){
@@ -1823,6 +1815,8 @@ public class SubcontractService {
 				monthList.add(monthHashMap.get(cal.get(Calendar.MONTH)+1));
 				certList.add(currentSCWrapper.getTotalPostedCertifiedAmount().doubleValue());
 				wdList.add(currentSCWrapper.getTotalPostedWorkDoneAmount().doubleValue());
+				cumCertList.add(currentSCWrapper.getTotalCumCertifiedAmount().doubleValue());
+				cumWdList.add(currentSCWrapper.getTotalCumWorkDoneAmount().doubleValue());
 			
 			}
 			SubcontractDashboardDTO subcontractDashboardCertWrapper = new SubcontractDashboardDTO();
@@ -1839,8 +1833,24 @@ public class SubcontractService {
 			subcontractDashboardWDWrapper.setMonthList(monthList);
 			subcontractDashboardWDWrapper.setDetailList(wdList);
 
+			SubcontractDashboardDTO subcontractDashboardCumCertWrapper = new SubcontractDashboardDTO();
+			subcontractDashboardCumCertWrapper.setCategory("CUM_CERT");
+			subcontractDashboardCumCertWrapper.setStartYear(startYear);
+			subcontractDashboardCumCertWrapper.setEndYear(endYear);
+			subcontractDashboardCumCertWrapper.setMonthList(monthList);
+			subcontractDashboardCumCertWrapper.setDetailList(cumCertList);
+
+			SubcontractDashboardDTO subcontractDashboardCumWDWrapper = new SubcontractDashboardDTO();
+			subcontractDashboardCumWDWrapper.setCategory("CUM_WD");
+			subcontractDashboardCumWDWrapper.setStartYear(startYear);
+			subcontractDashboardCumWDWrapper.setEndYear(endYear);
+			subcontractDashboardCumWDWrapper.setMonthList(monthList);
+			subcontractDashboardCumWDWrapper.setDetailList(cumWdList);
+
 			subcontractDashboardWrappeList.add(subcontractDashboardCertWrapper);
 			subcontractDashboardWrappeList.add(subcontractDashboardWDWrapper);
+			subcontractDashboardWrappeList.add(subcontractDashboardCumCertWrapper);
+			subcontractDashboardWrappeList.add(subcontractDashboardCumWDWrapper);
 
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
@@ -1849,8 +1859,8 @@ public class SubcontractService {
 
 		return subcontractDashboardWrappeList;
 	}
-	
-	
+
+
 	/**
 	 * @author koeyyeung
 	 * created on 19 July, 2016
@@ -1862,19 +1872,27 @@ public class SubcontractService {
 			double totalBQSCAmount = 0.0;
 			double postedBQCertifiedAmount = 0.0;
 			double postedBQWDAmount = 0.0;
+			double cumBQCertifiedAmount = 0.0;
+			double cumBQWDAmount = 0.0;
 			double totalVOSCAmount = 0.0;
 			double postedVOCertifiedAmount = 0.0;
 			double postedVOWDAmount = 0.0;
-			
+			double cumVOCertifiedAmount = 0.0;
+			double cumVOWDAmount = 0.0;
+
 			for (SubcontractDetail scDetail: scDetails){
 				if(scDetail instanceof SubcontractDetailVO){
 					totalVOSCAmount += scDetail.getAmountSubcontract().doubleValue();
 					postedVOCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedVOWDAmount += scDetail.getAmountPostedWD().doubleValue();
+					cumVOCertifiedAmount += scDetail.getAmountCumulativeCert().doubleValue();
+					cumVOWDAmount += scDetail.getAmountCumulativeWD().doubleValue();
 				}else if(scDetail instanceof SubcontractDetailBQ){
 					totalBQSCAmount += scDetail.getAmountSubcontract().doubleValue();
 					postedBQCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedBQWDAmount += scDetail.getAmountPostedWD().doubleValue();
+					cumBQCertifiedAmount += scDetail.getAmountCumulativeCert().doubleValue();
+					cumBQWDAmount += scDetail.getAmountCumulativeWD().doubleValue();
 				} 
 			}
 			
@@ -1883,6 +1901,8 @@ public class SubcontractService {
 			scDetailBQ.setAmountSubcontract(new BigDecimal(totalBQSCAmount));
 			scDetailBQ.setAmountPostedCert(new BigDecimal(postedBQCertifiedAmount));
 			scDetailBQ.setAmountPostedWD(new BigDecimal(postedBQWDAmount));
+			scDetailBQ.setAmountCumulativeCert(new BigDecimal(cumBQCertifiedAmount));
+			scDetailBQ.setAmountCumulativeWD(new BigDecimal(cumBQWDAmount));
 			scDetailsDashboard.add(scDetailBQ);
 			
 			SubcontractDetailVO scDetailVO = new SubcontractDetailVO();
@@ -1890,6 +1910,8 @@ public class SubcontractService {
 			scDetailVO.setAmountSubcontract(new BigDecimal(totalVOSCAmount));
 			scDetailVO.setAmountPostedCert(new BigDecimal(postedVOCertifiedAmount));
 			scDetailVO.setAmountPostedWD(new BigDecimal(postedVOWDAmount));
+			scDetailVO.setAmountCumulativeCert(new BigDecimal(cumVOCertifiedAmount));
+			scDetailVO.setAmountCumulativeWD(new BigDecimal(cumVOWDAmount));
 			scDetailsDashboard.add(scDetailVO);
 
 			

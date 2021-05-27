@@ -1,5 +1,5 @@
-mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'adlService', 'resourceSummaryService', '$cookies', '$q', 'repackagingService', 
-                               function($scope, colorCode, jobService, adlService, resourceSummaryService, $cookies, $q, repackagingService) {
+mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'adlService', 'resourceSummaryService', '$cookies', '$q', 'repackagingService', 'dashboardHelper',
+                               function($scope, colorCode, jobService, adlService, resourceSummaryService, $cookies, $q, repackagingService, dashboardHelper) {
 	$scope.loading = true;
 	
 	//Initialize panel setting
@@ -10,28 +10,20 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
-	var year =  new Date().getFullYear();
-	$scope.selectedYear = year;
-	$scope.yearList = [year];
-	
-	for(var i=0; i < 20; i++){
-		var yearToAdd = year - i;		
-		if(i>0 && yearToAdd > 2002){
-			$scope.yearList.push(yearToAdd);
-		}
-	} 
-	
+	$scope.yearList = dashboardHelper.getDashboardDropdown();
+	$scope.selectedYear = $scope.yearList[0];
+
     loadJobData();
     
     $scope.getJobDashboardData = function (year){
     	$scope.selectedYear = year;
-    	getJobData(year.toString().substring(2, 4));
+    	getJobData(year);
     }
     
     function loadJobData() {
     	getJobInfo();
     	getRepackaging();
-    	getJobData($scope.selectedYear.toString().substring(2, 4));
+    	getJobData($scope.selectedYear);
     	getResourceSummariesGroupByObjectCode();
     }
 
@@ -59,31 +51,35 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     }
     
     function getJobData(year) {
-    	var contractReceivableList = adlService.getJobDashboardData($scope.jobNo, 'ContractReceivable', year);
-    	var turnoverList = adlService.getJobDashboardData($scope.jobNo,  'Turnover', year);
-    	var totalBudgetList = adlService.getJobDashboardData($scope.jobNo, 'TotalBudget', year);
-    	var actualValueList = adlService.getJobDashboardData($scope.jobNo, 'ActualValue', year);
-    	
+    	var getJobDashboardData = adlService.getJobDashboardData($scope.jobNo, year);
 
-    	$q.all([contractReceivableList, turnoverList, totalBudgetList, actualValueList])
-    		.then(function (data){
-    			setDashboardData(data[0], data[1], data[2], data[3]);
-    	});
+    	$q.all([getJobDashboardData]).then(function (data){setDashboardData(data[0]);});
+
     }
  
     
-    function setDashboardData(contractReceivableList, turnoverList, totalBudgetList, actualValueList) {
-    	$scope.contractReceivable = contractReceivableList[11];
-    	$scope.turnover = turnoverList[11];
-    	//$scope.originalBudget = originalBudgetData;
-    	$scope.totalBudget = totalBudgetList[11];
-    	$scope.actualValue = actualValueList[11];
-    	
+    function setDashboardData(data) {
+    	var crData = data.find(x => x.category == 'CR').detailList
+    	var ivData = data.find(x => x.category == 'IV').detailList
+    	var avData = data.find(x => x.category == 'AV').detailList
+    	var tbData = data.find(x => x.category == 'TB').detailList
+    	var chartLabels = data[0].monthList
+
+		$scope.contractReceivable = crData[crData.length-1];
+		$scope.turnover = ivData[ivData.length-1];
+		//$scope.originalBudget = originalBudgetData;
+		$scope.totalBudget = tbData[tbData.length-1];
+		$scope.actualValue = avData[avData.length-1];
+
+		$scope.startYear = data[0].startYear;
+		$scope.endYear = data[0].endYear;
+		$scope.startMonth = chartLabels[0];
+		$scope.endMonth = chartLabels[chartLabels.length-1];
+
     	$scope.chartParameters = {
-    			labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    			series : ['Total Budget', 'Internal Value', 'Main Contract Cert. Amount', 'Actual Value'],//  'Tender Budget'
-    			//data : data.data,
-    			data: [totalBudgetList, turnoverList, contractReceivableList, actualValueList],
+    			labels : chartLabels,
+    			series : ['Internal Value', 'Main Contract Cert. Amount', 'Actual Cost'],//  'Tender Budget'
+    			data: [ivData, crData, avData],
     			options : {
     				showScale : true,
     				showTooltips : true,
@@ -96,7 +92,8 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     				animation : true,
     				//scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
     				scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
-    			}
+    			},
+			    colours : ['#17B6A4', '#9b59b6', '#2184DA']
     	};
     }
     

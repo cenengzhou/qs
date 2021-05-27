@@ -1,5 +1,5 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'jobService', '$uibModal',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, jobService, $uibModal) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'jobService', '$uibModal', 'dashboardHelper',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, jobService, $uibModal, dashboardHelper) {
 	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -9,15 +9,8 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 
 	var year =  new Date().getFullYear();
-	$scope.selectedYear = year;
-	$scope.yearList = [year];
-
-	for(var i=0; i < 20; i++){
-		var yearToAdd = year - i;		
-		if(i>0 && yearToAdd > 2002){
-			$scope.yearList.push(yearToAdd);
-		}
-	} 
+	$scope.yearList = dashboardHelper.getDashboardDropdown();
+	$scope.selectedYear = $scope.yearList[0];
 	
 	loadData();
 
@@ -56,7 +49,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 	$scope.getMainCertDashboardData = function (year){
 		$scope.selectedYear = year;
-		getMainCertData(year.toString().substring(2, 4));
+		getMainCertData(year);
 	}
 	
 	$scope.openRetentionReleaseSchedule = function() {
@@ -79,32 +72,36 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 	function loadData(){
 		getJob();
-		getMainCertData(year.toString().substring(2, 4));	
+		getMainCertData($scope.selectedYear);
 		getLatestMainCert();
 	}
 
 	function getMainCertData(year) {
-		var contractReceivableList = mainCertService.getCertificateDashboardData($scope.jobNo, 'ContractReceivable', year);
-		var ipaList = mainCertService.getCertificateDashboardData($scope.jobNo,  'IPA', year);
-		var ipcList = mainCertService.getCertificateDashboardData($scope.jobNo, 'IPC', year);
+		var getCertificateDashboardData = mainCertService.getCertificateDashboardData($scope.jobNo, year);
 
-
-		$q.all([contractReceivableList, ipaList, ipcList])
-		.then(function (data){
-			setDashboardData(data[0], data[1], data[2]);
-		});
+		$q.all([getCertificateDashboardData]).then(function (data){setDashboardData(data[0]);});
 	}
 
 
-	function setDashboardData(contractReceivableList, ipaList, ipcList) {
-		$scope.contractReceivable = contractReceivableList[11];
-		$scope.ipa = ipaList[11];
-		$scope.ipc = ipcList[11];
+	function setDashboardData(data) {
+		var crData = data.find(x => x.category == 'CR').detailList
+		var ipaData = data.find(x => x.category == 'IPA').detailList
+		var ipcData = data.find(x => x.category == 'IPC').detailList
+		var chartLabels = data[0].monthList
 
-		$scope.linChartParameters = {
-				labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+		$scope.contractReceivable = crData[crData.length-1];
+		$scope.ipa = ipaData[ipaData.length-1];
+		$scope.ipc = ipcData[ipcData.length-1];
+
+		$scope.startYear = data[0].startYear;
+		$scope.endYear = data[0].endYear;
+		$scope.startMonth = chartLabels[0];
+		$scope.endMonth = chartLabels[chartLabels.length-1];
+
+		$scope.lineChartParameters = {
+				labels : chartLabels,
 				series : ['IPA', 'IPC', 'Contract Receivable'],
-				data: [ipaList, ipcList, contractReceivableList],
+				data: [ipaData, ipcData, crData],
 				options : {
 					showScale : true,
 					showTooltips : true,

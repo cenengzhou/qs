@@ -21,7 +21,7 @@
 				</div>
 				<div class="widget-stat-info">
 					<div class="widget-stat-title">Total Budget</div>
-					<div class="widget-stat-number">{{totalBudget | currency}}</div>
+					<div class="widget-stat-number">{{(totalBudget||0) | currency}}</div>
 					<div class="widget-stat-text">
 						<small>recorded in the latest Resource Summary</small>
 					</div>
@@ -40,7 +40,7 @@
 				</div>
 				<div class="widget-stat-info">
 					<div class="widget-stat-title">Internal Valuation</div>
-					<div class="widget-stat-number">{{turnover | currency}}</div>
+					<div class="widget-stat-number">{{(turnover || 0 )| currency}}</div>
 					<div class="widget-stat-text">
 						<small>including manual input entries by Finance</small>
 					</div>
@@ -58,8 +58,8 @@
 					<i class="fa fa-dollar"></i>
 				</div>
 				<div class="widget-stat-info">
-					<div class="widget-stat-title">Actual Value (Cost)</div>
-					<div class="widget-stat-number">{{actualValue | currency}}</div>
+					<div class="widget-stat-title">Actual Cost</div>
+					<div class="widget-stat-number">{{(actualValue||0) | currency}}</div>
 					<div class="widget-stat-text">
 						<small>including manual input entries by Finance</small>
 					</div>
@@ -78,7 +78,7 @@
 				</div>
 				<div class="widget-stat-info">
 					<div class="widget-stat-title">Main Contract Cert. Amount</div>
-					<div class="widget-stat-number">{{contractReceivable |
+					<div class="widget-stat-number">{{(contractReceivable||0) |
 						currency}}</div>
 					<div class="widget-stat-text">
 						<small>Gross Certified Value</small>
@@ -114,8 +114,7 @@
 									ng-click="getJobDashboardData(year)">{{year}}</a></li>
 							</ul>
 						</div>
-						<div class="text-center">Jan {{selectedYear}} - Dec
-							{{selectedYear}}</div>
+						<div class="text-center">{{startMonth}} {{startYear}} - {{endMonth}} {{endYear}}</div>
 					</div>
 
 					<div>
@@ -123,7 +122,9 @@
 							chart-data="chartParameters.data"
 							chart-labels="chartParameters.labels"
 							chart-series="chartParameters.series"
-							chart-options="chartParameters.options" chart-legend="true"
+							chart-colours="chartParameters.colours"
+							chart-options="chartParameters.options"
+							chart-legend="true"
 							height="130">
 						           		</canvas>
 					</div>

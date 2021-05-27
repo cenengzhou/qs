@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.gammon.pcms.dto.rs.provider.response.JobDashboardDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -140,26 +141,21 @@ public class ADLController {
 	 *
 	 * @param noJob
 	 * @param year
-	 * @param yearEnd
 	 * @return
 	 * @author tikywong
 	 * @since Jul 11, 2016 9:26:48 AM
 	 */
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getJobDashboardData', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getJobDashboardData", method = RequestMethod.GET)
-	public List<BigDecimal> getJobDashboardData(	@RequestParam(required = true) String noJob,
-												@RequestParam(	required = true) String type,
-												@RequestParam(	required = false,
-												defaultValue = "0") BigDecimal year,
-												@RequestParam(	required = false,
-												defaultValue = "0") BigDecimal month 
-												) {
+	public List<JobDashboardDTO> getJobDashboardData(@RequestParam(required = true) String noJob,
+													 @RequestParam(required = true, defaultValue = "0") String year
+	) {
 		try {
-			return adlService.getJobDashboardData(year, month, noJob, type);
+			return adlService.getJobDashboardData(noJob, year);
 		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
-			return new ArrayList<BigDecimal>();
+			return new ArrayList<>();
 		}
 	}
 

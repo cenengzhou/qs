@@ -11,6 +11,8 @@ public class SubcontractSnapshotDTO implements Comparable<SubcontractSnapshotDTO
 	
 	private BigDecimal totalPostedCertifiedAmount;
 	private BigDecimal totalPostedWorkDoneAmount;
+	private BigDecimal totalCumCertifiedAmount;
+	private BigDecimal totalCumWorkDoneAmount;
 	private Date snapshotDate;
 	
 	
@@ -40,7 +42,21 @@ public class SubcontractSnapshotDTO implements Comparable<SubcontractSnapshotDTO
 		      return 0;
 	    return getSnapshotDate().compareTo(wrapper.getSnapshotDate());
 	  }
-	
-	
-	
+
+
+	public BigDecimal getTotalCumCertifiedAmount() {
+		return totalCumCertifiedAmount;
+	}
+
+	public void setTotalCumCertifiedAmount(BigDecimal totalCumCertifiedAmount) {
+		this.totalCumCertifiedAmount = totalCumCertifiedAmount;
+	}
+
+	public BigDecimal getTotalCumWorkDoneAmount() {
+		return totalCumWorkDoneAmount;
+	}
+
+	public void setTotalCumWorkDoneAmount(BigDecimal totalCumWorkDoneAmount) {
+		this.totalCumWorkDoneAmount = totalCumWorkDoneAmount;
+	}
 }

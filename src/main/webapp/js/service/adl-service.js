@@ -14,17 +14,16 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     });
     
   //Asyn Call
-    function getJobDashboardData(noJob, type, year){
+    function getJobDashboardData(noJob, year){
     	var deferred = $q.defer();
     	$http({
     		method: 'GET',
     		url: 'service/adl/getJobDashboardData',
     		params:{
     			noJob: noJob,
-    			type: type,
     			year: year
     		}
-    	}).success(function(data) { 
+    	}).success(function(data) {
     		deferred.resolve(data);
     	}).error(function(msg, code) {
     		deferred.reject(msg);

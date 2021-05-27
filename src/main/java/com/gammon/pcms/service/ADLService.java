@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
@@ -27,7 +28,9 @@ import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
 import com.gammon.pcms.dao.adl.SubcontractorWorkscopeDao;
+import com.gammon.pcms.dto.rs.provider.response.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
+import com.gammon.pcms.model.adl.AccountBalanceFigure;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
@@ -36,6 +39,7 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.pcms.model.adl.SubcontractorWorkscope;
+import com.gammon.pcms.wrapper.DashboardDataRange;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.service.RepackagingService;
 import com.gammon.qs.service.admin.AdminService;
@@ -153,71 +157,94 @@ public class ADLService {
 		else
 			return accountBalanceSCDao.find(year, month, ledgerType, jobNo, subcontractNo, objectCode, subsidiaryCode);
 	}
-	
+
+	private List<BigDecimal> packDataListTo12Months(List<BigDecimal> dataList) {
+		if (dataList != null && dataList.size()>0){
+			while(dataList.size()<12){
+				dataList.add(dataList.get(dataList.size()-1));
+			}
+		}else{
+			while(dataList.size()<12){
+				dataList.add(new BigDecimal(0));
+			}
+		}
+		return dataList;
+	}
+
+	private List<BigDecimal> adaptToDashboardDataList(List<AccountBalanceFigure> list) {
+		List<BigDecimal> result = new ArrayList<>();
+		for(AccountBalanceFigure x : list) {
+			result.add(x.getAmount());
+		}
+		return result;
+	}
+
 
 	/**
 	 * Monthly Cash Flow for Job Dash Board
 	 *
-	 * @param year
-	 * @param yearEnd
 	 * @param noJob
+	 * @param item
 	 * @return
 	 * @author tikywong
 	 * @since Jul 12, 2016 2:16:59 PM
 	 */
-	public List<BigDecimal> getJobDashboardData(	BigDecimal year,
-									           	BigDecimal month,
-												String noJob, 
-												String type) {
-		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
-		//logger.info("getJobDashboardData: "+ type);
+	public List<JobDashboardDTO> getJobDashboardData(String noJob, String item) {
+		DashboardDataRange dashboardDataRange = new DashboardDataRange(item);
+
+		BigDecimal startYearMonth = dashboardDataRange.getStartYYMM();
+		BigDecimal endYearMonth = dashboardDataRange.getEndYYMM();
+		String endYear = dashboardDataRange.getEndDateFormat("yy");
+
+		List<JobDashboardDTO> result = new ArrayList<>();
 		try {
-			if("ContractReceivable".equals(type)){
-				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-				for(int i=0 ; i < contractReceivableList.size(); i++){
-					if(i< 12)
-						dataList.add(contractReceivableList.get(i).negate());
-				}
-			}else if("Turnover".equals(type)){
-				List<BigDecimal> tunrnoverList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-				for(int i=0 ; i < tunrnoverList.size(); i++){
-					if(i< 12)
-						dataList.add(tunrnoverList.get(i));
-				}
-			}else if("TotalBudget".equals(type)){
-				dataList = repackagingService.getRepackagingMonthlySummary(noJob, year.toString());
-				if(dataList == null || dataList.size()==0){
-					
-				}
-			}else if("ActualValue".equals(type)){
-				List<AccountBalance> accountBalance = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-				
-				for(AccountBalance account : accountBalance){
-					if(account.getAccountPeriod().compareTo(new BigDecimal(12)) <= 0)
-						dataList.add(account.getAmountAccum());
-				}
-			}
+			List<AccountBalanceFigure> contractReceivableList = accountBalanceDao.findFiguresByRangeYearMonth(startYearMonth, endYearMonth, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<AccountBalanceFigure> turnoverList = accountBalanceDao.findFiguresByRangeYearMonth(startYearMonth, endYearMonth, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<AccountBalanceFigure> actualValueList = accountBalanceDao.calculateSumOfActualValueByRangeYearMonth(startYearMonth, endYearMonth, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<BigDecimal> totalBudgetList = repackagingService.getRepackagingMonthlySummary(noJob, endYear);
 
-			if (dataList != null && dataList.size()>0){
-				while(dataList.size()<12){
-					dataList.add(dataList.get(dataList.size()-1));
-				}
-			}else{
-				while(dataList.size()<12){
-					dataList.add(new BigDecimal(0));
+			packDataListTo12Months(totalBudgetList);
 
-				}
-			}
+			JobDashboardDTO contractReceivableWrapper = new JobDashboardDTO();
+			contractReceivableWrapper.setCategory("CR");
+			contractReceivableWrapper.setStartYear(dashboardDataRange.getStartYear());
+			contractReceivableWrapper.setEndYear(dashboardDataRange.getEndYear());
+			contractReceivableWrapper.setMonthList(dashboardDataRange.toMonthList());
+			contractReceivableWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList(contractReceivableList).stream().map(x -> x.negate()).collect(Collectors.toList())));
 
+			JobDashboardDTO turnoverWrapper = new JobDashboardDTO();
+			turnoverWrapper.setCategory("IV");
+			turnoverWrapper.setStartYear(dashboardDataRange.getStartYear());
+			turnoverWrapper.setEndYear(dashboardDataRange.getEndYear());
+			turnoverWrapper.setMonthList(dashboardDataRange.toMonthList());
+			turnoverWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList((turnoverList))));
+
+			JobDashboardDTO actualValueWrapper = new JobDashboardDTO();
+			actualValueWrapper.setCategory("AV");
+			actualValueWrapper.setStartYear(dashboardDataRange.getStartYear());
+			actualValueWrapper.setEndYear(dashboardDataRange.getEndYear());
+			actualValueWrapper.setMonthList(dashboardDataRange.toMonthList());
+			actualValueWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList(actualValueList)));
+
+			JobDashboardDTO totalBudgetWrapper = new JobDashboardDTO();
+			totalBudgetWrapper.setCategory("TB");
+			totalBudgetWrapper.setStartYear(dashboardDataRange.getStartYear());
+			totalBudgetWrapper.setEndYear(dashboardDataRange.getEndYear());
+			totalBudgetWrapper.setMonthList(dashboardDataRange.toMonthList());
+			totalBudgetWrapper.setDetailList(totalBudgetList);
+
+			result.add(contractReceivableWrapper);
+			result.add(turnoverWrapper);
+			result.add(actualValueWrapper);
+			result.add(totalBudgetWrapper);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return dataList;
+		return result;
 	}
-	
+
 	/**
 	 * Account Ledger general searching
 	 *

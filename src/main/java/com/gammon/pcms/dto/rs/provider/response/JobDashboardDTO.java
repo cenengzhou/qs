@@ -1,4 +1,4 @@
-package com.gammon.pcms.dto.rs.provider.response.maincert;
+package com.gammon.pcms.dto.rs.provider.response;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
  * @author koeyyeung
  * created on 19 Jul, 2016
  */
-public class MainCertDashboardDTO {
+public class JobDashboardDTO {
 	private String category;
 	private String startYear;
 	private String endYear;

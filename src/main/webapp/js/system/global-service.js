@@ -398,3 +398,70 @@ mainApp.factory('$exceptionHandler', ['$log', '$injector', function($log, $injec
      };
    }
  );*/
+
+mainApp.factory('dashboardHelper', ['dateFilter', function(dateFilter) {
+	return {
+		getDashboardDropdown: function(){
+			var result = ['Latest']
+			var year =  new Date().getFullYear();
+			for(var i=0; i < 20; i++){
+				var yearToAdd = year - i;
+				if(i>0 && yearToAdd > 2002){
+					result.push(yearToAdd);
+				}
+			}
+			return result;
+		},
+		getLast12Months: function() {
+			var d = new Date()
+			var months = []
+			for (var i=0; i<12; i++) {
+				months.push(dateFilter(d, 'MMM'))
+				d.setMonth(d.getMonth()-1)
+			}
+			return months
+		},
+		findPrevYear: function(y, m) {
+			return (m + 1) > 12 ? y : y - 1
+		},
+		findPrevMonth: function(m) {
+			return (m + 1) > 12 ? m%12 + 1 : m + 1
+		},
+		getCurrentMonth: function() {
+			var today = new Date()
+			return today.getMonth() + 1
+		},
+		getMonthName: function(i){
+			var monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+			return monthNames[i]
+		},
+		getFullYear: function(yy) {
+			return 2000+parseInt(yy)
+		},
+		getChartLabels: function(dataRange) {
+			var result = []
+			var currentDate = new Date(this.getFullYear(dataRange.startYear), dataRange.startMonth-1)
+			var endDate = new Date(this.getFullYear(dataRange.endYear), dataRange.endMonth-1)
+			while (currentDate <= endDate) {
+				var y = currentDate.getFullYear()%100
+				var m = currentDate.getMonth()+1
+				result.push(this.getMonthName(m) + ' ' + y)
+				currentDate.setMonth(currentDate.getMonth()+1)
+			}
+			return result
+		},
+		plotLineData: function(dataList, dataRange) {
+			var result = []
+			var currentDate = new Date(this.getFullYear(dataRange.startYear), dataRange.startMonth-1)
+			var endDate = new Date(this.getFullYear(dataRange.endYear), dataRange.endMonth-1)
+			while (currentDate <= endDate) {
+				var y = currentDate.getFullYear()%100
+				var m = currentDate.getMonth()+1
+				var e = dataList.find(x => x.year == y && x.month == m)
+				result.push(e ? e.amount : null)
+				currentDate.setMonth(currentDate.getMonth()+1)
+			}
+			return result
+		}
+	}
+}]);

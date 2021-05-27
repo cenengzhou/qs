@@ -82,14 +82,14 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 								$scope.startMonth = certData.monthList[0];
 								$scope.endMonth = certData.monthList[certData.monthList.length-1];
 								
-							}else if(value.category =="WD"){
+							}else if(value.category =="CUM_WD"){
 								wdData = value;
 							}
 						});
 						
 						$scope.lineChartParameters = {
 								labels : certData.monthList,
-								series : ['Posted Work Done', 'Posted Payment'],
+								series : ['Cumulative Work Done', 'Posted Payment'],
 								data : [
 								        wdData.detailList,
 								        certData.detailList,
@@ -168,17 +168,17 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 					angular.forEach(data, function(value, key){
 						if(value.lineType == "BQ"){
 							barChartJson.bqData.push(
-									[value.amountSubcontract],[value.amountPostedCert], [value.amountPostedWD]
+									[value.amountSubcontract],[value.amountPostedCert], [value.amountCumulativeWD]
 							);
 						}else if(value.lineType == "VO"){
 							if(value.amountSubcontract == 0)
 								value.amountSubcontract = 0.0001
 								if(value.amountPostedCert == 0)
 									value.amountPostedCert = 0.0001
-									if(value.amountPostedWD == 0)
-										value.amountPostedWD = 0.0001
+									if(value.amountCumulativeWD == 0)
+										value.amountCumulativeWD = 0.0001
 										barChartJson.voData.push(
-												[value.amountSubcontract],[value.amountPostedCert], [value.amountPostedWD]
+												[value.amountSubcontract],[value.amountPostedCert], [value.amountCumulativeWD]
 										);	
 						}
 					});

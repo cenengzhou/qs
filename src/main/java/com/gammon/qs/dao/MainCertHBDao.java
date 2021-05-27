@@ -22,7 +22,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
-import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertFigure;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 @Repository
@@ -165,11 +165,11 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	 * @author koeyyeung
 	 * @since Aug, 28, 2016**/
 	@SuppressWarnings("unchecked")
-	public List<MainCertDashboardDTO> getMonthlySummayIPA(String jobNo, String year) {
+	public List<MainCertFigure> getMonthlySummayIPA(String jobNo, String year) {
 		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
 						
 	
-		List<MainCertDashboardDTO> rsList = new ArrayList<MainCertDashboardDTO>();
+		List<MainCertFigure> rsList = new ArrayList<MainCertFigure>();
 		String hql =
 				"Select Certmax.Month,"
 				+"  (cert2.appmaincontractoramt"
@@ -204,24 +204,22 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 									.addScalar("month", StringType.INSTANCE)
 									.addScalar("amount", BigDecimalType.INSTANCE);
 		
-		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertDashboardDTO.class)).list();
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
 		
 		return rsList;
 	}
-	
-	
-	
+
 	/**
 	 * Main Cert Dashboard IPC
 	 * @author koeyyeung
 	 * @since Aug, 28, 2016**/
 
 	@SuppressWarnings("unchecked")
-	public List<MainCertDashboardDTO> getMonthlySummayIPC(String jobNo, String year) {
+	public List<MainCertFigure> getMonthlySummayIPC(String jobNo, String year) {
 		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
 						
 	
-		List<MainCertDashboardDTO> rsList = new ArrayList<MainCertDashboardDTO>();
+		List<MainCertFigure> rsList = new ArrayList<MainCertFigure>();
 		String hql =
 				"Select Certmax.Month,"
 				+ " (cert2.Certmaincontractoramt" 
@@ -256,8 +254,102 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 									.addScalar("month", StringType.INSTANCE)
 									.addScalar("amount", BigDecimalType.INSTANCE);
 		
-		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertDashboardDTO.class)).list();
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
 		
+		return rsList;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MainCertFigure> getMonthlySummaryIPAByYearMonth(String jobNo, String startYear, String startMonth, String endYear, String endMonth) {
+		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+
+
+		List<MainCertFigure> rsList = new ArrayList<MainCertFigure>();
+		String hql =
+				"Select Certmax.Year, Certmax.Month, concat(Certmax.Year, Certmax.Month) as YearMonth,"
+						+"  (cert2.appmaincontractoramt"
+						+"   + cert2.appnscndscamt"
+						+"   + cert2.appmosamt"
+						+"   - cert2.appmaincontractorret"
+						+"   + cert2.appmaincontractorretrel"
+						+"   - cert2.appretfornscndsc"
+						+"   + cert2.appretrelfornscndsc"
+						+"   - cert2.appmosret"
+						+"   + cert2.appmosretrel"
+						+"   - cert2.appccamt"
+						+"   + cert2.appadjustmentamt"
+						+"   + Cert2.appadvancepayment"
+						+"   + Cert2.Appcpfamt) As Amount"
+						+" From "
+						+"    (Select Certmonth.Year as year, Certmonth.Month as month,"
+						+"      Max(cert.Certno) as Certno"
+						+"    From "
+						+"        (Select To_Char(Cert_Issue_Date, 'YY') as year, To_Char(Cert_Issue_Date, 'MM') as month,"
+						+"        Max(Cert_Issue_Date) as CertDate"
+						+"        From "+schema+".Main_Cert"
+						+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-"+startMonth+"-"+startYear+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-"+endMonth+"-"+endYear+"', 'dd-mm-yyyy')"
+						+"        Group By To_Char(Cert_Issue_Date, 'YY'), To_Char(Cert_Issue_Date, 'MM')) Certmonth"
+						+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
+						+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
+						+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
+						+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
+
+
+		SQLQuery query = getSession().createSQLQuery(hql)
+				.addScalar("year", StringType.INSTANCE)
+				.addScalar("month", StringType.INSTANCE)
+				.addScalar("yearMonth", StringType.INSTANCE)
+				.addScalar("amount", BigDecimalType.INSTANCE);
+
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
+
+		return rsList;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MainCertFigure> getMonthlySummaryIPCByYearMonth(String jobNo, String startYear, String startMonth, String endYear, String endMonth) {
+		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+
+
+		List<MainCertFigure> rsList = new ArrayList<MainCertFigure>();
+		String hql =
+				"Select Certmax.Year, Certmax.Month, concat(Certmax.Year, Certmax.Month) as YearMonth,"
+						+ " (cert2.Certmaincontractoramt"
+						+ " + cert2.Certnscndscamt"
+						+ " + cert2.Certmosamt"
+						+ " - cert2.Certmaincontractorret"
+						+ " + cert2.Certmaincontractorretrel"
+						+ " - cert2.Certretfornscndsc"
+						+ " + cert2.Certretrelfornscndsc"
+						+ " - cert2.Certmosret"
+						+ " + cert2.Certmosretrel"
+						+ " - cert2.Certccamt"
+						+ " + cert2.Certadjustmentamt"
+						+ " + Cert2.Certadvancepayment "
+						+ " + Cert2.Certcpfamt) As Amount"
+						+" From "
+						+"    (Select Certmonth.Year as year, Certmonth.Month as month,"
+						+"      Max(cert.Certno) as Certno"
+						+"    From "
+						+"        (Select To_Char(Cert_Issue_Date, 'YY') as year, To_Char(Cert_Issue_Date, 'MM') as month,"
+						+"        Max(Cert_Issue_Date) as CertDate"
+						+"        From "+schema+".Main_Cert"
+						+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-"+startMonth+"-"+startYear+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-"+endMonth+"-"+endYear+"', 'dd-mm-yyyy')"
+						+"        Group By To_Char(Cert_Issue_Date, 'YY'),To_Char(Cert_Issue_Date, 'MM')) Certmonth"
+						+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
+						+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
+						+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
+						+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
+
+
+		SQLQuery query = getSession().createSQLQuery(hql)
+				.addScalar("year", StringType.INSTANCE)
+				.addScalar("month", StringType.INSTANCE)
+				.addScalar("yearMonth", StringType.INSTANCE)
+				.addScalar("amount", BigDecimalType.INSTANCE);
+
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
+
 		return rsList;
 	}
 	

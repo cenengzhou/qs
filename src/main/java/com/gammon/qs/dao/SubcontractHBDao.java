@@ -491,7 +491,9 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			ProjectionList projectionList = Projections.projectionList();
 			projectionList.add(Projections.sum("totalPostedCertifiedAmount"), "totalPostedCertifiedAmount");
 			projectionList.add(Projections.sum("totalPostedWorkDoneAmount"), "totalPostedWorkDoneAmount");
-			
+			projectionList.add(Projections.sum("totalCumCertifiedAmount"), "totalCumCertifiedAmount");
+			projectionList.add(Projections.sum("totalCumWorkDoneAmount"), "totalCumWorkDoneAmount");
+
 			criteria.setProjection(projectionList);
 			
 			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotDTO.class));

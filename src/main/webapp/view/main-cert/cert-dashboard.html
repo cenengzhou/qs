@@ -39,16 +39,15 @@
 									ng-click="getMainCertDashboardData(year)">{{year}}</a></li>
 							</ul>
 						</div>
-						<div class="text-center text-white">Jan {{selectedYear}} -
-							Dec {{selectedYear}}</div>
+						<div class="text-center text-white">{{startMonth}} {{startYear}} - {{endMonth}} {{endYear}}</div>
 					</div>
 
 					<div>
 						<canvas id="line" class="chart chart-line"
-							chart-data="linChartParameters.data"
-							chart-labels="linChartParameters.labels"
-							chart-series="linChartParameters.series"
-							chart-options="linChartParameters.options" chart-legend="true"
+							chart-data="lineChartParameters.data"
+							chart-labels="lineChartParameters.labels"
+							chart-series="lineChartParameters.series"
+							chart-options="lineChartParameters.options" chart-legend="true"
 							resize ng-style="resizeWithOffset(400)">
 						           		</canvas>
 					</div>

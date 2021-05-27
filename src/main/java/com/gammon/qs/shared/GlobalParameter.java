@@ -1,5 +1,7 @@
 package com.gammon.qs.shared;
 
+import java.util.HashMap;
+
 public class GlobalParameter {
 	
 	
@@ -58,6 +60,23 @@ public class GlobalParameter {
     public final static String TRANSIT_UOM_MATCHING = "Unit Code Matching";
     public final static String TRANSIT_ERROR = "TERROR";
     public final static String TRANSIT_SUCCESS_WITH_WARNING = "SUCCESS_WITH_WARNING"; // added by brian on 20110225
+
+	public static HashMap<Integer, String> getMonthHashMap() {
+		HashMap<Integer, String> monthHashMap = new HashMap<>();
+		monthHashMap.put(1, "Jan");
+		monthHashMap.put(2, "Feb");
+		monthHashMap.put(3, "Mar");
+		monthHashMap.put(4, "Apr");
+		monthHashMap.put(5, "May");
+		monthHashMap.put(6, "Jun");
+		monthHashMap.put(7, "Jul");
+		monthHashMap.put(8, "Aug");
+		monthHashMap.put(9, "Sep");
+		monthHashMap.put(10, "Oct");
+		monthHashMap.put(11, "Nov");
+		monthHashMap.put(12, "Dec");
+		return monthHashMap;
+	}
 	
 	/*
 	public final static String[][] getTerms(){
