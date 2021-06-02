@@ -1,6 +1,8 @@
 package com.gammon.qs.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.validator.GenericValidator;
@@ -259,6 +261,15 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return rsList;
 	}
 
+	private String findLastDateByYearMonth(String year, String month) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, Integer.parseInt(year));
+		calendar.set(Calendar.MONTH, Integer.parseInt(month)-1);
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		return simpleDateFormat.format(calendar.getTime());
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<MainCertFigure> getMonthlySummaryIPAByYearMonth(String jobNo, String startYear, String startMonth, String endYear, String endMonth) {
 		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
@@ -298,7 +309,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		SQLQuery query = getSession().createSQLQuery(hql);
 		query.setParameter("jobNo", jobNo);
 		query.setParameter("startDate", "01-"+startMonth+"-"+startYear);
-		query.setParameter("endDate", "31-"+endMonth+"-"+endYear);
+		query.setParameter("endDate", findLastDateByYearMonth(endYear, endMonth));
 		query.addScalar("year", StringType.INSTANCE);
 		query.addScalar("month", StringType.INSTANCE);
 		query.addScalar("yearMonth", StringType.INSTANCE);
@@ -348,7 +359,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		SQLQuery query = getSession().createSQLQuery(hql);
 		query.setParameter("jobNo", jobNo);
 		query.setParameter("startDate", "01-"+startMonth+"-"+startYear);
-		query.setParameter("endDate", "31-"+endMonth+"-"+endYear);
+		query.setParameter("endDate", findLastDateByYearMonth(endYear, endMonth));
 		query.addScalar("year", StringType.INSTANCE);
 		query.addScalar("month", StringType.INSTANCE);
 		query.addScalar("yearMonth", StringType.INSTANCE);
