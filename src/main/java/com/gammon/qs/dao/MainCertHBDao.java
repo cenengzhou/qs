@@ -1,6 +1,8 @@
 package com.gammon.qs.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.validator.GenericValidator;
@@ -259,6 +261,15 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return rsList;
 	}
 
+	private String findLastDateByYearMonth(String year, String month) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, Integer.parseInt(year));
+		calendar.set(Calendar.MONTH, Integer.parseInt(month)-1);
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		return simpleDateFormat.format(calendar.getTime());
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<MainCertFigure> getMonthlySummaryIPAByYearMonth(String jobNo, String startYear, String startMonth, String endYear, String endMonth) {
 		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
@@ -287,19 +298,22 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 						+"        (Select To_Char(Cert_Issue_Date, 'YY') as year, To_Char(Cert_Issue_Date, 'MM') as month,"
 						+"        Max(Cert_Issue_Date) as CertDate"
 						+"        From "+schema+".Main_Cert"
-						+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-"+startMonth+"-"+startYear+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-"+endMonth+"-"+endYear+"', 'dd-mm-yyyy')"
+						+"        Where Jobno = :jobNo And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date(:startDate, 'dd-mm-yyyy') And Cert_Issue_Date <= to_date(:endDate, 'dd-mm-yyyy')"
 						+"        Group By To_Char(Cert_Issue_Date, 'YY'), To_Char(Cert_Issue_Date, 'MM')) Certmonth"
 						+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
-						+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
+						+"    Where Jobno = :jobNo And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
 						+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
-						+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
+						+" Where Cert2.Jobno = :jobNo And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
 
 
-		SQLQuery query = getSession().createSQLQuery(hql)
-				.addScalar("year", StringType.INSTANCE)
-				.addScalar("month", StringType.INSTANCE)
-				.addScalar("yearMonth", StringType.INSTANCE)
-				.addScalar("amount", BigDecimalType.INSTANCE);
+		SQLQuery query = getSession().createSQLQuery(hql);
+		query.setParameter("jobNo", jobNo);
+		query.setParameter("startDate", "01-"+startMonth+"-"+startYear);
+		query.setParameter("endDate", findLastDateByYearMonth(endYear, endMonth));
+		query.addScalar("year", StringType.INSTANCE);
+		query.addScalar("month", StringType.INSTANCE);
+		query.addScalar("yearMonth", StringType.INSTANCE);
+		query.addScalar("amount", BigDecimalType.INSTANCE);
 
 		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
 
@@ -334,19 +348,22 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 						+"        (Select To_Char(Cert_Issue_Date, 'YY') as year, To_Char(Cert_Issue_Date, 'MM') as month,"
 						+"        Max(Cert_Issue_Date) as CertDate"
 						+"        From "+schema+".Main_Cert"
-						+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-"+startMonth+"-"+startYear+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-"+endMonth+"-"+endYear+"', 'dd-mm-yyyy')"
+						+"        Where Jobno = :jobNo And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date(:startDate, 'dd-mm-yyyy') And Cert_Issue_Date <= to_date(:endDate, 'dd-mm-yyyy')"
 						+"        Group By To_Char(Cert_Issue_Date, 'YY'),To_Char(Cert_Issue_Date, 'MM')) Certmonth"
 						+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
-						+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
+						+"    Where Jobno = :jobNo And System_Status = 'ACTIVE' Group By Certmonth.Year, Certmonth.Month, Certmonth.Certdate) Certmax"
 						+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
-						+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
+						+" Where Cert2.Jobno = :jobNo And Cert2.System_Status = 'ACTIVE' order by Certmax.year, Certmax.month";
 
 
-		SQLQuery query = getSession().createSQLQuery(hql)
-				.addScalar("year", StringType.INSTANCE)
-				.addScalar("month", StringType.INSTANCE)
-				.addScalar("yearMonth", StringType.INSTANCE)
-				.addScalar("amount", BigDecimalType.INSTANCE);
+		SQLQuery query = getSession().createSQLQuery(hql);
+		query.setParameter("jobNo", jobNo);
+		query.setParameter("startDate", "01-"+startMonth+"-"+startYear);
+		query.setParameter("endDate", findLastDateByYearMonth(endYear, endMonth));
+		query.addScalar("year", StringType.INSTANCE);
+		query.addScalar("month", StringType.INSTANCE);
+		query.addScalar("yearMonth", StringType.INSTANCE);
+		query.addScalar("amount", BigDecimalType.INSTANCE);
 
 		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertFigure.class)).list();
 
