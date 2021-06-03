@@ -328,7 +328,7 @@ public class MainCertService {
 		mainCertWrapper.setJobNumber(mainContractCertificate.getJobNo());
 		mainCertWrapper.setCertifiedMOSRetentionReleased(CalculationUtil.round(mainContractCertificate.getCertifiedMOSRetentionReleased().doubleValue(), 2));
 		mainCertWrapper.setCertificateStatus(MainCert.CERT_CONFIRMED);
-		mainCertWrapper.setCertifiedMainContractorAmount(mainContractCertificate.getCertifiedMainContractorAmount());
+		mainCertWrapper.setCertifiedMainContractorAmount(mainContractCertificate.getCertifiedMainContractorAmount()+mainContractCertificate.getCertifiedClaimsVariationAmount().doubleValue());
 		Double mosAmount = mainContractCertificate.getCertifiedMOSAmount() == null ? Double.valueOf(0) : mainContractCertificate.getCertifiedMOSAmount();
 		Double advancePayment = mainContractCertificate.getCertifiedAdvancePayment() == null ? Double.valueOf(0) : mainContractCertificate.getCertifiedAdvancePayment();
 		mainCertWrapper.setCertifiedMOSAmount(mosAmount + advancePayment);

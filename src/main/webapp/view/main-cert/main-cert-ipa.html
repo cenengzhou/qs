@@ -24,7 +24,8 @@
 							currency}}</div> -->
 										<div class="widget-stat-number">
 											{{cert.appliedMainContractorAmount +
-											cert.appliedNSCNDSCAmount + cert.appliedMOSAmount +
+											cert.appliedNSCNDSCAmount + cert.appliedClaimsVariationAmount+
+											cert.appliedMOSAmount +
 											cert.appliedMainContractorRetentionReleased +
 											cert.appliedRetentionforNSCNDSCReleased +
 											cert.appliedMOSRetentionReleased + cert.appliedAdvancePayment
@@ -44,7 +45,8 @@
 										<div class="widget-stat-title">IPA Gross Amount</div>
 										<div class="widget-stat-number">
 											{{cert.appliedMainContractorAmount +
-											cert.appliedNSCNDSCAmount + cert.appliedMOSAmount +
+											cert.appliedNSCNDSCAmount + cert.appliedClaimsVariationAmount+
+											cert.appliedMOSAmount +
 											cert.appliedAdvancePayment + cert.appliedAdjustmentAmount +
 											cert.appliedCPFAmount | currency}}</div>
 										<!-- <div class="widget-stat-number">{{cert.appGrossAmount |
@@ -103,6 +105,18 @@
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
 														ng-model="cert.appliedNSCNDSCAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-7 control-label">+ Claims and Variation
+												Amount</label>
+											<div class="col-md-5">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="true"
+														class="form-control input-sm text-right"
+														ng-model="cert.appliedClaimsVariationAmount"
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>

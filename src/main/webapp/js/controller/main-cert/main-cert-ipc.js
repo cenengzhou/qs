@@ -253,6 +253,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 								certificateNumber: 							data.certificateNumber + 1,
 								appliedMainContractorAmount: 				data.appliedMainContractorAmount,
 								appliedNSCNDSCAmount: 						data.appliedNSCNDSCAmount,
+								appliedClaimsVariationAmount: 				data.appliedClaimsVariationAmount,
 								appliedMOSAmount: 							data.appliedMOSAmount,
 								appliedMainContractorRetentionReleased: 	data.appliedMainContractorRetentionReleased ,
 								appliedRetentionforNSCNDSCReleased: 		data.appliedRetentionforNSCNDSCReleased,
@@ -267,6 +268,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 
 								certifiedMainContractorAmount:				data.certifiedMainContractorAmount, 
 								certifiedNSCNDSCAmount:						data.certifiedNSCNDSCAmount,
+								certifiedClaimsVariationAmount:				data.certifiedClaimsVariationAmount,
 								certifiedMOSAmount:							data.certifiedMOSAmount,
 								certifiedMainContractorRetentionReleased:	data.certifiedMainContractorRetentionReleased,
 								certifiedRetentionforNSCNDSCReleased:		data.certifiedRetentionforNSCNDSCReleased,
@@ -293,6 +295,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 								certificateNumber: 							1,
 								appliedMainContractorAmount: 				0,
 								appliedNSCNDSCAmount: 						0,
+								appliedClaimsVariationAmount:				0,
 								appliedMOSAmount: 							0,
 								appliedMainContractorRetentionReleased: 	0,
 								appliedRetentionforNSCNDSCReleased: 		0,
@@ -307,6 +310,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 
 								certifiedMainContractorAmount:				0, 
 								certifiedNSCNDSCAmount:						0,
+								certifiedClaimsVariationAmount:				0,
 								certifiedMOSAmount:							0,
 								certifiedMainContractorRetentionReleased:	0,
 								certifiedRetentionforNSCNDSCReleased:		0,
