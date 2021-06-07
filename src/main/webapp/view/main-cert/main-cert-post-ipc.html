@@ -80,10 +80,17 @@
 								currency}}</td>
 						</tr>
 						<tr>
-							<td>+ Claims and Variation Amount</td>
-							<td class="text-right">{{cert.appliedClaimsVariationAmount |
+							<td>+ Claims Amount</td>
+							<td class="text-right">{{cert.appliedClaimsAmount |
 								currency}}</td>
-							<td class="text-right">{{cert.certifiedClaimsVariationAmount |
+							<td class="text-right">{{cert.certifiedClaimsAmount |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td>+ Variation Amount</td>
+							<td class="text-right">{{cert.appliedVariationAmount |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedVariationAmount |
 								currency}}</td>
 						</tr>
 						<tr>

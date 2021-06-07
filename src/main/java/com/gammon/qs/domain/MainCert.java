@@ -51,9 +51,9 @@ public class MainCert extends BasePersistedObject {
 	private String jobNo;
 	private Integer certificateNumber;
 	private Double appliedMainContractorAmount = 0.0;
-	
 	private Double appliedNSCNDSCAmount = 0.0;
-	private BigDecimal appliedClaimsVariationAmount = new BigDecimal(0.0);
+	private BigDecimal appliedClaimsAmount = new BigDecimal(0.0);
+	private BigDecimal appliedVariationAmount = new BigDecimal(0.0);
 	private Double appliedMOSAmount = 0.0;
 	private Double appliedMainContractorRetention = 0.0;
 	private Double appliedMainContractorRetentionReleased = 0.0;
@@ -67,7 +67,8 @@ public class MainCert extends BasePersistedObject {
 	private Double appliedCPFAmount = 0.0;
 	private Double certifiedMainContractorAmount = 0.0;
 	private Double certifiedNSCNDSCAmount = 0.0;
-	private BigDecimal certifiedClaimsVariationAmount = new BigDecimal(0.0);
+	private BigDecimal certifiedClaimsAmount = new BigDecimal(0.0);
+	private BigDecimal certifiedVariationAmount = new BigDecimal(0.0);
 	private Double certifiedMOSAmount = 0.0;
 	private BigDecimal certifiedMainContractorRetention = new BigDecimal(0.0);
 	private BigDecimal certifiedMainContractorRetentionReleased = new BigDecimal(0.0);
@@ -102,7 +103,8 @@ public class MainCert extends BasePersistedObject {
 	public Double calculateCertifiedNetAmount(){
 		return  CalculationUtil.round((certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
-				+(certifiedClaimsVariationAmount==null?0:certifiedClaimsVariationAmount.doubleValue())
+				+(certifiedClaimsAmount==null?0:certifiedClaimsAmount.doubleValue())
+				+(certifiedVariationAmount==null?0:certifiedVariationAmount.doubleValue())
 				+(certifiedMOSAmount==null?0:certifiedMOSAmount)
 				-(certifiedMainContractorRetention==null?0:certifiedMainContractorRetention.doubleValue())
 				+(certifiedMainContractorRetentionReleased==null?0:certifiedMainContractorRetentionReleased.doubleValue())
@@ -121,7 +123,8 @@ public class MainCert extends BasePersistedObject {
 	public Double calculateAppliedNetAmount(){
 		return 	 (appliedMainContractorAmount==null?0:appliedMainContractorAmount)
 				+(appliedNSCNDSCAmount==null?0:appliedNSCNDSCAmount)
-				+(appliedClaimsVariationAmount==null?0:appliedClaimsVariationAmount.doubleValue())
+				+(appliedClaimsAmount==null?0:appliedClaimsAmount.doubleValue())
+				+(appliedVariationAmount==null?0:appliedVariationAmount.doubleValue())
 				+(appliedMOSAmount==null?0:appliedMOSAmount)
 				-(appliedMainContractorRetention==null?0:appliedMainContractorRetention)
 				+(appliedMainContractorRetentionReleased==null?0:appliedMainContractorRetentionReleased)
@@ -140,7 +143,8 @@ public class MainCert extends BasePersistedObject {
 	public Double calculateCertifiedGrossAmount(){
 		return 	 (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
-				+(certifiedClaimsVariationAmount==null?0:certifiedClaimsVariationAmount.doubleValue())
+				+(certifiedClaimsAmount==null?0:certifiedClaimsAmount.doubleValue())
+				+(certifiedVariationAmount==null?0:certifiedVariationAmount.doubleValue())
 				+(certifiedMOSAmount==null?0:certifiedMOSAmount)
 				+(certifiedAdjustmentAmount==null?0:certifiedAdjustmentAmount)
 				+(certifiedAdvancePayment==null?0:certifiedAdvancePayment)
@@ -152,7 +156,8 @@ public class MainCert extends BasePersistedObject {
 	public Double calculateAppliedGrossAmount(){
 		return 	 (appliedMainContractorAmount==null?0:appliedMainContractorAmount)
 				+(appliedNSCNDSCAmount==null?0:appliedNSCNDSCAmount)
-				+(appliedClaimsVariationAmount==null?0:appliedClaimsVariationAmount.doubleValue())
+				+(appliedClaimsAmount==null?0:appliedClaimsAmount.doubleValue())
+				+(appliedVariationAmount==null?0:appliedVariationAmount.doubleValue())
 				+(appliedMOSAmount==null?0:appliedMOSAmount)
 				+(appliedAdjustmentAmount==null?0:appliedAdjustmentAmount)
 				+(appliedAdvancePayment==null?0:appliedAdvancePayment)
@@ -164,7 +169,8 @@ public class MainCert extends BasePersistedObject {
 		result += ("\"mainCertificateNumber\": "+getCertificateNumber()+",");
 		result += ("\"appliedMainContractorAmount\": " +getAppliedMainContractorAmount()+",");
 		result += ("\"appliedNSCNDSCAmount\": " +getAppliedNSCNDSCAmount()+",");
-		result += ("\"appliedClaimsVariationAmount\": " +getAppliedClaimsVariationAmount()+",");
+		result += ("\"appliedClaimsAmount\": " +getAppliedClaimsAmount()+",");
+		result += ("\"appliedVariationAmount\": " +getAppliedVariationAmount()+",");
 		result += ("\"appliedMOSAmount\": " +getAppliedMOSAmount()+",");
 		result += ("\"appliedMainContractorRetention\": " +getAppliedMainContractorRetention()+",");
 		result += ("\"appliedMainContractorRetentionReleased\": " +getAppliedMainContractorRetentionReleased()+",");
@@ -178,7 +184,8 @@ public class MainCert extends BasePersistedObject {
 		result += ("\"appliedCPFAmount\": " +getAppliedCPFAmount()+",");
 		result += ("\"certifiedMainContractorAmount\": " +getCertifiedMainContractorAmount()+",");
 		result += ("\"certifiedNSCNDSCAmount\": " +getCertifiedNSCNDSCAmount()+",");
-		result += ("\"certifiedClaimsVariationAmount\": " +getCertifiedClaimsVariationAmount()+",");
+		result += ("\"certifiedClaimsAmount\": " +getCertifiedClaimsAmount()+",");
+		result += ("\"certifiedVariationAmount\": " +getCertifiedVariationAmount()+",");
 		result += ("\"certifiedMOSAmount\": " +getCertifiedMOSAmount()+",");
 		result += ("\"certifiedMainContractorRetention\": " +getCertifiedMainContractorRetention()+",");
 		result += ("\"certifiedMainContractorRetentionReleased\": " +getCertifiedMainContractorRetentionReleased()+",");
@@ -575,20 +582,38 @@ public class MainCert extends BasePersistedObject {
 		this.totalReceiptAmount = totalReceiptAmount;
 	}
 	@Column(name = "APPLIED_CLAIMS_VO_AMOUNT")
-	public BigDecimal getAppliedClaimsVariationAmount() {
-		return appliedClaimsVariationAmount;
+	public BigDecimal getAppliedClaimsAmount() {
+		return appliedClaimsAmount;
 	}
 
-	public void setAppliedClaimsVariationAmount(BigDecimal appliedClaimsVariationAmount) {
-		this.appliedClaimsVariationAmount = appliedClaimsVariationAmount;
+	public void setAppliedClaimsAmount(BigDecimal appliedClaimsAmount) {
+		this.appliedClaimsAmount = appliedClaimsAmount;
 	}
 	@Column(name = "CERTIFIED_CLAIMS_VO_AMOUNT")
-	public BigDecimal getCertifiedClaimsVariationAmount() {
-		return certifiedClaimsVariationAmount;
+	public BigDecimal getCertifiedClaimsAmount() {
+		return certifiedClaimsAmount;
 	}
 
-	public void setCertifiedClaimsVariationAmount(BigDecimal certifiedClaimsVariationAmount) {
-		this.certifiedClaimsVariationAmount = certifiedClaimsVariationAmount;
+	public void setCertifiedClaimsAmount(BigDecimal certifiedClaimsAmount) {
+		this.certifiedClaimsAmount = certifiedClaimsAmount;
+	}
+
+	@Column(name = "APPLIED_VARIATION_AMOUNT")
+	public BigDecimal getAppliedVariationAmount() {
+		return appliedVariationAmount;
+	}
+
+	public void setAppliedVariationAmount(BigDecimal appliedVariationAmount) {
+		this.appliedVariationAmount = appliedVariationAmount;
+	}
+
+	@Column(name = "CERTIFIED_VARIATION_AMOUNT")
+	public BigDecimal getCertifiedVariationAmount() {
+		return certifiedVariationAmount;
+	}
+
+	public void setCertifiedVariationAmount(BigDecimal certifiedVariationAmount) {
+		this.certifiedVariationAmount = certifiedVariationAmount;
 	}
 
 	public static String getCertStatusDescription(String certStatus){

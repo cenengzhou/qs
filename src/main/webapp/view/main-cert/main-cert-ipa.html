@@ -24,7 +24,7 @@
 							currency}}</div> -->
 										<div class="widget-stat-number">
 											{{cert.appliedMainContractorAmount +
-											cert.appliedNSCNDSCAmount + cert.appliedClaimsVariationAmount+
+											cert.appliedNSCNDSCAmount + cert.appliedClaimsAmount+ cert.appliedVariationAmount+
 											cert.appliedMOSAmount +
 											cert.appliedMainContractorRetentionReleased +
 											cert.appliedRetentionforNSCNDSCReleased +
@@ -45,7 +45,7 @@
 										<div class="widget-stat-title">IPA Gross Amount</div>
 										<div class="widget-stat-number">
 											{{cert.appliedMainContractorAmount +
-											cert.appliedNSCNDSCAmount + cert.appliedClaimsVariationAmount+
+											cert.appliedNSCNDSCAmount + cert.appliedClaimsAmount+ cert.appliedVariationAmount+
 											cert.appliedMOSAmount +
 											cert.appliedAdvancePayment + cert.appliedAdjustmentAmount +
 											cert.appliedCPFAmount | currency}}</div>
@@ -110,13 +110,23 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-7 control-label">+ Claims and Variation
-												Amount</label>
+											<label class="col-md-7 control-label">+ Claims Amount</label>
 											<div class="col-md-5">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
-														ng-model="cert.appliedClaimsVariationAmount"
+														ng-model="cert.appliedClaimsAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-md-7 control-label">+ Variation Amount</label>
+											<div class="col-md-5">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="true"
+														class="form-control input-sm text-right"
+														ng-model="cert.appliedVariationAmount"
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
