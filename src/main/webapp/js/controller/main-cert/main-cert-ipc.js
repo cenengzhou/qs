@@ -9,7 +9,31 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 	$scope.previousGSTReceivable = 0;
 	$scope.previousGSTPayable = 0;
 
-	
+	$scope.prevCert = null;
+	$scope.certMovement = {
+		certifiedMainContractorAmount : 0,
+		certifiedNSCNDSCAmount : 0,
+		certifiedClaimsAmount : 0,
+		certifiedVariationAmount : 0,
+		certifiedMOSAmount : 0,
+		certifiedMainContractorRetentionReleased : 0,
+		certifiedRetentionforNSCNDSCReleased : 0,
+		certifiedMOSRetentionReleased : 0,
+		certifiedAdjustmentAmount : 0,
+		certifiedAdvancePayment : 0,
+		certifiedCPFAmount : 0,
+		certifiedMainContractorRetention : 0,
+		certifiedRetentionforNSCNDSC : 0,
+		certifiedMOSRetention : 0,
+		certifiedContraChargeAmount : 0
+	};
+	$scope.isMovementColumnShown = false;
+
+	$scope.getLabelCss = isMovementColumnShown => mainCertService.getLabelCss(isMovementColumnShown);
+	$scope.getCertColCss = isMovementColumnShown => mainCertService.getCertColCss(isMovementColumnShown);
+	$scope.getMvmtColCss = isMovementColumnShown => mainCertService.getMvmtColCss(isMovementColumnShown);
+
+
 	$scope.mainCertNo = $cookies.get("mainCertNo");
 
 
@@ -17,7 +41,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 		getCertificate($scope.mainCertNo);
 	}
 	else
-		getLatestMainCert();		
+		getLatestMainCert();
 
 	//Save Function
 	$scope.save = function () {
@@ -33,27 +57,39 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 		updateCertificate();
 	};
 
-	$scope.editContraCharge = function() {
+	$scope.editContraCharge = function(mode) {
 		if(!$scope.fieldChanged){
 			
 			if($scope.cert.id == null || $scope.cert.id.length == 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please save the current main contract certificate first.");
 				return;
 			}
-			
-			modalService.open('lg', 'view/main-cert/modal/contra-charge-modal.html', 'ContraChargeModalCtrl');
+
+			if (mode == 'view')
+				modalService.open('lg', 'view/main-cert/modal/contra-charge-modal.html', 'ContraChargeModalCtrl', 'view');
+			else
+				modalService.open('lg', 'view/main-cert/modal/contra-charge-modal.html', 'ContraChargeModalCtrl');
+
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
 		}
 	}
+
 	
 	$scope.$watch('cert', function(newValue, oldValue) {
 		if(oldValue != null){
 			$scope.fieldChanged = true;
+			if ($scope.isMovementColumnShown)
+				$scope.certMovement = mainCertService.calculateMovement($scope.certMovement, $scope.cert, $scope.prevCert, 'certified')
 		}
 
 	}, true);
 
+	$scope.$watch('certMovement', function(newValue, oldValue) {
+	   if (oldValue != null && $scope.isMovementColumnShown) {
+		   $scope.cert = mainCertService.calculateCertFromMovement($scope.cert, $scope.prevCert, $scope.certMovement)
+	   }
+	}, true);
 
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
 		if($scope.fieldChanged){
@@ -88,6 +124,9 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 						mainCertService.getCertificate($scope.jobNo, mainCertNo - 1)
 						.then(
 								function( data ) {
+									$scope.prevCert = data;
+									$scope.certMovement = mainCertService.calculateMovement($scope.certMovement, $scope.cert, $scope.prevCert, 'certified')
+									$scope.isMovementColumnShown = true
 									$scope.previousCertNetAmount = data.certNetAmount;
 									$scope.previousGSTReceivable = data.gstReceivable;
 									$scope.previousGSTPayable = data.gstPayable;
@@ -332,8 +371,22 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 						}
 						
 					}
-
-				});
+					return $scope.cert.certificateNumber
+				})
+			.then(function(certNo) {
+				if (certNo > 1) {
+					mainCertService.getCertificate($scope.jobNo, certNo - 1)
+						.then(function (data) {
+							$scope.prevCert = data;
+						})
+						.then(function() {
+							if ($scope.cert && $scope.prevCert) {
+								$scope.certMovement = mainCertService.calculateMovement($scope.certMovement, $scope.cert, $scope.prevCert, 'certified')
+								$scope.isMovementColumnShown = true
+							}
+						})
+				}
+			});
 	}
 	
 	$scope.convertCertStatus = function(status){

@@ -41,14 +41,14 @@
 
 		<div class="col-md-3 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-danger"
-				ng-click="addData()">
+				ng-click="addData()" ng-show="editable">
 				<i class="fa fa-plus-circle"></i> <small>Add</small>
 			</button>
 		</div>
 
 		<div class="col-md-3 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-success"
-				ng-click="deleteData()">
+				ng-click="deleteData()" ng-show="editable">
 				<i class="fa fa-remove"></i> <small>Delete</small>
 			</button>
 		</div>
@@ -65,7 +65,7 @@
 
 <div class="modal-footer">
 	<button class="btn btn-primary btn-block" type="button"
-		ng-click="save()" ng-disabled = "disableButtons">
+		ng-click="save()" ng-disabled="disableButtons" ng-show="editable">
 		<span class="fa fa-save"></span> Update
 	</button>
 </div>

@@ -1,7 +1,12 @@
-<div class=" m-b-0">
+<style>
+	.main-cert-ipa .gross-amount-row { font-weight: 400; }
+	.main-cert-ipa .net-amount-row { font-weight: 400; }
+	.main-cert-ipa .input-group { width: 100%; }
+</style>
+<div class="main-cert-ipa m-b-0">
 	
 	<!-- <p class="text-purple-light">
-		<span class="icofont icofont-emo-angry icofont-2x"></span> Attention!
+		<span class="icofont icofont-e	mo-angry icofont-2x"></span> Attention!
 		You will <u>NOT</u> be able to adjust the BQ Items and Resources after
 		completing the Transit.
 	</p> -->
@@ -80,13 +85,13 @@
 								<div class="panel-body">
 									<div class="col-md-8">
 										<div class="form-group">
-											<label class="col-md-7 "></label> <label
-												class="text-light-blue col-md-5">IPA</label>
+											<label ng-class="getLabelCss(isMovementColumnShown)"></label>
+											<label class="text-light-blue" ng-class="getCertColCss(isMovementColumnShown)">IPA</label>
+											<label class="text-light-blue" ng-class="getMvmtColCss(isMovementColumnShown)">Movement</label>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">Main Contractor
-												Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">Main Contractor Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<!-- <span class="input-group-addon">$</span> -->
 													<input type="text" class="form-control input-sm text-right"
@@ -96,11 +101,20 @@
 													<!-- <span class="input-group-addon">.00</span> -->
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<!-- <span class="input-group--addon">$</span> -->
+													<input type="text" class="form-control input-sm text-right"
+														ng-currency ng-required="isMovementColumnShown"
+														ng-model="certMovement.appliedMainContractorAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+													<!-- <span class="input-group-addon">.00</span> -->
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ NSC / NDSC
-												Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ NSC / NDSC Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -108,10 +122,19 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency
+														   ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedNSCNDSCAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Claims Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Claims Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -119,10 +142,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedClaimsAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Variation Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Variation Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -130,10 +161,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedVariationAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ MOS Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ MOS Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -141,47 +180,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Main
-												Contractor Retention Released</label>
-											<div class="col-md-5">
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
 												<div class="input-group">
-													<input type="text" ng-currency ng-required="true"
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
 														class="form-control input-sm text-right"
-														ng-model="cert.appliedMainContractorRetentionReleased"
+														ng-model="certMovement.appliedMOSAmount"
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Retention for
-												NSC / NDSC Released</label>
-											<div class="col-md-5">
-												<div class="input-group">
-													<input type="text" ng-currency ng-required="true"
-														class="form-control input-sm text-right"
-														ng-model="cert.appliedRetentionforNSCNDSCReleased"
-														ng-disabled="disableButtons || cert.certificateStatus >= 120">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ MOS Retention
-												Released</label>
-											<div class="col-md-5">
-												<div class="input-group">
-													<input type="text" ng-currency ng-required="true"
-														class="form-control input-sm text-right"
-														ng-model="cert.appliedMOSRetentionReleased"
-														ng-disabled="disableButtons || cert.certificateStatus >= 120">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Adjustment
-												Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Adjustment Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -189,11 +199,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedAdjustmentAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ Advance
-												Payment</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Advance Payment</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -201,10 +218,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedAdvancePayment"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label">+ CPF Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ CPF Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -212,11 +237,99 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedCPFAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label text-red">- Main
-												Contractor Retention</label>
-											<div class="col-md-5">
+										<div class="main-cert-row gross-amount-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-right">Gross Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)" class="text-right">
+												{{cert.appliedMainContractorAmount
+											+ cert.appliedNSCNDSCAmount
+											+ cert.appliedClaimsAmount
+											+ cert.appliedVariationAmount
+											+ cert.appliedMOSAmount
+											+ cert.appliedAdvancePayment
+											+ cert.appliedAdjustmentAmount
+											+ cert.appliedCPFAmount | currency}}
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)" class="text-right">
+												{{certMovement.appliedMainContractorAmount
+											+ certMovement.appliedNSCNDSCAmount
+											+ certMovement.appliedClaimsAmount
+											+ certMovement.appliedVariationAmount
+											+ certMovement.appliedMOSAmount
+											+ certMovement.appliedAdvancePayment
+											+ certMovement.appliedAdjustmentAmount
+											+ certMovement.appliedCPFAmount | currency}}
+											</div>
+										</div>
+
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Main Contractor Retention Released</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="true"
+														   class="form-control input-sm text-right"
+														   ng-model="cert.appliedMainContractorRetentionReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														   class="form-control input-sm text-right"
+														   ng-model="certMovement.appliedMainContractorRetentionReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ Retention for NSC / NDSC Released</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="true"
+														   class="form-control input-sm text-right"
+														   ng-model="cert.appliedRetentionforNSCNDSCReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														   class="form-control input-sm text-right"
+														   ng-model="certMovement.appliedRetentionforNSCNDSCReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label">+ MOS Retention Released</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="true"
+														   class="form-control input-sm text-right"
+														   ng-model="cert.appliedMOSRetentionReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														   class="form-control input-sm text-right"
+														   ng-model="certMovement.appliedMOSRetentionReleased"
+														   ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-red">- Main Contractor Retention</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text"
 														class="form-control input-sm text-right text-right"
@@ -225,11 +338,19 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text"
+														class="form-control input-sm text-right text-right"
+														ng-currency ng-required="isMovementColumnShown"
+														ng-model="certMovement.appliedMainContractorRetention"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label text-red">-
-												Retention for NSC / NDSC</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-red">- Retention for NSC / NDSC</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -237,11 +358,18 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedRetentionforNSCNDSC"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label text-red">- MOS
-												Retention</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-red">- MOS Retention</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
@@ -249,17 +377,69 @@
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
 											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedMOSRetention"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-7 control-label text-red">-
-												Contra Charge Amount</label>
-											<div class="col-md-5">
+										<div class="main-cert-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-red">- Contra Charge Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)">
 												<div class="input-group">
 													<input type="text" ng-currency ng-required="true"
 														class="form-control input-sm text-right"
 														ng-model="cert.appliedContraChargeAmount"
 														ng-disabled="disableButtons || cert.certificateStatus >= 120">
 												</div>
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)">
+												<div class="input-group">
+													<input type="text" ng-currency ng-required="isMovementColumnShown"
+														class="form-control input-sm text-right"
+														ng-model="certMovement.appliedContraChargeAmount"
+														ng-disabled="disableButtons || cert.certificateStatus >= 120">
+												</div>
+											</div>
+										</div>
+										<div class="main-cert-row net-amount-row row form-group">
+											<label ng-class="getLabelCss(isMovementColumnShown)" class="control-label text-right">Net Amount</label>
+											<div ng-class="getCertColCss(isMovementColumnShown)" class="text-right">
+												{{cert.appliedMainContractorAmount
+											+ cert.appliedNSCNDSCAmount
+											+ cert.appliedClaimsAmount
+											+ cert.appliedVariationAmount
+											+ cert.appliedMOSAmount
+											+ cert.appliedMainContractorRetentionReleased
+											+ cert.appliedRetentionforNSCNDSCReleased
+											+ cert.appliedMOSRetentionReleased
+											+ cert.appliedAdvancePayment
+											+ cert.appliedAdjustmentAmount
+											+ cert.appliedCPFAmount
+											- cert.appliedMainContractorRetention
+											- cert.appliedRetentionforNSCNDSC
+											- cert.appliedMOSRetention
+											- cert.appliedContraChargeAmount | currency}}
+											</div>
+											<div ng-class="getMvmtColCss(isMovementColumnShown)" class="text-right">
+												{{certMovement.appliedMainContractorAmount
+											+ certMovement.appliedNSCNDSCAmount
+											+ certMovement.appliedClaimsAmount
+											+ certMovement.appliedVariationAmount
+											+ certMovement.appliedMOSAmount
+											+ certMovement.appliedMainContractorRetentionReleased
+											+ certMovement.appliedRetentionforNSCNDSCReleased
+											+ certMovement.appliedMOSRetentionReleased
+											+ certMovement.appliedAdvancePayment
+											+ certMovement.appliedAdjustmentAmount
+											+ certMovement.appliedCPFAmount
+											- certMovement.appliedMainContractorRetention
+											- certMovement.appliedRetentionforNSCNDSC
+											- certMovement.appliedMOSRetention
+											- certMovement.appliedContraChargeAmount | currency}}
 											</div>
 										</div>
 									</div>

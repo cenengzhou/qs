@@ -25,10 +25,53 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         updateCertificate: 					updateCertificate,
         updateCertificateByAdmin:			updateCertificateByAdmin,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
-        deleteMainCert:						deleteMainCert
+        deleteMainCert:						deleteMainCert,
+        getLabelCss:						getLabelCss,
+        getCertColCss:						getCertColCss,
+        getMvmtColCss:						getMvmtColCss,
+        calculateMovement:					calculateMovement,
+        calculateCertFromMovement:			calculateCertFromMovement
     });
 	
-    
+    function getLabelCss(isMovementColumnShown) {
+        return {'col-md-6' : isMovementColumnShown, 'col-md-7' : !isMovementColumnShown};
+    }
+
+    function getCertColCss(isMovementColumnShown) {
+        return {'col-md-3' : isMovementColumnShown, 'col-md-5' : !isMovementColumnShown};
+    }
+
+    function getMvmtColCss(isMovementColumnShown) {
+        return {'col-md-3' : isMovementColumnShown, 'hidden' : !isMovementColumnShown};
+    }
+
+    function calculateMovement(certMvmt, currCert, prevCert, filterTerm) {
+        if (!currCert || !prevCert || !certMvmt || !filterTerm)
+            return
+        var result = certMvmt;
+        Object.keys(currCert).filter(x => x.startsWith(filterTerm)).forEach(x => {
+            var currKey = x
+            var currValue = currCert[currKey]
+            var prevKey = x
+            var prevValue = prevCert[prevKey]
+            result[currKey] = currValue - prevValue
+        })
+        return result
+    }
+
+    function calculateCertFromMovement(cert, prevCert, certMvmt) {
+        if (!prevCert || !certMvmt || !cert)
+            return
+        var result = cert
+        Object.keys(certMvmt).forEach(x => {
+            var certMvmtKey = x
+            var certMvmtValue = certMvmt[certMvmtKey]
+            var prevKey = x
+            var prevValue = prevCert[prevKey]
+            result[certMvmtKey] = prevValue + certMvmtValue
+        })
+        return result
+    }
     
     function getCertificateList(noJob) {
     	var request = $http({

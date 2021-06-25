@@ -40,12 +40,12 @@ mainApp.controller('JobClaimKpiCtrl', ['$scope','claimKpiService', '$uibModal', 
 			{
 				type: 'Total',
 				order: 1,
-				description: 'Total',
+				description: 'Notified',
 				numberField: 'numberIssued',
 				amountField: 'amountIssued',
 				numberAlt: 'Number of Claims issued by the Client \\ Client\'s Rep. (Includes requests for Claims)',
 				amountAlt: 'Value of Claims issued by the Client \\ Client\'s Rep based on GCL anticpated Final Account Submission Value',
-				alt: 'Total of all Claims inclusive of Requests for Claims (Budget to be included in “Amount” if pricing is not completed'
+				alt: 'All claims notified to the Client'
 			},
 			{
 				type: 'Submitted',

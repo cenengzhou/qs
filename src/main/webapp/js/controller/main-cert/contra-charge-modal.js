@@ -1,5 +1,5 @@
-mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', '$state', '$timeout',
-                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, $state, $timeout ) {
+mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', '$state', '$timeout', 'modalStatus',
+                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, $state, $timeout, modalStatus ) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.mainCertNo = $cookies.get("mainCertNo");
@@ -8,6 +8,8 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 	$scope.totalCumCCAmount = 0;
 	
 	loadData();
+
+	$scope.editable = (modalStatus != 'view');
 
 	$scope.gridOptions = {
 			enableFiltering: false,
@@ -23,6 +25,7 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 			exporterMenuPdf: false,
 
 			rowEditWaitInterval :-1,
+			enableCellEdit: $scope.editable,
 
 			columnDefs: [
 			             { field: 'id', visible: false},
@@ -35,7 +38,11 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 	            		 { field: 'currentAmount', displayName: "Cumulative Amount", 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+						{ field: 'ivMovement', displayName: "Movement",
+							cellClass: 'text-right', cellFilter: 'number:2',
+							aggregationType: uiGridConstants.aggregationTypes.sum,
+							footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
 	            		 ]
 	};
 
@@ -73,7 +80,11 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 					rowEntity.amount = oldValue;
 				else{
 					rowEntity.currentAmount = roundUtil.round(newValue, 2);
+					rowEntity.ivMovement = roundUtil.round(newValue - rowEntity.previousAmount,2);
 				}
+			} else if (colDef.name == "ivMovement") {
+				rowEntity.currentAmount = roundUtil.round(rowEntity.previousAmount + parseFloat(newValue),2);
+				rowEntity.ivMovement = roundUtil.round(newValue,2);
 			}
 				
 		});
@@ -90,7 +101,9 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 			"objectCode": "",
 			"subsidiary": "",
 			"postAmount": 0,
-			"currentAmount": 0
+			"currentAmount": 0,
+			"previousAmount": 0,
+			"ivMovement": 0
 		});
 	};
 
@@ -143,6 +156,11 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 		mainCertService.getMainCertContraChargeList($scope.jobNo, $scope.mainCertNo)
 		.then(
 				function( data ) {
+					data.forEach(x => {
+						x.previousAmount = x.currentAmount;
+						x.ivMovement = x.currentAmount - x.previousAmount;
+					})
+
 					$scope.gridOptions.data = data;
 					
 					$timeout(function () {
