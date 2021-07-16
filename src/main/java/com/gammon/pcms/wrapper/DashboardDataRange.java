@@ -63,11 +63,11 @@ public class DashboardDataRange implements Serializable{
 	}
 
 	public Date getStartDate() {
-		return this.getStartDate();
+		return this.start;
 	}
 
 	public Date getEndDate() {
-		return this.getEndDate();
+		return this.end;
 	}
 
 	public String getStartDateFormat(String format) {

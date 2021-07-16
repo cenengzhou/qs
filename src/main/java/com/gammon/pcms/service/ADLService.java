@@ -1,7 +1,9 @@
 package com.gammon.pcms.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +181,39 @@ public class ADLService {
 		return result;
 	}
 
+	private List<BigDecimal> packDataListByDashboardDataRange(List<AccountBalanceFigure> list, DashboardDataRange range) {
+		List<BigDecimal> result = new ArrayList<>();
+
+		Date start = new Date(range.getStartDate().getTime());
+		Date end = new Date(range.getEndDate().getTime());
+		BigDecimal lastAmount = new BigDecimal(0);
+
+		// loop through every month from start month to end month
+		for (Date current = start; current.before(end); ) {
+			SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
+			SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+			BigDecimal year = new BigDecimal(yearFormat.format(current));
+			BigDecimal month = new BigDecimal(monthFormat.format(current));
+
+			// find current figure by year and month
+			AccountBalanceFigure currentFigure = list.stream().filter(x -> x.getYear().equals(year) && x.getMonth().equals(month)).findFirst().orElse(null);
+
+			// put amount in data list
+			if (currentFigure != null) {
+				result.add(currentFigure.getAmount());
+				lastAmount = currentFigure.getAmount();
+			} else {
+				result.add(lastAmount);
+			}
+
+			// iterate to next month
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(current);
+			cal.add(Calendar.MONTH, 1);
+			current = cal.getTime();
+		}
+		return result;
+	}
 
 	/**
 	 * Monthly Cash Flow for Job Dash Board
@@ -210,21 +245,24 @@ public class ADLService {
 			contractReceivableWrapper.setStartYear(dashboardDataRange.getStartYear());
 			contractReceivableWrapper.setEndYear(dashboardDataRange.getEndYear());
 			contractReceivableWrapper.setMonthList(dashboardDataRange.toMonthList());
-			contractReceivableWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList(contractReceivableList).stream().map(x -> x.negate()).collect(Collectors.toList())));
+			List<BigDecimal> crDataList = packDataListByDashboardDataRange(contractReceivableList, dashboardDataRange);
+			contractReceivableWrapper.setDetailList(crDataList.stream().map(x -> x.negate()).collect(Collectors.toList()));
 
 			JobDashboardDTO turnoverWrapper = new JobDashboardDTO();
 			turnoverWrapper.setCategory("IV");
 			turnoverWrapper.setStartYear(dashboardDataRange.getStartYear());
 			turnoverWrapper.setEndYear(dashboardDataRange.getEndYear());
 			turnoverWrapper.setMonthList(dashboardDataRange.toMonthList());
-			turnoverWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList((turnoverList))));
+			List<BigDecimal> ivDataList = packDataListByDashboardDataRange(turnoverList, dashboardDataRange);
+			turnoverWrapper.setDetailList(ivDataList);
 
 			JobDashboardDTO actualValueWrapper = new JobDashboardDTO();
 			actualValueWrapper.setCategory("AV");
 			actualValueWrapper.setStartYear(dashboardDataRange.getStartYear());
 			actualValueWrapper.setEndYear(dashboardDataRange.getEndYear());
 			actualValueWrapper.setMonthList(dashboardDataRange.toMonthList());
-			actualValueWrapper.setDetailList(packDataListTo12Months(adaptToDashboardDataList(actualValueList)));
+			List<BigDecimal> avDataList = packDataListByDashboardDataRange(actualValueList, dashboardDataRange);
+			actualValueWrapper.setDetailList(avDataList);
 
 			JobDashboardDTO totalBudgetWrapper = new JobDashboardDTO();
 			totalBudgetWrapper.setCategory("TB");
