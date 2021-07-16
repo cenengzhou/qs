@@ -406,7 +406,7 @@ mainApp.factory('dashboardHelper', ['dateFilter', function(dateFilter) {
 			var year =  new Date().getFullYear();
 			for(var i=0; i < 20; i++){
 				var yearToAdd = year - i;
-				if(i>0 && yearToAdd > 2002){
+				if(yearToAdd > 2002){
 					result.push(yearToAdd);
 				}
 			}
