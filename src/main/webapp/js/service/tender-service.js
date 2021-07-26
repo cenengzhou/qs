@@ -12,11 +12,12 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		updateRecommendedTender:	updateRecommendedTender,
 		deleteTender:				deleteTender,
 		getTenderVarianceList: 	getTenderVarianceList,
-		createTenderVariance:	createTenderVariance
-
+		createTenderVariance:	createTenderVariance,
+		updateTenderAdmin:	updateTenderAdmin,
+		updateTenderDetailListAdmin:  updateTenderDetailListAdmin
 	});
 
-	
+
 	function getTenderDetailList(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "get",
@@ -30,7 +31,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function getTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "get",
@@ -44,7 +45,17 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
+	function updateTenderAdmin(tender) {
+		var request = $http.post('service/tender/updateTenderAdmin', tender);
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function updateTenderDetailListAdmin(tenderDetailList) {
+		var request = $http.post('service/tender/updateTenderDetailListAdmin', tenderDetailList);
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
 	function getRecommendedTender(jobNo, subcontractNo) {
 		var request = $http({
 			method: "get",
@@ -57,7 +68,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function getTenderList(jobNo, subcontractNo) {
 		var request = $http({
 			method: "get",
@@ -70,7 +81,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function getTenderComparisonList(jobNo, subcontractNo) {
 		var request = $http({
 			method: "get",
@@ -83,8 +94,8 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
-	
+
+
 	function getUneditableTADetailIDs(jobNo, subcontractNo, tenderNo) {
 		var request = $http({
 			method: "get",
@@ -98,7 +109,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function createTender(jobNo, subcontractNo, subcontractorNo, subcontractorName) {
 		var request = $http({
 			method: "post",
@@ -109,12 +120,12 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 				subcontractNo: subcontractNo,
 				subcontractorNo: subcontractorNo,
 				subcontractorName: subcontractorName
-				
+
 			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function updateRecommendedTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "post",
@@ -128,7 +139,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate) {
 		var request = $http({
 			method: "post",
@@ -138,9 +149,9 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
 				subcontractorNo: subcontractorNo,
-				currencyCode: currencyCode, 
+				currencyCode: currencyCode,
 				exchangeRate: exchangeRate,
-				remarks: remarks, 
+				remarks: remarks,
 				statusChangeExecutionOfSC: statusChangeExecutionOfSC,
 				validate: validate
 			},
@@ -149,7 +160,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	
+
 	function deleteTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "post",
@@ -177,7 +188,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-	
+
 	function createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList) {
 		var request = $http({
 			method: "post",

@@ -6,7 +6,10 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 		.then(function(){
 			hasRole('QS_SITE_ADM')
 			.then(function(){
+				hasRole('QS_DOC')
+					.then(function(){
 //				gettingAllUser();
+					});
 			});
 		});
 	});

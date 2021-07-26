@@ -242,6 +242,10 @@ public class JobInfoService {
 		}
 		return error;
 	}
+
+	public JobInfo getJobInfo(Long id) throws Exception {
+		return jobHBDao.get(id);
+	}
 	
 	// call web service to get the 6 dates in table F0006
 	public JobDates getJobDates(String jobNumber) throws Exception {
@@ -321,10 +325,10 @@ public class JobInfoService {
 		}
 		logger.info("Job Division:" + job.getDivision() + " " + 
 		currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionGroupOne) + " :" + isAdminInGroupOne);
-		return (isAdminInGroupOne != isJobInGroupOne) 
+		return (isAdminInGroupOne != isJobInGroupOne)
 					 || "90023".equals(adminJobNo)
-						? "" 
-						: messageConfig.getRevisioSodMessage().replace("{division}", job.getDivision());
+				? ""
+				: messageConfig.getRevisioSodMessage().replace("{division}", job.getDivision());
 	}
 
 	private Boolean isJobInDivision(JobInfo job, List<String> divsions){

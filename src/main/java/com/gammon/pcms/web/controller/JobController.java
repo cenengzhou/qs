@@ -7,11 +7,14 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.gammon.pcms.application.User;
+import com.gammon.qs.service.security.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +40,8 @@ public class JobController {
 	private JobInfoService jobService;
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private SecurityService securityService;
 	
 	@JsonView(JobInfoView.NameAndDescription.class)
 	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
@@ -84,12 +89,26 @@ public class JobController {
 		jobDates = jobService.getJobDates(jobNo);
 		return jobDates;
 	}
+
+	private boolean validateParentCompanyGuarantee(JobInfo job) throws Exception {
+		User currentUser = securityService.getCurrentUser();
+		JobInfo prevJobInfo = jobService.getJobInfo(job.getId());
+		String current = job.getIsParentCompanyGuarantee() == null ? "" : job.getIsParentCompanyGuarantee();
+		String prev = prevJobInfo.getIsParentCompanyGuarantee() == null? "" : prevJobInfo.getIsParentCompanyGuarantee();
+		boolean isUpdated = !current.equals(prev);
+		boolean isLegal = currentUser.hasRole("ROLE_QS_DOC");
+		if (isUpdated && !isLegal)
+			return false;
+		return true;
+	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "updateJobInfo", method = RequestMethod.POST)
 	public String updateJobInfo(@Valid @RequestBody JobInfo job){
 		String result = null;
 		try {
+			if (!validateParentCompanyGuarantee(job))
+				throw new AccessDeniedException("Access denied");
 			result = jobService.updateJobInfo(job);
 		} catch (Exception e) {
 			result = "Job cannot be updated.";

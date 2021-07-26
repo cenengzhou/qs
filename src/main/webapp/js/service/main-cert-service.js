@@ -49,7 +49,9 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         if (!currCert || !prevCert || !certMvmt || !filterTerm)
             return
         var result = certMvmt;
-        Object.keys(currCert).filter(x => x.startsWith(filterTerm)).forEach(x => {
+        Object.keys(currCert).filter(function(x) {
+            return x.substring(0, filterTerm.length) == filterTerm
+        }).forEach(function(x) {
             var currKey = x
             var currValue = currCert[currKey]
             var prevKey = x
@@ -63,7 +65,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         if (!prevCert || !certMvmt || !cert)
             return
         var result = cert
-        Object.keys(certMvmt).forEach(x => {
+        Object.keys(certMvmt).forEach(function(x) {
             var certMvmtKey = x
             var certMvmtValue = certMvmt[certMvmtKey]
             var prevKey = x

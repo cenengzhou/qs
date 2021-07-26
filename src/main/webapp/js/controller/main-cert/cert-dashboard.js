@@ -84,10 +84,10 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 
 	function setDashboardData(data) {
-		var crData = data.find(x => x.category == 'CR').detailList
-		var ipaData = data.find(x => x.category == 'IPA').detailList
-		var ipcData = data.find(x => x.category == 'IPC').detailList
-		var chartLabels = data[0].monthList
+		var crData = data.find(function(x) { return (x.category == 'CR')}).detailList;
+		var ipaData = data.find(function(x) { return (x.category == 'IPA')}).detailList;
+		var ipcData = data.find(function(x) { return (x.category == 'IPC')}).detailList;
+		var chartLabels = data[0].monthList;
 
 		$scope.contractReceivable = crData[crData.length-1];
 		$scope.ipa = ipaData[ipaData.length-1];

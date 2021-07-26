@@ -1589,9 +1589,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [  'js/service/job-service.js?@PROJECT_VERSION@',  
                		 	   'js/service/subcontract-service.js?@PROJECT_VERSION@',
+               		 	   'js/service/tender-service.js?@PROJECT_VERSION@',
                	           'js/service/main-cert-service.js?@PROJECT_VERSION@',
                	           'js/service/payment-service.js?@PROJECT_VERSION@',
                	           'js/service/transit-service.js?@PROJECT_VERSION@',
+               	           'js/service/forecast-service.js?@PROJECT_VERSION@',
                	           'js/service/addendum-service.js?@PROJECT_VERSION@',
                	           'js/service/resource-summary-service.js?@PROJECT_VERSION@',
                	           'js/service/system-service.js?@PROJECT_VERSION@',
@@ -1616,12 +1618,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-SystemInformation.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-AnnouncementSetting.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-Transit.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-Tender.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-TenderDetail.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-MonthlyMovement.js?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Subcontract.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Addendum.html?@PROJECT_VERSION@',
 													 'view/admin/admin-Revisions-MainCert.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@'
-                    ] 
+													 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-Tender.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-TenderDetail.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@'
+                    ]
                 });
             }]
         },
@@ -1698,6 +1706,21 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/Transit',
 		templateUrl: 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsTransitCtrl'
+	})
+	.state('admin.Revisions.Tender', {
+		url: '/Tender',
+		templateUrl: 'view/admin/admin-Revisions-Tender.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsTenderCtrl'
+	})
+	.state('admin.Revisions.TenderDetail', {
+		url: '/TenderDetail',
+		templateUrl: 'view/admin/admin-Revisions-TenderDetail.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsTenderDetailCtrl'
+	})
+	.state('admin.Revisions.MonthlyMovement', {
+		url: '/MonthlyMovement',
+		templateUrl: 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsMonthlyMovementCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',

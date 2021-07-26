@@ -227,7 +227,18 @@ public class TenderService implements Serializable {
 		}
 		return error;
 	}
-	
+
+	public String updateTenderAdmin(Tender tender) {
+		Tender tenderInDB = tenderDao.get(tender.getId());
+		if(tenderInDB == null)
+			return "Tender not found in database";
+		tenderDao.merge(tender);
+		return null;
+	}
+
+	public void updateTenderDetailAdmin(TenderDetail tenderDetail) throws Exception {
+		tenderDetailDao.saveOrUpdate(tenderDetail);
+	}
 		
 	public String updateTenderAnalysisDetails(String jobNo, String packageNo,
 			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String statusChangeExecutionOfSC,

@@ -29,9 +29,9 @@ mainApp.controller('IPACtrl', ['$scope', 'mainCertService', '$cookies', '$stateP
 	};
 	$scope.isMovementColumnShown = false;
 
-	$scope.getLabelCss = isMovementColumnShown => mainCertService.getLabelCss(isMovementColumnShown);
-	$scope.getCertColCss = isMovementColumnShown => mainCertService.getCertColCss(isMovementColumnShown);
-	$scope.getMvmtColCss = isMovementColumnShown => mainCertService.getMvmtColCss(isMovementColumnShown);
+	$scope.getLabelCss = function(isMovementColumnShown) { return mainCertService.getLabelCss(isMovementColumnShown) }
+	$scope.getCertColCss = function(isMovementColumnShown) { return mainCertService.getCertColCss(isMovementColumnShown) }
+	$scope.getMvmtColCss = function(isMovementColumnShown) { return mainCertService.getMvmtColCss(isMovementColumnShown) }
 
 	$scope.mainCertNo = $cookies.get("mainCertNo");
 

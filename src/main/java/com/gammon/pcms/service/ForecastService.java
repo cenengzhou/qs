@@ -107,6 +107,11 @@ public class ForecastService {
 		
 		return wrapper;
 	}
+
+	public List<Forecast> getForecastList(String jobNo, int year, int month, String forecastFlag) {
+		List<Forecast> result = repository.getByPeriod(jobNo, year, month, forecastFlag);
+		return result;
+	}
 	
 	public ForecastListWrapper getForecastByJobNo(String jobNo, int year, int month) {
 		ForecastListWrapper wrapper  = new ForecastListWrapper();
@@ -355,6 +360,12 @@ public class ForecastService {
 		return result;
 		
 	}
+
+	public void updateForecastAdmin(Forecast forecast) throws Exception {
+		Forecast save = repository.save(forecast);
+		return;
+	}
+
 	public List<Forecast> saveList(String jobNo, List<Forecast> forecastList) {
 		return repository.save(forecastList);
 	}

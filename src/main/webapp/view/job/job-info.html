@@ -235,7 +235,7 @@
 										<div class="input-group col-md-12">
 
 											<textarea class="form-control"
-													style="overflow: hidden; box-sizing: border-box;height=auto;"
+													style="overflow: hidden; box-sizing: border-box;height:auto;"
 													ng-model="job.projectFullDescription"></textarea>
 										</div>
 									</div>
@@ -989,7 +989,25 @@
 								</div>
 							</div>
 						</div>
-					</div>	
+					</div>
+
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Parent Company Guarantee</label>
+								<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>Is Parent Company Guaranteed?</label>
+										<select class="form-control"
+												ng-model="parentCompanyGuaranteeOptions.selected"
+												ng-options="o.value as o.name for o in parentCompanyGuaranteeOptions"
+												ng-disabled="disableFields || !roles['has_QS_DOC']"
+												required></select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 	</div>
 	</div>

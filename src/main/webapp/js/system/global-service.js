@@ -457,7 +457,9 @@ mainApp.factory('dashboardHelper', ['dateFilter', function(dateFilter) {
 			while (currentDate <= endDate) {
 				var y = currentDate.getFullYear()%100
 				var m = currentDate.getMonth()+1
-				var e = dataList.find(x => x.year == y && x.month == m)
+				var e = dataList.find(function(x) {
+					return (x.year == y && x.month == m)
+				})
 				result.push(e ? e.amount : null)
 				currentDate.setMonth(currentDate.getMonth()+1)
 			}

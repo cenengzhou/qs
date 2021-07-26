@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.gammon.qs.service.JobInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,15 +29,19 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.TenderService;
 
+import org.apache.log4j.Logger;
+
 @RestController
 @RequestMapping(value = "service/tender/")
 public class TenderController {
-//	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private TenderService tenderService;
 	@Autowired
 	private TenderVarianceService tenderVarianceService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderDetailList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTenderDetailList", method = RequestMethod.GET)
@@ -137,6 +143,49 @@ public class TenderController {
 										@Valid @RequestBody List<TenderDetail> taDetails) throws Exception{
 		String result = "";
 		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate);
+		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('TenderController','updateTenderDetailAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateTenderDetailAdmin", method = RequestMethod.POST)
+	public void updateTenderDetailAdmin(@RequestBody TenderDetail tenderDetail) throws Exception {
+		if((tenderDetail).getId() == null) throw new IllegalArgumentException("Invalid Tender Detail");
+		String result = jobInfoService.canAdminJob(tenderDetail.getTender().getJobNo());
+		if(StringUtils.isEmpty(result)){
+			tenderService.updateTenderDetailAdmin(tenderDetail);
+		} else {
+			throw new IllegalAccessException(result);
+		}
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('TenderController','updateTenderDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateTenderDetailListAdmin", method = RequestMethod.POST)
+	public void updateTenderDetailListAdmin(@RequestBody List<TenderDetail> tenderDetailList) throws Exception {
+		String jobNumber = tenderDetailList.get(0).getTender().getJobNo();
+		String result = jobInfoService.canAdminJob(jobNumber);
+		if(StringUtils.isEmpty(result)){
+			tenderDetailList.forEach(tenderDetail -> {
+				try {
+					updateTenderDetailAdmin(tenderDetail);
+				} catch (Exception e) {
+					logger.error("error", e);
+				}
+			});
+		} else {
+			throw new IllegalAccessException(result);
+		}
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('TenderController','updateTenderAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateTenderAdmin", method = RequestMethod.POST)
+	public String updateTenderAdmin(@RequestBody Tender tender) throws Exception {
+		if(tender.getId() == null) throw new IllegalArgumentException("Invalid Tender");
+		String result = jobInfoService.canAdminJob(tender.getJobNo());
+		if(StringUtils.isEmpty(result)){
+			result = tenderService.updateTenderAdmin(tender);
+		} else {
+			throw new IllegalAccessException(result);
+		}
 		return result;
 	}
 	

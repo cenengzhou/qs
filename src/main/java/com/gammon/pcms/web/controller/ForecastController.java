@@ -2,6 +2,9 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
+import com.gammon.qs.service.JobInfoService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +23,12 @@ import com.gammon.pcms.wrapper.ForecastWrapper;
 @RestController
 @RequestMapping(value = "service/forecast/")
 public class ForecastController {
+	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private ForecastService service;
+	@Autowired
+	private JobInfoService jobInfoService;
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','getLatestForecastPeriod', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestForecastPeriod/{jobNo}", method = RequestMethod.GET)
@@ -41,7 +47,13 @@ public class ForecastController {
 	public ForecastListWrapper getForecastByJobNo(@PathVariable String jobNo, @PathVariable int year, @PathVariable int month) {
 		return service.getForecastByJobNo(jobNo, year, month);
 	}
-	
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','getForecastList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getForecastList/{jobNo}/{year}/{month}/{forecastFlag}", method = RequestMethod.GET)
+	public List<Forecast> getForecastList(@PathVariable String jobNo, @PathVariable int year, @PathVariable int month, @PathVariable String forecastFlag) {
+		return service.getForecastList(jobNo, year, month, forecastFlag);
+	}
+
 	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','getLatestCriticalProgramList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestCriticalProgramList/{jobNo}", method = RequestMethod.GET)
 	public List<Forecast> getLatestCriticalProgramList(@PathVariable String jobNo) {
@@ -82,6 +94,36 @@ public class ForecastController {
 	@RequestMapping(value = "updateCriticalProgramDesc", method = RequestMethod.POST)
 	public String updateCriticalProgramDesc(@RequestBody Forecast program) {
 		return service.updateCriticalProgramDesc(program);
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','updateForecastAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateForecastAdmin", method = RequestMethod.POST)
+	public void updateForecastAdmin(@RequestBody Forecast forecast) throws Exception {
+		if((forecast).getId() == null) throw new IllegalArgumentException("Invalid Forecast");
+		String result = jobInfoService.canAdminJob(forecast.getNoJob());
+		if(StringUtils.isEmpty(result)){
+			service.updateForecastAdmin(forecast);
+		} else {
+			throw new IllegalAccessException(result);
+		}
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','updateForecastListAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateForecastListAdmin", method = RequestMethod.POST)
+	public void updateForecastListAdmin(@RequestBody List<Forecast> forecastList) throws Exception {
+		String jobNumber = forecastList.get(0).getNoJob();
+		String result = jobInfoService.canAdminJob(jobNumber);
+		if(StringUtils.isEmpty(result)){
+			forecastList.forEach(forecast -> {
+				try {
+					updateForecastAdmin(forecast);
+				} catch (Exception e) {
+					logger.error("error", e);
+				}
+			});
+		} else {
+			throw new IllegalAccessException(result);
+		}
 	}
 	
 	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','delete', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")

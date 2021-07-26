@@ -4,10 +4,12 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
     	getLatestForecastPeriod: getLatestForecastPeriod,
     	getByTypeDesc:		getByTypeDesc,
     	getForecastByJobNo: getForecastByJobNo,
+    	getForecastList: getForecastList,
     	getLatestCriticalProgramList: getLatestCriticalProgramList,
     	getCriticalProgramRFList: getCriticalProgramRFList,
     	addCriticalProgram: addCriticalProgram,
     	updateCriticalProgramDesc: updateCriticalProgramDesc,
+		updateForecastListAdmin: updateForecastListAdmin,
     	saveByJobNo: 	saveByJobNo,
     	saveForecastByJobNo: saveForecastByJobNo,
 			deleteByJobNo:	deleteByJobNo,
@@ -45,6 +47,14 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
+
+    function getForecastList(jobNo, year, month, forecastFlag) {
+		var request = $http({
+			method: 'GET',
+			url: "service/forecast/getForecastList/" + jobNo + "/" + year + "/" + month + "/" + forecastFlag
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
     
     
     function getLatestCriticalProgramList(jobNo) {
@@ -102,23 +112,28 @@ mainApp.service('forecastService', ['$http', '$q', '$log', 'GlobalHelper',  func
 		});
 		return request;
     }
-    
-    
-    function deleteByJobNo(jobNo, id) {
+
+    function updateForecastListAdmin(forecastList) {
+		var request = $http.post('service/forecast/updateForecastListAdmin', forecastList);
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+
+	function deleteByJobNo(jobNo, id) {
 		var request = $http({
 			method: "delete",
 			url: "service/forecast/" + jobNo + "/" + id
 		});
-		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-		}
-		
-		function deleteBy(by, forecast) {
-			var request = $http({
-				method: "post",
-				url: "service/forecast/deleteBy/" + by,
-				data: forecast
-			});
-			return request;
-			}
+		return (request.then(GlobalHelper.handleSuccess, GlobalHelper.handleError));
+	}
+
+	function deleteBy(by, forecast) {
+		var request = $http({
+			method: "post",
+			url: "service/forecast/deleteBy/" + by,
+			data: forecast
+		});
+		return request;
+	}
 
 }]);

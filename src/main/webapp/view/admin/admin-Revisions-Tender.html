@@ -1,0 +1,143 @@
+<div>
+    <div class="row well">
+        <form name="RevisionsTenderSearch"
+              ng-submit="onSubmitTenderSearch()" class="form">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
+                       ng-change="canAdminJob(TenderSearch.jobNo)"
+                       id="TenderSearch_jobNo" ng-model="TenderSearch.jobNo">
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control"
+                       placeholder="Subcontract Number:" id="TenderSearch_packageNo"
+                       ng-model="TenderSearch.packageNo">
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control"
+                       placeholder="Vendor Number:" id="TenderSearch_vendorNo"
+                       ng-model="TenderSearch.vendorNo">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-block btn-primary" id="TenderSearch_submit"
+                        ng-disabled="!adminSearchBtn">Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <form name="RevisionsTenderRecord"
+          ng-submit="onSubmitTenderRecord()">
+        <div class="row" style="padding: 20px" ng-show="TenderRecord"
+             ng-show="true || TenderRecord !== undefined">
+            <div class="row" resize ng-style="resizeWithOffset(330)">
+                <fieldset>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_jobNo" class="control-label">Job Number</label>
+                            <div>
+                                <input type="text" class="form-control" id="TenderRecord_jobNo"
+                                       value="{{TenderRecord.jobNo}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_packageNo" class="control-label">Tender Number</label>
+                            <div>
+                                <input type="text" class="form-control" id="TenderRecord_packageNo"
+                                       value="{{TenderRecord.packageNo}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_vendorNo" class="control-label">Vendor Number</label>
+                            <div>
+                                <input type="text" class="form-control" id="TenderRecord_vendorNo"
+                                       ng-model="TenderRecord.vendorNo" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_NAME_SUBCONTRACTOR" class="control-label">Subcontractor
+                                Name</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="TenderRecord_NAME_SUBCONTRACTOR"
+                                       ng-model="TenderRecord.nameSubcontractor">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_DESCRIPTION" class="control-label">Currency Code</label>
+                            <div>
+                                <div class="input-group col-md-12">
+                                    <select class="form-control"
+                                            id="TenderRecord_DESCRIPTION"
+                                            ng-model="TenderRecord.currencyCode"
+                                            ng-options="o as o for o in currencyCode.options" required></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_EXCHANGERATE" class="control-label">Exchange Rate</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="TenderRecord_EXCHANGERATE"
+                                       ng-model="TenderRecord.exchangeRate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_BUDGETAMOUNT" class="control-label">Budget Amount</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="TenderRecord_BUDGETAMOUNT"
+                                       ng-model="TenderRecord.budgetAmount">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_AMTBUYGAINLOSS" class="control-label">Gain/ Loss</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="TenderRecord_AMTBUYGAINLOSS"
+                                       ng-model="TenderRecord.amtBuyingGainLoss">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="TenderRecord_REMARKS" class="control-label">Remarks</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="TenderRecord_REMARKS"
+                                       ng-model="TenderRecord.remarks">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="row"
+                 ng-show="true || TenderRecord.jobInfo.jobNo !== undefined">
+                <button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary"
+                        ng-disabled="!adminSearchBtn">Update
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

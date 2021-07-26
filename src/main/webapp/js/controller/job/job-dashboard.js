@@ -59,10 +59,10 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
  
     
     function setDashboardData(data) {
-    	var crData = data.find(x => x.category == 'CR').detailList
-    	var ivData = data.find(x => x.category == 'IV').detailList
-    	var avData = data.find(x => x.category == 'AV').detailList
-    	var tbData = data.find(x => x.category == 'TB').detailList
+    	var crData = data.find(function(x) {return (x.category == 'CR')}).detailList;
+    	var ivData = data.find(function(x) {return (x.category == 'IV')}).detailList;
+    	var avData = data.find(function(x) {return (x.category == 'AV')}).detailList;
+    	var tbData = data.find(function(x) {return (x.category == 'TB')}).detailList;
     	var chartLabels = data[0].monthList
 
 		$scope.contractReceivable = crData[crData.length-1];

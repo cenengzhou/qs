@@ -1,7 +1,15 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', 'subcontractService', '$timeout',
-                                   function($scope, jobService, modalService, $sce,$state, GlobalParameter, rootscopeService, subcontractService, $timeout) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', 'subcontractService', '$timeout', '$rootScope',
+                                   function($scope, jobService, modalService, $sce,$state, GlobalParameter, rootscopeService, subcontractService, $timeout, $rootScope) {
 	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
+
+	$scope.parentCompanyGuaranteeOptions = [
+		{ name: '', value: null},
+		{ name: 'Yes', value: 'Y'},
+		{ name: 'No', value: 'N'}
+	];
+	$scope.parentCompanyGuaranteeOptions.selected = $scope.parentCompanyGuaranteeOptions[0].value;
+
 	loadJobInfo();
 	
 	function loadJobInfo() {
@@ -29,6 +37,9 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 						$scope.job.provision = true;
 					else
 						$scope.job.provision = false;
+
+					if (data.isParentCompanyGuarantee)
+						$scope.parentCompanyGuaranteeOptions.selected = data.isParentCompanyGuarantee;
 					
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
@@ -145,6 +156,8 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			$scope.job.provision = "Y";
 		else
 			$scope.job.provision = "N";
+
+		$scope.job.isParentCompanyGuarantee = $scope.parentCompanyGuaranteeOptions.selected;
 		
 		updateJobInfoAndDates($scope.job, $scope.jobDates)
 		

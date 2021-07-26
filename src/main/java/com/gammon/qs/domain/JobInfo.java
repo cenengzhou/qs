@@ -205,6 +205,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Integer paymentTermFromClient;
 	
 	private String provision = "Y";
+
+	private String isParentCompanyGuarantee;
 	
 	
 	public JobInfo() {}
@@ -1201,6 +1203,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public void setProvision(String provision) {
 		this.provision = provision;
 	}
+
+	@Column(name = "IS_PARENT_COMPANY_GUARANTEE")
+	public String getIsParentCompanyGuarantee() { return isParentCompanyGuarantee; }
+	public void setIsParentCompanyGuarantee(String isParentCompanyGuarantee) { this.isParentCompanyGuarantee = isParentCompanyGuarantee; }
 	
 	@Override
 	public String toString() {

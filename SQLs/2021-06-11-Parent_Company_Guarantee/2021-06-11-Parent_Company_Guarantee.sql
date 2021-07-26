@@ -1,0 +1,6 @@
+alter table JOB_INFO
+    add IS_PARENT_COMPANY_GUARANTEE VARCHAR2(1 char)
+/
+alter table JOB_INFO_AUDIT
+    add IS_PARENT_COMPANY_GUARANTEE VARCHAR2(1 char)
+/

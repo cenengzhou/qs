@@ -156,7 +156,7 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 		mainCertService.getMainCertContraChargeList($scope.jobNo, $scope.mainCertNo)
 		.then(
 				function( data ) {
-					data.forEach(x => {
+					data.forEach(function(x) {
 						x.previousAmount = x.currentAmount;
 						x.ivMovement = x.currentAmount - x.previousAmount;
 					})
