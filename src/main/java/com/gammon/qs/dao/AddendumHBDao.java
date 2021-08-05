@@ -11,10 +11,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.RecoverableSummary;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -64,6 +66,24 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 		criteria.setProjection(Projections.sum("amtAddendum"));
 		
 		return criteria.uniqueResult() == null ? 0.0 : ((BigDecimal)criteria.uniqueResult()).doubleValue();
+	}
+
+	@SuppressWarnings("unchecked")
+	public RecoverableSummary getSumOfRecoverableAmount(String noJob, String noSubcontract, Long startAddendumNo, Long endAddendumNo) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noJob", noJob));
+		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.ge("no", startAddendumNo));
+		criteria.add(Restrictions.le("no", endAddendumNo));
+
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.sum("recoverableAmount"), "recoverableAmount")
+				.add(Projections.sum("nonRecoverableAmount"), "nonRecoverableAmount"));
+
+		criteria.setResultTransformer(Transformers.aliasToBean(RecoverableSummary.class));
+		List<RecoverableSummary> results = criteria.list();
+		RecoverableSummary result = results.get(0);
+		return result;
 	}
 
 	

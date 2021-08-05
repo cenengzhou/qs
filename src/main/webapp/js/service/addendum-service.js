@@ -8,6 +8,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	getAddendumDetailHeader:			getAddendumDetailHeader,
     	getAddendumDetailsByHeaderRef:		getAddendumDetailsByHeaderRef,
     	getAllAddendumDetails:				getAllAddendumDetails,
+    	getForm2Summary:		            getForm2Summary,
     	getAddendumDetailsWithoutHeaderRef:	getAddendumDetailsWithoutHeaderRef,
     	getDefaultValuesForAddendumDetails:	getDefaultValuesForAddendumDetails,
     	createAddendum:						createAddendum,
@@ -16,6 +17,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	deleteAddendumDetailHeader:			deleteAddendumDetailHeader,
     	addAddendumDetail:					addAddendumDetail,
     	addAddendumFromResourceSummaries: 	addAddendumFromResourceSummaries,
+        addAddendumFromResourceSummaryAndAddendumDetail:    addAddendumFromResourceSummaryAndAddendumDetail,
     	updateAddendumDetail:				updateAddendumDetail,
     	updateAddendumDetailList:			updateAddendumDetailList,
     	deleteAddendumDetail:				deleteAddendumDetail,
@@ -110,6 +112,20 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
             	jobNo: jobNo,
             	subcontractNo: subcontractNo,
             	addendumNo: addendumNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function getForm2Summary(jobNo, subcontractNo, addendumNo) {
+        var request = $http({
+            method: "get",
+            url: "service/addendum/getForm2Summary",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                addendumNo: addendumNo
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
@@ -211,23 +227,42 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+
     function addAddendumFromResourceSummaries(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummaryList) {
         var request = $http({
             method: "post",
             url: "service/addendum/addAddendumFromResourceSummaries",
             dataType: "application/json;charset=UTF-8",
             params: {
-            	jobNo: jobNo,
-            	subcontractNo: subcontractNo,
-            	addendumNo: addendumNo,
-            	addendumDetailHeaderRef: addendumDetailHeaderRef
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                addendumNo: addendumNo,
+                addendumDetailHeaderRef: addendumDetailHeaderRef
             },
             data: resourceSummaryList
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+
+    function addAddendumFromResourceSummaryAndAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummary, addendumDetail) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/addAddendumFromResourceSummaryAndAddendumDetail",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                addendumNo: addendumNo,
+                addendumDetailHeaderRef: addendumDetailHeaderRef
+            },
+            data: {
+                resourceSummary: resourceSummary,
+                addendumDetail: addendumDetail
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
 
     function updateAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail) {
         var request = $http({

@@ -1,0 +1,267 @@
+<style>
+.project-info-section {
+
+}
+.project-info-row {
+
+}
+.project-info-column {
+
+}
+.project-info-cell {
+
+}
+.project-info-editcell {
+	border-bottom: 1px solid black;
+	min-height: 20px;
+}
+.project-info-section .project-info-row .project-info-column label {
+	font-weight: bold;
+	font-size: 12px;
+}
+.addendum-form2-v2 .addendum-form2-table tr td:first-child {
+	text-align: center;
+}
+.addendum-form2-v2 .addendum-form2-table tr td {
+
+}
+.addendum-form2-v2 .addendum-form2-table tfoot {
+	font-weight: bold;
+}
+.addendum-form2-v2 .approval-section div {
+	font-weight: bold;
+}
+.addendum-form2-v2 .note-section {
+	padding: 20px;
+}
+.addendum-form2-v2 .note-section div {
+	/*font-weight: bold;*/
+}
+.addendum-form2-v2 .remark-section {
+	background-color: #d8d8d8;
+	padding: 20px;
+}
+</style>
+<div class="invoice addendum-form2-v2" ng-hide="false">
+	<div class="invoice-logo m-l-5 pull-right">
+		<div class="table-border">
+			<h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
+		</div>
+	</div>
+	<div class="invoice-logo">
+		<img src="image/gammon.bmp" class="logo" style="width: 128px" />
+	</div>
+	<div class="row">
+		<div class="col-md-12 m-t-10">
+			<label class="pull-right"><b>PDS/08/Form 2</b></label>
+		</div>
+		<div class="col-md-12">
+			<span class="pull-right hidden-print"> <a href="javascript:;"
+					onclick="window.print()" id="printBtn"
+					class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+						<i class="fa fa-print m-r-3"></i> Print
+				</a>
+				</span>
+		</div>
+	</div>
+
+	<h6 class= "invoice-title invoice-underline" align="center">Sub-Contract Addendum</h6>
+
+	<div class="project-info-section">
+		<div class="row project-info-row">
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Project No\ Name: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell">{{jobNo}} - {{jobDescription}}</span>
+			</div>
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Sub-Contract Addendum No.: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell">{{addendumNo}} - {{addendum.title}}</span>
+			</div>
+		</div>
+		<div class="row project-info-row">
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Sub-Contract No. \ Sub-Contractor: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell">{{subcontractNo}} - {{addendum.nameSubcontractor}}</span>
+			</div>
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Latest 1FC \ 2FC EoJ Liability.: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell"></span>
+			</div>
+		</div>
+		<div class="row project-info-row">
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Sub-Contract Package Description: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell" style="border-bottom: 1px solid black">{{subcontract.description}}</span>
+			</div>
+			<div class="col-md-6 col-print-6 project-info-column">
+				<span class="col-md-4 col-print-4 project-info-cell"><label>Latest Rolling Forecast EoJ Liability: </label></span>
+				<span class="col-md-8 col-print-8 project-info-editcell" style="border-bottom: 1px solid black"></span>
+			</div>
+		</div>
+	</div>
+
+	<table class="table table-border m-t-15 addendum-form2-table">
+		<thead>
+			<tr>
+				<th class="t-header width-150">Item</th>
+				<th class="t-header">Description</th>
+				<th class="t-header width-100">Recoverable</th>
+				<th class="t-header width-100">Non-Recoverable</th>
+				<th class="t-header width-250">Total Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="row1">
+				<td class="column1 first-column">A</td>
+				<td class="column1">Original Sub-Contract Sum at Award</td>
+				<td class="column1 text-right">{{summary.originalRecoverable | currency}}</td>
+				<td class="column1 text-right">{{summary.originalNonRecoverable | currency}}</td>
+				<td class="column1 text-right">{{summary.originalTotal | currency}}</td>
+			</tr>
+			<tr class="row1">
+				<td class="column1 first-column">B</td>
+				<td class="column1">Previous Subcontract Addenda</td>
+				<td class="column1 text-right">{{summary.prevRecoverable | currency}}</td>
+				<td class="column1 text-right">{{summary.prevNonRecoverable | currency}}</td>
+				<td class="column1 text-right">{{summary.prevTotal | currency}}</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="column1 t-footer first-column">C</td>
+				<td class="column1 t-footer">EoJ Sub-Contract Liability prior to this Sub-Contract Addendum (A + B)</td>
+				<td class="column1 t-footer text-right">{{summary.eojRecoverable | currency}}</td>
+				<td class="column1 t-footer text-right">{{summary.eojNonRecoverable | currency}}</td>
+				<td class="column1 t-footer text-right">{{summary.eojTotal | currency}}</td>
+			</tr>
+		</tfoot>
+	</table>
+
+	<table class="table table-border m-t-15 addendum-form2-table">
+		<thead>
+			<tr>
+				<th class="t-header" style="width: 75px">Type</th>
+				<th class="t-header" style="width: 75px">Ref</th>
+				<th class="t-header">Description & Explanation of change</th>
+				<th class="t-header width-100">Recoverable</th>
+				<th class="t-header width-100">Non-Recoverable</th>
+				<th class="t-header width-150">Total Amount</th>
+				<th class="t-header width-100">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="row1" ng-repeat="addendumDetail in summary.addendumDetailWrapperList">
+				<td class="column1 first-column">{{addendumDetail.typeVo}}</td>
+				<td class="column1 first-column">{{addendumDetail.remarks}}</td>
+				<td class="column1">{{addendumDetail.description}}</td>
+				<td class="column1 text-right">
+					<span ng-if="addendumDetail.typeRecoverable == 'R'">{{addendumDetail.amtAddendum | currency}}</span>
+				</td>
+				<td class="column1 text-right">
+					<span ng-if="addendumDetail.typeRecoverable == 'NR'">{{addendumDetail.amtAddendum | currency}}</span>
+				</td>
+				<td class="column1 text-right">
+					<ng-switch on="addendumDetail.typeAction">
+						<span ng-switch-when="UPDATE">
+							{{addendumDetail.amtAddendum | currency}} (Previous Amount: {{addendumDetail.prevAmtAddendum | currency}})
+						</span>
+						<span ng-switch-default>{{addendumDetail.amtAddendum | currency}}</span>
+					</ng-switch>
+				</td>
+				<td class="column1 text-right">{{addendumDetail.typeAction}}</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2" class="column1 t-footer first-column">D</td>
+				<td class="column1 t-footer">Subtotal of this Sub-Contract Addendum</td>
+				<td class="column1 text-right t-footer">{{summary.subtotalRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer">{{summary.subtotalNonRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer" colspan="2">{{summary.subtotalTotal | currency}}</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="column1 t-footer first-column">E</td>
+				<td class="column1 t-footer">
+					<div>Cumulative total of all Sub-Contract Addenda (B + D)</div>
+				</td>
+				<td class="column1 text-right t-footer">{{summary.cumulativeRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer">{{summary.cumulativeNonRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer" colspan="2">
+					<div>{{summary.cumulativeTotal | currency}}</div>
+					<div><i style="font-size: 11px; color: red" ng-if="summary.cumulativePercentage">({{summary.cumulativePercentage | number:0}}% of Original Sub-Contract Sum*)</i></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="column1 t-footer first-column">F</td>
+				<td class="column1 t-footer">Revised Sub-Contract EoJ Liability if this SC Addendum is Approved (A + E)</td>
+				<td class="column1 text-right t-footer">{{summary.revisedRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer">{{summary.revisedNonRecoverable | currency}}</td>
+				<td class="column1 text-right t-footer" colspan="2">{{summary.revisedTotal | currency}}</td>
+			</tr>
+		</tfoot>
+	</table>
+	<div class="m-t-30">
+		<table class="table">
+			<tbody>
+				<tr class="row1">
+					<td class="column1">
+						<div class="m-b-10">Approved by:</div>
+						<div><span class="invoice-underline">__________________________</span></div>
+						<div>Project Commercial Lead</div>
+						<div>Date: <span class="invoice-underline"></span></div>
+					</td>
+					<td class="column1" colspan="2">
+						<div class="m-b-25"></div>
+						<div><span class="invoice-underline">__________________________</span></div>
+						<div>Project in Charge</div>
+						<div>Date: <span class="invoice-underline"></span></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="row note-section m-t-15">
+		<div class="col-md-2 col-print-2">Notes: </div>
+		<div class="col-md-10 col-print-10">
+			* >= 25% of Original Sub-Contract Sum requires approval from Commercial Director (PDS/08/4.2.7)      \      Head Office Sub-Contract Addenda Approvals executed in the ERP Approval System
+		</div>
+	</div>
+	<div class="row hidden-print remark-section m-t-15">
+		<div style="font-weight: bold" class="m-10">Remarks</div>
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>V1</td>
+					<td>Recoverable External Variation and \ or Claims</td>
+				</tr>
+				<tr>
+					<td>V2</td>
+					<td>Internal Variations</td>
+				</tr>
+				<tr>
+					<td>V3</td>
+					<td>Budget Transfer</td>
+				</tr>
+				<tr>
+					<td>C1</td>
+					<td>Contra Charge to others (But not to Sub-Contractors)</td>
+				</tr>
+				<tr>
+					<td>C2</td>
+					<td>Contra Charge to Other Sub-Contractors</td>
+				</tr>
+				<tr>
+					<td>L1</td>
+					<td>Contra Charge from GCL (Not from other sub=contractors)</td>
+				</tr>
+				<tr>
+					<td>L2</td>
+					<td>Contra Charge from Other Sub-Contractors</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	 <button class="btn btn-primary btn-block hidden-print m-t-30" ng-click="submit()" id="submitBtn" ng-hide = "disableButtons" ng-disabled="disableButtons"><span class="fa fa-save"></span> <b>Submit</b></button>
+</div>
+
+<!--<div compile="form2Html"></div>-->

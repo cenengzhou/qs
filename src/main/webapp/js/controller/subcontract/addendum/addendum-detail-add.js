@@ -12,7 +12,18 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	$scope.addendumDetail = [];
 	$scope.units=[];
 	$scope.units.selected = "AM";
-	
+	$scope.optionRecoverables = [{
+		id: 2,
+		label: 'Recoverable',
+		value: 'R'
+	}, {
+		id: 3,
+		label: 'Non-Recoverable',
+		value: 'NR'
+	}];
+
+
+
 	getUnitOfMeasurementList();
 	
 	$scope.lineTypes = {
@@ -27,23 +38,42 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	};
 	$scope.lineType = "V2";
 
-	
+	$scope.isAddResourceSummary = modalStatus == 'ADD_RESOURCE_SUMMARY';
+
 
 	$scope.calculate = function(field){
+		$scope.isAmtDisabled = false;
+		$scope.isQtyDisabled = $scope.disableFields;
+		$scope.isRateDisabled = false;
 		if(field == "totalAmount" && $scope.addendumDetail.amtAddendum != null){
 			if($scope.addendumDetail.amtAddendum.indexOf('.') != $scope.addendumDetail.amtAddendum.length -1){
 				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.amtAddendum, 2);
-				$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
+				if ($scope.isQtyDisabled && $scope.isRateDisabled)
+					return;
+				else if ($scope.isQtyDisabled && !$scope.isRateDisabled)
+					$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 4);
+				else
+					$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
 			}
 		}else if(field == "quantity" && $scope.addendumDetail.quantity != null){
 			if($scope.addendumDetail.quantity.indexOf('.') != $scope.addendumDetail.quantity.length -1){
 				$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.quantity, 4);
-				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+				if ($scope.isAmtDisabled && $scope.isRateDisabled)
+					return;
+				else if ($scope.isAmtDisabled && !$scope.isRateDisabled)
+					$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 4);
+				else
+					$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
 			}
 		}else if (field == "rate" && $scope.addendumDetail.rateAddendum != null){
 			if($scope.addendumDetail.rateAddendum.indexOf('.') != $scope.addendumDetail.rateAddendum.length -1){
 				$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 4);
-				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+				if ($scope.isAmtDisabled && $scope.isQtyDisabled)
+					return;
+				else if ($scope.isAmtDisabled && !$scope.isQtyDisabled)
+					$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4)
+				else
+					$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
 			}
 		}
 	}
@@ -89,14 +119,36 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					remarks:			$scope.addendumDetail.remarks,
 					idHeaderRef:		$scope.addendumDetail.idHeaderRef,
 					typeVo: 			$scope.addendumDetail.typeVo,
-					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
+					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail,
+					typeRecoverable:		$scope.addendumDetail.typeRecoverable
 			}
 			addAddendumDetail(addendumDetailToAdd);
 		}
 		else if(modalStatus == 'UPDATE'){
 			updateAddendumDetail($scope.addendumDetail);
+		} else if (modalStatus == 'ADD_RESOURCE_SUMMARY') {
+			addAddendumFromResourceSummaryAndAddendumDetail(modalParam, $scope.addendumDetail);
 		}
 	};
+
+	function addAddendumFromResourceSummaryAndAddendumDetail(resourceSummary, addendumDetail) {
+		addendumService.addAddendumFromResourceSummaryAndAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummary, addendumDetail)
+			.then(
+				function (data) {
+					if (data.length != 0) {
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
+					} else {
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendums have been created.");
+						$uibModalInstance.close();
+
+						if (addendumDetailHeaderRef == null || addendumDetailHeaderRef.trim().length == 0) {
+							$location.path("/subcontract/addendum/tab/detail-list");
+						} else
+							$state.reload();
+					}
+				});
+	}
 	
 	function addAddendumDetail(addendumDetail){
 		addendumService.addAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
@@ -117,7 +169,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 				});
 	}
 	
-	function updateAddendumDetail(addendumDetail){console.log('UPDATe');
+	function updateAddendumDetail(addendumDetail){
 		addendumService.updateAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
 		.then(
 				function( data ) {
@@ -178,6 +230,21 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			if($scope.addendumDetail.idResourceSummary != null){
 				$scope.disableFields = true;
 			}
+		}
+		else if(modalStatus == 'ADD_RESOURCE_SUMMARY'){
+			$scope.addendumDetail = {
+				"description": modalParam.resourceDescription,
+				"quantity": modalParam.quantity,
+				"rateAddendum": modalParam.rate,
+				"amtAddendum": modalParam.amountBudget,
+				"codeObject": modalParam.objectCode,
+				"codeSubsidiary": modalParam.subsidiaryCode,
+				"unit": modalParam.unit
+			}
+			$scope.lineType = modalParam.typeVo;
+			$scope.disableSelect = true;
+			$scope.disableFields = true;
+
 		}
 		
 	});

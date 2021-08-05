@@ -81,6 +81,7 @@ public class SubcontractDetail extends BasePersistedObject {
 	private String approved = NOT_APPROVED;
 	private String unit;
 	private String remark;
+	private String typeRecoverable;
 	@Deprecated private Double postedCertifiedQuantity = 0.0;
 	@Deprecated private Double cumCertifiedQuantity = 0.0;
 
@@ -365,6 +366,15 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.remark = remark;
 	}
 
+	@Column(name = "TYPE_RECOVERABLE")
+	public String getTypeRecoverable() {
+		return typeRecoverable;
+	}
+
+	public void setTypeRecoverable(String typeRecoverable) {
+		this.typeRecoverable = typeRecoverable;
+	}
+
 	@Deprecated
 	@Column(name = "postedCertQty")
 	public Double getPostedCertifiedQuantity() {
@@ -498,6 +508,7 @@ public class SubcontractDetail extends BasePersistedObject {
 		result = prime * result + ((amountPostedCert == null) ? 0 : amountPostedCert.hashCode());
 		result = prime * result + ((amountSubcontract == null) ? 0 : amountSubcontract.hashCode());
 		result = prime * result + ((amountSubcontractNew == null) ? 0 : amountSubcontractNew.hashCode());
+		result = prime * result + ((typeRecoverable == null) ? 0 : typeRecoverable.hashCode());
 		result = prime * result + ((approved == null) ? 0 : approved.hashCode());
 		result = prime * result + ((balanceType == null) ? 0 : balanceType.hashCode());
 		result = prime * result + ((billItem == null) ? 0 : billItem.hashCode());

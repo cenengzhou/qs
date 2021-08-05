@@ -165,6 +165,9 @@ public class Subcontract extends BasePersistedObject {
 	private BigDecimal totalMOSPostedCertAmount;
 	private BigDecimal totalAPPostedCertAmount;
 
+	private BigDecimal totalRecoverableAmount;
+	private BigDecimal totalNonRecoverableAmount;
+
 	// Dates
 	private Date requisitionApprovedDate;
 	private Date tenderAnalysisApprovedDate;
@@ -891,6 +894,24 @@ public class Subcontract extends BasePersistedObject {
 	public void setTotalAPPostedCertAmount(BigDecimal totalAPPostedCertAmount) {
 		this.totalAPPostedCertAmount = totalAPPostedCertAmount;
 	}
+
+	@Column(name = "TOTAL_RECOVERABLE_AMOUNT", precision = 19, scale = 2)
+	public BigDecimal getTotalRecoverableAmount() {
+		return totalRecoverableAmount;
+	}
+
+	public void setTotalRecoverableAmount(BigDecimal totalRecoverableAmount) {
+		this.totalRecoverableAmount = totalRecoverableAmount;
+	}
+
+	@Column(name = "TOTAL_NON_RECOVERABLE_AMOUNT", precision = 19, scale = 2)
+	public BigDecimal getTotalNonRecoverableAmount() {
+		return totalNonRecoverableAmount;
+	}
+
+	public void setTotalNonRecoverableAmount(BigDecimal totalNonRecoverableAmount) {
+		this.totalNonRecoverableAmount = totalNonRecoverableAmount;
+	}
 	
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
@@ -1084,6 +1105,8 @@ public class Subcontract extends BasePersistedObject {
 			", totalCCPostedCertAmount='" + getTotalCCPostedCertAmount() + "'" +
 			", totalMOSPostedCertAmount='" + getTotalMOSPostedCertAmount() + "'" +
 			", totalAPPostedCertAmount='" + getTotalAPPostedCertAmount() + "'" +
+			", totalRecoverableAmount='" + getTotalRecoverableAmount() + "'" +
+			", totalNonRecoverableAmount='" + getTotalNonRecoverableAmount() + "'" +
 			", requisitionApprovedDate='" + getRequisitionApprovedDate() + "'" +
 			", tenderAnalysisApprovedDate='" + getTenderAnalysisApprovedDate() + "'" +
 			", preAwardMeetingDate='" + getPreAwardMeetingDate() + "'" +

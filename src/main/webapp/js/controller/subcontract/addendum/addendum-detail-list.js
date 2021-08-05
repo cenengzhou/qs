@@ -40,8 +40,10 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		            		},
 		            		cellFilter : 'number:2',
 			             },
+						 { field: 'typeRecoverable', displayName:"Recoverable", width:120,
+							 cellTemplate: "<div class='ui-grid-cell-contents'>{{row.entity.typeRecoverable ? row.entity.typeRecoverable == 'R' ? 'Recoverable' : 'Non-Recoverable' : null}}</div>"},
 			             { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'  },
-			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, 
+			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false,
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (row.entity.amtBudget < 0) {

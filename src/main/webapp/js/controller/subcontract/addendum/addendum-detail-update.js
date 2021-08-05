@@ -50,6 +50,8 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 
 			             {field: 'costRate', width: 80, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             {field: 'typeRecoverable', displayName: "Recoverable", width: 120,
+							 cellTemplate: "<div class='ui-grid-cell-contents'>{{row.entity.typeRecoverable ? row.entity.typeRecoverable == 'R' ? 'Recoverable' : 'Non-Recoverable' : null}}</div>"},
 			             {field: 'projectedProvision', width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 			             {field: 'provision', width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 
@@ -102,6 +104,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 					quantity:			dataRows[0].quantity,
 					rateAddendum:		dataRows[0].scRate, 
 					amtAddendum:		dataRows[0].amountSubcontract, 
+					typeRecoverable:	dataRows[0].typeRecoverable,
 					rateBudget: 		dataRows[0].costRate,
 					amtBudget: 			dataRows[0].amountBudget,
 					unit:				$scope.unit,

@@ -25,7 +25,7 @@
 								<span class="icon text-primary"><i class="fa fa-star"></i></span>
 							</h3>
 							<p class="m-b-20">Please input the required fields below.</p>
-							<div class="form-group" id="addAddendumStep2LineType">
+							<div class="form-group" id="addAddendumStep2LineType" ng-if="!isAddResourceSummary">
 								<label>Line Type - <strong>{{lineTypes[lineType]}}</strong>
 								</label>
 								<div class="btn-group btn-group-justified">
@@ -63,7 +63,7 @@
 							</div>
 
 							<div class="row" id="addAddendumStep2Details">
-								<div class="col-md-4">
+								<div class="col-md-4" ng-if="!isAddResourceSummary">
 									<div class="form-group">
 										<label>BQ Item</label> 
 										<input type="text"
@@ -108,18 +108,31 @@
 												ng-change="calculate('rate')" 
 												ng-paste="calculate('rate')"
 												ng-model-options="{updateOn: 'blur'}"
+												ng-disabled="isRateDisabled"
 												required />
 									</div>
 								</div>
 
 								<div class="col-md-4">
 									<div class="form-group">
-										<label>Total Amount</label> 
+										<label>Total Amount</label>
 										<input  data-parsley-type="number" class="form-control"
-											ng-model="addendumDetail.amtAddendum" 
+											ng-model="addendumDetail.amtAddendum"
 											ng-change="calculate('totalAmount')"
 											ng-paste="calculate('totalAmount')"
+											ng-disabled="isAmtDisabled"
 											required />
+									</div>
+								</div>
+
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Recoverable</label>
+										<select class="form-control"
+												ng-model="addendumDetail.typeRecoverable"
+												ng-options="o.value as o.label for o in optionRecoverables">
+											<option value=""></option>
+										</select>
 									</div>
 								</div>
 

@@ -2473,6 +2473,8 @@ public class SubcontractService {
 				BigDecimal totalMOSPostedCertAmount = new BigDecimal(0.00);
 				BigDecimal totalRetentionReleasedAmount = new BigDecimal(0.00);
 				BigDecimal totalAPPostedCertAmount = new BigDecimal(0.00);
+				BigDecimal totalRecoverableAmount = new BigDecimal(0.00);
+				BigDecimal totalNonRecoverableAmount = new BigDecimal(0.00);
 				try {
 					scDetails = subcontractDetailHBDao.getSCDetails(subcontract);
 
@@ -2521,6 +2523,13 @@ public class SubcontractService {
 							if (!excludedFromProvisionCalculation){
 								totalPostedCertAmount = totalPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
+							// Calculate Subcontract - Total Recoverable Amount and Total Non-Recoverable Amount
+							String typeRecoverable = scDetail.getTypeRecoverable() != null ? scDetail.getTypeRecoverable() : "";
+							BigDecimal amountSubcontract = CalculationUtil.roundToBigDecimal(scDetail.getAmountSubcontract(), 2);
+							if (typeRecoverable.equals("R"))
+								totalRecoverableAmount = totalRecoverableAmount.add(amountSubcontract);
+							else if (typeRecoverable.equals("NR"))
+								totalNonRecoverableAmount = totalNonRecoverableAmount.add(amountSubcontract);
 
 						}
 					}
@@ -2557,6 +2566,8 @@ public class SubcontractService {
 					subcontract.setTotalMOSPostedCertAmount(totalMOSPostedCertAmount);
 					subcontract.setTotalAPPostedCertAmount(totalAPPostedCertAmount);
 					subcontract.setRetentionReleased(totalRetentionReleasedAmount);
+					subcontract.setTotalRecoverableAmount(totalRecoverableAmount);
+					subcontract.setTotalNonRecoverableAmount(totalNonRecoverableAmount);
 					try {
 						subcontractHBDao.saveOrUpdate(subcontract);
 					} catch (DataAccessException e) {
@@ -3051,7 +3062,9 @@ public class SubcontractService {
 		detail.setQuantity(subcontractDetail.getQuantity());
 
 		detail.setScRate(subcontractDetail.getScRate());
-		
+
+		detail.setTypeRecoverable(subcontractDetail.getTypeRecoverable());
+
 		detail.setAmountBudget(new BigDecimal(0));
 		detail.setAmountSubcontract(new BigDecimal(0));
 		detail.setAmountSubcontractNew(new BigDecimal(0));

@@ -30,8 +30,11 @@
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-primary btn-block" ng-click="save()"
-		ng-hide="disableButtons" ng-disabled="disableButtons">
-		Add <span class="fa fa-save"></span>
-	</button>
+	<div class="col-md-6">
+		<button class="btn btn-primary btn-block" ng-click="save()" ng-hide="disableButtons" ng-disabled="disableButtons">Add <span class="fa fa-save"></span></button>
+	</div>
+	<div class="col-md-6">
+		<button class="btn btn-success btn-block" ng-click="saveWithDetail()" ng-hide="disableButtons" ng-disabled="disableButtons">Add with Update Detail<span class="fa fa-save"></span></button>
+	</div>
+
 </div>

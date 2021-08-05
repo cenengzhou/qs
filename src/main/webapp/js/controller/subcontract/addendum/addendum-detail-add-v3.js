@@ -43,6 +43,15 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 			             ]
 	};
 
+	$scope.saveWithDetail = function() {
+		var dataRows = $scope.gridApi.selection.getSelectedRows();
+		if(dataRows.length == 0 || dataRows.length > 1){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select 1 row to update addendum.");
+			return;
+		}
+		modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'ADD_RESOURCE_SUMMARY', dataRows[0]);
+	}
+
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		

@@ -10,6 +10,8 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.gammon.pcms.wrapper.Form2SummaryWrapper;
+import com.gammon.pcms.wrapper.ResourceSummaryWrapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -105,6 +107,14 @@ public class AddendumController {
 		List<AddendumDetail> addendumDetailList = null;
 		addendumDetailList = addendumService.getAllAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo));
 		return addendumDetailList;
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAllAddendumDetails', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getForm2Summary", method = RequestMethod.GET)
+	public Form2SummaryWrapper getForm2Summary(@RequestParam(required = true) String jobNo,
+											   @RequestParam(required = true) String subcontractNo,
+											   @RequestParam(required = true) String addendumNo) {
+		return addendumService.getForm2Summary(jobNo, subcontractNo, Long.valueOf(addendumNo));
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getDefaultValuesForAddendumDetails', @securityConfig.getRolePcmsEnq())")
@@ -262,7 +272,28 @@ public class AddendumController {
 										@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
 		try{
-			result = addendumService.addAddendumFromResourceSummaries(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailHeaderRef, resourceSummaryList);
+			result = addendumService.addAddendumFromResourceSummaries(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailHeaderRef, resourceSummaryList, null);
+		}catch(Exception e){
+			result  = "Addendum Detail cannot be created.";
+			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+		}
+		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','addAddendumFromResourceSummaries', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "addAddendumFromResourceSummaryAndAddendumDetail", method = RequestMethod.POST)
+	public String addAddendumFromResourceSummaryAndAddendumDetail(@RequestParam(required = true) String jobNo,
+												   @RequestParam(required = true) String subcontractNo,
+												   @RequestParam(required = true) String addendumNo,
+												   @RequestParam(required = false)BigDecimal addendumDetailHeaderRef,
+												   @RequestBody ResourceSummaryWrapper resourceSummaryWrapper){
+		String result = "";
+		try{
+			ResourceSummary resourceSummary = resourceSummaryWrapper.getResourceSummary();
+			AddendumDetail addendumDetail = resourceSummaryWrapper.getAddendumDetail();
+			result = addendumService.addAddendumFromResourceSummaryAndAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailHeaderRef, resourceSummary, addendumDetail);
 		}catch(Exception e){
 			result  = "Addendum Detail cannot be created.";
 			e.printStackTrace();

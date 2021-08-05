@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.wrapper.Form2SummaryWrapper;
+import com.gammon.qs.service.AddendumService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +141,8 @@ public class HTMLService implements Serializable{
 	private HrUserRepository hrUserRepository;
 	@Autowired
 	private MasterListService masterListService;
+	@Autowired
+	private AddendumService addendumService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -313,10 +317,15 @@ public class HTMLService implements Serializable{
 			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
 
 		Addendum addendum = new Addendum();
-		List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>(); 
+		List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
+
+		Form2SummaryWrapper summary = new Form2SummaryWrapper();
+
 		if(noAddendum !=null){
 			addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
 			addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
+
+			summary = addendumService.getForm2Summary(noJob, noSubcontract, noAddendum);
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -328,7 +337,7 @@ public class HTMLService implements Serializable{
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("addendum", addendum != null ? addendum : new Addendum());
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
-		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());
+		data.put("summary", summary != null ? summary : "");
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 

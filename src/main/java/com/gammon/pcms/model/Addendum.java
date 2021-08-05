@@ -68,6 +68,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private BigDecimal amtAddendumTotalTba = new BigDecimal(0.00);
 	private BigDecimal amtAddendum = new BigDecimal(0.00);
 	private BigDecimal amtSubcontractRevisedTba = new BigDecimal(0.00);
+	private BigDecimal recoverableAmount = new BigDecimal(0.00);
+	private BigDecimal nonRecoverableAmount = new BigDecimal(0.00);
 	private Date dateSubmission;
 	private Date dateApproval;
 	private String status;
@@ -109,6 +111,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 					BigDecimal amtAddendumTotalTba,
 					BigDecimal amtAddendum,
 					BigDecimal amtSubcontractRevisedTba,
+					BigDecimal recoverableAmount,
+					BigDecimal nonRecoverableAmount,
 					Date dateSubmission,
 					Date dateApproval,
 					String status,
@@ -135,6 +139,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtAddendumTotalTba = amtAddendumTotalTba;
 		this.amtAddendum = amtAddendum;
 		this.amtSubcontractRevisedTba = amtSubcontractRevisedTba;
+		this.recoverableAmount = recoverableAmount;
+		this.nonRecoverableAmount = nonRecoverableAmount;
 		this.dateSubmission = dateSubmission;
 		this.dateApproval = dateApproval;
 		this.status = status;
@@ -315,6 +321,24 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtSubcontractRevisedTba = amtSubcontractRevisedTba;
 	}
 
+	@Column(name = "RECOVERABLE_AMOUNT", precision = 19, scale = 2)
+	public BigDecimal getRecoverableAmount() {
+		return this.recoverableAmount;
+	}
+
+	public void setRecoverableAmount(BigDecimal recoverableAmount) {
+		this.recoverableAmount = recoverableAmount;
+	}
+
+	@Column(name = "NON_RECOVERABLE_AMOUNT", precision = 19, scale = 2)
+	public BigDecimal getNonRecoverableAmount() {
+		return this.nonRecoverableAmount;
+	}
+
+	public void setNonRecoverableAmount(BigDecimal nonRecoverableAmount) {
+		this.nonRecoverableAmount = nonRecoverableAmount;
+	}
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DATE_SUBMISSION",
 			length = 7)
@@ -403,6 +427,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		result = prime * result + ((amtSubcontractRemeasured == null) ? 0 : amtSubcontractRemeasured.hashCode());
 		result = prime * result + ((amtSubcontractRevised == null) ? 0 : amtSubcontractRevised.hashCode());
 		result = prime * result + ((amtSubcontractRevisedTba == null) ? 0 : amtSubcontractRevisedTba.hashCode());
+		result = prime * result + ((recoverableAmount == null) ? 0 : recoverableAmount.hashCode());
+		result = prime * result + ((nonRecoverableAmount == null) ? 0 : nonRecoverableAmount.hashCode());
 		result = prime * result + ((dateApproval == null) ? 0 : dateApproval.hashCode());
 		result = prime * result + ((dateSubmission == null) ? 0 : dateSubmission.hashCode());
 		result = prime * result + ((descriptionSubcontract == null) ? 0 : descriptionSubcontract.hashCode());
@@ -460,6 +486,16 @@ public class Addendum extends PcmsPersistedAuditObject {
 			if (other.amtSubcontractRevisedTba != null)
 				return false;
 		} else if (!amtSubcontractRevisedTba.equals(other.amtSubcontractRevisedTba))
+			return false;
+		if (recoverableAmount == null) {
+			if (other.recoverableAmount != null)
+				return false;
+		} else if (!recoverableAmount.equals(other.recoverableAmount))
+			return false;
+		if (nonRecoverableAmount == null) {
+			if (other.nonRecoverableAmount != null)
+				return false;
+		} else if (!nonRecoverableAmount.equals(other.nonRecoverableAmount))
 			return false;
 		if (dateApproval == null) {
 			if (other.dateApproval != null)

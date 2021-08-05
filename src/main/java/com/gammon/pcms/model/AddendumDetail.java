@@ -51,6 +51,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 									DELETE
 	}
 
+	public static enum TYPE_RECOVERABLE { R, NR }
+
 	private BigDecimal id;
 	private Addendum idAddendum;
 	private String noJob;
@@ -75,6 +77,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	private String typeAction; //ADD, UPDATE, DELETE
 	private BigDecimal idResourceSummary;
 	private SubcontractDetail idSubcontractDetail;
+	private String typeRecoverable;
 	
 	public AddendumDetail() {
 	}
@@ -99,11 +102,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.dateCreated = dateCreated;
 	}
 
-	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no,
-			String typeHd, String typeVo, String bpi, String description, BigDecimal quantity, BigDecimal rateAddendum,
-			BigDecimal amtAddendum, BigDecimal rateBudget, BigDecimal amtBudget, 
-			String codeObject, String codeSubsidiary, String unit, String remarks, String usernameCreated,
-			Date dateCreated, String usernameLastModified, Date dateLastModified, BigDecimal idHeaderRef) {
+	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no, String typeHd, String typeVo, String bpi, String description, BigDecimal quantity, BigDecimal rateAddendum, BigDecimal amtAddendum, BigDecimal rateBudget, BigDecimal amtBudget, String codeObject, String codeSubsidiary, String unit, String remarks, BigDecimal idHeaderRef, String codeObjectForDaywork, String noSubcontractChargedRef, String typeAction, BigDecimal idResourceSummary, SubcontractDetail idSubcontractDetail, String typeRecoverable, String usernameCreated, Date dateCreated, String usernameLastModified, Date dateLastModified) {
 		this.id = id;
 		this.idAddendum = idAddendum;
 		this.noJob = noJob;
@@ -122,11 +121,17 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.codeSubsidiary = codeSubsidiary;
 		this.unit = unit;
 		this.remarks = remarks;
+		this.idHeaderRef = idHeaderRef;
+		this.codeObjectForDaywork = codeObjectForDaywork;
+		this.noSubcontractChargedRef = noSubcontractChargedRef;
+		this.typeAction = typeAction;
+		this.idResourceSummary = idResourceSummary;
+		this.idSubcontractDetail = idSubcontractDetail;
+		this.typeRecoverable = typeRecoverable;
 		this.usernameCreated = usernameCreated;
 		this.dateCreated = dateCreated;
 		this.usernameLastModified = usernameLastModified;
 		this.dateLastModified = dateLastModified;
-		this.idHeaderRef = idHeaderRef;
 	}
 
 	@Id
@@ -379,7 +384,17 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.idSubcontractDetail = idSubcontractDetail;
 	}
 
-	
+	@Column(name = "TYPE_RECOVERABLE",
+			length = 10)
+	public String getTypeRecoverable() {
+		return typeRecoverable;
+	}
+
+	public void setTypeRecoverable(String typeRecoverable) {
+		this.typeRecoverable = typeRecoverable;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -390,7 +405,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 				+ ", description=" + description + ", quantity=" + quantity + ", rateAddendum=" + rateAddendum
 				+ ", amtAddendum=" + amtAddendum + ", rateBudget=" + rateBudget + ", amtBudget=" + amtBudget
 				+ ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", unit=" + unit + ", remarks="
-				+ remarks + ", idHeaderRef=" + idHeaderRef + "]";
+				+ remarks + ", idHeaderRef=" + idHeaderRef + ", typeRecoverable=" + typeRecoverable + "]";
 	}
 
 	/*
@@ -403,6 +418,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((amtAddendum == null) ? 0 : amtAddendum.hashCode());
+		result = prime * result + ((typeRecoverable == null) ? 0 : typeRecoverable.hashCode());
 		result = prime * result + ((amtBudget == null) ? 0 : amtBudget.hashCode());
 		result = prime * result + ((bpi == null) ? 0 : bpi.hashCode());
 		result = prime * result + ((codeObject == null) ? 0 : codeObject.hashCode());
@@ -529,6 +545,11 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 			if (other.unit != null)
 				return false;
 		} else if (!unit.equals(other.unit))
+			return false;
+		if (typeRecoverable == null) {
+			if (other.typeRecoverable != null)
+				return false;
+		} else if (!typeRecoverable.equals(other.typeRecoverable))
 			return false;
 		return true;
 	}

@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.RecoverableSummary;
+import com.gammon.pcms.wrapper.AddendumDetailWrapper;
+import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -118,6 +121,58 @@ public class AddendumService{
 	public List<AddendumDetail> getAllAddendumDetails(String jobNo, String subcontractNo, Long addendumNo) {
 		List<AddendumDetail> list = addendumDetailHBDao.getAllAddendumDetails(jobNo, subcontractNo, addendumNo);
 		return list;
+	}
+	private <T> T getValueOrDefault(T value, T defaultValue) {
+		return value == null ? defaultValue : value;
+	}
+
+	public Form2SummaryWrapper getForm2Summary(String jobNo, String subcontractNo, Long addendumNo) {
+		Form2SummaryWrapper w = new Form2SummaryWrapper();
+		try {
+			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
+			RecoverableSummary prevRecoverableSum = addendumHBDao.getSumOfRecoverableAmount(jobNo, subcontractNo, Long.valueOf(1), addendumNo-1);
+			RecoverableSummary subtotalRecoverableSum = addendumHBDao.getSumOfRecoverableAmount(jobNo, subcontractNo, addendumNo, addendumNo);
+
+			BigDecimal originalTotal = addendum.getAmtSubcontractRemeasured();
+			BigDecimal prevRecoverable = getValueOrDefault(prevRecoverableSum.getRecoverableAmount(), new BigDecimal(0));
+			BigDecimal prevNonRecoverable = getValueOrDefault(prevRecoverableSum.getNonRecoverableAmount(), new BigDecimal(0));
+			BigDecimal prevTotal = addendum.getAmtAddendumTotal();
+			BigDecimal subtotalRecoverable = subtotalRecoverableSum.getRecoverableAmount();
+			BigDecimal subtotalNonRecoverable = subtotalRecoverableSum.getNonRecoverableAmount();
+			BigDecimal subtotalTotal = addendum.getAmtAddendum();
+			BigDecimal cumulativeTotal = prevTotal.add(subtotalTotal);
+
+			w.setOriginalTotal(originalTotal);
+			w.setPrevRecoverable(prevRecoverable);
+			w.setPrevNonRecoverable(prevNonRecoverable);
+			w.setPrevTotal(prevTotal);
+			w.setEojTotal(originalTotal.add(prevTotal));
+			w.setSubtotalRecoverable(subtotalRecoverable);
+			w.setSubtotalNonRecoverable(subtotalNonRecoverable);
+			w.setSubtotalTotal(subtotalTotal);
+			w.setCumulativeRecoverable(prevRecoverable.add(subtotalRecoverable));
+			w.setCumulativeNonRecoverable(prevNonRecoverable.add(subtotalNonRecoverable));
+			w.setCumulativeTotal(cumulativeTotal);
+			w.calculateCumulativePercentage();
+			w.setRevisedTotal(originalTotal.add(cumulativeTotal));
+
+			// append previous addendum amount and type recoverable to addendum detail
+			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetails(jobNo,subcontractNo, addendumNo);
+			List<AddendumDetailWrapper> addendumDetailWrapperList = new ArrayList<>();
+			for(AddendumDetail a : addendumDetailList) {
+				AddendumDetailWrapper addendumDetailWrapper = new AddendumDetailWrapper(a);
+				AddendumDetail previousAddendumDetail = addendumDetailHBDao.getPreviousAddendumDetail(a);
+				if (previousAddendumDetail != null) {
+					addendumDetailWrapper.setPrevAmtAddendum(previousAddendumDetail.getAmtAddendum());
+					addendumDetailWrapper.setPrevTypeRecoverable(previousAddendumDetail.getTypeRecoverable());
+				}
+				addendumDetailWrapperList.add(addendumDetailWrapper);
+			}
+			w.setAddendumDetailWrapperList(addendumDetailWrapperList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return w;
 	}
 
 	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(String jobNo, String subcontractNo, Long addendumNo) {
@@ -361,8 +416,14 @@ public class AddendumService{
 		return error;
 	}
 
+	public String addAddendumFromResourceSummaryAndAddendumDetail(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, ResourceSummary resourceSummary, AddendumDetail addendumDetail) throws Exception {
+		List<ResourceSummary> resourceSummaryList = new ArrayList<>();
+		resourceSummaryList.add(resourceSummary);
+		return addAddendumFromResourceSummaries(jobNo, subcontractNo, addendumNo, idHeaderRef, resourceSummaryList, addendumDetail);
+	}
+
 	
-	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) throws Exception {
+	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList, AddendumDetail customAddendumDetail) throws Exception {
 		String error = "";
 
 //		try {
@@ -430,6 +491,13 @@ public class AddendumService{
 				
 				addendumDetail.setAmtBudget(new BigDecimal(resourceSummary.getAmountBudget()));
 				addendumDetail.setRateBudget(new BigDecimal(resourceSummary.getRate()));
+
+				if (customAddendumDetail != null) {
+					addendumDetail.setTypeRecoverable(customAddendumDetail.getTypeRecoverable());
+					addendumDetail.setRemarks(customAddendumDetail.getRemarks());
+					addendumDetail.setAmtAddendum(customAddendumDetail.getAmtAddendum());
+					addendumDetail.setRateAddendum(customAddendumDetail.getRateAddendum());
+				}
 
 				error = addVOValidate(addendumDetail, true);
 				if (error!=null)
@@ -590,6 +658,7 @@ public class AddendumService{
 					addendumDetail.setDescription(subcontractDetail.getDescription());
 					addendumDetail.setQuantity(new BigDecimal(subcontractDetail.getQuantity()));
 					addendumDetail.setRateAddendum(new BigDecimal(subcontractDetail.getScRate()));
+					addendumDetail.setTypeRecoverable(subcontractDetail.getTypeRecoverable());
 					addendumDetail.setAmtAddendum(subcontractDetail.getAmountSubcontract());
 					addendumDetail.setRateBudget(new BigDecimal(subcontractDetail.getCostRate()));
 					addendumDetail.setAmtBudget(subcontractDetail.getAmountBudget());
@@ -619,9 +688,10 @@ public class AddendumService{
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
 			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetails(noJob, noSubcontract, addendumNo);
-			
+
+			// Calculate Addendum Amount
 			BigDecimal addendumAmount = new BigDecimal(0);
-			
+
 			for(AddendumDetail addendumDetail: addendumDetailList){
 				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
 					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum());
@@ -631,11 +701,67 @@ public class AddendumService{
 					addendumAmount = addendumAmount.subtract(addendumDetail.getAmtAddendum());
 				}
 			}
-			
+
+			// Calculate Addendum - Recoverable Amount and Non-Recoverable Amount
+			BigDecimal recoverableAmount = new BigDecimal(0);
+			BigDecimal nonRecoverableAmount = new BigDecimal(0);
+			for(AddendumDetail addendumDetail: addendumDetailList){
+				String typeRecoverable = addendumDetail.getTypeRecoverable() != null ? addendumDetail.getTypeRecoverable() : "";
+				BigDecimal amount = addendumDetail.getAmtAddendum();
+				String typeAction = addendumDetail.getTypeAction();
+
+				if (amount != null) {
+					if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(typeAction)){
+						if (typeRecoverable.equals("R"))
+							recoverableAmount = recoverableAmount.add(amount);
+						else if (typeRecoverable.equals("NR"))
+							nonRecoverableAmount = nonRecoverableAmount.add(amount);
+					}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(typeAction)){
+						AddendumDetail previousAddendumDetail = addendumDetailHBDao.getPreviousAddendumDetail(addendumDetail);
+						String prevTypeRecoverable = previousAddendumDetail.getTypeRecoverable() != null ? previousAddendumDetail.getTypeRecoverable() : "";
+						BigDecimal prevAmount = previousAddendumDetail.getAmtAddendum();
+
+						if (prevTypeRecoverable.equals("R")) {
+							if (typeRecoverable.equals("R"))
+								recoverableAmount = recoverableAmount.add(amount).subtract(prevAmount);
+							else if (typeRecoverable.equals("NR")) {
+								recoverableAmount = recoverableAmount.subtract(prevAmount);
+								nonRecoverableAmount = nonRecoverableAmount.add(amount);
+							} else
+								recoverableAmount = recoverableAmount.subtract(prevAmount);
+						} else if (prevTypeRecoverable.equals("NR")) {
+							if (typeRecoverable.equals("R")) {
+								recoverableAmount = recoverableAmount.add(amount);
+								nonRecoverableAmount = nonRecoverableAmount.subtract(prevAmount);
+							} else if (typeRecoverable.equals("NR")) {
+								nonRecoverableAmount = nonRecoverableAmount.add(amount).subtract(prevAmount);
+							} else {
+								nonRecoverableAmount = nonRecoverableAmount.subtract(prevAmount);
+							}
+						} else {
+							if (typeRecoverable.equals("R")) {
+								recoverableAmount = recoverableAmount.add(amount);
+							} else if (typeRecoverable.equals("NR")) {
+								nonRecoverableAmount = nonRecoverableAmount.add(amount);
+							} else {
+
+							}
+						}
+					}else if(AddendumDetail.TYPE_ACTION.DELETE.toString().equals(typeAction)){
+						if (typeRecoverable.equals("R"))
+							recoverableAmount = recoverableAmount.subtract(amount);
+						else if (typeRecoverable.equals("NR"))
+							nonRecoverableAmount = nonRecoverableAmount.subtract(amount);
+					}
+				}
+			}
+
 			//Update Addendum Amount
 			addendum.setAmtAddendum(addendumAmount);
 			addendum.setAmtAddendumTotalTba(addendum.getAmtAddendumTotal().add(addendumAmount));
 			addendum.setAmtSubcontractRevisedTba(addendum.getAmtSubcontractRevised().add(addendumAmount));
+			addendum.setRecoverableAmount(recoverableAmount);
+			addendum.setNonRecoverableAmount(nonRecoverableAmount);
 			addendumHBDao.update(addendum);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
@@ -957,6 +1083,7 @@ public class AddendumService{
 		scDetailVO.setCostRate(addendumDetail.getRateBudget().doubleValue());
 		scDetailVO.setQuantity(addendumDetail.getQuantity().doubleValue());
 		scDetailVO.setAmountSubcontract(addendumDetail.getAmtAddendum());
+		scDetailVO.setTypeRecoverable(addendumDetail.getTypeRecoverable());
 		scDetailVO.setAmountBudget(addendumDetail.getAmtBudget());
 
 
@@ -1029,6 +1156,7 @@ public class AddendumService{
 			scDetail.setScRate(addendumDetail.getRateAddendum().doubleValue());
 			scDetail.setQuantity(addendumDetail.getQuantity().doubleValue());
 			scDetail.setAmountSubcontract(addendumDetail.getAmtAddendum());
+			scDetail.setTypeRecoverable(addendumDetail.getTypeRecoverable());
 			/**
 			 * @author koeyyeung
 			 * newQuantity should be set as BQ Quantity as initial setup
@@ -1058,6 +1186,7 @@ public class AddendumService{
 					scDetailsCC.setScRate(scDetail.getScRate()*-1);
 					scDetailsCC.setQuantity(scDetail.getQuantity());
 					scDetailsCC.setAmountSubcontract(scDetail.getAmountSubcontract());
+					scDetailsCC.setTypeRecoverable(scDetail.getTypeRecoverable());
 
 					scDetailsCC.setApproved(SubcontractDetail.APPROVED);
 					scDetailsCC.setContraChargeSCNo(addendumDetail.getNoSubcontract());
@@ -1113,6 +1242,21 @@ public class AddendumService{
 		try {
 			subcontract.setApprovedVOAmount(addendum.getAmtAddendumTotalTba());
 			subcontract.setLatestAddendumValueUpdatedDate(new Date());
+
+			// Calculate Subcontract - Total Recoverable Amount and Total Non-Recoverable Amount
+			BigDecimal totalRecoverableAmount = new BigDecimal(0);
+			BigDecimal totalNonRecoverableAmount = new BigDecimal(0);
+			List<SubcontractDetail> scDetails = subcontractDetailHBDao.getSCDetails(subcontract);
+			for (SubcontractDetail scDetail : scDetails) {
+				String typeRecoverable = scDetail.getTypeRecoverable() != null ? scDetail.getTypeRecoverable() : "";
+				BigDecimal amountSubcontract = CalculationUtil.roundToBigDecimal(scDetail.getAmountSubcontract(), 2);
+				if (typeRecoverable.equals("R"))
+					totalRecoverableAmount = totalRecoverableAmount.add(amountSubcontract);
+				else if (typeRecoverable.equals("NR"))
+					totalNonRecoverableAmount = totalNonRecoverableAmount.add(amountSubcontract);
+			}
+			subcontract.setTotalRecoverableAmount(totalRecoverableAmount);
+			subcontract.setTotalNonRecoverableAmount(totalNonRecoverableAmount);
 
 			if(subcontract.getRetentionTerms() == null){
 				subcontract.setRetentionAmount(new BigDecimal(0.00));

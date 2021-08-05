@@ -49,6 +49,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		            		},
 		            		cellFilter : 'number:2',
 			             },
+						 {field: 'typeRecoverable', displayName:"Recoverable", width:120,
+							 cellTemplate: "<div class='ui-grid-cell-contents'>{{row.entity.typeRecoverable ? row.entity.typeRecoverable == 'R' ? 'Recoverable' : 'Non-Recoverable' : null}}</div>"},
 		            	 {field: 'codeObject',  displayName:"Object Code",  width:80 },
 		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:80 },
 		            	 {field: 'noSubcontractChargedRef', displayName:"Corr. Subcontract No.", width:80 },

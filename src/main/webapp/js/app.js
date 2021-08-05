@@ -725,19 +725,19 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract.addendum.form2', {
 		url: "/form2",
-		templateUrl: "view/subcontract/addendum/addendum-form2.html?@PROJECT_VERSION@",
+		templateUrl: "view/subcontract/addendum/addendum-form2-v2.html?@PROJECT_VERSION@",
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/addendum/addendum-form2.js?@PROJECT_VERSION@',
+                           'js/controller/subcontract/addendum/addendum-form2-v2.js?@PROJECT_VERSION@',
                            'js/service/html-service.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]
         },
-		controller: 'AddendumForm2Ctrl'
+		controller: 'AddendumForm2v2Ctrl'
 	})
 	
 	
