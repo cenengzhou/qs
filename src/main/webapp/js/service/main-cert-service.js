@@ -30,7 +30,8 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         getCertColCss:						getCertColCss,
         getMvmtColCss:						getMvmtColCss,
         calculateMovement:					calculateMovement,
-        calculateCertFromMovement:			calculateCertFromMovement
+        calculateCertFromMovement:			calculateCertFromMovement,
+        checkFieldChanged:			checkFieldChanged
     });
 	
     function getLabelCss(isMovementColumnShown) {
@@ -73,6 +74,24 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
             result[certMvmtKey] = prevValue + certMvmtValue
         })
         return result
+    }
+
+    function checkFieldChanged(newCertObj, originalCertObj, filterTerm) {
+        var result = false;
+        Object.keys(originalCertObj)
+            .filter(function (x) {
+                return x.substring(0, filterTerm.length) == filterTerm
+            })
+            .forEach(function (x) {
+                var key = x
+                var value = parseFloat(newCertObj[key]).toFixed(2)
+                var key2 = x
+                var value2 = parseFloat(originalCertObj[key2]).toFixed(2)
+                if (value != value2) {
+                    result = true;
+                }
+            })
+        return result;
     }
     
     function getCertificateList(noJob) {

@@ -75,10 +75,10 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 		}
 	}
 
-	
+
 	$scope.$watch('cert', function(newValue, oldValue) {
 		if(oldValue != null){
-			$scope.fieldChanged = true;
+			$scope.fieldChanged = mainCertService.checkFieldChanged(newValue, $scope.originialCert, 'certified');
 			if ($scope.isMovementColumnShown)
 				$scope.certMovement = mainCertService.calculateMovement($scope.certMovement, $scope.cert, $scope.prevCert, 'certified')
 		}
@@ -113,6 +113,7 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 		.then(
 				function( data ) {
 					$scope.cert = data;
+					$scope.originialCert = angular.copy($scope.cert);
 					if($scope.cert.certificateStatus < 200)
 						$scope.disableButtons = false;
 					else
