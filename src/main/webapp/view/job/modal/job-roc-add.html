@@ -1,0 +1,109 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-11">
+            <h4 class="modal-title">{{ displayMode == 'UPDATE' ? 'Update' : 'Add'}} ROC</h4>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-default pull-right" type="button"
+                    ng-click="cancel()">
+                <span class="fa fa-remove"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal-body bg-gray-light">
+    <div class="animated fadeIn">
+        <form name="form-validate" id="form-validate" class="ng-pristine ng-valid">
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <h3 class="form-header form-header-lg m-b-10">
+                            <span class="icon text-primary"><i class="fa fa-star"></i></span>
+                        </h3>
+                        <p class="m-b-20">Please input the required fields below.</p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Project No</label>
+                                    <input type="text" placeholder="" class="form-control "
+                                           ng-model="roc.projectNo" ng-disabled="true" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Project R&O Ref</label>
+                                    <input type="text" placeholder="" class="form-control "
+                                           ng-model="roc.projectRef"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>ROC Category</label>
+                                    <select class="form-control"
+                                            ng-model="roc.rocCategory"
+                                            ng-options="o as o for o in rocCatOptions" required>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Classification</label>
+                                    <select class="form-control"
+                                            ng-model="roc.classification"
+                                            ng-change="onRocClassSelected(roc.classification)"
+                                            ng-options="o as o for o in rocClassOptions" required>
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Impact</label>
+                                    <select class="form-control"
+                                            ng-model="roc.impact"
+                                            ng-options="o as o for o in impactOptions" required>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="form-control"
+                                            ng-model="roc.status"
+                                            ng-options="o as o for o in statusOptions" required>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-if="rocClassDescription">
+                                <p class="text-red">{{rocClassDescription}}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Description (Max. 300 chars)</label>
+                                    <input type="text" placeholder="" class="form-control "
+                                           ng-model="roc.description" maxlength="300" required/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+        </form>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger btn-block" type="button" ng-if="displayMode == 'ADD'"
+            ng-click="addRoc()" ng-hide="disableButtons" ng-disabled="disableButtons">
+        <span class="fa fa-save"></span> Add
+    </button>
+    <button class="btn btn-success btn-block" type="button" ng-if="displayMode == 'UPDATE'"
+            ng-click="updateRoc()" ng-hide="disableButtons" ng-disabled="disableButtons">
+        <span class="fa fa-save"></span> Update
+    </button>
+</div>

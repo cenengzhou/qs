@@ -54,7 +54,13 @@
 					<i class="icofont icofont-mathematical-alt-2"></i>
 					<span>Monthly Movement</span>
 				</a>
-			</li>	
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="job.roc">
+					<i class="icofont icofont-mathematical-alt-2"></i>
+					<span>ROC</span>
+				</a>
+			</li>
 			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.attachment.first">
 					<i class="fa fa-file"></i>
@@ -64,11 +70,11 @@
 
 			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.accountMaster">
-					<i class="fa fa-plus-circle"></i> 
+					<i class="fa fa-plus-circle"></i>
 					<span>Create Account Code</span>
 				</a>
 			</li>
-			
+
 			<li class="divider has-minify-btn">
                       <!-- begin sidebar minify button -->
                       <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>

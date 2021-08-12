@@ -205,6 +205,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.roc', {
+		url: "/roc",
+		templateUrl: "view/job/job-roc.html?@PROJECT_VERSION@",
+		controller: 'JobRocCtrl',
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/service/roc-service.js?@PROJECT_VERSION@',
+						'js/controller/job/job-roc.js?@PROJECT_VERSION@',
+						'js/controller/job/modal/job-roc-add-modal.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		}
+	})
 	.state('job.attachment', {
 		templateUrl: "view/job/job-attachment.html?@PROJECT_VERSION@",
 	})

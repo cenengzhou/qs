@@ -468,7 +468,7 @@ mainApp.constant('GlobalMessage', {
 	maxCharLimitReached:
 		"You've reached the max. limit of text length!",
 	navigateToAccountLedgerEnquiry:
-		"You are going to navigate to Account Ledger Enquiry, are you usre you want to proceed?",
+		"You are going to navigate to Account Ledger Enquiry, are you sure you want to proceed?",
 	repackagingConfirmEmailSubject:
 		"Request to review and confirm the Repackaging of Job %JOBNO% by %USERNAME%",
 	repackagingConfirmEmailContent:
@@ -476,5 +476,7 @@ mainApp.constant('GlobalMessage', {
 	deleteForecastCP:
 	  "Critical Programme in all months will be removed, are you sure to proceed?",
 	deleteMonthlyMovement:
-	  "Selected monthly movement will be removed, are you sure to proceed?"
+	  "Selected monthly movement will be removed, are you sure to proceed?",
+	leavingUpdatedGrid:
+	  "Your changes will discard after adding new ROC, are you sure to proceed?"
 });
