@@ -19,5 +19,7 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 
 	Long deleteByProjectNoAndId(String projectNo, Long id);
 
+	ROC findByProjectNoAndRocCategoryAndDescription(String projectNo, String rocCategory, String description);
+
 
 }

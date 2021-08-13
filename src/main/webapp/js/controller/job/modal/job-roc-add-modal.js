@@ -13,8 +13,7 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
             $scope.roc = modalParam;
         } else {
             $scope.roc = {
-                projectNo: $scope.jobNo,
-                status: $scope.statusOptions[0]
+                projectNo: $scope.jobNo
             }
         }
 
@@ -79,29 +78,22 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
         }
 
         function initOptions() {
-            rocService.getRocClassDescMap().then(function(data) {
-                $scope.rocClassDescMap = data;
-                $scope.rocClassOptions = $scope.rocClassDescMap.map(function(x) { return x.classification; });
-            })
+            var getRocClassDescMap = rocService.getRocClassDescMap();
+            var getRocCategoryList = rocService.getRocCategoryList();
+            var getImpactList = rocService.getImpactList();
+            var getStatusList = rocService.getStatusList();
 
-            $scope.rocCatOptions = [
-                "Tender Risk",
-                "Tender Opps",
-                "Contingency",
-                "Risk",
-                "Opps"
-            ]
+            $q.all([getRocClassDescMap, getRocCategoryList, getImpactList, getStatusList])
+                .then(function(data) {
+                    $scope.rocClassDescMap = data[0];
+                    $scope.rocClassOptions = $scope.rocClassDescMap.map(function(x) { return x.classification; });
 
-            $scope.impactOptions = [
-                'Increased Cost',
-                'Increased Turnover',
-                'Reduced Cost',
-                'Reduced Turnover'
-            ]
+                    $scope.rocCatOptions = data[1];
+                    $scope.impactOptions = data[2];
+                    $scope.statusOptions = data[3];
 
-            $scope.statusOptions = [
-                'Live',
-                'Closed'
-            ]
+                    $scope.roc.status = $scope.statusOptions[0];
+                });
+
         }
     }]);

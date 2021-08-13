@@ -24,6 +24,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +49,7 @@ public class ROC extends BasePersistedObject {
 	//	ROC Category
 	public static final String TENDER_RISK = "Tender Risk";
 	public static final String TENDER_OPPS = "Tender Opps";
-	public static final String CONTINGENCIES = "Contingencies";
+	public static final String CONTINGENCY = "Contingency";
 	public static final String RISK = "Risk";
 	public static final String OPPS = "Opps";
 
@@ -56,6 +58,10 @@ public class ROC extends BasePersistedObject {
 	public static final String INCREASED_COST= "Increased Cost";
 	public static final String REDUCED_TURNOVER= "Reduced Turnover";
 	public static final String REDUCED_COST= "Reduced Cost";
+
+	// Status
+	public static final String LIVE= "Live";
+	public static final String CLOSED= "Closed";
 
 	private Long id;
 	private String projectNo;
@@ -187,6 +193,38 @@ public class ROC extends BasePersistedObject {
 			e.printStackTrace();
 		}
 		return jsonString;
+	}
+
+	@Transient
+	@JsonIgnore
+	public static List<String> getRocCategoryList() {
+		List<String> rocCategoryList = new ArrayList<>();
+		rocCategoryList.add(TENDER_RISK);
+		rocCategoryList.add(TENDER_OPPS);
+		rocCategoryList.add(CONTINGENCY);
+		rocCategoryList.add(RISK);
+		rocCategoryList.add(OPPS);
+		return rocCategoryList;
+	}
+
+	@Transient
+	@JsonIgnore
+	public static List<String> getImpactList() {
+		List<String> impactList = new ArrayList<>();
+		impactList.add(INCREASED_TURNOVER);
+		impactList.add(INCREASED_COST);
+		impactList.add(REDUCED_TURNOVER);
+		impactList.add(REDUCED_COST);
+		return impactList;
+	}
+
+	@Transient
+	@JsonIgnore
+	public static List<String> getStatusList() {
+		List<String> statusList = new ArrayList<>();
+		statusList.add(LIVE);
+		statusList.add(CLOSED);
+		return statusList;
 	}
 
 

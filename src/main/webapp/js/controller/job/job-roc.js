@@ -83,7 +83,8 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     } else {
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "ROC Details have been updated.");
                         $scope.gridDirtyRows = null;
-                        $state.reload();
+                        $scope.gridApi.rowEdit.setRowsClean(dataRows);
+                        getData($scope.year, $scope.month);
                     }
                 });
         }
@@ -142,8 +143,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             },
 
             columnDefs: [
-                {field: 'id', width: 100, visible: false},
-                {field: 'roc.id', width: 100, visible: false},
+                {field: 'id', displayName: 'ROC Id', width: 100, visible: false},
                 {
                     field: 'rocCategory', displayName: "Category", width: 160, enableCellEdit: false,
                     grouping: {groupPriority: 0}, sort: {priority: 0, direction: 'desc'}
@@ -158,15 +158,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.amountBest',
                     displayName: "Best Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass,
                     enableCellEdit: true
                 },
@@ -174,30 +173,28 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.amountExpected',
                     displayName: "Expected Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass
                 },
                 {
                     field: 'rocDetail.amountWorst',
                     displayName: "Worst Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass
                 },
                 {
@@ -252,15 +249,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.movementBest',
                     displayName: "Movement Best Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass,
                     visible: $scope.showPreviousAndMovementAmount
                 },
@@ -268,15 +264,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.movementExpected',
                     displayName: "Movement Expected Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass,
                     visible: $scope.showPreviousAndMovementAmount
                 },
@@ -284,21 +279,21 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.movementWorst',
                     displayName: "Movement Worst Case",
                     width: 120,
-                    cellClass: 'text-right',
+                    cellClass: 'text-right blue',
                     cellFilter: 'number:2',
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    cellClass: customCellClass,
                     headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
                     footerCellClass: customFooterClass,
                     visible: $scope.showPreviousAndMovementAmount
                 },
                 {
                     field: 'rocDetail.remarks',
                     displayName: "Remarks",
+                    cellClass: 'blue',
                     headerCellClass: 'blue'
                 },
                 {field: 'rocDetail.year', displayName: 'Year', width: 100, visible: false},

@@ -36,6 +36,24 @@ public class RocController {
 		return rocService.getRocClassDescMap();
 	}
 
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocCategoryList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getRocCategoryList", method = RequestMethod.GET)
+	public List<String> getRocCategoryList(){
+		return rocService.getRocCategoryList();
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getImpactList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getImpactList", method = RequestMethod.GET)
+	public List<String> getImpactList(){
+		return rocService.getImpactList();
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getStatusList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getStatusList", method = RequestMethod.GET)
+	public List<String> getStatusList(){
+		return rocService.getStatusList();
+	}
+
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','addRoc', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "addRoc", method = RequestMethod.POST)
 	public String addRoc(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){

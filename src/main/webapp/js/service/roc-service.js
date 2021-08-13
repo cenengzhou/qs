@@ -5,7 +5,10 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		addRoc: addRoc,
 		updateRoc: updateRoc,
 		saveRocDetails: saveRocDetails,
-		getRocClassDescMap: getRocClassDescMap
+		getRocClassDescMap: getRocClassDescMap,
+		getRocCategoryList: getRocCategoryList,
+		getImpactList: getImpactList,
+		getStatusList: getStatusList
     });
 
 	function getRocListSummary(jobNo, year, month) {
@@ -20,6 +23,30 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		var request = $http({
 			method: 'GET',
 			url: "service/roc/getRocClassDescMap"
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function getRocCategoryList() {
+		var request = $http({
+			method: 'GET',
+			url: "service/roc/getRocCategoryList"
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function getImpactList() {
+		var request = $http({
+			method: 'GET',
+			url: "service/roc/getImpactList"
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function getStatusList() {
+		var request = $http({
+			method: 'GET',
+			url: "service/roc/getStatusList"
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}

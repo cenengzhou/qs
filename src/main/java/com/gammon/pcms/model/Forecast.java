@@ -79,6 +79,16 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 	public Forecast() {
 	}
 
+	public Forecast(String noJob, Integer year, Integer month, String forecastFlag, String forecastType, String forecastDesc, BigDecimal amount) {
+		this.noJob = noJob;
+		this.year = year;
+		this.month = month;
+		this.forecastFlag = forecastFlag;
+		this.forecastType = forecastType;
+		this.forecastDesc = forecastDesc;
+		this.amount = amount;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FORECAST_GEN")
 	@Column(name = "ID", unique = true, nullable = false, scale = 0)
