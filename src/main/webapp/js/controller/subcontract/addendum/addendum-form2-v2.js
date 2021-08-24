@@ -101,7 +101,7 @@ mainApp.controller('AddendumForm2v2Ctrl', ['$scope', 'modalService', 'addendumSe
 
         function getForm2Summary(){
             addendumService.getForm2Summary($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
-                .then(data => {
+                .then(function(data) {
                     $scope.summary = data
                 });
         }
