@@ -13,19 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
@@ -39,8 +26,22 @@ import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "service/subcontract/", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
@@ -53,6 +54,9 @@ public class SubcontractController {
 	private JobInfoService jobInfoService;
 	@Autowired
 	private PackageSnapshotGenerationService packageSnapshotGenerationService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractDetailByID', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getSubcontractDetailByID",	method = RequestMethod.GET)
@@ -403,18 +407,21 @@ public class SubcontractController {
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam Date glDate){
 		subcontractService.runProvisionPostingManually(jobNumber, glDate, false);
+		mailContentGenerator.sendAdminFnEmail("runProvisionPostingManually", "jobNumber:" + jobNumber + " glDate:" + glDate);
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','generateSCPackageSnapshotManually', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
 	public void generateSCPackageSnapshotManually(){
 		packageSnapshotGenerationService.generateSCPackageSnapshotManually();
+		mailContentGenerator.sendAdminFnEmail("generateSCPackageSnapshotManually", "");
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateF58001FromSCPackageManually', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateF58001FromSCPackageManually", method = RequestMethod.POST)
 	public void updateF58001FromSCPackageManually(){
 		subcontractService.updateF58001FromSCPackageManually();
+		mailContentGenerator.sendAdminFnEmail("updateF58001FromSCPackageManually", "");
 	}
 
 	
@@ -425,6 +432,7 @@ public class SubcontractController {
 		String result = jobInfoService.canAdminJob(subcontract.getJobInfo().getJobNumber());
 		if(StringUtils.isEmpty(result)){
 			result = subcontractService.updateSubcontractAdmin(subcontract);
+			mailContentGenerator.sendAdminFnEmail("updateSubcontractAdmin", subcontract.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}
@@ -438,6 +446,7 @@ public class SubcontractController {
 		String result = jobInfoService.canAdminJob(subcontractDetail.getJobNo());
 		if(StringUtils.isEmpty(result)){
 			subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
+			mailContentGenerator.sendAdminFnEmail("updateSubcontractDetailAdmin", subcontractDetail.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}

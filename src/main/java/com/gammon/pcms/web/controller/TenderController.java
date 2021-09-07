@@ -12,8 +12,17 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.gammon.pcms.dto.rs.provider.response.ta.TenderComparisonDTO;
+import com.gammon.pcms.model.TenderVariance;
+import com.gammon.pcms.service.TenderVarianceService;
+import com.gammon.qs.domain.Tender;
+import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.TenderService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.gammon.pcms.dto.rs.provider.response.ta.TenderComparisonDTO;
-import com.gammon.pcms.model.TenderVariance;
-import com.gammon.pcms.service.TenderVarianceService;
-import com.gammon.qs.domain.Tender;
-import com.gammon.qs.domain.TenderDetail;
-import com.gammon.qs.service.TenderService;
-
-import org.apache.log4j.Logger;
 
 @RestController
 @RequestMapping(value = "service/tender/")
@@ -42,6 +42,8 @@ public class TenderController {
 	private TenderVarianceService tenderVarianceService;
 	@Autowired
 	private JobInfoService jobInfoService;
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderDetailList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTenderDetailList", method = RequestMethod.GET)
@@ -153,6 +155,7 @@ public class TenderController {
 		String result = jobInfoService.canAdminJob(tenderDetail.getTender().getJobNo());
 		if(StringUtils.isEmpty(result)){
 			tenderService.updateTenderDetailAdmin(tenderDetail);
+			mailContentGenerator.sendAdminFnEmail("updateTenderDetailAdmin", tenderDetail.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}
@@ -183,6 +186,7 @@ public class TenderController {
 		String result = jobInfoService.canAdminJob(tender.getJobNo());
 		if(StringUtils.isEmpty(result)){
 			result = tenderService.updateTenderAdmin(tender);
+			mailContentGenerator.sendAdminFnEmail("updateTenderAdmin", tender.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}
@@ -220,4 +224,3 @@ public class TenderController {
 		return result;
 	}
 }
-

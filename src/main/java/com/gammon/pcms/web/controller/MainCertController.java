@@ -11,19 +11,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertContraCharge;
@@ -32,6 +23,16 @@ import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertContraChargeService;
 import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "service/mainCert/")
@@ -45,6 +46,9 @@ public class MainCertController {
 	private MainCertRetentionReleaseService mainCertRetentionReleaseService;
 	@Autowired
 	private MainCertContraChargeService mainCertContraChargeService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 
 	// ---------------- get ----------------
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','getCertificateList', @securityConfig.getRolePcmsEnq())")
@@ -150,7 +154,9 @@ public class MainCertController {
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateMainCertFromF03B14Manually', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateMainCertFromF03B14Manually", method = RequestMethod.POST)
 	public Boolean updateMainCertFromF03B14Manually(){
-		return mainCertService.updateMainCertFromF03B14Manually();
+		Boolean result = mainCertService.updateMainCertFromF03B14Manually();
+		mailContentGenerator.sendAdminFnEmail("updateMainCertFromF03B14Manually", "");
+		return result;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateCertificateByAdmin', @securityConfig.getRolePcmsQsAdmin())")
@@ -159,6 +165,7 @@ public class MainCertController {
 		String result = jobInfoService.canAdminJob(mainCert.getJobNo());
 		if(StringUtils.isEmpty(result)){
 			result = mainCertService.updateMainContractCert(mainCert);
+			mailContentGenerator.sendAdminFnEmail("updateCertificateByAdmin", mainCert.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}

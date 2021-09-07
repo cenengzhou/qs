@@ -79,7 +79,7 @@ mainApp.controller('AdminRevisionsAddendumDetailCtrl', ['$scope', 'modalService'
 		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
 		if(dataRows.length > 0){
-			addendumService.updateAddendumDetailList(dataRows)
+			addendumService.updateAddendumDetailListAdmin(dataRows)
 			.then(function(data){
 				$scope.gridApi.rowEdit.setRowsClean(dataRows);
 				if(data == ''){

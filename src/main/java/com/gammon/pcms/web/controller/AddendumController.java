@@ -10,8 +10,16 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.gammon.pcms.model.Addendum;
+import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.pcms.wrapper.ResourceSummaryWrapper;
+import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.service.AddendumService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,13 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.gammon.pcms.model.Addendum;
-import com.gammon.pcms.model.AddendumDetail;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.ResourceSummary;
-import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.service.AddendumService;
 
 @RestController
 @RequestMapping(value = "service/addendum/"/*,
@@ -39,6 +40,9 @@ public class AddendumController {
 
 	@Autowired
 	private AddendumService addendumService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getLatestAddendum', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestAddendum", method = RequestMethod.GET)
@@ -142,6 +146,14 @@ public class AddendumController {
 			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
 			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		}
+		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendum', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateAddendumAdmin", method = RequestMethod.POST)
+	public String updateAddendumAdmin(@RequestBody Addendum addendum) {
+		String result = updateAddendum(addendum);
+		mailContentGenerator.sendAdminFnEmail("updateAddendumAdmin", addendum.toString());
 		return result;
 	}
 
@@ -249,6 +261,14 @@ public class AddendumController {
 		return result;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetail', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateAddendumDetailListAdmin", method = RequestMethod.POST)
+	public String updateAddendumDetailListAdmin(@RequestBody List<AddendumDetail> addendumDetailList) {
+		String result = updateAddendumDetailList(addendumDetailList);
+		mailContentGenerator.sendAdminFnEmail("updateAddendumDetailListAdmin", addendumDetailList.toString());
+		return result;
+	}
+		
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetail', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateAddendumDetailList", method = RequestMethod.POST)
 	public String updateAddendumDetailList(@RequestBody List<AddendumDetail> addendumDetailList){

@@ -13,15 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
@@ -31,9 +22,19 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.IVPostingHistService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "service/resourceSummary/")
@@ -47,6 +48,9 @@ public class ResourceSummaryController {
 	private JobInfoService jobInfoService;
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummaries', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
@@ -175,6 +179,7 @@ public class ResourceSummaryController {
 		String result = jobInfoService.canAdminJob(jobNo);
 		if(StringUtils.isEmpty(result)){
 			resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+			mailContentGenerator.sendAdminFnEmail("updateResourceSummariesForAdmin", "jobNo:" + jobNo);
 		} else {
 			throw new IllegalAccessException(result);
 		}

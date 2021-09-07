@@ -191,7 +191,7 @@ mainApp.controller('AdminRevisionsAttachmentCtrl', ['$q', '$scope', '$filter', '
 		rows.forEach(function(row){
 			getTextKey()
 			.then(function(response){
-				attachmentService.deleteAttachment($scope.attachmentSearch.nameObject, response.textKey, parseInt(row.noSequence))
+				attachmentService.deleteAttachmentAdmin($scope.attachmentSearch.nameObject, response.textKey, parseInt(row.noSequence))
 				.then(function(data){
 					onSubmitAttachmentSearch();
 				});

@@ -13,16 +13,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
 import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAddendumApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAwardApprovalRequest;
@@ -61,6 +51,17 @@ import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class APController {
@@ -81,6 +82,8 @@ public class APController {
 	private AttachmentConfig attachmentConfig;
 	@Autowired
 	RestTemplateHelper restTemplateHelper;
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 
 	private RestTemplate restTemplate;
 
@@ -116,14 +119,27 @@ public class APController {
 	public CompleteAwardApprovalResponse completeAwardApproval(	HttpServletRequest request,
 															@PathVariable String jobNumber,
 															@PathVariable String packageNo,
-															@PathVariable String approvalDecision) {
+			@PathVariable String approvalDecision) {
 		CompleteAwardApprovalRequest requestObj = new CompleteAwardApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		CompleteAwardApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAwardApproval", requestObj, CompleteAwardApprovalResponse.class);
+		CompleteAwardApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":"
+				+ request.getServerPort() + request.getContextPath() + "/ws/completeAwardApproval", requestObj,
+				CompleteAwardApprovalResponse.class);
 		return responseObj;
+	}
+
+	@RequestMapping(path = {"service/ap/completeAwardApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}"},  method = RequestMethod.GET)
+	public CompleteAwardApprovalResponse completeAwardApprovalAdmin(	HttpServletRequest request,
+										@PathVariable String jobNumber,
+										@PathVariable String packageNo,
+			@PathVariable String approvalDecision) {
+		CompleteAwardApprovalResponse response = completeAwardApproval(request, jobNumber, packageNo, approvalDecision);
+		mailContentGenerator.sendAdminFnEmail("completeAwardApprovalAdmin",
+				jobNumber + "-" + packageNo + "-" + approvalDecision);
+		return response;
 	}
 
 	/**
@@ -159,15 +175,29 @@ public class APController {
 																@PathVariable String jobNumber,
 																@PathVariable String packageNo,
 																@PathVariable String user,
-																@PathVariable String approvalDecision) {
+			@PathVariable String approvalDecision) {
 		CompleteAddendumApprovalRequest requestObj = new CompleteAddendumApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setUser(user);
 		requestObj.setApprovalDecision(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		CompleteAddendumApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAddendumApproval", requestObj, CompleteAddendumApprovalResponse.class);
+		CompleteAddendumApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":"
+				+ request.getServerPort() + request.getContextPath() + "/ws/completeAddendumApproval", requestObj,
+				CompleteAddendumApprovalResponse.class);
 		return responseObj;
+	}
+	
+	@RequestMapping(path = {"service/ap/completeAddendumApprovalAdmin/{jobNumber}/{packageNo}/{user}/{approvalDecision}"}, method = RequestMethod.GET)
+	public CompleteAddendumApprovalResponse completeAddendumApprovalAdmin(HttpServletRequest request,
+																@PathVariable String jobNumber,
+																@PathVariable String packageNo,
+																@PathVariable String user,
+			@PathVariable String approvalDecision) {
+		CompleteAddendumApprovalResponse response = completeAddendumApproval(request, jobNumber, packageNo, user, approvalDecision);
+		mailContentGenerator.sendAdminFnEmail("completeAddendumApprovalAdmin",
+				jobNumber + "-" + packageNo + "-" + approvalDecision);
+		return response;
 	}
 
 	/**
@@ -202,14 +232,28 @@ public class APController {
 	public CompleteMainCertApprovalResponse completeMainCertApproval(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String mainCertNo,
-																		@PathVariable String approvalDecision) {
+			@PathVariable String approvalDecision) {
 		CompleteMainCertApprovalRequest requestObj = new CompleteMainCertApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNo(mainCertNo);
 		requestObj.setApprovalDecision(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		CompleteMainCertApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeMainCertApproval", requestObj, CompleteMainCertApprovalResponse.class);
+		CompleteMainCertApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":"
+				+ request.getServerPort() + request.getContextPath() + "/ws/completeMainCertApproval", requestObj,
+				CompleteMainCertApprovalResponse.class);
 		return responseObj;
+	}
+
+		@RequestMapping(path = {"service/ap/completeMainCertApprovalAdmin/{jobNumber}/{mainCertNo}/{approvalDecision}"},
+							method = RequestMethod.GET)
+	public CompleteMainCertApprovalResponse completeMainCertApprovalAdmin(	HttpServletRequest request,
+																		@PathVariable String jobNumber,
+																		@PathVariable String mainCertNo,
+			@PathVariable String approvalDecision) {
+		CompleteMainCertApprovalResponse response = completeMainCertApproval(request, jobNumber, mainCertNo, approvalDecision);
+				mailContentGenerator.sendAdminFnEmail("completeMainCertApprovalAdmin",
+				jobNumber + "-" + mainCertNo + "-" + approvalDecision);
+		return response;
 	}
 
 	/**
@@ -253,6 +297,18 @@ public class APController {
 		return responseObj;
 	}
 
+	@RequestMapping(path = {"service/ap/completePaymentApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}"}, 
+							method = RequestMethod.GET)
+	public CompletePaymentApprovalResponse completePaymentApprovalAdmin(	HttpServletRequest request,
+														@PathVariable String jobNumber,
+														@PathVariable String packageNo,
+			@PathVariable String approvalDecision) {
+		CompletePaymentApprovalResponse response = completePaymentApproval(request, jobNumber, packageNo, approvalDecision);
+		mailContentGenerator.sendAdminFnEmail("completePaymentApprovalAdmin",
+		jobNumber + "-" + packageNo + "-" + approvalDecision);
+				return response;
+	}
+
 	/**
 	 * REST mapping
 	 * 
@@ -294,6 +350,20 @@ public class APController {
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteSplitTerminateApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeSplitTerminateApproval", requestObj, CompleteSplitTerminateApprovalResponse.class);
 		return responseObj;
+	}
+
+	@RequestMapping(path = {"service/ap/completeSplitTerminateApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}/{splitOrTerminate}"},
+							method = RequestMethod.GET)
+	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApprovalAdmin(	HttpServletRequest request,
+																	@PathVariable String jobNumber,
+																	@PathVariable String packageNo,
+																	@PathVariable String approvalDecision,
+			@PathVariable String splitOrTerminate) {
+		CompleteSplitTerminateApprovalResponse response = completeSplitTerminateApproval(request, jobNumber, packageNo,
+				approvalDecision, splitOrTerminate);
+				mailContentGenerator.sendAdminFnEmail("completeSplitTerminateApprovalAdmin",
+		jobNumber + "-" + packageNo + "-" + approvalDecision + "-" + splitOrTerminate);
+		return response;
 	}
 
 	/**

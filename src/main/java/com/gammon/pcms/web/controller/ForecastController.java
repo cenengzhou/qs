@@ -2,7 +2,15 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
+import com.gammon.pcms.model.Forecast;
+import com.gammon.pcms.model.Forecast.DeleteByEnum;
+import com.gammon.pcms.service.ForecastService;
+import com.gammon.pcms.wrapper.ForecastGroupWrapper;
+import com.gammon.pcms.wrapper.ForecastListWrapper;
+import com.gammon.pcms.wrapper.ForecastWrapper;
 import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.model.Forecast;
-import com.gammon.pcms.model.Forecast.DeleteByEnum;
-import com.gammon.pcms.service.ForecastService;
-import com.gammon.pcms.wrapper.ForecastGroupWrapper;
-import com.gammon.pcms.wrapper.ForecastListWrapper;
-import com.gammon.pcms.wrapper.ForecastWrapper;
-
 @RestController
 @RequestMapping(value = "service/forecast/")
 public class ForecastController {
@@ -29,6 +30,9 @@ public class ForecastController {
 	private ForecastService service;
 	@Autowired
 	private JobInfoService jobInfoService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('ForecastController','getLatestForecastPeriod', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestForecastPeriod/{jobNo}", method = RequestMethod.GET)
@@ -103,6 +107,7 @@ public class ForecastController {
 		String result = jobInfoService.canAdminJob(forecast.getNoJob());
 		if(StringUtils.isEmpty(result)){
 			service.updateForecastAdmin(forecast);
+			mailContentGenerator.sendAdminFnEmail("updateForecastAdmin", forecast.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}

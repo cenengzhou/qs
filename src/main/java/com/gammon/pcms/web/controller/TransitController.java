@@ -16,6 +16,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
+import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.AppTransitUom;
+import com.gammon.qs.domain.Transit;
+import com.gammon.qs.domain.TransitBpi;
+import com.gammon.qs.domain.TransitCodeMatch;
+import com.gammon.qs.domain.TransitResource;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+import com.gammon.qs.service.transit.TransitImportResponse;
+import com.gammon.qs.service.transit.TransitService;
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.AppTransitUom;
-import com.gammon.qs.domain.Transit;
-import com.gammon.qs.domain.TransitBpi;
-import com.gammon.qs.domain.TransitCodeMatch;
-import com.gammon.qs.domain.TransitResource;
-import com.gammon.qs.service.JobInfoService;
-import com.gammon.qs.service.transit.TransitImportResponse;
-import com.gammon.qs.service.transit.TransitService;
-import com.google.gson.Gson;
-
 @RestController
 @RequestMapping(value = "service/transit/")
 public class TransitController {
@@ -46,6 +47,8 @@ public class TransitController {
 	private TransitService transitService;
 	@Autowired
 	private JobInfoService jobInfoService;
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	private Logger logger = Logger.getLogger(getClass());
 	private String RESPONSE_CONTENT_TYPE_TEXT_HTML = "text/html";
 	private String RESPONSE_HEADER_NAME_CACHE_CONTROL = "Cache-Control";
@@ -196,6 +199,7 @@ public class TransitController {
 		String result = jobInfoService.canAdminJob(jobNumber);
 		if(StringUtils.isEmpty(result)){
 			transitService.unlockTransitHeader(jobNumber);
+			mailContentGenerator.sendAdminFnEmail("unlockTransitAdmin", "jobNumber:" + jobNumber);
 		} else {
 			throw new IllegalAccessException(result);
 		}

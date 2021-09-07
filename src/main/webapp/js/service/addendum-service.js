@@ -13,6 +13,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	getDefaultValuesForAddendumDetails:	getDefaultValuesForAddendumDetails,
     	createAddendum:						createAddendum,
     	updateAddendum:						updateAddendum,
+        updateAddendumAdmin:                updateAddendumAdmin,
     	updateAddendumDetailHeader:			updateAddendumDetailHeader,
     	deleteAddendumDetailHeader:			deleteAddendumDetailHeader,
     	addAddendumDetail:					addAddendumDetail,
@@ -20,6 +21,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         addAddendumFromResourceSummaryAndAddendumDetail:    addAddendumFromResourceSummaryAndAddendumDetail,
     	updateAddendumDetail:				updateAddendumDetail,
     	updateAddendumDetailList:			updateAddendumDetailList,
+        updateAddendumDetailListAdmin:		updateAddendumDetailListAdmin,
     	deleteAddendumDetail:				deleteAddendumDetail,
     	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails,
     	submitAddendumApproval:				submitAddendumApproval
@@ -173,7 +175,16 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    
+    function updateAddendumAdmin(addendum) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/updateAddendumAdmin",
+            dataType: "application/json;charset=UTF-8",
+            data: addendum
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
     function updateAddendum(addendum) {
         var request = $http({
             method: "post",
@@ -279,6 +290,16 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
    
+    function updateAddendumDetailListAdmin(addendumDetailList) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/updateAddendumDetailListAdmin",
+            dataType: "application/json;charset=UTF-8",
+            data: addendumDetailList
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
     function updateAddendumDetailList(addendumDetailList) {
         var request = $http({
             method: "post",
@@ -336,7 +357,3 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     }
 
 }]);
-
-
-
-

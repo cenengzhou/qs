@@ -58,7 +58,7 @@ mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'Glo
 	}
 	
 	function onAddendumUpdate(){
-		addendumService.updateAddendum($scope.addendum)
+		addendumService.updateAddendumAdmin($scope.addendum)
 		.then(function(data){
 			if(data != ""){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);

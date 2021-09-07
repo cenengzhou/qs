@@ -10,6 +10,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gammon.pcms.model.Attachment;
+import com.gammon.qs.io.AttachmentFile;
+import com.gammon.qs.service.AttachmentService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gammon.pcms.model.Attachment;
-import com.gammon.qs.io.AttachmentFile;
-import com.gammon.qs.service.AttachmentService;
-import com.google.gson.Gson;
-
 @RestController
 @RequestMapping(value = "service/attachment/")
 public class AttachmentController {
@@ -38,6 +39,9 @@ public class AttachmentController {
 	
 	@Autowired
 	private AttachmentService attachmentService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 
 	/** 
 	 * @author Henry Lai created on 17-10-2014
@@ -63,8 +67,18 @@ public class AttachmentController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
 	@RequestMapping(value = "deleteAttachment", method = RequestMethod.POST)
-	public Boolean deleteAttachment(@RequestParam String nameObject, @RequestParam String textKey, @RequestParam Integer sequenceNumber) throws Exception{
+	public Boolean deleteAttachment(@RequestParam String nameObject, @RequestParam String textKey,
+			@RequestParam Integer sequenceNumber) throws Exception {
 		Boolean result = attachmentService.deleteAttachment(nameObject, textKey, sequenceNumber);
+		return result;
+	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
+	@RequestMapping(value = "deleteAttachmentAdmin", method = RequestMethod.POST)
+	public Boolean deleteAttachmentAdmin(@RequestParam String nameObject, @RequestParam String textKey, @RequestParam Integer sequenceNumber) throws Exception{
+		Boolean result = attachmentService.deleteAttachment(nameObject, textKey, sequenceNumber);
+		mailContentGenerator.sendAdminFnEmail("deleteAttachmentAdmin",
+		nameObject + "-" + textKey + "-" + sequenceNumber);
 		return result;
 	}
 	

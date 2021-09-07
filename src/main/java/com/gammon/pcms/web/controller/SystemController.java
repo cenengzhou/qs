@@ -17,26 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.Manager;
-import org.apache.catalina.Session;
-import org.apache.catalina.core.ApplicationContext;
-import org.apache.catalina.core.ApplicationContextFacade;
-import org.apache.catalina.core.StandardContext;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.dao.DataAccessException;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,8 +41,29 @@ import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.admin.CronTriggerService;
+import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.service.admin.QrtzTriggerService;
 import com.gammon.qs.service.security.SecurityServiceSpringImpl;
+
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
+import org.apache.catalina.core.ApplicationContext;
+import org.apache.catalina.core.ApplicationContextFacade;
+import org.apache.catalina.core.StandardContext;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "service/system/")
@@ -106,6 +107,8 @@ public class SystemController {
 	private SessionRegistry sessionRegistry;
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','getAuditTableMap', @securityConfig.getRolePcmsImsEnq())")
 	@RequestMapping(value = "getAuditTableMap", method = RequestMethod.POST)
@@ -116,7 +119,9 @@ public class SystemController {
 	@PreAuthorize(value = " @GSFService.isFnEnabled('SystemController','housekeepAuditTable', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "housekeepAuditTable", method = RequestMethod.POST)
 	public int housekeepAuditTable(@RequestParam String tableName) throws DataAccessException, SQLException{
-		return auditHousekeepService.housekeekpByAuditTableName(tableName);
+		int result = auditHousekeepService.housekeekpByAuditTableName(tableName);
+		mailContentGenerator.sendAdminFnEmail("housekeepAuditTable", "tableName:" + tableName);
+		return result;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','findEntityByIdRevision', @securityConfig.getRolePcmsImsAdmin())")
@@ -363,6 +368,7 @@ public class SystemController {
 			HttpServletRequest request, HttpServletResponse response) {
 		boolean result = false;
 		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, null);
+		mailContentGenerator.sendAdminFnEmail("createSystemConstant", appSubcontractStandardTerms.toString());
 		if (!result) {
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
 		}
@@ -372,12 +378,14 @@ public class SystemController {
 	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
 	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, null);
+		mailContentGenerator.sendAdminFnEmail("updateMultipleSystemConstants", appSubcontractStandardTermsList.toString());
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','inactivateSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "deleteSCStandardTerms", method = RequestMethod.POST)
 	public void deleteSCStandardTerms(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		subcontractService.deleteSCStandardTerms(appSubcontractStandardTermsList);
+		mailContentGenerator.sendAdminFnEmail("deleteSCStandardTerms", appSubcontractStandardTermsList.toString());
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','searchSystemConstants', @securityConfig.getRolePcmsEnq())")

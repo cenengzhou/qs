@@ -3,6 +3,7 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     return({
       	obtainAttachmentList:	obtainAttachmentList,
     	deleteAttachment:		deleteAttachment,
+			deleteAttachmentAdmin:		deleteAttachmentAdmin,
     	uploadTextAttachment:	uploadTextAttachment,
        	uploadAttachment:		uploadAttachment,
   });
@@ -31,7 +32,20 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-
+    
+    function deleteAttachmentAdmin(nameObject, textKey, sequenceNumber){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/deleteAttachmentAdmin',
+            params: {
+            	nameObject: nameObject,
+            	textKey: textKey,
+            	sequenceNumber: sequenceNumber
+            }
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
     function uploadTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment){
     	var request = $http({
 			method : 'POST',
@@ -60,7 +74,3 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     }
     
 }]);
-
-
-
-

@@ -10,6 +10,17 @@ package com.gammon.pcms.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gammon.pcms.scheduler.service.PaymentPostingService;
+import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.PaymentCertDetail;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.PaymentService;
+import com.gammon.qs.service.admin.MailContentGenerator;
+import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
+import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.gammon.pcms.scheduler.service.PaymentPostingService;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.PaymentCert;
-import com.gammon.qs.domain.PaymentCertDetail;
-import com.gammon.qs.service.JobInfoService;
-import com.gammon.qs.service.PaymentService;
-import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
-import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
-import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 
 @RestController
 @RequestMapping(value = "service/payment/")
@@ -40,7 +41,10 @@ public class PaymentController {
 	private PaymentService paymentService;
 	@Autowired JobInfoService jobInfoService;
 	@Autowired
-	private PaymentPostingService paymentPostingService;	
+	private PaymentPostingService paymentPostingService;
+
+	@Autowired
+	private MailContentGenerator mailContentGenerator;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getLatestPaymentCert', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestPaymentCert", method = RequestMethod.GET)
@@ -183,6 +187,7 @@ public class PaymentController {
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
+		mailContentGenerator.sendAdminFnEmail("updateF58011FromSCPaymentCertManually", "");
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updatePaymentCert', @securityConfig.getRolePcmsQsAdmin())")
@@ -192,6 +197,7 @@ public class PaymentController {
 		String result = jobInfoService.canAdminJob(paymentCert.getJobNo());
 		if(StringUtils.isEmpty(result)){
 			result = paymentService.updateSCPaymentCertAdmin(paymentCert);
+			mailContentGenerator.sendAdminFnEmail("updatePaymentCert", paymentCert.toString());
 		} else {
 			throw new IllegalAccessException(result);
 		}
@@ -202,6 +208,7 @@ public class PaymentController {
 	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();
+		mailContentGenerator.sendAdminFnEmail("runPaymentPosting", "");
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','obtainPaymentCertificateList', @securityConfig.getRolePcmsEnq())")
@@ -216,6 +223,7 @@ public class PaymentController {
 	@RequestMapping(value = "deletePendingPaymentAndDetails", method = RequestMethod.POST)
 	public void deletePendingPaymentAndDetails(@RequestParam long paymentCertId) throws Exception{
 		paymentService.deletePendingPaymentAndDetails(paymentCertId);
+		mailContentGenerator.sendAdminFnEmail("deletePendingPaymentAndDetails", "paymentCertId:" + paymentCertId);
 	}
 	
 
