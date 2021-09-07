@@ -1,16 +1,61 @@
-mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance', '$cookies', 'modalService', '$state', 'GlobalParameter', '$q', 'modalStatus', 'modalParam',
-    function ($scope, rocService, $uibModalInstance, $cookies, modalService, $state, GlobalParameter, $q, modalStatus, modalParam) {
+mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance', '$cookies', 'modalService', '$state', 'GlobalParameter', '$q', 'modalStatus', 'modalParam', '$rootScope', '$timeout', 'rootscopeService',
+    function ($scope, rocService, $uibModalInstance, $cookies, modalService, $state, GlobalParameter, $q, modalStatus, modalParam, $rootScope, $timeout, rootscopeService) {
         $scope.GlobalParameter = GlobalParameter;
         $scope.editable = false;
 
         $scope.jobNo = $cookies.get("jobNo");
 
+        var self = this;
+
+        $scope.person = {};
+
+        rootscopeService.gettingAllUser()
+            .then(function (data) {
+                self.repos = data;
+                var findUser = self.repos.filter(function(x) { return x.username == $scope.roc.rocOwner});
+                if (findUser.length > 0 && findUser[0])
+                    $scope.person.selectedItem = findUser[0];
+            });
+
         initOptions();
+
+        $scope.querySearch = function(query) {
+            var results = query ? self.repos.filter(createFilterFor(query)) : self.repos, deferred;
+            deferred = $q.defer();
+            $timeout(function() {
+                deferred.resolve(results);
+            }, 300, false);
+            return deferred.promise;
+        }
+
+        $scope.searchTextChange = function(text, person) {
+            if (!text) $scope.roc.rocOwner = null;
+        }
+
+        $scope.selectedItemChange = function(item, person) {
+            if (!item) $scope.roc.rocOwner = null;
+            if (item && item.username)
+                $scope.roc.rocOwner = item.username;
+        }
+
+        function createFilterFor(query) {
+            var lowercaseQuery = (query || "").toLowerCase();
+            return function filterFn(item) {
+                var fullNameRegExp = new RegExp(lowercaseQuery.split(' ').join('.*'));
+                var fullNameReverseRegExp = new RegExp(lowercaseQuery.split(' ').reverse().join('.*'));
+                return lowercaseQuery.length > 3 && (
+                    (item.username && item.username.indexOf(lowercaseQuery) === 0) ||
+                    (item.employeeId && item.employeeId.indexOf(lowercaseQuery) === 0) ||
+                    (item.fullName && (fullNameRegExp.test(item.fullName.toLowerCase()) || fullNameReverseRegExp.test(item.fullName.toLowerCase()))) ||
+                    (item.email && item.email.toLowerCase().indexOf(lowercaseQuery) === 0)
+                );
+            };
+        }
 
         $scope.displayMode = modalStatus;
 
-        if ($scope.displayMode == 'UPDATE') {
-            $scope.roc = modalParam;
+        if ($scope.displayMode === 'UPDATE') {
+            $scope.roc = angular.copy(modalParam);
         } else {
             $scope.roc = {
                 projectNo: $scope.jobNo
@@ -26,7 +71,7 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
 
             rocService.addRoc($scope.jobNo, $scope.roc)
                 .then(function (data) {
-                    if (data.length != 0) {
+                    if (data.length !== 0) {
                         Error(data);
                     } else {
                         Success();
@@ -43,7 +88,7 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
             rocService.updateRoc($scope.jobNo, $scope.roc)
                 .then(
                     function (data) {
-                        if (data.length != 0) {
+                        if (data.length !== 0) {
                             Error(data);
                         } else {
                             Success();
@@ -67,7 +112,11 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
         function Success() {
             $scope.cancel();
             modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
-            $state.reload();
+
+            if ($scope.displayMode === 'UPDATE')
+                $rootScope.$broadcast('reloadRocList', {});
+            else
+                $state.reload();
         }
 
         function Error(msg) {
@@ -92,7 +141,8 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
                     $scope.impactOptions = data[2];
                     $scope.statusOptions = data[3];
 
-                    $scope.roc.status = $scope.statusOptions[0];
+                    if (!$scope.roc.status)
+                        $scope.roc.status = $scope.statusOptions[0];
                 });
 
         }

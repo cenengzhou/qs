@@ -478,5 +478,5 @@ mainApp.constant('GlobalMessage', {
 	deleteMonthlyMovement:
 	  "Selected monthly movement will be removed, are you sure to proceed?",
 	leavingUpdatedGrid:
-	  "Your changes will discard after adding new ROC, are you sure to proceed?"
+	  "Your changes will discard after adding/ updating ROC, are you sure to proceed?"
 });

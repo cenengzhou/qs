@@ -14,6 +14,8 @@ public class MessageConfig {
 	private String paymentHoldMessage;
 	@Value("${revision.sod.message}")
 	private String revisionSodMessage;
+	@Value("${roc.cutoff.date}")
+	private String rocCutoffDate;
 	
 	public String getSubcontractHoldMessage() {
 		return subcontractHoldMessage;
@@ -27,4 +29,7 @@ public class MessageConfig {
 		return revisionSodMessage;
 	}
 
+	public String getRocCutoffDate() {
+		return rocCutoffDate;
+	}
 }

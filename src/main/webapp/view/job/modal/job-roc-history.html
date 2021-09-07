@@ -1,0 +1,68 @@
+<style>
+    .job-roc-history-grid .ui-grid-header-cell .ui-grid-cell-contents,
+    .job-roc-detail-history-grid .ui-grid-header-cell .ui-grid-cell-contents {
+        height: 48px;
+        white-space: normal;
+        -ms-text-overflow: clip;
+        -o-text-overflow: clip;
+        text-overflow: clip;
+        overflow: visible;
+    }
+    .job-roc-history-grid,
+    .job-roc-detail-history-grid {
+        overflow: hidden !important;
+    }
+    .job-roc-history-grid .ui-grid-cell-contents-break,
+    .job-roc-detail-history-grid .ui-grid-cell-contents-break {
+        word-wrap: break-word;
+        white-space: pre-wrap !important;
+    }
+    .job-roc-history-grid .ui-grid-row,
+    .job-roc-history-grid .ui-grid-cell,
+    .job-roc-detail-history-grid .ui-grid-row,
+    .job-roc-detail-history-grid .ui-grid-cell {
+        height: auto !important;
+    }
+    .job-roc-history-grid .ui-grid-row div[role=row],
+    .job-roc-detail-history-grid .ui-grid-row div[role=row] {
+        display: flex;
+        align-content: stretch;
+    }
+</style>
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-11">
+            <h4 class="modal-title">ROC History</h4>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-default pull-right" type="button"
+                    ng-click="cancel()">
+                <span class="fa fa-remove"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal-body bg-gray-light">
+    <div class="animated fadeIn">
+        <div class="box box-primary">
+            <div class="box-body">
+                <p>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="active = 1">ROC</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="active = 2">ROC Detail</button>
+                </p>
+                <div id="job-roc-history-grid" class="job-roc-history-grid" save-and-restore-grid-state="roc_audit"
+                     ui-grid-save-state ui-grid="gridOptions" ui-grid-selection ui-grid-grouping
+                     ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-cellnav
+                     class="grid" resize ng-style="resizeWithOffset(400)" ng-if="active == 1"></div>
+                <div id="job-roc-detail-history-grid" class="job-roc-detail-history-grid" save-and-restore-grid-state="roc_details_audit"
+                     ui-grid-save-state ui-grid="detailGridOptions" ui-grid-selection ui-grid-grouping
+                     ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-cellnav
+                     class="grid" resize ng-style="resizeWithOffset(400)" ng-if="active == 2"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+
+</div>

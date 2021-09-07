@@ -1,3 +1,8 @@
+<style>
+    .md-autocomplete-suggestions-container {
+        z-index:100000 !important; /* any number of choice > 1050*/
+    }
+</style>
 <div class="modal-header">
     <div class="row">
         <div class="col-md-11">
@@ -31,7 +36,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Project R&O Ref</label>
+                                    <label>Project R&O Ref
+                                        <i class="fa fa-lg fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="Insert reference from Project R&O schedule (Appendix 4 of PDS/15) if applicable"></i>
+                                    </label>
                                     <input type="text" placeholder="" class="form-control "
                                            ng-model="roc.projectRef"/>
                                 </div>
@@ -87,6 +94,36 @@
                                     <input type="text" placeholder="" class="form-control "
                                            ng-model="roc.description" maxlength="300" required/>
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label>ROC Owner</label>
+                                <md-autocomplete style="text-align:center"
+                                                 md-require-match="true"
+                                                 md-delay="300"
+                                                 md-autoselect="true"
+                                                 md-clear-button="!person.disabled"
+                                                 ng-disabled="person.disabled"
+                                                 md-selected-item="person.selectedItem"
+                                                 md-search-text-change="searchTextChange(person.searchText, person)"
+                                                 md-search-text="person.searchText"
+                                                 md-selected-item-change="selectedItemChange(item, person)"
+                                                 md-items="item in querySearch(person.searchText)"
+                                                 md-item-text="item.fullName"
+                                                 md-min-length="3"
+                                                 placeholder="Input Username..."
+                                                 md-menu-class="autocomplete-custom-template"
+                                                 md-menu-container-class="custom-container">
+                                    <md-item-template>
+                                        <span class="item-title">
+                                            <span><strong>{{item.fullName}}</strong></span>
+                                        </span>
+                                        <span class="item-metadata">
+                                            <span>
+                                                <small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>
+                                            </span>
+                                        </span>
+                                    </md-item-template>
+                                </md-autocomplete>
                             </div>
                         </div>
                     </div>

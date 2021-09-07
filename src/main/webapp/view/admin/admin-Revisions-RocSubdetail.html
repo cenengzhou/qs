@@ -1,0 +1,44 @@
+<div class="row well">
+    <form name="RevisionsRocSubdetailSearch"
+          ng-submit="onSubmitRocSubdetailSearch()" class="form">
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
+                   ng-change="canAdminJob(RocSubdetailSearch.jobNo)"
+                   id="RocSubdetailSearch_jobNo" ng-model="RocSubdetailSearch.jobNo">
+        </div>
+        <div class="col-md-3">
+            <select class="form-control"
+                    id="RocSubdetailSearch_rocCategory"
+                    ng-model="RocSubdetailSearch.rocCategory"
+                    ng-options="o as o for o in rocCategoryOptions" required></select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control"
+                   placeholder="Description:" id="RocSubdetailSearch_description"
+                   ng-model="RocSubdetailSearch.description">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-block btn-primary" id="RocSubdetailSearch_submit"
+                    ng-disabled="!adminSearchBtn">Search
+            </button>
+        </div>
+    </form>
+</div>
+<div class="col-md-12">
+    <br>
+    <div id="" save-and-restore-grid-state="admin_revisions_roc_subdetail" ui-grid-save-state ui-grid="gridOptions"
+         external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns
+         ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+         resize ng-style="resizeWithOffset(365)">
+    </div>
+    <div class="row">
+        <button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary"
+                ng-disabled="!adminSearchBtn">Update Roc Subdetail
+        </button>
+    </div>
+    <div class="row">
+        <button ng-show="showQSAdmin && gridApi.selection.getSelectedRows().length > 0" ng-click="deleteRows()" type="button" class="btn btn-block btn-success"
+                ng-disabled="!adminSearchBtn">Delete {{gridApi.selection.getSelectedRows().length}} rows
+        </button>
+    </div>
+</div>

@@ -216,7 +216,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 					files: [
 						'js/service/roc-service.js?@PROJECT_VERSION@',
 						'js/controller/job/job-roc.js?@PROJECT_VERSION@',
-						'js/controller/job/modal/job-roc-add-modal.js?@PROJECT_VERSION@'
+						'js/controller/job/modal/job-roc-add-modal.js?@PROJECT_VERSION@',
+						'js/controller/job/modal/job-roc-history-modal.js?@PROJECT_VERSION@',
+						'js/controller/job/modal/job-roc-subdetail-modal.js?@PROJECT_VERSION@'
 					]
 				});
 			}]
@@ -1607,6 +1609,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [  'js/service/job-service.js?@PROJECT_VERSION@',  
                		 	   'js/service/subcontract-service.js?@PROJECT_VERSION@',
                		 	   'js/service/tender-service.js?@PROJECT_VERSION@',
+               		 	   'js/service/roc-service.js?@PROJECT_VERSION@',
                	           'js/service/main-cert-service.js?@PROJECT_VERSION@',
                	           'js/service/payment-service.js?@PROJECT_VERSION@',
                	           'js/service/transit-service.js?@PROJECT_VERSION@',
@@ -1638,6 +1641,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 													 'js/controller/admin/admin-Revisions-Tender.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-TenderDetail.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-MonthlyMovement.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-Roc.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-RocDetail.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-RocSubdetail.js?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Subcontract.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Addendum.html?@PROJECT_VERSION@',
@@ -1645,7 +1651,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 													 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@',
 													 'view/admin/admin-Revisions-Tender.html?@PROJECT_VERSION@',
 													 'view/admin/admin-Revisions-TenderDetail.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@'
+													 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-Roc.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-RocDetail.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@'
                     ]
                 });
             }]
@@ -1738,6 +1747,21 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/MonthlyMovement',
 		templateUrl: 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsMonthlyMovementCtrl'
+	})
+	.state('admin.Revisions.Roc', {
+		url: '/Roc',
+		templateUrl: 'view/admin/admin-Revisions-Roc.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsRocCtrl'
+	})
+	.state('admin.Revisions.RocDetail', {
+		url: '/RocDetail',
+		templateUrl: 'view/admin/admin-Revisions-RocDetail.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsRocDetailCtrl'
+	})
+	.state('admin.Revisions.RocSubdetail', {
+		url: '/RocSubdetail',
+		templateUrl: 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsRocSubdetailCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',
@@ -1983,6 +2007,21 @@ mainApp.config(function(blockUIConfig) {
 
 });
 
+mainApp.config(function($provide){
+	$provide.decorator('uiGridCellNavService', function($delegate, uiGridConstants, uiGridCellNavConstants) {
+		var getDirection = $delegate.getDirection;
+		$delegate.getDirection = function (evt) {
+			if (evt.target.className.indexOf('roc-remarks-textarea') != -1) {
+				if (evt.keyCode === uiGridConstants.keymap.ENTER && evt.ctrlKey)
+					return uiGridCellNavConstants.direction.DOWN;
+				else if (evt.keyCode === uiGridConstants.keymap.ENTER)
+					return null;
+			}
+			return getDirection(evt);
+		};
+		return $delegate;
+	})
+});
 
 /**
  * Event-Listner for Location change

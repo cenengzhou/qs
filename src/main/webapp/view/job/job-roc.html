@@ -10,7 +10,32 @@
 	.job-roc-grid {
 		overflow: hidden !important;
 	}
+	.job-roc-grid .ui-grid-cell-contents-break {
+		word-wrap: break-word;
+		white-space: pre-wrap !important;
+	}
+	.job-roc-grid .ui-grid-row,
+	.job-roc-grid .ui-grid-cell {
+		height: auto !important;
+	}
+	.job-roc-grid .ui-grid-row div[role=row] {
+		display: flex;
+		align-content: stretch;
+	}
+	.job-roc-grid textarea {
+		width: 100%;
+		height: auto;
+	}
 </style>
+<script>
+	function textareaAutosize(event, element) {
+		setTimeout(function () {
+			element.style.cssText = 'height: auto';
+			var height = element.scrollHeight + 20;
+			element.style.cssText = 'height: ' + height + 'px';
+		}, 0);
+	}
+</script>
 <div id="content" class="content">
 
 
@@ -29,16 +54,16 @@
 							   ng-model-options="{ updateOn: 'blur' }" >
 					</div>
 				</div>
-				<div class="col-md-6"></div>
+				<div class="col-md-3 text-red">** Cutoff Date: {{cutoffDate}}th of each month</div>
+				<div class="col-md-2"></div>
+				<div class="col-md-3 text-right">
+					<md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()" aria-label="Show Closed Item"
+								 class="md-warn md-align-top-left" flex> Display Live & Closed Item</md-checkbox>
+				</div>
 				<div class="col-md-2">
 					<button type="button" class="btn btn-danger btn-block "
 							ng-click="openAddRocDialog()">
 						<i class="fa fa-plus"></i> Add ROC
-					</button>
-				</div>
-				<div class="col-md-2" >
-					<button type="button" class="btn btn-success btn-block " ng-click="openEditRocDialog()">
-						<i class="fa fa-pencil"></i> Edit ROC
 					</button>
 				</div>
 			</div>
@@ -59,10 +84,10 @@
 							</div>
 						</div>
 						<div class="panel-body">
-							<div id="" class="job-roc-grid" save-and-restore-grid-state="roc_details" ui-grid-save-state ui-grid="gridOptions" ui-grid-selection ui-grid-grouping
+							<div id="" class="job-roc-grid" save-and-restore-grid-state="roc_details" ui-grid-save-state ui-grid="gridOptions" ui-grid-grouping
 								 ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-edit ui-grid-row-edit ui-grid-cellnav
 								 class="grid" resize ng-style="resizeWithOffset(400)"></div>
-							<label class="blue">* Blue columns are editable. Please press the "Save Details" to record the numbers.</label>
+							<label class="blue">* Blue columns are editable. Please press the "Save Details" to save the changes.</label>
 						</div>
 						<div class="panel-footer bg-white">
 							<button class="btn btn-block btn-primary btn-sm"

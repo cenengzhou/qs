@@ -12,6 +12,7 @@ import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,13 +73,17 @@ public class ROC extends BasePersistedObject {
 	private String impact;
 	private String description;
 	private String status;
+	private String rocOwner;
+	private Date openDate;
+	private Date closedDate;
 
 	private List<ROC_DETAIL> rocDetails;
+	private List<ROC_SUBDETAIL> rocSubdetails;
 
 	public ROC() {
 	}
 
-	public ROC(Long id, String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status) {
+	public ROC(Long id, String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, Date createdDate, String createdUser, Date lastModifiedDate, String lastModifiedUser, String rocOwner, Date openDate, Date closedDate) {
 		this.id = id;
 		this.projectNo = projectNo;
 		this.projectRef = projectRef;
@@ -86,9 +92,16 @@ public class ROC extends BasePersistedObject {
 		this.impact = impact;
 		this.description = description;
 		this.status = status;
+		this.createdDate = createdDate;
+		this.createdUser = createdUser;
+		this.lastModifiedDate = lastModifiedDate;
+		this.lastModifiedUser = lastModifiedUser;
+		this.rocOwner = rocOwner;
+		this.openDate = openDate;
+		this.closedDate = closedDate;
 	}
 
-	public ROC(String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status) {
+	public ROC(String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, String rocOwner, Date openDate, Date closedDate) {
 		this.projectNo = projectNo;
 		this.projectRef = projectRef;
 		this.rocCategory = rocCategory;
@@ -96,6 +109,9 @@ public class ROC extends BasePersistedObject {
 		this.impact = impact;
 		this.description = description;
 		this.status = status;
+		this.rocOwner = rocOwner;
+		this.openDate = openDate;
+		this.closedDate = closedDate;
 	}
 
 	@Id
@@ -173,13 +189,25 @@ public class ROC extends BasePersistedObject {
 	}
 
 	@JsonIgnore
-	@OneToMany(mappedBy="roc", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="roc", fetch = FetchType.LAZY)
+	@NotAudited
 	public List<ROC_DETAIL> getRocDetails() {
 		return rocDetails;
 	}
 
 	public void setRocDetails(List<ROC_DETAIL> rocDetails) {
 		this.rocDetails = rocDetails;
+	}
+
+	@JsonIgnore
+	@OneToMany(mappedBy="roc", fetch = FetchType.LAZY)
+	@NotAudited
+	public List<ROC_SUBDETAIL> getRocSubdetails() {
+		return rocSubdetails;
+	}
+
+	public void setRocSubdetails(List<ROC_SUBDETAIL> rocSubdetails) {
+		this.rocSubdetails = rocSubdetails;
 	}
 
 	@Override
@@ -227,5 +255,31 @@ public class ROC extends BasePersistedObject {
 		return statusList;
 	}
 
+	@Column(name = "ROC_OWNER")
+	public String getRocOwner() {
+		return rocOwner;
+	}
+
+	public void setRocOwner(String rocOwner) {
+		this.rocOwner = rocOwner;
+	}
+
+	@Column(name = "OPEN_DATE")
+	public Date getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(Date openDate) {
+		this.openDate = openDate;
+	}
+
+	@Column(name = "CLOSED_DATE")
+	public Date getClosedDate() {
+		return closedDate;
+	}
+
+	public void setClosedDate(Date closedDate) {
+		this.closedDate = closedDate;
+	}
 
 }

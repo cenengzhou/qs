@@ -5,12 +5,21 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
 
         $scope.jobNo = $cookies.get("jobNo");
 
-        var today = new Date();
-        $scope.month = today.getUTCMonth() + 1; //months from 1-12
-        $scope.year = today.getUTCFullYear();
-        $scope.monthYear = $scope.year + '-' + $scope.month;
-
         $scope.showPreviousAndMovementAmount = false;
+        $scope.numberCellFilter = 'number:0';
+
+        $scope.showClosedItem = false;
+
+        rocService.getCutoffDate().then(function(data) {
+            $scope.cutoffDate = data;
+            var d = new Date();
+            if (d.getDate() <= $scope.cutoffDate) {
+                d.setMonth(d.getMonth() - 1);
+            }
+            $scope.month = d.getMonth() + 1;
+            $scope.year = d.getFullYear();
+            $scope.monthYear = $scope.year + '-' + $scope.month;
+        });
 
         function getData(year, month) {
             var rocListApi = rocService.getRocListSummary($scope.jobNo, year, month);
@@ -62,13 +71,20 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             modalService.open('lg', 'view/job/modal/job-roc-add.html', 'JobRocAddCtrl', 'ADD');
         }
 
-        $scope.openEditRocDialog = function () {
-            var dataRows = $scope.gridApi.selection.getSelectedRows();
-            if (dataRows.length == 0 || dataRows.length > 1) {
-                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select 1 row to update roc.");
+        $scope.openEditRocDialog = function (rowEntity) {
+            var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+            var dataRows = gridRows.map(function (gridRow) {
+                return gridRow.entity;
+            });
+            if (dataRows.length > 0) {
+                confirmService.show({}, {bodyText: GlobalMessage.leavingUpdatedGrid})
+                    .then(function (response) {
+                        if (response === 'Yes')
+                            modalService.open('lg', 'view/job/modal/job-roc-add.html', 'JobRocAddCtrl', 'UPDATE', rowEntity);
+                    });
                 return;
             }
-            modalService.open('lg', 'view/job/modal/job-roc-add.html', 'JobRocAddCtrl', 'UPDATE', dataRows[0]);
+            modalService.open('lg', 'view/job/modal/job-roc-add.html', 'JobRocAddCtrl', 'UPDATE', rowEntity);
         }
 
         $scope.saveRocDetails = function () {
@@ -89,6 +105,18 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                 });
         }
 
+        $scope.displayClosedItem = function() {
+            if ($scope.showClosedItem) {
+                $scope.gridApi.grid.columns[6].filters[0].term = '';
+                $scope.gridOptions.columnDefs[5].visible = true;
+            } else {
+                $scope.gridApi.grid.columns[6].filters[0].term = 'Live';
+                $scope.gridOptions.columnDefs[5].visible = false;
+            }
+            $scope.gridApi.grid.refresh();
+
+        }
+
         $scope.gridOptions = {
             enableSorting: true,
             enableFiltering: true,
@@ -99,7 +127,8 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             allowCellFocus: false,
             showGridFooter: false,
             showColumnFooter: true,
-            treeRowHeaderAlwaysvisible: false,
+            treeRowHeaderAlwaysVisible: false,
+            showTreeRowHeader: false,
             exporterMenuPdf: false,
             groupingNullLabel: '',
             rowEditWaitInterval: -1,
@@ -143,72 +172,90 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             },
 
             columnDefs: [
-                {field: 'id', displayName: 'ROC Id', width: 100, visible: false},
+
+                {field: 'id', type: 'number', displayName: 'ROC Id', width: 100, visible: false, enableCellEdit: false},
+                {field: 'assignedNo', type: 'number', displayName: 'Item', width: 100, visible: true, enableCellEdit: false,
+                    sort: {priority: 1, direction: uiGridConstants.ASC}},
+                {field: 'projectNo', width: 100, visible: false, enableCellEdit: false},
+                {field: 'classification', width: 100, visible: false, enableCellEdit: false},
+                {field: 'impact', width: 150, visible: false, enableCellEdit: false},
+                {field: 'status', width: 100, visible: false, enableCellEdit: false,
+                filter: {
+                    term: 'Live'
+                }},
+                {field: 'projectRef', displayName: "Project R&O Ref.", width: 100, enableCellEdit: false, visible: false},
+                {field: 'description', displayName: "Description", width: 250, enableCellEdit: false, visible: true,
+                    cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',},
                 {
-                    field: 'rocCategory', displayName: "Category", width: 160, enableCellEdit: false,
-                    grouping: {groupPriority: 0}, sort: {priority: 0, direction: 'desc'}
+                    field: 'rocCategory', displayName: "Category", width: 200, enableCellEdit: false,
+                    grouping: {groupPriority: 0}, sort: {priority: 0, direction: uiGridConstants.DESC},
+                    cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }} (Below the Line)</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD }}</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }} (Above the Line)</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">{{ MODEL_COL_FIELD }}</div>'
                 },
-                {field: 'projectNo', width: 100, visible: false},
-                {field: 'classification', width: 100, visible: false},
-                {field: 'impact', width: 150, visible: false},
-                {field: 'status', width: 100, visible: false},
-                {field: 'projectRef', displayName: "Project R&O Ref.", width: 100, enableCellEdit: false},
-                {field: 'description', displayName: "Description", width: 250, enableCellEdit: false},
                 {
                     field: 'rocDetail.amountBest',
                     displayName: "Best Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
+                    cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">N/A</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
-                    enableCellEdit: true
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.amountExpected',
                     displayName: "Expected Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
-                    footerCellClass: customFooterClass
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
+                    footerCellClass: customFooterClass,
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.amountWorst',
                     displayName: "Worst Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
-                    footerCellClass: customFooterClass
+                    cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">N/A</div>' +
+                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
+                    footerCellClass: customFooterClass,
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.previousAmountBest',
                     displayName: "Previous Best Case",
                     width: 120,
                     cellClass: 'text-right',
-                    cellFilter: 'number:2',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
                     cellClass: customCellClass,
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
                     enableCellEdit: false,
                     visible: $scope.showPreviousAndMovementAmount
@@ -218,13 +265,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     displayName: "Previous Expected Case",
                     width: 120,
                     cellClass: 'text-right',
-                    cellFilter: 'number:2',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
                     cellClass: customCellClass,
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
                     enableCellEdit: false,
                     visible: $scope.showPreviousAndMovementAmount
@@ -234,13 +281,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     displayName: "Previous Worst Case",
                     width: 120,
                     cellClass: 'text-right',
-                    cellFilter: 'number:2',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
                     cellClass: customCellClass,
-                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
                     enableCellEdit: false,
                     visible: $scope.showPreviousAndMovementAmount
@@ -249,58 +296,85 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     field: 'rocDetail.movementBest',
                     displayName: "Movement Best Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
-                    visible: $scope.showPreviousAndMovementAmount
+                    visible: $scope.showPreviousAndMovementAmount,
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.movementExpected',
                     displayName: "Movement Expected Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
-                    visible: $scope.showPreviousAndMovementAmount
+                    visible: $scope.showPreviousAndMovementAmount,
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.movementWorst',
                     displayName: "Movement Worst Case",
                     width: 120,
-                    cellClass: 'text-right blue',
-                    cellFilter: 'number:2',
+                    cellClass: 'text-right',
+                    cellFilter: $scope.numberCellFilter,
                     treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
                     customTreeAggregationFinalizerFn: function (aggregation) {
                         aggregation.rendered = aggregation.value;
                     },
-                    headerCellClass: 'blue',
-                    footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:2 }}</div>',
+                    footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                     footerCellClass: customFooterClass,
-                    visible: $scope.showPreviousAndMovementAmount
+                    visible: $scope.showPreviousAndMovementAmount,
+                    enableCellEdit: false
                 },
                 {
                     field: 'rocDetail.remarks',
-                    displayName: "Remarks",
+                    displayName: "Remarks / Actions to be taken",
                     cellClass: 'blue',
-                    headerCellClass: 'blue'
+                    headerCellClass: 'blue',
+                    cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
+                    editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
+                },
+                {
+                    name: 'Buttons', displayName: '',  width: 180, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
+                    cellTemplate: '<div class="col-md-12" style="padding: 5px 20px">' +
+                        '<div class="row" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-success" ng-click="grid.appScope.openEditRocDialog(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px;" ></span> Edit</button></div>' +
+                        '<div class="row m-t-5" ng-if="!row.groupHeader && (row.entity.createdDate != row.entity.lastModifiedDate) && (row.entity !== null && row.entity.id !== null && row.entity.id >= 0)"><button class="btn btn-sm icon-btn btn-info" ng-click="grid.appScope.viewRocHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px" ></span> History</button></div>' +
+                        '<div class="row m-t-5" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-warning" ng-click="grid.appScope.editRocSubdetail(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px" ></span> Subdetail</button></div>' +
+                        '</div>'
                 },
                 {field: 'rocDetail.year', displayName: 'Year', width: 100, visible: false},
-                {field: 'rocDetail.month', displayName: 'Month', width: 100, visible: false}
+                {field: 'rocDetail.month', displayName: 'Month', width: 100, visible: false},
+                {field: 'rocDetail.id', displayName: 'ROC Detail Id', width: 100, visible: false}
+
             ]
 
         };
+
+        $scope.editRocSubdetail = function(entity) {
+            modalService.open('xxlg', 'view/job/modal/job-roc-subdetail.html', 'JobRocSubdetailCtrl', 'UPDATE', { 'roc': entity });
+        }
+
+        $scope.viewRocHistory = function(entity) {
+            if (entity !== null && entity.id !== null && entity.id >= 0) {
+                var id = entity.id;
+                var detailId = (entity.rocDetail && entity.rocDetail.id)? entity.rocDetail.id : null;
+                modalService.open('xxlg', 'view/job/modal/job-roc-history.html', 'JobRocHistoryCtrl', 'READ', {'id': id, 'detailId': detailId});
+            } else {
+                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Cannot view roc history.");
+            }
+
+        }
 
         $scope.$watch('monthYear', function (newValue, oldValue) {
             if (oldValue != newValue) {
@@ -317,5 +391,15 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
 
         }, true);
 
+        $scope.$on("reloadRocList", function(event, data) {
+            var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+            var dataRows = gridRows.map(function (gridRow) {
+                return gridRow.entity;
+            });
+            $scope.gridApi.rowEdit.setRowsClean(dataRows);
+            getData($scope.year, $scope.month);
+        });
+
 
     }]);
+

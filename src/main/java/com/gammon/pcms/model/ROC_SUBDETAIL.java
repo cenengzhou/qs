@@ -2,6 +2,7 @@ package com.gammon.pcms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -16,12 +17,10 @@ import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,15 +28,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Date;
 
 /**
- * The persistent class for the ROC_DETAIL database table.
+ * The persistent class for the ROC_SUBDETAIL database table.
  *
  */
 @Audited
@@ -45,38 +43,57 @@ import java.util.List;
 @Entity
 @DynamicUpdate
 @SelectBeforeUpdate
-@Table(name = "ROC_DETAIL")
+@Table(name = "ROC_SUBDETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "ROC_DETAIL_GEN", sequenceName = "ROC_DETAIL_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "ROC_SUBDETAIL_GEN", sequenceName = "ROC_SUBDETAIL_SEQ", allocationSize = 1)
 @AttributeOverride(	name = "id", column = @Column(	name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
-@NamedQuery(name = "ROC_DETAIL.findAll", query = "SELECT v FROM ROC_DETAIL v")
-public class ROC_DETAIL extends BasePersistedObject {
+@NamedQuery(name = "ROC_SUBDETAIL.findAll", query = "SELECT v FROM ROC_SUBDETAIL v")
+public class ROC_SUBDETAIL extends BasePersistedObject {
 
 	private static final long serialVersionUID = 7517505028363979338L;
 
+	// update type
+	public static final String ADD = "ADD";
+	public static final String DELETE = "DELETE";
+	public static final String UPDATE = "UPDATE";
+
 	private Long id;
+	private String description;
 	private BigDecimal amountBest = new BigDecimal(0.0);
 	private BigDecimal amountExpected = new BigDecimal(0.0);
 	private BigDecimal amountWorst = new BigDecimal(0.0);
-	private BigDecimal previousAmountBest = new BigDecimal(0.0);
-	private BigDecimal previousAmountExpected = new BigDecimal(0.0);
-	private BigDecimal previousAmountWorst = new BigDecimal(0.0);
+	private Date inputDate;
+	private String hyperlink;
 	private String remarks;
-	private Integer year;
-	private Integer month;
 
 	private ROC roc;
 
-	public ROC_DETAIL() {
+	private String updateType;
+	private Long assignedNo;
+
+	private boolean editable;
+
+	public ROC_SUBDETAIL() {
 	}
 
-	public ROC_DETAIL(int year, int month) {
-		this.year = year;
-		this.month = month;
+	public ROC_SUBDETAIL(BigDecimal amountBest, BigDecimal amountExpected, BigDecimal amountWorst) {
+		this.amountBest = amountBest;
+		this.amountExpected = amountExpected;
+		this.amountWorst = amountWorst;
 	}
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROC_DETAIL_GEN")
+	public ROC_SUBDETAIL(ROC_SUBDETAIL subdetail) {
+		this.description = subdetail.getDescription();
+		this.amountBest = subdetail.getAmountBest();
+		this.amountExpected = subdetail.getAmountExpected();
+		this.amountWorst = subdetail.getAmountWorst();
+		this.inputDate = new Date();
+		this.hyperlink = subdetail.getHyperlink();
+		this.remarks = subdetail.getRemarks();
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROC_SUBDETAIL_GEN")
 	@Column(name = "ID", unique = true, nullable = false, scale = 0)
 	public Long getId() {
 		return this.id;
@@ -122,30 +139,12 @@ public class ROC_DETAIL extends BasePersistedObject {
 		this.remarks = remarks;
 	}
 
-	@Column(name = "YEAR")
-	public Integer getYear() {
-		return year;
-	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-	@Column(name = "MONTH")
-	public Integer getMonth() {
-		return month;
-	}
-
-	public void setMonth(Integer month) {
-		this.month = month;
-	}
-
 	@JsonIgnore
 	@ManyToOne
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "ID_ROC",
-			foreignKey = @ForeignKey(name = "FK_RocDetail_Roc_PK"),
+			foreignKey = @ForeignKey(name = "FK_Roc_Roc_PK"),
 			updatable = true,
 			insertable = true)
 	public ROC getRoc() {
@@ -169,32 +168,59 @@ public class ROC_DETAIL extends BasePersistedObject {
 		return jsonString;
 	}
 
+	@Column(name = "DESCRIPTION")
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Column(name = "INPUT_DATE")
+	public Date getInputDate() {
+		return inputDate;
+	}
+
+	public void setInputDate(Date inputDate) {
+		this.inputDate = inputDate;
+	}
+
+	@Column(name = "HYPERLINK")
+	public String getHyperlink() {
+		return hyperlink;
+	}
+
+	public void setHyperlink(String hyperlink) {
+		this.hyperlink = hyperlink;
+	}
+
 	@Transient
-	public BigDecimal getPreviousAmountBest() {
-		return previousAmountBest;
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	public String getUpdateType() {
+		return updateType;
 	}
 
-	public void setPreviousAmountBest(BigDecimal previousAmountBest) {
-		this.previousAmountBest = previousAmountBest;
-	}
-
-	@Transient
-	public BigDecimal getPreviousAmountExpected() {
-		return previousAmountExpected;
-	}
-
-	public void setPreviousAmountExpected(BigDecimal previousAmountExpected) {
-		this.previousAmountExpected = previousAmountExpected;
+	public void setUpdateType(String updateType) {
+		this.updateType = updateType;
 	}
 
 	@Transient
-	public BigDecimal getPreviousAmountWorst() {
-		return previousAmountWorst;
+	public Long getAssignedNo() {
+		return assignedNo;
 	}
 
-	public void setPreviousAmountWorst(BigDecimal previousAmountWorst) {
-		this.previousAmountWorst = previousAmountWorst;
+	public void setAssignedNo(Long assignedNo) {
+		this.assignedNo = assignedNo;
 	}
 
+	@Transient
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
 
 }

@@ -10,21 +10,11 @@ public class RocWrapper extends ROC implements Serializable{
 	private static final long serialVersionUID = 726349016460817739L;
 
 	private ROC_DETAIL rocDetail;
+	private Long assignedNo;
+
+	private String cutoffDate;
 
 	public RocWrapper() {
-	}
-
-	public RocWrapper(ROC roc) {
-		super(
-				roc.getId(),
-				roc.getProjectNo(),
-				roc.getProjectRef(),
-				roc.getRocCategory(),
-				roc.getClassification(),
-				roc.getImpact(),
-				roc.getDescription(),
-				roc.getStatus()
-		);
 	}
 
 	public RocWrapper(ROC roc, ROC_DETAIL rocDetail) {
@@ -36,7 +26,14 @@ public class RocWrapper extends ROC implements Serializable{
 				roc.getClassification(),
 				roc.getImpact(),
 				roc.getDescription(),
-				roc.getStatus()
+				roc.getStatus(),
+				roc.getCreatedDate(),
+				roc.getCreatedUser(),
+				roc.getLastModifiedDate(),
+				roc.getLastModifiedUser(),
+				roc.getRocOwner(),
+				roc.getOpenDate(),
+				roc.getClosedDate()
 		);
 		this.setRocDetail(rocDetail);
 	}
@@ -47,5 +44,21 @@ public class RocWrapper extends ROC implements Serializable{
 
 	public void setRocDetail(ROC_DETAIL rocDetail) {
 		this.rocDetail = rocDetail;
+	}
+
+	public Long getAssignedNo() {
+		return assignedNo;
+	}
+
+	public void setAssignedNo(Long assignedNo) {
+		this.assignedNo = assignedNo;
+	}
+
+	public String getCutoffDate() {
+		return cutoffDate;
+	}
+
+	public void setCutoffDate(String cutoffDate) {
+		this.cutoffDate = cutoffDate;
 	}
 }

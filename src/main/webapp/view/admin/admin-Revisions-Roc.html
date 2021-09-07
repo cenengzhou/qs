@@ -1,0 +1,140 @@
+<div>
+    <div class="row well">
+        <form name="RevisionsRocSearch"
+              ng-submit="onSubmitRocSearch()" class="form">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
+                       ng-change="canAdminJob(RocSearch.jobNo)"
+                       id="RocSearch_jobNo" ng-model="RocSearch.jobNo">
+            </div>
+            <div class="col-md-3">
+                <select class="form-control"
+                        id="RocSearch_rocCategory"
+                        ng-model="RocSearch.rocCategory"
+                        ng-options="o as o for o in rocCategoryOptions" required></select>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control"
+                       placeholder="Description:" id="RocSearch_description"
+                       ng-model="RocSearch.description">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-block btn-primary" id="RocSearch_submit"
+                        ng-disabled="!adminSearchBtn">Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <form name="RevisionsRocRecord"
+          ng-submit="onSubmitRocRecord()">
+        <div class="row" style="padding: 20px" ng-show="RocRecord !== undefined">
+            <div class="row" resize ng-style="resizeWithOffset(330)">
+                <fieldset>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_projectNo" class="control-label">Job Number</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_projectNo"
+                                       value="{{RocRecord.projectNo}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_projectRef" class="control-label">Project R&O Ref</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_projectRef"
+                                       ng-model="RocRecord.projectRef">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_rocCategory" class="control-label">ROC Category</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_rocCategory"
+                                       ng-model="RocRecord.rocCategory" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_classification" class="control-label">Classification</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_classification"
+                                       ng-model="RocRecord.classification" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_impact" class="control-label">Impact</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_impact"
+                                       ng-model="RocRecord.impact" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_description_2" class="control-label">Description</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_description_2"
+                                       ng-model="RocRecord.description" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_status" class="control-label">Status</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_status"
+                                       ng-model="RocRecord.status" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_rocOwner" class="control-label">ROC Owner</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_rocOwner"
+                                       ng-model="RocRecord.rocOwner">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocRecord_closedDate" class="control-label">Closed Date</label>
+                            <div>
+                                <input type="text" class="form-control" id="RocRecord_closedDate"
+                                       ng-model="RocRecord.closedDate">
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <div class="row"
+                 ng-show="true || RocRecord.projectNo !== undefined">
+                <button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary"
+                        ng-disabled="!adminSearchBtn">Update
+                </button>
+            </div>
+            <div class="row"
+                 ng-show="true || RocRecord.projectNo !== undefined">
+                <button ng-show="showQSAdmin" ng-click="deleteRoc()" type="button" class="btn btn-block btn-success"
+                        ng-disabled="!adminSearchBtn">Delete
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
