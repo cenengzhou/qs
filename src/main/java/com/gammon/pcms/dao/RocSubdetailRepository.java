@@ -21,4 +21,10 @@ public interface RocSubdetailRepository extends JpaRepository<ROC_SUBDETAIL, Lon
             "and (a.inputDate >= :startDate and a.inputDate < :endDate)")
     ROC_SUBDETAIL findSumByRocId(@Param("rocId") Long rocId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+    @Query("select case when (count(a) > 0) then true else false end from ROC_SUBDETAIL a " +
+            "where a.roc.id=:rocId and a.systemStatus='ACTIVE' " +
+            "and (a.inputDate >= :startDate and a.inputDate < :endDate)")
+    boolean existsByRocIdAndStartDateAndEndDate(@Param("rocId") Long rocId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
 }

@@ -94,8 +94,18 @@ public class RocService {
 			for(ROC roc: filterRocList) {
 				// find current year month
 				ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), year, month);
+
 				if (rocDetail == null) {
-					rocDetail = new ROC_DETAIL(year, month);
+					YearMonth inputYearMonth = YearMonth.of(year, month).plusMonths(-1);
+					Date startDate = findStartDate(inputYearMonth);
+					Date endDate = findEndDate(inputYearMonth);
+					boolean existSubdetail = rocSubdetailRepository.existsByRocIdAndStartDateAndEndDate(roc.getId(), startDate, endDate);
+					if (existSubdetail) {
+						calculateRocDetailAmountAndMonthlyMovement(jobNo, roc.getId());
+						rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), year, month);
+					} else {
+						rocDetail = new ROC_DETAIL(year, month);
+					}
 				}
 
 				// find previous month
@@ -441,9 +451,8 @@ public class RocService {
 			List<ROC_DETAIL> saveList = new ArrayList<>();
 
 			for(YearMonth period = startYM; period.isBefore(endYM) || period.equals(endYM); period = period.plusMonths(1)) {
-				int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
-				LocalDate periodStart = LocalDate.of(startYM.getYear(), startYM.getMonthValue(), cutoffDate).plusDays(1);
-				LocalDate periodEnd = LocalDate.of(period.getYear(), period.getMonthValue(), cutoffDate).plusMonths(1).plusDays(1);
+				Date periodStart = findStartDate(startYM);
+				Date periodEnd = findEndDate(period);
 
 				// find sum from subdetail and update to detail
 				ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(rocId, period.getYear(), period.getMonthValue());
@@ -452,9 +461,7 @@ public class RocService {
 					rocDetail.setRoc(roc);
 					rocDetail = rocDetailRepository.save(rocDetail);
 				}
-				ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocId(roc.getId(),
-						Date.from(periodStart.atStartOfDay(ZoneId.systemDefault()).toInstant()),
-						Date.from(periodEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocId(roc.getId(), periodStart, periodEnd);
 				rocDetail.setAmountBest(summary.getAmountBest());
 				rocDetail.setAmountExpected(summary.getAmountExpected());
 				rocDetail.setAmountWorst(summary.getAmountWorst());
@@ -477,6 +484,16 @@ public class RocService {
 			e.printStackTrace();
 		}
 		return error;
+	}
+
+	private Date findEndDate(YearMonth period) {
+		int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
+		return Date.from(LocalDate.of(period.getYear(), period.getMonthValue(), cutoffDate).plusMonths(1).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	private Date findStartDate(YearMonth startYM) {
+		int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
+		return Date.from(LocalDate.of(startYM.getYear(), startYM.getMonthValue(), cutoffDate).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 
