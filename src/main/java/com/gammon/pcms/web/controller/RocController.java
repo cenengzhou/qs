@@ -4,6 +4,7 @@ import com.gammon.pcms.model.ROC;
 import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
 import com.gammon.pcms.model.ROC_DETAIL;
 import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.service.RocAdminService;
 import com.gammon.pcms.service.RocService;
 import com.gammon.pcms.wrapper.RocWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class RocController {
 	@Autowired
 	private RocService rocService;
 
+	@Autowired
+	private RocAdminService rocAdminService;
+
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getCutoffDate', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getCutoffDate", method = RequestMethod.GET)
 	public int getCutoffDate(){
@@ -35,19 +39,19 @@ public class RocController {
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "getRocAdmin/{jobNo}/{rocCategory}/{description}", method = RequestMethod.GET)
 	public ROC getRocAdmin(@PathVariable String jobNo, @PathVariable String rocCategory, @PathVariable String description){
-		return rocService.getRocAdmin(jobNo, rocCategory, description);
+		return rocAdminService.getRocAdmin(jobNo, rocCategory, description);
 	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "getRocDetailListAdmin/{jobNo}/{rocCategory}/{description}", method = RequestMethod.GET)
 	public List<ROC_DETAIL> getRocDetailListAdmin(@PathVariable String jobNo, @PathVariable String rocCategory, @PathVariable String description){
-		return rocService.getRocDetailListAdmin(jobNo, rocCategory, description);
+		return rocAdminService.getRocDetailListAdmin(jobNo, rocCategory, description);
 	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocSubdetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "getRocSubdetailListAdmin/{jobNo}/{rocCategory}/{description}", method = RequestMethod.GET)
 	public List<ROC_SUBDETAIL> getRocSubdetailListAdmin(@PathVariable String jobNo, @PathVariable String rocCategory, @PathVariable String description){
-		return rocService.getRocSubdetailListAdmin(jobNo, rocCategory, description);
+		return rocAdminService.getRocSubdetailListAdmin(jobNo, rocCategory, description);
 	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocListSummary', @securityConfig.getRolePcmsEnq())")
@@ -146,12 +150,28 @@ public class RocController {
 		return result;
 	}
 
+	// TODO: change it to recalculate roc only in current period
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','recalculateRoc', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@RequestMapping(value = "recalculateRoc", method = RequestMethod.POST)
+	public String recalculateRoc(@RequestParam(required = true) String jobNo){
+		String result = "";
+		try{
+			result = rocService.recalculateRoc(jobNo);
+		}catch(Exception e){
+			result  = "ROC cannot be recalculated.";
+			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+				throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+		}
+		return result;
+	}
+
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','updateRocAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateRocAdmin", method = RequestMethod.POST)
 	public String updateRocAdmin(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){
 		String result = "";
 		try{
-			result = rocService.updateRocAdmin(jobNo, roc);
+			result = rocAdminService.updateRocAdmin(jobNo, roc);
 		}catch(Exception e){
 			result  = "ROC cannot be updated.";
 			e.printStackTrace();
@@ -166,7 +186,7 @@ public class RocController {
 	public String updateRocDetailListAdmin(@RequestParam(required = true) String jobNo, @RequestBody List<ROC_DETAIL> rocDetailList){
 		String result = "";
 		try{
-			result = rocService.updateRocDetailListAdmin(jobNo, rocDetailList);
+			result = rocAdminService.updateRocDetailListAdmin(jobNo, rocDetailList);
 		}catch(Exception e){
 			result  = "ROC Detail cannot be updated.";
 			e.printStackTrace();
@@ -181,7 +201,7 @@ public class RocController {
 	public String updateRocSubdetailListAdmin(@RequestParam(required = true) String jobNo, @RequestBody List<ROC_SUBDETAIL> rocSubdetailList){
 		String result = "";
 		try{
-			result = rocService.updateRocSubdetailListAdmin(jobNo, rocSubdetailList);
+			result = rocAdminService.updateRocSubdetailListAdmin(jobNo, rocSubdetailList);
 		}catch(Exception e){
 			result  = "ROC Subdetail annot be updated.";
 			e.printStackTrace();
@@ -211,7 +231,7 @@ public class RocController {
 	public String deleteRocDetailListAdmin(@RequestParam(required = true) String jobNo, @RequestBody List<ROC_DETAIL> rocDetailList){
 		String result = "";
 		try{
-			result = rocService.deleteRocDetailListAdmin(jobNo, rocDetailList);
+			result = rocAdminService.deleteRocDetailListAdmin(jobNo, rocDetailList);
 		}catch(Exception e){
 			result  = "ROC Detail List cannot be deleted.";
 			e.printStackTrace();
@@ -226,7 +246,7 @@ public class RocController {
 	public String deleteRocSubdetailListAdmin(@RequestParam(required = true) String jobNo, @RequestBody List<ROC_SUBDETAIL> rocSubdetailList){
 		String result = "";
 		try{
-			result = rocService.deleteRocSubdetailListAdmin(jobNo, rocSubdetailList);
+			result = rocAdminService.deleteRocSubdetailListAdmin(jobNo, rocSubdetailList);
 		}catch(Exception e){
 			result  = "ROC Subdetail List cannot be deleted.";
 			e.printStackTrace();
@@ -241,7 +261,7 @@ public class RocController {
 	public String deleteRocAdmin(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){
 		String result = "";
 		try{
-			result = rocService.deleteRocAdmin(jobNo, roc);
+			result = rocAdminService.deleteRocAdmin(jobNo, roc);
 		}catch(Exception e){
 			result  = "ROC cannot be deleted.";
 			e.printStackTrace();

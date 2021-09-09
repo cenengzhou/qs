@@ -15,7 +15,6 @@ import com.gammon.pcms.wrapper.RocSummaryWrapper;
 import com.gammon.pcms.wrapper.RocWrapper;
 import com.gammon.qs.dao.RocDetailHBDao;
 import com.gammon.qs.dao.RocHBDao;
-import com.gammon.qs.service.admin.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,6 @@ public class RocService {
 
 	@Autowired
 	private RocClassDescMapRepository rocClassDescMapRepository;
-
-	@Autowired
-	private AdminService adminService;
 
 	@Autowired
 	private ForecastService forecastService;
@@ -302,34 +298,7 @@ public class RocService {
 		return a.getYear() == b.getYear() && a.getMonthValue() == b.getMonthValue();
 	}
 
-	public String updateRocAdmin(String noJob, ROC roc) {
-		String error = "";
-		try {
-			// perform roc validation
-			String basicChecking = validateInputRoc(noJob, roc);
-			if (!basicChecking.isEmpty())
-				return basicChecking;
 
-			// find existing roc and update
-			ROC newRoc = rocRepository.findOne(roc.getId());
-
-			newRoc.setProjectRef(roc.getProjectRef());
-			newRoc.setRocCategory(roc.getRocCategory());
-			newRoc.setClassification(roc.getClassification());
-			newRoc.setImpact(roc.getImpact());
-			newRoc.setDescription(roc.getDescription());
-			newRoc.setStatus(roc.getStatus());
-			newRoc.setRocOwner(roc.getRocOwner());
-			newRoc.setClosedDate(roc.getClosedDate());
-
-			ROC result = rocRepository.save(newRoc);
-
-		} catch (Exception e) {
-			error = "ROC cannot be updated";
-			e.printStackTrace();
-		}
-		return error;
-	}
 
 	public String saveRocDetails(String noJob, List<RocWrapper> rocWrapperList) {
 		String error = "";
@@ -448,8 +417,6 @@ public class RocService {
 				logger.info("Job Start Period: " + startYM.toString() + ", Job End Period: " + endYM.toString());
 			}
 
-			List<ROC_DETAIL> saveList = new ArrayList<>();
-
 			for(YearMonth period = startYM; period.isBefore(endYM) || period.equals(endYM); period = period.plusMonths(1)) {
 				Date periodStart = findStartDate(startYM);
 				Date periodEnd = findEndDate(period);
@@ -491,7 +458,7 @@ public class RocService {
 		return Date.from(LocalDate.of(period.getYear(), period.getMonthValue(), cutoffDate).plusMonths(1).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
-	private Date findStartDate(YearMonth startYM) {
+	private Date findStartDate(YearMonth startYM)  {
 		int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
 		return Date.from(LocalDate.of(startYM.getYear(), startYM.getMonthValue(), cutoffDate).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
@@ -595,145 +562,28 @@ public class RocService {
 		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 
-	public ROC getRocAdmin(String jobNo, String rocCategory, String description) {
-		if (jobNo.isEmpty() || description.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		ROC roc = rocRepository.findByProjectNoAndRocCategoryAndDescriptionAndSystemStatus(jobNo, rocCategory, description, "ACTIVE");
-		return roc;
-	}
 
-	public List<ROC_DETAIL> getRocDetailListAdmin(String jobNo, String rocCategory, String description) {
-		List<ROC_DETAIL> result = new ArrayList<>();
-		if (jobNo.isEmpty() || rocCategory.isEmpty() || description.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		ROC roc = rocRepository.findByProjectNoAndRocCategoryAndDescriptionAndSystemStatus(jobNo, rocCategory, description, "ACTIVE");
-		if (roc != null)
-			result = rocDetailRepository.findRocDetailsByRocIdAdmin(roc.getId());
-		return result;
-	}
-
-	public List<ROC_SUBDETAIL> getRocSubdetailListAdmin(String jobNo, String rocCategory, String description) {
-		List<ROC_SUBDETAIL> result = new ArrayList<>();
-		if (jobNo.isEmpty() || rocCategory.isEmpty() || description.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		ROC roc = rocRepository.findByProjectNoAndRocCategoryAndDescriptionAndSystemStatus(jobNo, rocCategory, description, "ACTIVE");
-		if (roc != null)
-			result = rocSubdetailRepository.findByRocId(roc.getId());
-		return result;
-	}
-
-	public String updateRocDetailListAdmin(String jobNo, List<ROC_DETAIL> rocDetailList) {
-		if (jobNo.isEmpty() || rocDetailList == null || rocDetailList.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		String error = "";
-		try {
-			List<ROC_DETAIL> saveList = new ArrayList<>();
-			for (ROC_DETAIL rocDetail : rocDetailList) {
-				ROC_DETAIL dbRecord = rocDetailRepository.findOne(rocDetail.getId());
-				dbRecord.setAmountBest(rocDetail.getAmountBest());
-				dbRecord.setAmountExpected(rocDetail.getAmountExpected());
-				dbRecord.setAmountWorst(rocDetail.getAmountWorst());
-				dbRecord.setRemarks(rocDetail.getRemarks());
-				saveList.add(dbRecord);
-			}
-			if (!saveList.isEmpty()) {
-				rocDetailRepository.save(saveList);
-			}
-		} catch (Exception e) {
-			error = "ROC Detail cannot be updated";
-			e.printStackTrace();
-		}
-		return error;
-	}
-
-	public String updateRocSubdetailListAdmin(String jobNo, List<ROC_SUBDETAIL> rocSubdetailList) {
-		if (jobNo.isEmpty() || rocSubdetailList == null || rocSubdetailList.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		String error = "";
-		try {
-			List<ROC_SUBDETAIL> saveList = new ArrayList<>();
-			for (ROC_SUBDETAIL rocSubdetail : rocSubdetailList) {
-				ROC_SUBDETAIL dbRecord = rocSubdetailRepository.findOne(rocSubdetail.getId());
-				dbRecord.setDescription(rocSubdetail.getDescription());
-				dbRecord.setAmountBest(rocSubdetail.getAmountBest());
-				dbRecord.setAmountExpected(rocSubdetail.getAmountExpected());
-				dbRecord.setAmountWorst(rocSubdetail.getAmountWorst());
-				dbRecord.setHyperlink(rocSubdetail.getHyperlink());
-				dbRecord.setInputDate(rocSubdetail.getInputDate());
-				dbRecord.setRemarks(rocSubdetail.getRemarks());
-				saveList.add(dbRecord);
-			}
-			if (!saveList.isEmpty()) {
-				rocSubdetailRepository.save(saveList);
-			}
-		} catch (Exception e) {
-			error = "ROC Subdetail cannot be updated";
-			e.printStackTrace();
-		}
-		return error;
-	}
-
-	public String deleteRocDetailListAdmin(String jobNo, List<ROC_DETAIL> rocDetailList) {
-		if (jobNo.isEmpty() || rocDetailList == null || rocDetailList.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		String error = "";
-		try {
-			List<ROC_DETAIL> saveList = new ArrayList<>();
-			for (ROC_DETAIL rocDetail : rocDetailList) {
-				ROC_DETAIL dbRecord = rocDetailRepository.findOne(rocDetail.getId());
-				dbRecord.inactivate();
-				saveList.add(dbRecord);
-			}
-			if (!saveList.isEmpty()) {
-				rocDetailRepository.save(saveList);
-			}
-		} catch (Exception e) {
-			error = "ROC Detail cannot be deleted";
-			e.printStackTrace();
-		}
-		return error;
-	}
-
-	public String deleteRocSubdetailListAdmin(String jobNo, List<ROC_SUBDETAIL> rocSubdetailList) {
-		if (jobNo.isEmpty() || rocSubdetailList == null || rocSubdetailList.isEmpty())
-			throw new IllegalArgumentException("invalid parameters");
-		String error = "";
-		try {
-			List<ROC_SUBDETAIL> saveList = new ArrayList<>();
-			for (ROC_SUBDETAIL subdetail : rocSubdetailList) {
-				ROC_SUBDETAIL dbRecord = rocSubdetailRepository.findOne(subdetail.getId());
-				dbRecord.inactivate();
-				saveList.add(dbRecord);
-			}
-			if (!saveList.isEmpty()) {
-				rocSubdetailRepository.save(saveList);
-			}
-		} catch (Exception e) {
-			error = "ROC Subdetail cannot be deleted";
-			e.printStackTrace();
-		}
-		return error;
-	}
-
-	public String deleteRocAdmin(String jobNo, ROC roc) {
-		if (jobNo.isEmpty() || roc == null)
-			throw new IllegalArgumentException("invalid parameters");
-		String error = "";
-		try {
-			ROC dbRecord = rocRepository.findOne(roc.getId());
-			if (dbRecord != null) {
-				dbRecord.inactivate();
-				rocRepository.save(dbRecord);
-			}
-		} catch (Exception e) {
-			error = "ROC cannot be deleted";
-			e.printStackTrace();
-		}
-		return error;
-	}
 
 	public int getCutoffDate() {
 		return Integer.parseInt(messageConfig.getRocCutoffDate());
+	}
+
+	public String recalculateRoc(String jobNo) {
+		String error = "";
+		try {
+			if (jobNo.isEmpty())
+				throw new IllegalArgumentException("invalid parameters");
+			List<ROC> rocList = rocRepository.findByJobNo(jobNo);
+			for (ROC roc : rocList) {
+				String s = calculateRocDetailAmountAndMonthlyMovement(jobNo, roc.getId());
+				if (!s.equals(""))
+					return s;
+			}
+		} catch (Exception e) {
+			error = "ROC cannot be recalculated";
+			e.printStackTrace();
+		}
+		return error;
 	}
 }
 
