@@ -51,34 +51,28 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
             });
         }
 
-        $scope.deleteItem = function() {
-            var dataRows = $scope.gridApi.selection.getSelectedRows();
-            if(dataRows.length == 0){
-                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select row.");
-                return;
-            }
-            for (var i=0; i < dataRows.length; i++) {
-                var item = dataRows[i];
-                var index = $scope.gridOptions.data.indexOf(item);
-                switch(item.updateType) {
-                    case 'ADD':
-                        if (item.assignedNo == null) {
-                            $scope.gridOptions.data.splice(index, 1);
-                        }
-                        break;
-                    case 'DELETE':
-                        break;
-                    case 'UPDATE':
-                    default:
-                        if (item.assignedNo != null) {
-                            $scope.gridOptions.data[index].amountBest = 0;
-                            $scope.gridOptions.data[index].amountExpected = 0;
-                            $scope.gridOptions.data[index].amountWorst = 0;
-                            $scope.gridOptions.data[index].updateType = 'DELETE';
-                            $scope.gridApi.rowEdit.setRowsDirty([dataRows[i]]);
-                            $scope.gridApi.grid.refresh();
-                        }
-                }
+        $scope.deleteItem = function(rowRenderIndex) {
+            var index = rowRenderIndex;
+            var item = $scope.gridOptions.data[rowRenderIndex];
+            switch(item.updateType) {
+                case 'ADD':
+                    if (item.assignedNo == null) {
+                        $scope.gridApi.rowEdit.setRowsClean([item]);
+                        $scope.gridOptions.data.splice(index, 1);
+                    }
+                    break;
+                case 'DELETE':
+                    break;
+                case 'UPDATE':
+                default:
+                    if (item.assignedNo != null) {
+                        item.amountBest = 0;
+                        item.amountExpected = 0;
+                        item.amountWorst = 0;
+                        item.updateType = 'DELETE';
+                        $scope.gridApi.rowEdit.setRowsDirty([item]);
+                        $scope.gridApi.grid.refresh();
+                    }
             }
         }
 
@@ -129,7 +123,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         }
 
         function customRowTemplate() {
-            return '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'text-gray\' : !row.entity.editable }" role="{{col.isRowHeader ? \'rowheader\' : \'gridcell\'}}" ui-grid-cell></div>';
+            return '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'text-black\' : !row.entity.editable }" role="{{col.isRowHeader ? \'rowheader\' : \'gridcell\'}}" ui-grid-cell></div>';
         }
 
         function initGrid() {
@@ -144,7 +138,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 showGridFooter: false,
                 showColumnFooter: true,
                 treeRowHeaderAlwaysVisible: false,
-                enableRowHeaderSelection: true,
+                enableRowHeaderSelection: false,
                 exporterMenuPdf: false,
                 rowEditWaitInterval: -1,
                 onRegisterApi: function (gridApi) {
@@ -163,14 +157,16 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 rowTemplate: customRowTemplate(),
 
                 columnDefs: [
-                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 100, visible: true, enableCellEdit: false,
+                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false,
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\',\'DELETE\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
                             '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\',\'DELETE\'].indexOf(row.entity.updateType) != -1">({{row.entity.updateType}})</div>'
                     },
                     {field: 'id', displayName: 'Id', width: 100, visible: false, enableCellEdit: false},
                     {field: 'rocDetailId', displayName: 'Id', width: 100, visible: false},
                     {field: 'description', displayName: 'Secondary Detail', width: 200, visible: true,
-                        headerCellClass: 'blue', cellClass: 'blue'
+                        headerCellClass: 'blue', cellClass: 'blue',
+                        cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
+                        editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
                         field: 'amountBest',
@@ -210,7 +206,9 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         cellTemplate: '<div class="ui-grid-cell-contents"><a ng-if="row.entity.hyperlink" ng-href="{{row.entity.hyperlink}}" target="_blank">(View attachment)</a></div>'
                     },
                     {field: 'remarks', displayName: 'Remarks', visible: true,
-                        headerCellClass: 'blue', cellClass: 'blue'
+                        headerCellClass: 'blue', cellClass: 'blue',
+                        cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
+                        editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
                         field: 'inputDate',
@@ -222,7 +220,13 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
                             '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">(assigned by the system)</div>'
                     },
-                    {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 150, visible: true, enableCellEdit: false}
+                    {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 150, visible: true, enableCellEdit: false},
+                    {
+                        name: 'Buttons', displayName: '',  width: 100, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
+                        cellTemplate: '<div class="col-md-12" style="padding: 5px 20px">' +
+                            '<div class="row"><button class="btn btn-sm icon-btn btn-success" ng-if="row.entity.editable" ng-click="grid.appScope.deleteItem(rowRenderIndex)"> <span class="fa fa-remove" style="padding-left:10px;" ></span> Delete</button></div>' +
+                            '</div>'
+                    }
                 ]
 
             };
