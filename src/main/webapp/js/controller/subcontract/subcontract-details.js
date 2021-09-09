@@ -303,9 +303,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			             {field: 'sequenceNo', width: 100},
 			             {field: 'resourceNo', width: 100},
 			             {field: 'balanceType', width: 100},
-			             {field: 'tenderAnalysisDetail_ID', width: 100, visible:false},
-			             {field: 'typeRecoverable', displayName:"Recoverable", width: 120,
-							 cellTemplate: "<div class='ui-grid-cell-contents'>{{row.entity.typeRecoverable ? row.entity.typeRecoverable == 'R' ? 'Recoverable' : 'Non-Recoverable' : null}}</div>"}
+			             {field: 'tenderAnalysisDetail_ID', width: 100, visible:false}
 			             ]
 
 			
