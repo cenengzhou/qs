@@ -64,15 +64,17 @@ public class ROC_DETAIL extends BasePersistedObject {
 	private String remarks;
 	private Integer year;
 	private Integer month;
+	private String status = ROC.LIVE;
 
 	private ROC roc;
 
 	public ROC_DETAIL() {
 	}
 
-	public ROC_DETAIL(int year, int month) {
+	public ROC_DETAIL(int year, int month, ROC roc) {
 		this.year = year;
 		this.month = month;
+		setRoc(roc);
 	}
 
     @Id
@@ -138,6 +140,15 @@ public class ROC_DETAIL extends BasePersistedObject {
 
 	public void setMonth(Integer month) {
 		this.month = month;
+	}
+
+	@Column(name = "STATUS")
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@JsonIgnore

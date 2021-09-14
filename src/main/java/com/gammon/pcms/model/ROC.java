@@ -2,6 +2,7 @@ package com.gammon.pcms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -281,5 +282,6 @@ public class ROC extends BasePersistedObject {
 	public void setClosedDate(Date closedDate) {
 		this.closedDate = closedDate;
 	}
+
 
 }

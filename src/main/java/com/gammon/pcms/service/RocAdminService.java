@@ -117,7 +117,8 @@ public class RocAdminService {
 				dbRecord.setAmountExpected(rocSubdetail.getAmountExpected());
 				dbRecord.setAmountWorst(rocSubdetail.getAmountWorst());
 				dbRecord.setHyperlink(rocSubdetail.getHyperlink());
-				dbRecord.setInputDate(rocSubdetail.getInputDate());
+				dbRecord.setYear(rocSubdetail.getYear());
+				dbRecord.setMonth(rocSubdetail.getMonth());
 				dbRecord.setRemarks(rocSubdetail.getRemarks());
 				saveList.add(dbRecord);
 			}

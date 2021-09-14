@@ -1,109 +1,161 @@
 <style>
-	.job-roc-grid .ui-grid-header-cell .ui-grid-cell-contents {
-		height: 48px;
-		white-space: normal;
-		-ms-text-overflow: clip;
-		-o-text-overflow: clip;
-		text-overflow: clip;
-		overflow: visible;
-	}
-	.job-roc-grid {
-		overflow: hidden !important;
-	}
-	.job-roc-grid .ui-grid-cell-contents-break {
-		word-wrap: break-word;
-		white-space: pre-wrap !important;
-	}
-	.job-roc-grid .ui-grid-row,
-	.job-roc-grid .ui-grid-cell {
-		height: auto !important;
-	}
-	.job-roc-grid .ui-grid-row div[role=row] {
-		display: flex;
-		align-content: stretch;
-	}
-	.job-roc-grid textarea {
-		width: 100%;
-		height: auto;
-	}
+    .job-roc-grid .ui-grid-header-cell .ui-grid-cell-contents {
+        height: 48px;
+        white-space: normal;
+        -ms-text-overflow: clip;
+        -o-text-overflow: clip;
+        text-overflow: clip;
+        overflow: visible;
+    }
+
+    .job-roc-grid {
+        overflow: hidden !important;
+    }
+
+    .job-roc-grid .ui-grid-cell-contents-break {
+        word-wrap: break-word;
+        white-space: pre-wrap !important;
+    }
+
+    .job-roc-grid .ui-grid-row,
+    .job-roc-grid .ui-grid-cell {
+        height: auto !important;
+    }
+
+    .job-roc-grid .ui-grid-row div[role=row] {
+        display: flex;
+        align-content: stretch;
+    }
+
+    .job-roc-grid textarea {
+        width: 100%;
+        height: auto;
+    }
 </style>
 <script>
-	function textareaAutosize(event, element) {
-		setTimeout(function () {
-			element.style.cssText = 'height: auto';
-			var height = element.scrollHeight + 20;
-			element.style.cssText = 'height: ' + height + 'px';
-		}, 0);
-	}
+    function textareaAutosize(event, element) {
+        setTimeout(function () {
+            element.style.cssText = 'height: auto';
+            var height = element.scrollHeight + 20;
+            element.style.cssText = 'height: ' + height + 'px';
+        }, 0);
+    }
 </script>
 <div id="content" class="content">
 
 
-<!-- begin section-container -->
-<div class="section-container ">
-    <!-- begin row -->
-	<div class="box box-primary">
-		<div class="box-header with-border">
-			<div class="row">
-				<div class="col-md-2 ">
+    <!-- begin section-container -->
+    <div class="section-container ">
+        <!-- begin row -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <div class="row">
+                    <div class="col-md-2 ">
 
-					<div class="input-group" moment-picker="monthYear" format="YYYY-MM"
-						 start-view="year" today="true">
-						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-						<input class="form-control" ng-model="monthYear"
-							   ng-model-options="{ updateOn: 'blur' }" >
-					</div>
-				</div>
-				<div class="col-md-3 text-red">** Cutoff Date: {{cutoffDate}}th of each month</div>
-				<div class="col-md-2"></div>
-				<div class="col-md-3 text-right">
-					<md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()" aria-label="Show Closed Item"
-								 class="md-warn md-align-top-left" flex> Display Live & Closed Item</md-checkbox>
-				</div>
-				<div class="col-md-2">
-					<button type="button" class="btn btn-danger btn-block "
-							ng-click="openAddRocDialog()">
-						<i class="fa fa-plus"></i> Add ROC
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="box-body">
-			<div class="row">
-				<div class="col-md-12">
+                        <div class="input-group" moment-picker="monthYear" format="YYYY-MM"
+                             start-view="year" today="true">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input class="form-control" ng-model="monthYear"
+                                   ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-red" ng-if="cutoffDate > 0">** Cutoff Date: {{cutoffDate}}th of each
+                        month
+                    </div>
+                    <div class="col-md-3" ng-if="cutoffDate <= 0"></div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3 text-right">
+                        <md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()"
+                                     aria-label="Show Closed Item"
+                                     class="md-warn md-align-top-left" flex> Display Live & Closed Item
+                        </md-checkbox>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-block "
+                                ng-click="addRoc()">
+                            <i class="fa fa-plus"></i> Add ROC
+                        </button>
+                    </div>
+                    <!--				<div class="col-md-2">-->
+                    <!--					<button type="button" class="btn btn-purple btn-block " ng-disabled="buttonTimer > 0"-->
+                    <!--							ng-click="recalculateRoc()">-->
+                    <!--						<i class="fa fa-calculator"></i> Recalculate <span ng-if="buttonTimer > 0">({{buttonTimer/1000}}s)</span>-->
+                    <!--					</button>-->
+                    <!--				</div>-->
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
 
-					<div class="panel panel-white">
-						<div class="panel-heading">
-							<div class="panel-heading-btn">
-								<a href="javascript:;"
-								   class="btn btn-xs btn-icon btn-circle btn-inverse"
-								   data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
-									href="javascript:;"
-									class="btn btn-xs btn-icon btn-circle btn-inverse"
-									data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-							</div>
-						</div>
-						<div class="panel-body">
-							<div id="" class="job-roc-grid" save-and-restore-grid-state="roc_details" ui-grid-save-state ui-grid="gridOptions" ui-grid-grouping
-								 ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-edit ui-grid-row-edit ui-grid-cellnav
-								 class="grid" resize ng-style="resizeWithOffset(400)"></div>
-							<label class="blue">* Blue columns are editable. Please press the "Save Details" to save the changes.</label>
-						</div>
-						<div class="panel-footer bg-white">
-							<button class="btn btn-block btn-primary btn-sm"
-									ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details</button>
-						</div>
-					</div>
+                        <div class="panel panel-white">
+                            <div class="panel-heading">
+                                <div class="panel-heading-btn">
+                                    <a href="javascript:;"
+                                       class="btn btn-xs btn-icon btn-circle btn-inverse"
+                                       data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+                                        href="javascript:;"
+                                        class="btn btn-xs btn-icon btn-circle btn-inverse"
+                                        data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div id="" class="job-roc-grid" save-and-restore-grid-state="roc_details"
+                                     ui-grid-save-state ui-grid="gridOptions" ui-grid-grouping
+                                     ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-edit
+                                     ui-grid-row-edit ui-grid-cellnav
+                                     class="grid" resize ng-style="resizeWithOffset(400)"></div>
+                                <label class="blue">* Blue columns are editable. Please press the "Save Details" to save
+                                    the changes.</label>
+<!--                                <p class="text-red">Person: {{person}}, Item: {{item}}</p>-->
+<!--                                <span ng-include src="'roc-owner-template'"></span>-->
+                            </div>
+                            <div class="panel-footer bg-white">
+                                <button class="btn btn-block btn-primary btn-sm"
+                                        ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
+                                </button>
+                            </div>
+                        </div>
 
 
-				</div>
-			</div>
-		</div>
+                    </div>
+                </div>
+            </div>
 
-	</div>
-	<!-- end row -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end section-container -->
+
+
 </div>
-<!-- end section-container -->
 
-
-</div>
+<script type="text/ng-template" id="roc-owner-template">
+    <md-autocomplete style="text-align:center"
+                     md-require-match="true"
+                     md-delay="300"
+                     md-autoselect="true"
+                     md-clear-button="!person.disabled"
+                     ng-disabled="person.disabled"
+                     md-selected-item="person.selectedItem"
+                     md-search-text-change="ctrl.searchTextChange(person.searchText, person)"
+                     md-search-text="person.searchText"
+                     md-selected-item-change="ctrl.selectedItemChange(item, person)"
+                     md-items="item in ctrl.querySearch(person.searchText)"
+                     md-item-text="item.fullName"
+                     md-min-length="3"
+                     placeholder="Input Username..."
+                     md-menu-class="autocomplete-custom-template"
+                     md-menu-container-class="custom-container">
+        <md-item-template>
+            <span class="item-title">
+                <span><strong>{{item.fullName}}</strong></span>
+            </span>
+            <span class="item-metadata">
+                <span>
+                    <small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>
+                </span>
+            </span>
+        </md-item-template>
+    </md-autocomplete>
+</script>

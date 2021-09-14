@@ -5,12 +5,15 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         $scope.jobNo = $cookies.get("jobNo");
 
         $scope.roc = modalParam.roc;
+        $scope.year = parseInt(modalParam.year);
+        $scope.month = parseInt(modalParam.month);
 
         initGrid();
 
+        handleRiskAndOpps();
+
         getData();
 
-        handleRiskAndOpps();
 
         function handleRiskAndOpps() {
             if (!isRiskAndOpps()) {
@@ -27,7 +30,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         }
 
         function getData() {
-            rocService.getRocSubdetailList($scope.jobNo, $scope.roc.id).then(function (data) {
+            rocService.getRocSubdetailList($scope.jobNo, $scope.roc.id, $scope.year, $scope.month).then(function (data) {
                 if (data && data.length >= 0) {
                     $scope.gridOptions.data = data;
                 }
@@ -37,9 +40,13 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         }
 
         $scope.addItem = function() {
-            var newRow = { 'rocDetailId' : null, 'id' : null, 'assignedNo': null, 'description' : '', 'amountBest' : 0, 'amountExpected' : 0,'amountWorst' : 0, 'inputDate' : null, 'remarks' : '', 'hyperlink' : ''};
+            var newRow = { 'rocDetailId' : null, 'id' : null, 'assignedNo': null, 'description' : '', 'amountBest' : 0, 'amountExpected' : 0,'amountWorst' : 0, 'year' : null, 'month': null, 'remarks' : '', 'hyperlink' : ''};
             newRow.editable = true;
             newRow.updateType = 'ADD';
+            if ($scope.year && $scope.month) {
+                newRow.year = $scope.year;
+                newRow.month = $scope.month;
+            }
 
             $scope.gridOptions.data.splice(0,0,newRow);
 
@@ -97,9 +104,8 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 changeList.push(item);
             }
 
-            var detailId = $scope.roc.rocDetail.id;
             var rocId = $scope.roc.id;
-            rocService.saveSubdetailList($scope.jobNo, rocId, detailId, changeList).then(function(data) {
+            rocService.saveSubdetailList($scope.jobNo, rocId, changeList, $scope.year, $scope.month).then(function(data) {
                 var isError;
                 var result = parseInt(data);
                 if (data.length == 0) {
@@ -211,20 +217,28 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
-                        field: 'inputDate',
-                        displayName: 'Input Date',
-                        cellFilter: 'date:"yyyy-MMM-dd HH:mm:ss"',
-                        width: 150,
+                        field: 'year',
+                        displayName: 'Year',
+                        width: 100,
                         visible: true,
                         enableCellEdit: false,
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
-                            '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">(assigned by the system)</div>'
+                            '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">{{row.entity.year}}</div>'
+                    },
+                    {
+                        field: 'month',
+                        displayName: 'Month',
+                        width: 100,
+                        visible: true,
+                        enableCellEdit: false,
+                        cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
+                            '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">{{row.entity.month}}</div>'
                     },
                     {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 150, visible: true, enableCellEdit: false},
                     {
-                        name: 'Buttons', displayName: '',  width: 100, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
+                        name: 'Buttons', displayName: '',  width: 50, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
                         cellTemplate: '<div class="col-md-12" style="padding: 5px 20px">' +
-                            '<div class="row"><button class="btn btn-sm icon-btn btn-success" ng-if="row.entity.editable" ng-click="grid.appScope.deleteItem(rowRenderIndex)"> <span class="fa fa-remove" style="padding-left:10px;" ></span> Delete</button></div>' +
+                            '<div class="row"><button class="btn btn-sm icon-btn btn-success" ng-if="row.entity.editable" ng-click="grid.appScope.deleteItem(rowRenderIndex)"> <span class="fa fa-remove" style="padding-left:10px;" ></span></button></div>' +
                             '</div>'
                     }
                 ]

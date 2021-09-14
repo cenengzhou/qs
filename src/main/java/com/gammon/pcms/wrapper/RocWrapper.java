@@ -14,6 +14,8 @@ public class RocWrapper extends ROC implements Serializable{
 
 	private String cutoffDate;
 
+	private String updateType;
+
 	public RocWrapper() {
 	}
 
@@ -60,5 +62,13 @@ public class RocWrapper extends ROC implements Serializable{
 
 	public void setCutoffDate(String cutoffDate) {
 		this.cutoffDate = cutoffDate;
+	}
+
+	public String getUpdateType() {
+		return updateType;
+	}
+
+	public void setUpdateType(String updateType) {
+		this.updateType = updateType;
 	}
 }

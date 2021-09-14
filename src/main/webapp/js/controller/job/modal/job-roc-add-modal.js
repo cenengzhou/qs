@@ -56,9 +56,12 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
 
         if ($scope.displayMode === 'UPDATE') {
             $scope.roc = angular.copy(modalParam);
-        } else {
+        } else if ($scope.displayMode === 'ADD') {
+            $scope.year = modalParam.year;
+            $scope.month = modalParam.month;
             $scope.roc = {
-                projectNo: $scope.jobNo
+                projectNo: $scope.jobNo,
+                openDate: new Date($scope.year, $scope.month-1)
             }
         }
 
@@ -113,10 +116,11 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
             $scope.cancel();
             modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Records have been updated.");
 
-            if ($scope.displayMode === 'UPDATE')
-                $rootScope.$broadcast('reloadRocList', {});
-            else
-                $state.reload();
+            $rootScope.$broadcast('reloadRocList', {});
+            // if ($scope.displayMode === 'UPDATE')
+            //     $rootScope.$broadcast('reloadRocList', {});
+            // else
+            //     $state.reload();
         }
 
         function Error(msg) {
@@ -144,6 +148,7 @@ mainApp.controller('JobRocAddCtrl', ['$scope', 'rocService', '$uibModalInstance'
                     if (!$scope.roc.status)
                         $scope.roc.status = $scope.statusOptions[0];
                 });
-
         }
+
+
     }]);

@@ -70,14 +70,8 @@ mainApp.controller('AdminRevisionsRocSubdetailCtrl', ['$scope', 'modalService', 
                     aggregationType: uiGridConstants.aggregationTypes.sum,
                     footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
                 },
-                {
-                    field: 'inputDate',
-                    type: 'date',
-                    cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"',
-                    width: '240',
-                    displayName: "Input Date",
-                    enableCellEdit: $scope.canEdit
-                },
+                {field: 'year', width: '120', displayName: "Year", enableCellEdit: $scope.canEdit},
+                {field: 'month', width: '120', displayName: "Month", enableCellEdit: $scope.canEdit},
                 {field: 'hyperlink', width: '120', displayName: "Hyperlink", enableCellEdit: true},
                 {field: 'remarks', displayName: "Remarks", enableCellEdit: $scope.canEdit},
                 {field: 'systemStatus', width: '120', displayName: "Status", enableCellEdit: false}

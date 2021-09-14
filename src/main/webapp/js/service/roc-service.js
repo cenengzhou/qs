@@ -22,7 +22,8 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		getImpactList: getImpactList,
 		getStatusList: getStatusList,
 		getRocHistory: getRocHistory,
-		getRocDetailHistory: getRocDetailHistory
+		getRocDetailHistory: getRocDetailHistory,
+		recalculateRoc: recalculateRoc
     });
 
 	function getCutoffDate() {
@@ -65,10 +66,10 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function getRocSubdetailList(jobNo, rocId) {
+	function getRocSubdetailList(jobNo, rocId, year, month) {
 		var request = $http({
 			method: 'GET',
-			url: "service/roc/getRocSubdetailList/" + jobNo + "/" + rocId
+			url: "service/roc/getRocSubdetailList/" + jobNo + "/" + rocId + "/" + year+ "/" + month
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
@@ -186,6 +187,18 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
+	function recalculateRoc(jobNo) {
+		var request = $http({
+			method: "post",
+			url: "service/roc/recalculateRoc",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
 	function saveRocDetails(jobNo, rocDetails) {
 		var request = $http({
 			method: "post",
@@ -199,7 +212,7 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function saveSubdetailList(jobNo, rocId, detailId, rocSubdetails) {
+	function saveSubdetailList(jobNo, rocId, rocSubdetails, year, month) {
 		var request = $http({
 			method: "post",
 			url: "service/roc/saveSubdetailList",
@@ -207,7 +220,8 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 			params: {
 				jobNo: jobNo,
 				rocId: rocId,
-				detailId: detailId
+				year: year,
+				month: month
 			},
 			data: rocSubdetails
 		});

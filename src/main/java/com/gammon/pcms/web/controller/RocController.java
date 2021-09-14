@@ -61,9 +61,9 @@ public class RocController {
 	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocSubdetailList', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "getRocSubdetailList/{jobNo}/{rocId}", method = RequestMethod.GET)
-	public List<ROC_SUBDETAIL> getRocSubdetailList(@PathVariable String jobNo, @PathVariable Long rocId){
-		return rocService.getRocSubdetailList(jobNo, rocId);
+	@RequestMapping(value = "getRocSubdetailList/{jobNo}/{rocId}/{year}/{month}", method = RequestMethod.GET)
+	public List<ROC_SUBDETAIL> getRocSubdetailList(@PathVariable String jobNo, @PathVariable Long rocId, @PathVariable int year, @PathVariable int month){
+		return rocService.getRocSubdetailList(jobNo, rocId, year, month);
 	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocClassDescMap', @securityConfig.getRolePcmsEnq())")
@@ -107,7 +107,7 @@ public class RocController {
 	public String addRoc(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){
 		String result = "";
 		try{
-			result = rocService.addRoc(jobNo, roc);
+			result = rocService.addRoc(jobNo, roc, null);
 		}catch(Exception e){
 			result  = "ROC cannot be created.";
 			e.printStackTrace();
@@ -136,11 +136,12 @@ public class RocController {
 	@RequestMapping(value = "saveSubdetailList", method = RequestMethod.POST)
 	public String saveSubdetailList(@RequestParam(required = true) String jobNo,
 									@RequestParam(required = true) Long rocId,
-									@RequestParam(required = false) Long detailId,
+									@RequestParam(required = true) int year,
+									@RequestParam(required = true) int month,
 									@RequestBody List<ROC_SUBDETAIL> subdetailList){
 		String result = "";
 		try{
-			result = rocService.saveSubdetailList(jobNo, rocId, detailId, subdetailList);
+			result = rocService.saveSubdetailList(jobNo, rocId, subdetailList, year, month);
 		}catch(Exception e){
 			result  = "ROC Subdetails cannot be saved.";
 			e.printStackTrace();
@@ -150,13 +151,12 @@ public class RocController {
 		return result;
 	}
 
-	// TODO: change it to recalculate roc only in current period
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','recalculateRoc', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "recalculateRoc", method = RequestMethod.POST)
-	public String recalculateRoc(@RequestParam(required = true) String jobNo){
+	public String recalculateRoc(@RequestParam(required = true) String jobNo, @RequestParam(required = true) int year, @RequestParam(required = true) int month){
 		String result = "";
 		try{
-			result = rocService.recalculateRoc(jobNo);
+			result = rocService.recalculateRoc(jobNo, year, month);
 		}catch(Exception e){
 			result  = "ROC cannot be recalculated.";
 			e.printStackTrace();

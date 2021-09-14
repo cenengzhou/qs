@@ -208,7 +208,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('job.roc', {
 		url: "/roc",
 		templateUrl: "view/job/job-roc.html?@PROJECT_VERSION@",
-		controller: 'JobRocCtrl',
+		controller: 'JobRocCtrl as ctrl',
 		resolve: {
 			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
 				return $ocLazyLoad.load({

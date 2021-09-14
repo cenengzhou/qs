@@ -32,7 +32,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * The persistent class for the ROC_SUBDETAIL database table.
@@ -62,7 +61,8 @@ public class ROC_SUBDETAIL extends BasePersistedObject {
 	private BigDecimal amountBest = new BigDecimal(0.0);
 	private BigDecimal amountExpected = new BigDecimal(0.0);
 	private BigDecimal amountWorst = new BigDecimal(0.0);
-	private Date inputDate;
+	private Integer year;
+	private Integer month;
 	private String hyperlink;
 	private String remarks;
 
@@ -87,7 +87,6 @@ public class ROC_SUBDETAIL extends BasePersistedObject {
 		this.amountBest = subdetail.getAmountBest();
 		this.amountExpected = subdetail.getAmountExpected();
 		this.amountWorst = subdetail.getAmountWorst();
-		this.inputDate = new Date();
 		this.hyperlink = subdetail.getHyperlink();
 		this.remarks = subdetail.getRemarks();
 	}
@@ -177,15 +176,6 @@ public class ROC_SUBDETAIL extends BasePersistedObject {
 		this.description = description;
 	}
 
-	@Column(name = "INPUT_DATE")
-	public Date getInputDate() {
-		return inputDate;
-	}
-
-	public void setInputDate(Date inputDate) {
-		this.inputDate = inputDate;
-	}
-
 	@Column(name = "HYPERLINK")
 	public String getHyperlink() {
 		return hyperlink;
@@ -223,4 +213,21 @@ public class ROC_SUBDETAIL extends BasePersistedObject {
 		this.editable = editable;
 	}
 
+	@Column(name = "YEAR")
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	@Column(name = "MONTH")
+	public Integer getMonth() {
+		return month;
+	}
+
+	public void setMonth(Integer month) {
+		this.month = month;
+	}
 }

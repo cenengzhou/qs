@@ -1,17 +1,15 @@
 package com.gammon.pcms.service;
 
-import com.gammon.pcms.config.ApplicationConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.dao.RocClassDescMapRepository;
 import com.gammon.pcms.dao.RocDetailRepository;
 import com.gammon.pcms.dao.RocRepository;
 import com.gammon.pcms.dao.RocSubdetailRepository;
-import com.gammon.pcms.model.Forecast;
+import com.gammon.pcms.helper.RocDateUtils;
 import com.gammon.pcms.model.ROC;
 import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
 import com.gammon.pcms.model.ROC_DETAIL;
 import com.gammon.pcms.model.ROC_SUBDETAIL;
-import com.gammon.pcms.wrapper.RocSummaryWrapper;
 import com.gammon.pcms.wrapper.RocWrapper;
 import com.gammon.qs.dao.RocDetailHBDao;
 import com.gammon.qs.dao.RocHBDao;
@@ -22,18 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -55,7 +46,7 @@ public class RocService {
 	private RocClassDescMapRepository rocClassDescMapRepository;
 
 	@Autowired
-	private ForecastService forecastService;
+	private RocIntegrationService rocIntegrationService;
 
 	@Autowired
 	private RocHBDao rocHBDao;
@@ -66,42 +57,34 @@ public class RocService {
 	@Autowired
 	private MessageConfig messageConfig;
 
-	@Autowired
-	private ApplicationConfig applicationConfig;
-
 	public List<RocWrapper> getRocWrapperList(String jobNo, int year, int month) {
 		if (jobNo.isEmpty() || !(month >= 1 && month <= 12))
 			throw new IllegalArgumentException("invalid parameters");
 		List<RocWrapper> result = new ArrayList<>();
 		try {
 			List<ROC> rocList = rocRepository.findByJobNo(jobNo);
+			YearMonth inputYearMonth = YearMonth.of(year, month);
 
 			// filter roc by year month
 			List<ROC> filterRocList = new ArrayList<>();
 			for (ROC r : rocList) {
-				YearMonth createdYearMonth = findYearMonthFromCutoffDate(r.getOpenDate());
-				YearMonth inputYearMonth = YearMonth.of(year, month);
+				YearMonth createdYearMonth = RocDateUtils.findYearMonthFromCutoffDate(r.getOpenDate(), getCutoffDate());
 				if (inputYearMonth.isAfter(createdYearMonth) || inputYearMonth.equals(createdYearMonth)) {
+					if (r.getStatus().equals(ROC.CLOSED)) {
+						YearMonth closedYearMonth = RocDateUtils.findYearMonthFromCutoffDate(r.getClosedDate(), getCutoffDate());
+						if (inputYearMonth.isAfter(closedYearMonth))
+							continue;
+					}
 					filterRocList.add(r);
 				}
 			}
 
 			// Merge detail list to detail
 			for(ROC roc: filterRocList) {
-				// find current year month
 				ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), year, month);
-
 				if (rocDetail == null) {
-					YearMonth inputYearMonth = YearMonth.of(year, month).plusMonths(-1);
-					Date startDate = findStartDate(inputYearMonth);
-					Date endDate = findEndDate(inputYearMonth);
-					boolean existSubdetail = rocSubdetailRepository.existsByRocIdAndStartDateAndEndDate(roc.getId(), startDate, endDate);
-					if (existSubdetail) {
-						calculateRocDetailAmountAndMonthlyMovement(jobNo, roc.getId());
-						rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), year, month);
-					} else {
-						rocDetail = new ROC_DETAIL(year, month);
-					}
+					// mirror last record
+					rocDetail = findDetailBackwardOrCreateOne(year, month, roc);
 				}
 
 				// find previous month
@@ -133,8 +116,24 @@ public class RocService {
 		return result;
 	}
 
+	private ROC_DETAIL findDetailBackwardOrCreateOne(int year, int month, ROC roc) {
+		ROC_DETAIL rocDetail;
+		rocDetail = new ROC_DETAIL(year, month, roc);
 
-	public List<ROC_SUBDETAIL> getRocSubdetailList(String jobNo, Long rocId) {
+		// find figures backward and fill in the row
+		List<ROC_DETAIL> findDetails = rocDetailRepository.findByRocIdAndYearMonthOrderByYearDescAndMonthDesc(roc.getId(), year, month);
+		if (!findDetails.isEmpty()) {
+			ROC_DETAIL latest = findDetails.get(0);
+			rocDetail.setAmountBest(latest.getAmountBest());
+			rocDetail.setAmountExpected(latest.getAmountExpected());
+			rocDetail.setAmountWorst(latest.getAmountWorst());
+			rocDetail.setRemarks(latest.getRemarks());
+		}
+		return rocDetail;
+	}
+
+
+	public List<ROC_SUBDETAIL> getRocSubdetailList(String jobNo, Long rocId, int year, int month) {
 		List<ROC_SUBDETAIL> result = new ArrayList<>();
 		if (rocId != null) {
 			result = rocSubdetailRepository.findByRocId(rocId);
@@ -143,11 +142,17 @@ public class RocService {
 				subdetail.setAssignedNo(counter);
 				counter++;
 
-				subdetail.setEditable(compareYearMonthFromCutOffDate(subdetail.getInputDate(), new Date()));
+				subdetail.setEditable(
+						RocDateUtils.compareYearMonthPeriod(
+								YearMonth.of(year, month),
+								YearMonth.of(subdetail.getYear(), subdetail.getMonth())
+						)
+				);
 			}
 		}
 		return result;
 	}
+
 
 	public List<ROC_CLASS_DESC_MAP> getRocClassDescMap() {
 		return rocClassDescMapRepository.findAll();
@@ -184,22 +189,7 @@ public class RocService {
 		return error;
 	}
 
-	private Date toCutOffDate(Date inputDate) {
-		int rocCutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(inputDate);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		if (day <= rocCutoffDate) {
-			calendar.add(Calendar.MONTH, -1);
-			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-			calendar.set(Calendar.HOUR_OF_DAY, 23);
-			calendar.set(Calendar.MINUTE, 59);
-			calendar.set(Calendar.SECOND, 59);
-		}
-		return calendar.getTime();
-	}
-
-	public String addRoc(String noJob, ROC roc) {
+	public String addRoc(String noJob, ROC roc, ROC_DETAIL rocDetail) {
 		String error = "";
 		try {
 			// perform roc validation
@@ -221,10 +211,18 @@ public class RocService {
 					roc.getDescription(),
 					roc.getStatus(),
 					roc.getRocOwner(),
-					new Date(),
-					roc.getStatus().equals(ROC.CLOSED) ? new Date() : null
+					roc.getOpenDate(),
+					roc.getStatus().equals(ROC.CLOSED) ? today() : null
 			);
-			ROC result = rocRepository.save(newRoc);
+			ROC newRocResult = rocRepository.save(newRoc);
+
+			// create detail
+			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(roc.getOpenDate(), getCutoffDate());
+			ROC_DETAIL newRocDetail = new ROC_DETAIL(yearMonth.getYear(), yearMonth.getMonthValue(), newRocResult);
+			if (rocDetail != null && !rocDetail.getRemarks().isEmpty()) {
+				newRocDetail.setRemarks(rocDetail.getRemarks());
+			}
+			rocDetailRepository.save(newRocDetail);
 
 		} catch (Exception e) {
 			error = "ROC cannot be created";
@@ -249,36 +247,8 @@ public class RocService {
 			dbRoc.setImpact(roc.getImpact());
 
 			// handle status change (Live or Closed)
-			String oldStatus = dbRoc.getStatus();
-			String newStatus = roc.getStatus();
-			if (!oldStatus.equals(newStatus)) {
-				if (newStatus.equals(ROC.CLOSED)) {
-					dbRoc.setClosedDate(new Date());
-
-					YearMonth todayYearMonth = findYearMonthFromCutoffDate(new Date());
-					// zero out figures
-					ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
-					if (rocDetail != null) {
-						rocDetail.setAmountBest(BigDecimal.valueOf(0));
-						rocDetail.setAmountExpected(BigDecimal.valueOf(0));
-						rocDetail.setAmountWorst(BigDecimal.valueOf(0));
-						rocDetailRepository.save(rocDetail);
-
-						// calculate monthly movement
-						String calculateMonthlyMovement = calculateRocSummaryToMonthlyMovement(noJob, todayYearMonth.getYear(), todayYearMonth.getMonthValue());
-						if (!calculateMonthlyMovement.equals(""))
-							return calculateMonthlyMovement;
-					}
-
-				} else {
-					if (!compareYearMonthFromCutOffDate(new Date(), dbRoc.getClosedDate())) {
-						return "Cannot reopen other month period";
-					}
-					dbRoc.setClosedDate(null);
-					calculateRocDetailAmountAndMonthlyMovement(noJob, dbRoc.getId());
-				}
-				dbRoc.setStatus(roc.getStatus());
-			}
+			String rocStatusChange = handleRocStatusChange(noJob, roc, dbRoc);
+			if (rocStatusChange != "") return rocStatusChange;
 
 			dbRoc.setDescription(roc.getDescription());
 			dbRoc.setRocOwner(roc.getRocOwner());
@@ -292,34 +262,99 @@ public class RocService {
 		return error;
 	}
 
-	private boolean compareYearMonthFromCutOffDate(Date date1, Date date2) {
-		YearMonth a = findYearMonthFromCutoffDate(date1);
-		YearMonth b = findYearMonthFromCutoffDate(date2);
-		return a.getYear() == b.getYear() && a.getMonthValue() == b.getMonthValue();
+	private String handleRocStatusChange(String noJob, ROC roc, ROC dbRoc) {
+		String oldStatus = dbRoc.getStatus();
+		String newStatus = roc.getStatus();
+		YearMonth todayYearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
+		ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
+		if (rocDetail == null) {
+			rocDetail = findDetailBackwardOrCreateOne(todayYearMonth.getYear(), todayYearMonth.getMonthValue(), roc);
+		}
+		if (!oldStatus.equals(newStatus)) {
+			if (newStatus.equals(ROC.CLOSED)) {
+				dbRoc.setClosedDate(today());
+
+				// zero out figures
+				rocDetail.setAmountBest(BigDecimal.valueOf(0));
+				rocDetail.setAmountExpected(BigDecimal.valueOf(0));
+				rocDetail.setAmountWorst(BigDecimal.valueOf(0));
+				rocDetail.setStatus(ROC.CLOSED);
+				rocDetailRepository.save(rocDetail);
+
+				rocSubdetailRepository.updateSubdetailToZeroByRocIdAndPeriod(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
+
+			} else {
+				if (!RocDateUtils.compareDatePeriodCutoff(today(), dbRoc.getClosedDate(), getCutoffDate())) {
+					return "Cannot reopen other month period";
+				}
+				dbRoc.setClosedDate(null);
+				rocDetail.setStatus(ROC.LIVE);
+				calculateRocDetailAmount(dbRoc.getId(), todayYearMonth);
+//				calculateRocDetailAmountAndMonthlyMovementByPeriod(noJob, dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
+			}
+			dbRoc.setStatus(roc.getStatus());
+		}
+		return "";
 	}
-
-
 
 	public String saveRocDetails(String noJob, List<RocWrapper> rocWrapperList) {
 		String error = "";
 		try {
 			for (RocWrapper rocWrapper : rocWrapperList) {
-				ROC roc = rocRepository.findOne(rocWrapper.getId());
-				if (roc.getStatus().equals(ROC.CLOSED)) {
-					return "ROC is closed";
-				}
-				if (!noJob.equals(roc.getProjectNo()))
-					return "Job no not match";
-				ROC_DETAIL inputDetail = rocWrapper.getRocDetail();
-				Long id = inputDetail.getId();
-				ROC_DETAIL newRocDetail =
-						id == null ?
-								new ROC_DETAIL(inputDetail.getYear(), inputDetail.getMonth())
-								: rocDetailRepository.findOne(id);
-				newRocDetail.setRemarks(inputDetail.getRemarks());
-				newRocDetail.setRoc(roc);
+				Long rocId = rocWrapper.getId();
+				ROC_DETAIL rocDetailWrapper = rocWrapper.getRocDetail();
+//				YearMonth todayYearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
+				YearMonth yearMonth = YearMonth.of(rocDetailWrapper.getYear(), rocDetailWrapper.getMonth());
 
-				ROC_DETAIL result = rocDetailRepository.save(newRocDetail);
+				// handle ROC (add/ update)
+				if (rocWrapper.getUpdateType().equals("ADD")) {
+					ROC newRoc = new ROC(
+							noJob,
+							rocWrapper.getProjectRef(),
+							rocWrapper.getRocCategory(),
+							rocWrapper.getClassification(),
+							rocWrapper.getImpact(),
+							rocWrapper.getDescription(),
+							rocWrapper.getStatus(),
+							rocWrapper.getRocOwner(),
+							rocWrapper.getOpenDate(),
+							null
+					);
+					String s = addRoc(noJob, newRoc, rocWrapper.getRocDetail());
+					if (s != "") return s;
+
+				} else if (rocWrapper.getUpdateType().equals("UPDATE")) {
+					ROC roc = rocRepository.findOne(rocId);
+					ROC newRoc = new ROC(
+							rocId,
+							noJob,
+							rocWrapper.getProjectRef(),
+							rocWrapper.getRocCategory(),
+							rocWrapper.getClassification(),
+							rocWrapper.getImpact(),
+							rocWrapper.getDescription(),
+							rocWrapper.getStatus(),
+							null,
+							null,
+							null,
+							null,
+							rocWrapper.getRocOwner(),
+							rocWrapper.getOpenDate(),
+							rocWrapper.getClosedDate()
+					);
+					String s = updateRoc(noJob, newRoc);
+					if (s != "") return s;
+
+					// handle ROC detail
+					ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(rocId, yearMonth.getYear(), yearMonth.getMonthValue());
+					if (rocDetail == null) {
+						rocDetail = findDetailBackwardOrCreateOne(yearMonth.getYear(), yearMonth.getMonthValue(), roc);
+					}
+
+					rocDetail.setRemarks(rocDetailWrapper.getRemarks());
+
+					ROC_DETAIL result = rocDetailRepository.save(rocDetail);
+				}
 
 			}
 		} catch (Exception e) {
@@ -329,35 +364,12 @@ public class RocService {
 		return error;
 	}
 
-	private YearMonth findYearMonthFromCutoffDate(Date date) {
-		return YearMonth.from(toCutOffDate(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-	}
-
-	public String saveSubdetailList(String jobNo, Long rocId, Long detailId, List<ROC_SUBDETAIL> subdetailList) {
+	public String saveSubdetailList(String jobNo, Long rocId, List<ROC_SUBDETAIL> subdetailList, int year, int month) {
 		String result = "";
 		try {
 			ROC roc = rocRepository.getByID(rocId);
 			if (roc.getStatus().equals(ROC.CLOSED)) {
 				return "ROC is closed";
-			}
-
-			// invalid period for editing (must be the same period for delete)
-			YearMonth todayYearMonth = findYearMonthFromCutoffDate(new Date());
-			for (ROC_SUBDETAIL s : subdetailList) {
-				if (s.getUpdateType().equals(ROC_SUBDETAIL.ADD))
-					continue;
-				YearMonth inputDateYearMonth = findYearMonthFromCutoffDate(s.getInputDate());
-				if (!(todayYearMonth.getYear() == inputDateYearMonth.getYear() && todayYearMonth.getMonthValue() == inputDateYearMonth.getMonthValue()))
-					return "Cannot edit other month period";
-			}
-
-			// create profile
-			if (detailId == null && subdetailList != null && subdetailList.size() > 0) {
-				ROC_DETAIL rocDetail = new ROC_DETAIL(todayYearMonth.getYear(), todayYearMonth.getMonthValue());
-				rocDetail.setRoc(roc);
-				ROC_DETAIL createdProfile = rocDetailRepository.save(rocDetail);
-				detailId = createdProfile.getId();
-				result = String.valueOf(detailId);
 			}
 
 			// handle changes
@@ -367,6 +379,10 @@ public class RocService {
 				if (updateType.equals(ROC_SUBDETAIL.ADD)) {
 					// handle add item
 					ROC_SUBDETAIL newRecord = new ROC_SUBDETAIL(subdetail);
+//					newRecord.setYear(todayYearMonth.getYear());
+//					newRecord.setMonth(todayYearMonth.getMonthValue());
+					newRecord.setYear(subdetail.getYear());
+					newRecord.setMonth(subdetail.getMonth());
 					newRecord.setRoc(roc);
 					changeList.add(newRecord);
 				} else if (updateType.equals(ROC_SUBDETAIL.DELETE)) {
@@ -378,6 +394,10 @@ public class RocService {
 				} else {
 					// handle update item
 					ROC_SUBDETAIL dbRecord = rocSubdetailRepository.findOne(subdetail.getId());
+
+					dbRecord.setYear(subdetail.getYear());
+					dbRecord.setMonth(subdetail.getMonth());
+
 					dbRecord.setDescription(subdetail.getDescription());
 					dbRecord.setAmountBest(subdetail.getAmountBest());
 					dbRecord.setAmountExpected(subdetail.getAmountExpected());
@@ -391,8 +411,8 @@ public class RocService {
 
 			rocSubdetailRepository.save(changeList);
 
-			// calculate roc detail (from start to current month period)
-			String calculateRoc = calculateRocDetailAmountAndMonthlyMovement(jobNo, roc.getId());
+			// calculate roc detail
+			String calculateRoc = calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, roc.getId(), year, month);
 			if (!calculateRoc.equals(""))
 				return calculateRoc;
 
@@ -403,48 +423,19 @@ public class RocService {
 		return result;
 	}
 
-	public String calculateRocDetailAmountAndMonthlyMovement(String jobNo, Long rocId) {
+
+	public String calculateRocDetailAmountAndMonthlyMovementByPeriod(String jobNo, Long rocId, int year, int month) {
 		String error = "";
 		try {
-			ROC roc = rocRepository.getByID(rocId);
-			YearMonth startYM = findYearMonthFromCutoffDate(roc.getOpenDate());
-			YearMonth endYM = findYearMonthFromCutoffDate(roc.getClosedDate() == null ? new Date() : roc.getClosedDate());
+//			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
+			YearMonth yearMonth = YearMonth.of(year, month);
 
-			// TODO: remove logger if stable
-			if (applicationConfig.getDeployEnvironment().equals("LOC")) {
-				logger.info("ROC ID: " + rocId);
-				logger.info("Job Open Date: " + roc.getOpenDate() + ", Job Closed Date: " + roc.getClosedDate());
-				logger.info("Job Start Period: " + startYM.toString() + ", Job End Period: " + endYM.toString());
-			}
+			calculateRocDetailAmount(rocId, yearMonth);
 
-			for(YearMonth period = startYM; period.isBefore(endYM) || period.equals(endYM); period = period.plusMonths(1)) {
-				Date periodStart = findStartDate(startYM);
-				Date periodEnd = findEndDate(period);
-
-				// find sum from subdetail and update to detail
-				ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(rocId, period.getYear(), period.getMonthValue());
-				if (rocDetail == null) {
-					rocDetail = new ROC_DETAIL(period.getYear(), period.getMonthValue());
-					rocDetail.setRoc(roc);
-					rocDetail = rocDetailRepository.save(rocDetail);
-				}
-				ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocId(roc.getId(), periodStart, periodEnd);
-				rocDetail.setAmountBest(summary.getAmountBest());
-				rocDetail.setAmountExpected(summary.getAmountExpected());
-				rocDetail.setAmountWorst(summary.getAmountWorst());
-
-				ROC_DETAIL saveRocDetail = rocDetailRepository.save(rocDetail);
-
-				// TODO: remove logger if stable
-				if (applicationConfig.getDeployEnvironment().equals("LOC")) {
-					logger.info("Period Start: " + periodStart.toString() + ", Job End: " + periodEnd.toString(), "Best: " + saveRocDetail.getAmountBest(), "Expected: " + saveRocDetail.getAmountExpected(), "Worst: " + saveRocDetail.getAmountWorst());
-				}
-
-				// calculate monthly movement
-				String calculateMonthlyMovement = calculateRocSummaryToMonthlyMovement(jobNo, period.getYear(), period.getMonthValue());
-				if (!calculateMonthlyMovement.equals(""))
-					return calculateMonthlyMovement;
-			}
+			// calculate monthly movement
+			String calculateMonthlyMovement = rocIntegrationService.calculateRocSummaryToMonthlyMovement(jobNo, yearMonth.getYear(), yearMonth.getMonthValue());
+			if (!calculateMonthlyMovement.equals(""))
+				return calculateMonthlyMovement;
 
 		} catch (Exception e) {
 			error = "Failed to calculate roc amount. Job No: "+jobNo+", ROC id: " + rocId;
@@ -453,97 +444,36 @@ public class RocService {
 		return error;
 	}
 
-	private Date findEndDate(YearMonth period) {
-		int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
-		return Date.from(LocalDate.of(period.getYear(), period.getMonthValue(), cutoffDate).plusMonths(1).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
-
-	private Date findStartDate(YearMonth startYM)  {
-		int cutoffDate = Integer.parseInt(messageConfig.getRocCutoffDate());
-		return Date.from(LocalDate.of(startYM.getYear(), startYM.getMonthValue(), cutoffDate).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
-
-
-	public String calculateRocSummaryToMonthlyMovement(String jobNo, Integer year, Integer month) {
-		String error = "";
-		try {
-			List<Forecast> forecastList = forecastService.getForecastList(jobNo, year, month, Forecast.ROLLING_FORECAST);
-			List<Forecast> newForecastList = new ArrayList<>();
-			List<RocSummaryWrapper> sumOfAmountExpectedGroupByRocCat = rocDetailRepository.findSumOfAmountExpectedGroupByRocCat(jobNo, year, month);
-
-			Forecast actualTurnover = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.ACTUAL, Forecast.INTERNAL_VALUE, forecastList);
-			Forecast actualCost = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.ACTUAL, Forecast.COST, forecastList);
-			Forecast turnover = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.EOJ, Forecast.TURNOVER, forecastList);
-			Forecast cost = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.EOJ, Forecast.COST, forecastList);
-			Forecast unTurnover = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.UNSECURED_EOJ, Forecast.UNSECURED_TURNOVER, forecastList);
-			Forecast unCost = findDbOrCreateNewForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.UNSECURED_EOJ, Forecast.UNSECURED_COST, forecastList);
-
-			Forecast tenderRisk = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CONTINGENCY, Forecast.TENDER_RISKS, ROC.TENDER_RISK, sumOfAmountExpectedGroupByRocCat, forecastList);
-			Forecast tenderOpps = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CONTINGENCY, Forecast.TENDER_OPPS, ROC.TENDER_OPPS, sumOfAmountExpectedGroupByRocCat, forecastList);
-			Forecast others = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CONTINGENCY, Forecast.OTHERS, ROC.CONTINGENCY, sumOfAmountExpectedGroupByRocCat, forecastList);
-			Forecast risk = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.RISKS, Forecast.RISKS, ROC.RISK, sumOfAmountExpectedGroupByRocCat, forecastList);
-			Forecast opps = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.RISKS, Forecast.OPPS, ROC.OPPS, sumOfAmountExpectedGroupByRocCat, forecastList);
-
-			newForecastList.add(actualTurnover);
-			newForecastList.add(actualCost);
-			newForecastList.add(turnover);
-			newForecastList.add(cost);
-			newForecastList.add(unTurnover);
-			newForecastList.add(unCost);
-			newForecastList.add(tenderRisk);
-			newForecastList.add(tenderOpps);
-			newForecastList.add(others);
-			newForecastList.add(risk);
-			newForecastList.add(opps);
-
-			forecastService.saveList(jobNo, newForecastList);
-
-		} catch (Exception e) {
-			error = "Failed to calculate roc summary to monthly movement. Year: " + year + ", Month: " + month ;
-			e.printStackTrace();
+	private void calculateRocDetailAmount(Long rocId, YearMonth yearMonth) {
+		ROC roc = rocRepository.getByID(rocId);
+		// check if roc detail exist, create one if not
+		ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(rocId, yearMonth.getYear(), yearMonth.getMonthValue());
+		if (rocDetail == null) {
+			rocDetail = new ROC_DETAIL(yearMonth.getYear(), yearMonth.getMonthValue(), roc);
+			rocDetail = rocDetailRepository.save(rocDetail);
 		}
-		return error;
+
+		// find sum by the period
+		ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocIdAndEndPeriod(roc.getId(), yearMonth.getYear(), yearMonth.getMonthValue());
+		rocDetail.setAmountBest(summary.getAmountBest());
+		rocDetail.setAmountExpected(summary.getAmountExpected());
+		rocDetail.setAmountWorst(summary.getAmountWorst());
+
+		ROC_DETAIL saveRocDetail = rocDetailRepository.save(rocDetail);
+
 	}
 
-	private Forecast findDbAndUpdateSumForecast(String jobNo, Integer year, Integer month, String forecastFlag, String forecastType, String forecastDesc, String rocCategory, List<RocSummaryWrapper> sumOfAmountExpectedGroupByRocCat, List<Forecast> forecastList) {
-		Forecast forecast = findDbOrCreateNewForecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, forecastList);
-		Optional<RocSummaryWrapper> dbSummary = sumOfAmountExpectedGroupByRocCat.stream().filter(x -> x.getRocCategory().equals(rocCategory)).findFirst();
-		if (dbSummary.isPresent()) {
-			forecast.setAmount(dbSummary.get().getSumAmountExpected());
-		} else {
-			forecast.setAmount(BigDecimal.valueOf(0));
-		}
-		return forecast;
-	}
+	public List<String> getRocCategoryList() {return ROC.getRocCategoryList();}
 
-	private Forecast findDbOrCreateNewForecast(String jobNo, Integer year, Integer month, String forecastFlag, String forecastType, String forecastDesc, List<Forecast> forecastList) {
-		Forecast forecast;
-		Optional<Forecast> dbForecast = forecastList.stream().filter(x -> x.getForecastDesc().equals(forecastDesc)).findFirst();
-		if (dbForecast.isPresent()) {
-			forecast = dbForecast.get();
-		} else {
-			forecast = new Forecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, BigDecimal.valueOf(0));
-		}
-		return forecast;
-	}
+	public List<String> getImpactList() {return ROC.getImpactList();}
 
-	public List<String> getRocCategoryList() {
-		return ROC.getRocCategoryList();
-	}
-
-	public List<String> getImpactList() {
-		return ROC.getImpactList();
-	}
-
-	public List<String> getStatusList() {
-		return ROC.getStatusList();
-	}
+	public List<String> getStatusList() {return ROC.getStatusList();}
 
 	public List<ROC> getRocHistory(Long rocId) {
 		if (rocId == null || rocId < 0)
 			throw new IllegalArgumentException("invalid roc id");
 		List<ROC> auditHistory = rocHBDao.getAuditHistory(rocId);
-		List<ROC> uniqleResult = auditHistory.stream().filter(distinctByKey(x -> x.getLastModifiedDate())).collect(Collectors.toList());
+		List<ROC> uniqleResult = auditHistory.stream().filter(RocDateUtils.distinctByKey(x -> x.getLastModifiedDate())).collect(Collectors.toList());
 		return uniqleResult;
 	}
 
@@ -551,31 +481,20 @@ public class RocService {
 		if (rocDetailId == null || rocDetailId < 0)
 			throw new IllegalArgumentException("invalid roc detail id");
 		List<ROC_DETAIL> auditHistory = rocDetailHBDao.getAuditHistory(rocDetailId);
-		List<ROC_DETAIL> uniqleResult = auditHistory.stream().filter(distinctByKey(x -> x.getLastModifiedDate())).collect(Collectors.toList());
+		List<ROC_DETAIL> uniqleResult = auditHistory.stream().filter(RocDateUtils.distinctByKey(x -> x.getLastModifiedDate())).collect(Collectors.toList());
 		return uniqleResult;
 	}
 
-	private static <T> Predicate<T> distinctByKey(
-			Function<? super T, ?> keyExtractor) {
+	public int getCutoffDate() {return Integer.parseInt(messageConfig.getRocCutoffDate());}
 
-		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-	}
-
-
-
-	public int getCutoffDate() {
-		return Integer.parseInt(messageConfig.getRocCutoffDate());
-	}
-
-	public String recalculateRoc(String jobNo) {
+	public String recalculateRoc(String jobNo, int year, int month) {
 		String error = "";
 		try {
 			if (jobNo.isEmpty())
 				throw new IllegalArgumentException("invalid parameters");
 			List<ROC> rocList = rocRepository.findByJobNo(jobNo);
 			for (ROC roc : rocList) {
-				String s = calculateRocDetailAmountAndMonthlyMovement(jobNo, roc.getId());
+				String s =  calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, roc.getId(), year, month);
 				if (!s.equals(""))
 					return s;
 			}
@@ -585,5 +504,7 @@ public class RocService {
 		}
 		return error;
 	}
+
+	public Date today() {return new Date();}
 }
 
