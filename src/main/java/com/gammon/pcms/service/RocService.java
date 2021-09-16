@@ -219,7 +219,7 @@ public class RocService {
 			// create detail
 			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(roc.getOpenDate(), getCutoffDate());
 			ROC_DETAIL newRocDetail = new ROC_DETAIL(yearMonth.getYear(), yearMonth.getMonthValue(), newRocResult);
-			if (rocDetail != null && !rocDetail.getRemarks().isEmpty()) {
+			if (rocDetail != null && rocDetail.getRemarks() != null && !rocDetail.getRemarks().isEmpty()) {
 				newRocDetail.setRemarks(rocDetail.getRemarks());
 			}
 			rocDetailRepository.save(newRocDetail);
