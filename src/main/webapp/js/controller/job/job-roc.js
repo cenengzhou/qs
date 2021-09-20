@@ -1,5 +1,5 @@
-mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', '$interval',
-    function ($scope, rocService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, $interval) {
+mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', '$interval', '$window',
+    function ($scope, rocService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, $interval, $window) {
         $scope.GlobalParameter = GlobalParameter;
         $scope.editable = false;
 
@@ -156,6 +156,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
         $scope.saveRocDetails = function () {
             var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
             var dataRows = gridRows.map(function (gridRow) {
+                gridRow.entity.rocOwner = gridRow.person && gridRow.person.selectedItem != null ? gridRow.person.selectedItem.username : null;
                 return gridRow.entity;
             });
 
@@ -180,9 +181,11 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
                     } else {
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "ROC Details have been updated.");
-                        $scope.gridDirtyRows = null;
-                        $scope.gridApi.rowEdit.setRowsClean(dataRows);
-                        getData($scope.year, $scope.month);
+                        // $scope.gridDirtyRows = null;
+                        // $scope.gridApi.rowEdit.setRowsClean(dataRows);
+                        // getData($scope.year, $scope.month);
+                        // $scope.gridApi.core.refresh();
+                        $window.location.reload();
                     }
                 });
         }
@@ -214,9 +217,9 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                 enableColumnMoving: true,
                 enableCellEditOnFocus: true,
                 allowCellFocus: false,
-                showGridFooter: false,
+                // showGridFooter: false,
                 showColumnFooter: true,
-                treeRowHeaderAlwaysVisible: false,
+                treeRowHeaderAlwaysVisible: true,
                 showTreeRowHeader: false,
                 exporterMenuPdf: false,
                 groupingNullLabel: '',
@@ -267,32 +270,38 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                 columnDefs: [
 
                     {field: 'id', type: 'number', displayName: 'ROC Id', width: 100, visible: false, enableCellEdit: false},
-                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 100, visible: true, enableCellEdit: false,
+                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false,
                         // sort: {priority: 1, direction: uiGridConstants.ASC}
                     },
-                    {field: 'projectNo', width: 100, visible: false, enableCellEdit: false},
+                    { field: 'projectNo', width: 100, visible: false, enableCellEdit: false },
+                    // {
+                    //     field: 'rocCategory', displayName: "Group", width: 100,
+                    //     enableCellEdit : false,
+                    //     grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' },
+                    //     cellTemplate: '<b>{{row.entity.rocCategory}}</b>'
+                    // },
                     {
-                        field: 'rocCategory', displayName: "Category", width: 200, enableCellEdit: true,
+                        field: 'rocCategory', displayName: "Category", width: 120, enableCellEdit: true,
                         headerCellClass: 'blue', cellClass: 'blue',
                         editableCellTemplate: 'ui-grid/dropdownEditor',
-                        // grouping: {groupPriority: 0},
-                        // sort: {priority: 0, direction: uiGridConstants.DESC},
-                        cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }} (Below the Line)</div>' +
-                            '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD }}</div>' +
-                            '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }} (Above the Line)</div>' +
-                            '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">{{ MODEL_COL_FIELD }}</div>'
+                        grouping: {groupPriority: 0},
+                        sort: {priority: 0, direction: uiGridConstants.DESC},
+                        cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }} (Below the Line)</div>' +
+                            '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD }}</div>' +
+                            '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }} (Above the Line)</div>' +
+                            '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">{{ MODEL_COL_FIELD }}</div>'
                     },
-                    {field: 'classification', width: 150, visible: true, enableCellEdit: true,
+                    {field: 'classification', width: 200, visible: true, enableCellEdit: true,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         headerCellClass: 'blue', cellClass: 'blue'
                     },
-                    {field: 'impact', width: 150, visible: true, enableCellEdit: true,
+                    {field: 'impact', width: 120, visible: true, enableCellEdit: true,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         headerCellClass: 'blue', cellClass: 'blue'
                     },
-                    {field: 'rocDetail.status', displayName: 'Status', width: 100, visible: true, enableCellEdit: true,
+                    {field: 'rocDetail.status', displayName: 'Status', width: 60, visible: true, enableCellEdit: true,
                         // filter: {term: 'Live'},
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
@@ -302,7 +311,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         headerCellClass: 'blue', cellClass: 'blue'
                     },
-                    {field: 'description', displayName: "Description", width: 250, enableCellEdit: true, visible: true,
+                    {field: 'description', displayName: "Description", width: 150, enableCellEdit: true, visible: true,
                         cellClass: 'blue',
                         headerCellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
@@ -313,18 +322,19 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         displayName: 'Owner',
                         cellClass: 'blue',
                         headerCellClass: 'blue',
-                        width: 250,
+                        width: 180,
                         editableCellTemplate: '' +
                         '<md-autocomplete style="text-align:center" ' +
                             'md-require-match="true" ' +
                             'md-delay="300" ' +
                             'md-autoselect="true" ' +
+                            'md-min-length="1" ' +
                             'md-clear-button="!row.person.disabled" ' +
                             'ng-disabled="row.person.disabled" ' +
                             'md-selected-item="row.person.selectedItem" ' +
                             'md-search-text-change="grid.appScope.searchTextChange(row.entity.rocOwner, row.person)" ' +
                             'md-search-text="row.entity.rocOwner" ' +
-                            'md-selected-item-change="grid.appScope.selectedItemChange(item, row.person)" ' +
+                            'md-selected-item-change="grid.appScope.selectedItemChange(item, row)" ' +
                             'md-items="item in grid.appScope.querySearch(row.entity.rocOwner)" ' +
                             'md-item-text="item.username" ' +
                             'md-min-length="3" ' +
@@ -347,7 +357,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.amountBest',
                         displayName: "Best Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -365,7 +375,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.amountExpected',
                         displayName: "Expected Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -379,7 +389,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.amountWorst',
                         displayName: "Worst Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -397,7 +407,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.previousAmountBest',
                         displayName: "Previous Best Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -413,7 +423,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.previousAmountExpected',
                         displayName: "Previous Expected Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -429,7 +439,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.previousAmountWorst',
                         displayName: "Previous Worst Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -445,7 +455,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.movementBest',
                         displayName: "Movement Best Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -460,7 +470,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.movementExpected',
                         displayName: "Movement Expected Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -475,7 +485,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.movementWorst',
                         displayName: "Movement Worst Case",
-                        width: 120,
+                        width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
                         treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -490,16 +500,16 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     {
                         field: 'rocDetail.remarks',
                         displayName: "Remarks / Actions to be taken",
-                        width: 250,
+                        width: 150,
                         cellClass: 'blue',
                         headerCellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
-                        name: 'Buttons', displayName: '',  width: 180, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
+                        name: 'Buttons', displayName: '',  width: 100, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
                         cellTemplate: '<div class="col-md-12" style="padding: 5px 20px" ng-if="row.entity.id >= 0">' +
-                            '<div class="row" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-success" ng-click="grid.appScope.openEditRocDialog(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px;" ></span> Edit Owner</button></div>' +
+                            // '<div class="row" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-success" ng-click="grid.appScope.openEditRocDialog(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px;" ></span> Edit Owner</button></div>' +
                             '<div class="row m-t-5" ng-if="!row.groupHeader && (row.entity.createdDate != row.entity.lastModifiedDate) && (row.entity !== null && row.entity.id !== null && row.entity.id >= 0)"><button class="btn btn-sm icon-btn btn-info" ng-click="grid.appScope.viewRocHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px" ></span> History</button></div>' +
                             '<div class="row m-t-5" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-warning" ng-click="grid.appScope.editRocSubdetail(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px" ></span> Subdetail</button></div>' +
                             '</div>'
@@ -623,10 +633,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             if (!text) $scope.rocOwner = null;
         }
 
-        function selectedItemChange(item, person) {
+        function selectedItemChange(item, row) {
             if (!item) $scope.rocOwner = null;
             if (item && item.username)
                 $scope.rocOwner = item.username;
+            if (row) {
+                row.entity.rocOwner = item != null ? item.username : null;
+                $scope.gridApi.rowEdit.setRowsDirty([row.entity]);
+            }
         }
 
         function createFilterFor(query) {
