@@ -309,6 +309,42 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
+                        field: 'rocOwner',
+                        displayName: 'Owner',
+                        cellClass: 'blue',
+                        headerCellClass: 'blue',
+                        width: 250,
+                        editableCellTemplate: '' +
+                        '<md-autocomplete style="text-align:center" ' +
+                            'md-require-match="true" ' +
+                            'md-delay="300" ' +
+                            'md-autoselect="true" ' +
+                            'md-clear-button="!row.person.disabled" ' +
+                            'ng-disabled="row.person.disabled" ' +
+                            'md-selected-item="row.person.selectedItem" ' +
+                            'md-search-text-change="grid.appScope.searchTextChange(row.entity.rocOwner, row.person)" ' +
+                            'md-search-text="row.entity.rocOwner" ' +
+                            'md-selected-item-change="grid.appScope.selectedItemChange(item, row.person)" ' +
+                            'md-items="item in grid.appScope.querySearch(row.entity.rocOwner)" ' +
+                            'md-item-text="item.username" ' +
+                            'md-min-length="3" ' +
+                            'placeholder="Input Username..." ' +
+                            'md-menu-class="autocomplete-custom-template" ' +
+                            'md-menu-container-class="custom-container" ' +
+                            '>' +
+                            '<md-item-template>' +
+                                '<span class="item-title">' +
+                                    '<span><strong>{{item.fullName}}</strong></span>' +
+                                '</span>' +
+                                '<span class="item-metadata">' +
+                                    '<span>' +
+                                        '<small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>' +
+                                    '</span>' +
+                                '</span>' +
+                            '</md-item-template>' +
+                        '</md-autocomplete>'
+                    },
+                    {
                         field: 'rocDetail.amountBest',
                         displayName: "Best Case",
                         width: 120,
@@ -569,12 +605,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
 
         /* for ROC Owner */
         var self = this;
-        self.querySearch   = querySearch;
-        self.selectedItemChange = selectedItemChange;
-        self.searchTextChange   = searchTextChange;
-
+        self.querySearch   = $scope.querySearch = querySearch;
+        self.selectedItemChange = $scope.selectedItemChange = selectedItemChange;
+        self.searchTextChange = $scope.searchTextChange = searchTextChange;
+        self.createFilterFor = $scope.createFilterFor = createFilterFor;
+        
         function querySearch(query) {
-            var results = query ? self.repos.filter(createFilterFor(query)) : self.repos, deferred;
+            var results = query ? self.repos.filter(self.createFilterFor(query)) : self.repos, deferred;
             deferred = $q.defer();
             $timeout(function() {
                 deferred.resolve(results);
@@ -607,4 +644,3 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
         }
 
     }]);
-
