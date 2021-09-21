@@ -1,6 +1,6 @@
 var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize', 'ngMaterial', 'ngJoyRide',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery', 'ui.tinymce',
-									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping', 'ui.grid.validate', 'ui.grid.saveState', 'angular-js-xlsx',
+									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.expandable', 'ui.grid.grouping', 'ui.grid.validate', 'ui.grid.saveState', 'angular-js-xlsx',
 									 'ng-currency', 'angular.filter']);  
 
 // configure our routes    
