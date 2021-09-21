@@ -46,6 +46,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     var rocList = data[0];
                     $scope.gridOptions.data = rocList;
                     for (var i = 0; i < rocList.length; i++) {
+                        $scope.gridOptions.data[i].person = {searchText: $scope.gridOptions.data[i].rocOwner};
                         var curr = rocList[i].rocDetail;
                         if (curr != null) {
                             curr.movementBest = curr.amountBest - curr.previousAmountBest;
@@ -156,7 +157,9 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
         $scope.saveRocDetails = function () {
             var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
             var dataRows = gridRows.map(function (gridRow) {
-                gridRow.entity.rocOwner = gridRow.person && gridRow.person.selectedItem != null ? gridRow.person.selectedItem.username : null;
+                gridRow.entity.rocOwner = gridRow.entity.person && gridRow.entity.person.selectedItem != null && gridRow.entity.person.searchText
+                                        ? gridRow.entity.person.selectedItem.username
+                                        : null;
                 return gridRow.entity;
             });
 
@@ -181,11 +184,11 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
                     } else {
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "ROC Details have been updated.");
-                        // $scope.gridDirtyRows = null;
-                        // $scope.gridApi.rowEdit.setRowsClean(dataRows);
-                        // getData($scope.year, $scope.month);
-                        // $scope.gridApi.core.refresh();
-                        $window.location.reload();
+                        $scope.gridDirtyRows = null;
+                        $scope.gridApi.rowEdit.setRowsClean(dataRows);
+                        getData($scope.year, $scope.month);
+                        $scope.gridApi.core.refresh();
+                        // $window.location.reload();
                     }
                 });
         }
@@ -324,18 +327,18 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         headerCellClass: 'blue',
                         width: 180,
                         editableCellTemplate: '' +
-                        '<md-autocomplete style="text-align:center" ' +
+                        '<md-autocomplete style="text-align:center" ng-blur="grid.appScope.autocompleteBlur(row)"' +
                             'md-require-match="true" ' +
                             'md-delay="300" ' +
                             'md-autoselect="true" ' +
                             'md-min-length="1" ' +
-                            'md-clear-button="!row.person.disabled" ' +
-                            'ng-disabled="row.person.disabled" ' +
-                            'md-selected-item="row.person.selectedItem" ' +
-                            'md-search-text-change="grid.appScope.searchTextChange(row.entity.rocOwner, row.person)" ' +
-                            'md-search-text="row.entity.rocOwner" ' +
+                            'md-clear-button="!row.entity.person.disabled" ' +
+                            'ng-disabled="row.entity.person.disabled" ' +
+                            'md-selected-item="row.entity.person.selectedItem" ' +
+                            'md-search-text-change="grid.appScope.searchTextChange(row.entity.person.searchText, row.entity.person)" ' +
+                            'md-search-text="row.entity.person.searchText" ' +
                             'md-selected-item-change="grid.appScope.selectedItemChange(item, row)" ' +
-                            'md-items="item in grid.appScope.querySearch(row.entity.rocOwner)" ' +
+                            'md-items="item in grid.appScope.querySearch(row.entity.person.searchText)" ' +
                             'md-item-text="item.username" ' +
                             'md-min-length="3" ' +
                             'placeholder="Input Username..." ' +
@@ -620,6 +623,17 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
         self.searchTextChange = $scope.searchTextChange = searchTextChange;
         self.createFilterFor = $scope.createFilterFor = createFilterFor;
         
+        $scope.autocompleteBlur = function (row) {
+            if (row.entity.person && row.entity.person.searchText) {
+                row.entity.rocOwner = row.entity.person.selectedItem ? row.entity.person.selectedItem.username : null;
+            } else {
+                row.entity.rocOwner = null;
+            }
+            $timeout(function () {
+                $scope.$broadcast("uiGridEventEndCellEdit");
+            }, 100);
+        }
+
         function querySearch(query) {
             var results = query ? self.repos.filter(self.createFilterFor(query)) : self.repos, deferred;
             deferred = $q.defer();
@@ -642,7 +656,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                 $scope.gridApi.rowEdit.setRowsDirty([row.entity]);
             }
         }
-
+        
         function createFilterFor(query) {
             var lowercaseQuery = (query || "").toLowerCase();
             return function filterFn(item) {
