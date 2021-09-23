@@ -45,6 +45,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     $scope.data = {};
                     var rocList = data[0];
                     $scope.gridOptions.data = rocList;
+                    $scope.displayClosedItem();
                     for (var i = 0; i < rocList.length; i++) {
                         $scope.gridOptions.data[i].person = { searchText: $scope.gridOptions.data[i].rocOwner };
                         $scope.gridOptions.data[i].group = $scope.gridOptions.data[i].rocCategory;
@@ -210,9 +211,9 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
             $scope.gridApi.grid.refresh();
             $timeout(function () {
                 if ($scope.showClosedItem) {
-                    $scope.gridApi.grid.columns[6].filters[0].term = '';
+                    $scope.gridApi.grid.columns[7].filters[0].term = '';
                 } else {
-                    $scope.gridApi.grid.columns[6].filters[0].term = 'Live';
+                    $scope.gridApi.grid.columns[7].filters[0].term = 'Live';
                 }
                 $scope.gridApi.grid.refresh();
             }, 100);
