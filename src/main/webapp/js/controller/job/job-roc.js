@@ -203,17 +203,18 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
         }
 
         $scope.displayClosedItem = function() {
+            var statusColumnDefId = 6;
             if ($scope.showClosedItem) {
-                $scope.gridOptions.columnDefs[5].visible = true;
+                $scope.gridOptions.columnDefs[statusColumnDefId].visible = true;
             } else {
-                $scope.gridOptions.columnDefs[5].visible = false;
+                $scope.gridOptions.columnDefs[statusColumnDefId].visible = false;
             }
             $scope.gridApi.grid.refresh();
             $timeout(function () {
                 if ($scope.showClosedItem) {
-                    $scope.gridApi.grid.columns[7].filters[0].term = '';
+                    $scope.gridApi.grid.columns[statusColumnDefId + 1].filters[0].term = '';
                 } else {
-                    $scope.gridApi.grid.columns[7].filters[0].term = 'Live';
+                    $scope.gridApi.grid.columns[statusColumnDefId + 1].filters[0].term = 'Live';
                 }
                 $scope.gridApi.grid.refresh();
             }, 100);
