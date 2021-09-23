@@ -63,7 +63,6 @@
                         month
                     </div>
                     <div class="col-md-3" ng-if="cutoffDate <= 0"></div>
-                    <div class="col-md-2"></div>
                     <div class="col-md-3 text-right">
                         <md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()"
                                      aria-label="Show Closed Item"
@@ -75,6 +74,12 @@
                                 ng-click="addRoc()">
                             <i class="fa fa-plus"></i> Add ROC
                         </button>
+                    </div>
+                    
+                    <div class="col-md-2">
+                    <button class="btn btn-block btn-primary"
+                    ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
+                    </button>
                     </div>
                     <!--				<div class="col-md-2">-->
                     <!--					<button type="button" class="btn btn-purple btn-block " ng-disabled="buttonTimer > 0"-->
@@ -109,11 +114,6 @@
                                     the changes.</label>
 <!--                                <p class="text-red">Person: {{person}}, Item: {{item}}</p>-->
 <!--                                <span ng-include src="'roc-owner-template'"></span>-->
-                            </div>
-                            <div class="panel-footer bg-white">
-                                <button class="btn btn-block btn-primary btn-sm"
-                                        ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
-                                </button>
                             </div>
                         </div>
 

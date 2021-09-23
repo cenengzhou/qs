@@ -288,21 +288,10 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         headerCellClass: 'blue', cellClass: 'blue',
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         // grouping: {groupPriority: 1},
-                        // sort: {priority: 1, direction: uiGridConstants.DESC},
-                        cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }} (Below the Line)</div>' +
-                            '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }} (Above the Line)</div>' +
+                        // sort: {priority: 0, direction: uiGridConstants.DESC},
+                        cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }}<br>(Below the Line)</div>' +
+                            '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }}<br>(Above the Line)</div>' +
                             '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader">{{ MODEL_COL_FIELD }}</div>'
-                    },
-                    {
-                        field: 'group',
-                        displayName: "Group",
-                        enableCellEdit: false,
-                        visible: false,
-                        grouping: {groupPriority: 0},
-                        sort: { priority: 0, direction: uiGridConstants.DESC },
-                        cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }} (Below the Line)</div>' +
-                        '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }} (Above the Line)</div>' +
-                        '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader"></div>'
                     },
                     {field: 'classification', width: 200, visible: true, enableCellEdit: true,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
@@ -397,11 +386,6 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         customTreeAggregationFinalizerFn: function (aggregation) {
                             aggregation.rendered = aggregation.value;
                         },
-                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
-                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
-                        '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">N/A</div>' +
-                        '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
-                        footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: customFooterClass,
                         enableCellEdit: false
                     },
@@ -415,11 +399,10 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         customTreeAggregationFinalizerFn: function (aggregation) {
                             aggregation.rendered = aggregation.value;
                         },
-                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
+                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
-                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">N/A</div>' +
+                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">N/A</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
-                        footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: customFooterClass,
                         enableCellEdit: false
                     },
@@ -535,7 +518,18 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     },
                     {field: 'rocDetail.year', displayName: 'Year', width: 100, visible: false},
                     {field: 'rocDetail.month', displayName: 'Month', width: 100, visible: false},
-                    {field: 'rocDetail.id', displayName: 'ROC Detail Id', width: 100, visible: false}
+                    { field: 'rocDetail.id', displayName: 'ROC Detail Id', width: 100, visible: false },
+                    {
+                        field: 'group',
+                        displayName: "Group",
+                        enableCellEdit: false,
+                        visible: false,
+                        grouping: {groupPriority: 0},
+                        sort: { priority: 0, direction: uiGridConstants.ASC },
+                        cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) != -1">{{ row.treeNode.aggregations[0].groupVal }}<br>(Below the Line)</div>' +
+                        '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && row.treeNode.aggregations[0].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[0].groupVal) == -1">{{ row.treeNode.aggregations[0].groupVal }}<br>(Above the Line)</div>' +
+                        '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader"></div>'
+                    },
 
                 ]
 
