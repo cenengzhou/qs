@@ -300,6 +300,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         customTreeAggregationFinalizerFn: function (aggregation) {
                             aggregation.rendered = aggregation.value;
                         },
+                        footerCellTemplate: '<div class="ui-grid-cell-contents" >&nbsp;</div>',
                         cellTemplate: '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && !grid.appScope.isNewGroup(grid, row) && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) != -1">{{ COL_FIELD }}<br>(Below the Line)</div>' +
                             '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && !grid.appScope.isNewGroup(grid, row) && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) == -1">{{ COL_FIELD }}<br>(Above the Line)</div>' +
                             '<div style="white-space: nowrap !important" class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader && grid.appScope.isNewGroup(grid, row)">{{grid.appScope.newGroup}}</div>' +
