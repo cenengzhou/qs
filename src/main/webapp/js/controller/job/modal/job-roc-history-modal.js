@@ -11,6 +11,7 @@ mainApp.controller('JobRocHistoryCtrl', ['$scope', 'rocService', '$uibModalInsta
                 $scope.gridOptions.data = data;
             else
                 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'Failed to get roc history');
+            $scope.gridApi.core.handleWindowResize();
         });
 
         if ($scope.selection.detailId) {
@@ -43,6 +44,17 @@ mainApp.controller('JobRocHistoryCtrl', ['$scope', 'rocService', '$uibModalInsta
             },
 
             columnDefs: [
+                {field: 'itemNo', displayName: 'Item', width: 50, visible: true},
+                {field: 'projectNo', displayName: 'Project No', width: 100, visible: true},
+                {field: 'projectRef', displayName: 'Project R&O Ref.', width: 100, visible: true},
+                {field: 'rocCategory', displayName: 'Category', width: 100, visible: true},
+                {field: 'classification', displayName: 'Classification', width: 150, visible: true},
+                {field: 'impact', displayName: 'Impact', width: 150, visible: true},
+                {field: 'description', displayName: 'Description', visible: true, width: 150,
+                    cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>'},
+                {field: 'rocOwner', displayName: 'Owner', width: 100, visible: true},
+                {field: 'status', displayName: 'Status', width: 100, visible: true},
+                {field: 'systemStatus', displayName: 'System Status', width: 120, visible: true},
                 {
                     field: 'lastModifiedDate',
                     displayName: 'Last Modified Date',
@@ -51,14 +63,7 @@ mainApp.controller('JobRocHistoryCtrl', ['$scope', 'rocService', '$uibModalInsta
                     visible: true
                 },
                 {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 120, visible: true},
-                {field: 'systemStatus', displayName: 'System Status', width: 120, visible: true},
                 {field: 'id', displayName: 'Id', width: 100, visible: false},
-                {field: 'projectNo', displayName: 'Project No', width: 100, visible: false},
-                {field: 'projectRef', displayName: 'Project R&O Ref.', width: 100, visible: true},
-                {field: 'rocCategory', displayName: 'ROC Category', width: 100, visible: true},
-                {field: 'classification', displayName: 'Classification', width: 100, visible: true},
-                {field: 'impact', displayName: 'Impact', width: 150, visible: true},
-                {field: 'status', displayName: 'Status', width: 100, visible: true},
                 {field: 'createdUser', displayName: 'Created By', width: 100, visible: false},
                 {
                     field: 'createdDate',
@@ -66,9 +71,7 @@ mainApp.controller('JobRocHistoryCtrl', ['$scope', 'rocService', '$uibModalInsta
                     cellFilter: 'date:"yyyy-MMM-dd HH:mm:ss"',
                     width: 150,
                     visible: false
-                },
-                {field: 'description', displayName: 'Description', visible: true,
-                    cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',}
+                }
 
             ]
 
@@ -103,7 +106,7 @@ mainApp.controller('JobRocHistoryCtrl', ['$scope', 'rocService', '$uibModalInsta
                 {field: 'systemStatus', displayName: 'System Status', width: 120, visible: true},
                 {field: 'id', displayName: 'Id', width: 100, visible: false},
                 {field: 'amountBest', displayName: 'Best Case', width: 100, cellClass: 'text-right',
-                cellFilter: 'number:0'},
+                    cellFilter: 'number:0'},
                 {field: 'amountExpected', displayName: 'Expected Case', width: 100, cellClass: 'text-right',
                     cellFilter: 'number:0'},
                 {field: 'amountWorst', displayName: 'Worst Case', width: 100, cellClass: 'text-right',
