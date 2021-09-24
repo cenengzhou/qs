@@ -383,9 +383,9 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         customTreeAggregationFinalizerFn: function (aggregation) {
                             aggregation.rendered = aggregation.value;
                         },
-                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ COL_FIELD | number:0}}</div>' +
+                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
-                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[10].groupVal && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>' +
+                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[10].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) == -1">N/A</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
                         footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: customFooterClass,
@@ -414,9 +414,9 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                         customTreeAggregationFinalizerFn: function (aggregation) {
                             aggregation.rendered = aggregation.value;
                         },
-                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ COL_FIELD | number:0}}</div>' +
+                        cellTemplate: '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) != -1">{{ COL_FIELD | number:0}}</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) != -1">{{ MODEL_COL_FIELD | number:0}}</div>' +
-                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[10].groupVal && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>' +
+                            '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[10].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) == -1">N/A</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
                         footerCellClass: customFooterClass,
                         enableCellEdit: false
