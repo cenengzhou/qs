@@ -68,6 +68,7 @@ public class ROC extends BasePersistedObject {
 
 	private Long id;
 	private String projectNo;
+	private Long itemNo;
 	private String projectRef;
 	private String rocCategory;
 	private String classification;
@@ -84,9 +85,10 @@ public class ROC extends BasePersistedObject {
 	public ROC() {
 	}
 
-	public ROC(Long id, String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, Date createdDate, String createdUser, Date lastModifiedDate, String lastModifiedUser, String rocOwner, Date openDate, Date closedDate) {
+	public ROC(Long id, String projectNo, Long itemNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, Date createdDate, String createdUser, Date lastModifiedDate, String lastModifiedUser, String rocOwner, Date openDate, Date closedDate) {
 		this.id = id;
 		this.projectNo = projectNo;
+		this.itemNo = itemNo;
 		this.projectRef = projectRef;
 		this.rocCategory = rocCategory;
 		this.classification = classification;
@@ -102,8 +104,9 @@ public class ROC extends BasePersistedObject {
 		this.closedDate = closedDate;
 	}
 
-	public ROC(String projectNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, String rocOwner, Date openDate, Date closedDate) {
+	public ROC(String projectNo, Long itemNo, String projectRef, String rocCategory, String classification, String impact, String description, String status, String rocOwner, Date openDate, Date closedDate) {
 		this.projectNo = projectNo;
+		this.itemNo = itemNo;
 		this.projectRef = projectRef;
 		this.rocCategory = rocCategory;
 		this.classification = classification;
@@ -133,6 +136,15 @@ public class ROC extends BasePersistedObject {
 
 	public void setProjectNo(String noJob) {
 		this.projectNo = noJob;
+	}
+
+	@Column(name = "ITEM_NO")
+	public Long getItemNo() {
+		return itemNo;
+	}
+
+	public void setItemNo(Long itemNo) {
+		this.itemNo = itemNo;
 	}
 
 	@Column(name = "PROJECT_REF")
@@ -282,6 +294,5 @@ public class ROC extends BasePersistedObject {
 	public void setClosedDate(Date closedDate) {
 		this.closedDate = closedDate;
 	}
-
 
 }

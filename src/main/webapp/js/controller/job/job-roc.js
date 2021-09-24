@@ -282,7 +282,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
 
                 columnDefs: [
                     {field: 'id', type: 'number', displayName: 'ROC Id', width: 100, visible: false, enableCellEdit: false},
-                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false,
+                    {field: 'itemNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false,
                         // sort: {priority: 1, direction: uiGridConstants.ASC}
                     },
                     { field: 'projectNo', width: 100, visible: false, enableCellEdit: false },

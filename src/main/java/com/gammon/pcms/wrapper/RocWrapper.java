@@ -23,6 +23,7 @@ public class RocWrapper extends ROC implements Serializable{
 		super(
 				roc.getId(),
 				roc.getProjectNo(),
+				roc.getItemNo(),
 				roc.getProjectRef(),
 				roc.getRocCategory(),
 				roc.getClassification(),

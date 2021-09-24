@@ -202,8 +202,11 @@ public class RocService {
 				return String.format("Description of %s is duplicated", byProjectNoAndRocCategoryAndDescription.getDescription());
 
 			// form new roc and save to db
+			ROC topByProjectNoOrderByItemNoDesc = rocRepository.findTopByProjectNoOrderByItemNoDesc(noJob);
+			Long itemNo = topByProjectNoOrderByItemNoDesc == null ? 1 : topByProjectNoOrderByItemNoDesc.getItemNo() + 1;
 			ROC newRoc = new ROC(
 					noJob,
+					itemNo,
 					roc.getProjectRef(),
 					roc.getRocCategory(),
 					roc.getClassification(),
@@ -310,6 +313,7 @@ public class RocService {
 				if (rocWrapper.getUpdateType().equals("ADD")) {
 					ROC newRoc = new ROC(
 							noJob,
+							null,
 							rocWrapper.getProjectRef(),
 							rocWrapper.getRocCategory(),
 							rocWrapper.getClassification(),
@@ -328,6 +332,7 @@ public class RocService {
 					ROC newRoc = new ROC(
 							rocId,
 							noJob,
+							rocWrapper.getItemNo(),
 							rocWrapper.getProjectRef(),
 							rocWrapper.getRocCategory(),
 							rocWrapper.getClassification(),

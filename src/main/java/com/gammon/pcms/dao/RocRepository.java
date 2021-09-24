@@ -20,4 +20,5 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 
 	ROC findByProjectNoAndRocCategoryAndDescriptionAndSystemStatus(String projectNo, String rocCategory, String description, String systemStatus);
 
+	ROC findTopByProjectNoOrderByItemNoDesc(String projectNo);
 }
