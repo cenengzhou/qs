@@ -2720,6 +2720,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
                 //parent controller scrolls
               }
               else {
+                return;
                 event.preventDefault();
                 event.stopPropagation();
                 scrollEvent.fireThrottledScrollingEvent('', scrollEvent);
