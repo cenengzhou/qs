@@ -54,8 +54,12 @@
                         <div class="form-group">
                             <label for="RocRecord_rocCategory" class="control-label">ROC Category</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_rocCategory"
-                                       ng-model="RocRecord.rocCategory" required>
+                                <div class="input-group col-md-12">
+                                    <select class="form-control"
+                                            id="RocRecord_rocCategory"
+                                            ng-model="RocRecord.rocCategory"
+                                            ng-options="o as o for o in rocCategoryOptions" required></select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -64,8 +68,12 @@
                         <div class="form-group">
                             <label for="RocRecord_classification" class="control-label">Classification</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_classification"
-                                       ng-model="RocRecord.classification" required>
+                                <div class="input-group col-md-12">
+                                    <select class="form-control"
+                                            id="RocRecord_classification"
+                                            ng-model="RocRecord.classification"
+                                            ng-options="o as o for o in classificationOptions" required></select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,8 +82,12 @@
                         <div class="form-group">
                             <label for="RocRecord_impact" class="control-label">Impact</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_impact"
-                                       ng-model="RocRecord.impact" required>
+                                <div class="input-group col-md-12">
+                                    <select class="form-control"
+                                            id="RocRecord_impact"
+                                            ng-model="RocRecord.impact"
+                                            ng-options="o as o for o in impactOptions" required></select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -94,8 +106,12 @@
                         <div class="form-group">
                             <label for="RocRecord_status" class="control-label">Status</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_status"
-                                       ng-model="RocRecord.status" required>
+                                <div class="input-group col-md-12">
+                                    <select class="form-control"
+                                            id="RocRecord_status"
+                                            ng-model="RocRecord.status"
+                                            ng-options="o as o for o in statusOptions" required></select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,8 +120,34 @@
                         <div class="form-group">
                             <label for="RocRecord_rocOwner" class="control-label">ROC Owner</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_rocOwner"
-                                       ng-model="RocRecord.rocOwner">
+                                <md-autocomplete id="RocRecord_rocOwner"
+                                                style="text-align:center"
+                                                 md-require-match="true"
+                                                 md-delay="300"
+                                                 md-autoselect="true"
+                                                 md-clear-button="!person.disabled"
+                                                 ng-disabled="person.disabled"
+                                                 md-selected-item="person.selectedItem"
+                                                 md-search-text-change="searchTextChange(person.searchText, person)"
+                                                 md-search-text="person.searchText"
+                                                 md-selected-item-change="selectedItemChange(item, person)"
+                                                 md-items="item in querySearch(person.searchText)"
+                                                 md-item-text="item.username"
+                                                 md-min-length="3"
+                                                 placeholder="Input Username..."
+                                                 md-menu-class="autocomplete-custom-template"
+                                                 md-menu-container-class="custom-container">
+                                    <md-item-template>
+                                        <span class="item-title">
+                                            <span><strong>{{item.fullName}}</strong></span>
+                                        </span>
+                                        <span class="item-metadata">
+                                            <span>
+                                                <small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>
+                                            </span>
+                                        </span>
+                                    </md-item-template>
+                                </md-autocomplete>
                             </div>
                         </div>
                     </div>
@@ -114,8 +156,16 @@
                         <div class="form-group">
                             <label for="RocRecord_closedDate" class="control-label">Closed Date</label>
                             <div>
-                                <input type="text" class="form-control" id="RocRecord_closedDate"
-                                       ng-model="RocRecord.closedDate">
+                                <div class="input-group"
+                                     moment-picker="RocRecord.closedDate"
+                                     format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
+									<span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <input class="form-control"
+                                           id="RocRecord_closedDate"
+                                           ng-model="RocRecord.closedDate">
+                                </div>
                             </div>
                         </div>
                     </div>

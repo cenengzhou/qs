@@ -1,17 +1,28 @@
 mainApp.controller('AdminRevisionsRocCtrl',
-    ['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'rocService', 'confirmService', '$state',
-        function ($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, rocService, confirmService, $state) {
+    ['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'rocService', 'confirmService', '$state', '$q', '$timeout',
+        function ($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, rocService, confirmService, $state, $q, $timeout) {
             $scope.GlobalParameter = GlobalParameter;
 
             $scope.RocSearch = {};
 
             $scope.rocCategoryOptions = [];
 
+            $scope.person = {};
+
+            initOptions();
+
+            var self = this;
+
             rocService.getRocCategoryList().then(function(data) {
                 $scope.rocCategoryOptions = data;
                 if ($scope.rocCategoryOptions && $scope.rocCategoryOptions.length > 0)
                     $scope.RocSearch.rocCategory = $scope.rocCategoryOptions[0];
             });
+
+            rootscopeService.gettingAllUser()
+                .then(function (data) {
+                    self.repos = data;
+                });
 
             rootscopeService.gettingWorkScopes()
                 .then(function (response) {
@@ -36,6 +47,8 @@ mainApp.controller('AdminRevisionsRocCtrl',
                             } else {
                                 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Roc not found");
                             }
+
+                            $scope.person.searchText = $scope.RocRecord.rocOwner;
                         }, function (data) {
                             modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
                         });
@@ -86,5 +99,62 @@ mainApp.controller('AdminRevisionsRocCtrl',
             function cleanupRocRecord() {
                 $scope.RevisionsRocRecord.$setPristine();
             }
+
+            function initOptions() {
+                var getRocClassDescMap = rocService.getRocClassDescMap();
+                var getRocCategoryList = rocService.getRocCategoryList();
+                var getImpactList = rocService.getImpactList();
+                var getStatusList = rocService.getStatusList();
+
+                $q.all([getRocClassDescMap, getRocCategoryList, getImpactList, getStatusList])
+                    .then(function(data) {
+                        $scope.rocClassDescMap = data[0];
+                        $scope.rocClassOptions = $scope.rocClassDescMap.map(function(x) { return x.classification; });
+
+                        $scope.impactOptions = data[2];
+                        $scope.classificationOptions = $scope.rocClassOptions;
+                        $scope.statusOptions = data[3];
+                        $scope.rocCategoryOptions = data[1];
+
+
+                    });
+
+            }
+
+
+            /* ROC owner */
+            $scope.querySearch = function(query) {
+                var results = query ? self.repos.filter(createFilterFor(query)) : self.repos, deferred;
+                deferred = $q.defer();
+                $timeout(function() {
+                    deferred.resolve(results);
+                }, 300, false);
+                return deferred.promise;
+            }
+
+            $scope.searchTextChange = function(text, person) {
+                if (!text) $scope.rocOwner = null;
+            }
+
+            $scope.selectedItemChange = function(item, person) {
+                if (!item) $scope.rocOwner = null;
+                if (item && item.username)
+                    $scope.RocRecord.rocOwner = item.username;
+            }
+
+            function createFilterFor(query) {
+                var lowercaseQuery = (query || "").toLowerCase();
+                return function filterFn(item) {
+                    var fullNameRegExp = new RegExp(lowercaseQuery.split(' ').join('.*'));
+                    var fullNameReverseRegExp = new RegExp(lowercaseQuery.split(' ').reverse().join('.*'));
+                    return lowercaseQuery.length > 3 && (
+                        (item.username && item.username.indexOf(lowercaseQuery) === 0) ||
+                        (item.employeeId && item.employeeId.indexOf(lowercaseQuery) === 0) ||
+                        (item.fullName && (fullNameRegExp.test(item.fullName.toLowerCase()) || fullNameReverseRegExp.test(item.fullName.toLowerCase()))) ||
+                        (item.email && item.email.toLowerCase().indexOf(lowercaseQuery) === 0)
+                    );
+                };
+            }
+
 
         }]);
