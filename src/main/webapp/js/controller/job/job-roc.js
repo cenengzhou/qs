@@ -389,11 +389,12 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
                         footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: customFooterClass,
+                        footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         enableCellEdit: false
                     },
                     {
                         field: 'rocDetail.amountExpected',
-                        displayName: "Expected Case",
+                        displayName: "Realistic",
                         width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
@@ -402,6 +403,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                             aggregation.rendered = aggregation.value;
                         },
                         footerCellClass: customFooterClass,
+                        footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         enableCellEdit: false
                     },
                     {
@@ -419,6 +421,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                             '<div class="ui-grid-cell-contents" ng-if="row.groupHeader && row.treeNode.aggregations[10].groupVal && [\'Risk\', \'Opps\'].indexOf(row.treeNode.aggregations[10].groupVal) == -1">N/A</div>' +
                             '<div class="ui-grid-cell-contents" ng-if="!row.groupHeader && [\'Risk\', \'Opps\'].indexOf(row.entity.rocCategory) == -1">N/A</div>',
                         footerCellClass: customFooterClass,
+                        footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:0 }}</div>',
                         enableCellEdit: false
                     },
                     {
@@ -439,7 +442,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     },
                     {
                         field: 'rocDetail.previousAmountExpected',
-                        displayName: "Previous Expected Case",
+                        displayName: "Previous Realistic",
                         width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,
@@ -486,7 +489,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                     },
                     {
                         field: 'rocDetail.movementExpected',
-                        displayName: "Movement Expected Case",
+                        displayName: "Movement Realistic",
                         width: 100,
                         cellClass: 'text-right',
                         cellFilter: $scope.numberCellFilter,

@@ -187,7 +187,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                     },
                     {
                         field: 'amountExpected',
-                        displayName: "Expected Case",
+                        displayName: "Realistic",
                         width: 120,
                         headerCellClass: 'blue',
                         cellClass: 'text-right blue',
