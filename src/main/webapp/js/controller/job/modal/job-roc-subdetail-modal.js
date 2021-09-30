@@ -142,7 +142,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 enableCellEditOnFocus: true,
                 allowCellFocus: false,
                 showGridFooter: false,
-                showColumnFooter: true,
+                showColumnFooter: false,
                 treeRowHeaderAlwaysVisible: false,
                 enableRowHeaderSelection: false,
                 exporterMenuPdf: false,
