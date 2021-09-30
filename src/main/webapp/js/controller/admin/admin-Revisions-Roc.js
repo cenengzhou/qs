@@ -44,6 +44,12 @@ mainApp.controller('AdminRevisionsRocCtrl',
                                     data.workscope = '' + data.workscope;
                                 }
                                 $scope.RocRecord = data;
+                                if (data.closedDate) {
+                                    var d = new Date(data.closedDate);
+                                    var d2 = new Date(d.getTime() - d.getTimezoneOffset()*60*1000);
+                                    $scope.RocRecord.closedDate = d2.toISOString().split('T')[0];
+                                }
+
                             } else {
                                 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Roc not found");
                             }
@@ -56,9 +62,6 @@ mainApp.controller('AdminRevisionsRocCtrl',
             };
 
             $scope.onSubmitRocRecord = function () {
-                if ($scope.RevisionsRocRecord.$invalid) {
-                    return;
-                }
                 if ($scope.RocRecord.projectNo !== undefined) {
                     rocService.updateRocAdmin($scope.RocSearch.jobNo, $scope.RocRecord)
                         .then(

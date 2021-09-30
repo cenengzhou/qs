@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -215,7 +216,7 @@ public class RocService {
 					roc.getStatus(),
 					roc.getRocOwner(),
 					roc.getOpenDate(),
-					roc.getStatus().equals(ROC.CLOSED) ? today() : null
+					roc.getStatus().equals(ROC.CLOSED) ? findClosedPeriod() : null
 			);
 			ROC newRocResult = rocRepository.save(newRoc);
 
@@ -232,6 +233,10 @@ public class RocService {
 			e.printStackTrace();
 		}
 		return error;
+	}
+
+	private Date findClosedPeriod() {
+		return Date.from(YearMonth.now().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 	public String updateRoc(String noJob, ROC roc) {
@@ -275,7 +280,7 @@ public class RocService {
 		}
 		if (!oldStatus.equals(newStatus)) {
 			if (newStatus.equals(ROC.CLOSED)) {
-				dbRoc.setClosedDate(today());
+				dbRoc.setClosedDate(findClosedPeriod());
 
 				// zero out figures
 				rocDetail.setAmountBest(BigDecimal.valueOf(0));
