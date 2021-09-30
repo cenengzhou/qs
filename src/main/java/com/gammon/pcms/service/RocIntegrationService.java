@@ -54,6 +54,9 @@ public class RocIntegrationService {
 			Forecast risk = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.RISKS, Forecast.RISKS, ROC.RISK, sumOfAmountExpectedGroupByRocCat, forecastList);
 			Forecast opps = findDbAndUpdateSumForecast(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.RISKS, Forecast.OPPS, ROC.OPPS, sumOfAmountExpectedGroupByRocCat, forecastList);
 
+			tenderOpps.setAmount(tenderOpps.getAmount().negate());
+			risk.setAmount(risk.getAmount().negate());
+
 			newForecastList.add(actualTurnover);
 			newForecastList.add(actualCost);
 			newForecastList.add(turnover);
