@@ -163,13 +163,13 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 rowTemplate: customRowTemplate(),
 
                 columnDefs: [
-                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false,
+                    {field: 'assignedNo', type: 'number', displayName: 'Item', width: 50, visible: true, enableCellEdit: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\',\'DELETE\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
                             '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\',\'DELETE\'].indexOf(row.entity.updateType) != -1">({{row.entity.updateType}})</div>'
                     },
-                    {field: 'id', displayName: 'Id', width: 100, visible: false, enableCellEdit: false},
-                    {field: 'rocDetailId', displayName: 'Id', width: 100, visible: false},
-                    {field: 'description', displayName: 'Secondary Detail', width: 200, visible: true,
+                    {field: 'id', displayName: 'Id', width: 100, visible: false, enableCellEdit: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false},
+                    {field: 'rocDetailId', displayName: 'Id', width: 100, visible: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false},
+                    {field: 'description', displayName: 'Secondary Detail', width: 200, visible: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         headerCellClass: 'blue', cellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
@@ -181,8 +181,8 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         headerCellClass: 'blue',
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
-                        aggregationType: uiGridConstants.aggregationTypes.sum,
-                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
+                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
                     {
@@ -192,8 +192,8 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         headerCellClass: 'blue',
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
-                        aggregationType: uiGridConstants.aggregationTypes.sum,
-                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
+                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
                     {
@@ -203,15 +203,15 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         headerCellClass: 'blue',
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
-                        aggregationType: uiGridConstants.aggregationTypes.sum,
-                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
+                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
-                    {field: 'hyperlink', displayName: 'Attachment', visible: true, width: 120,
+                    {field: 'hyperlink', displayName: 'Attachment', visible: true, width: 120, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         headerCellClass: 'blue', cellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents"><a ng-if="row.entity.hyperlink" ng-href="{{row.entity.hyperlink}}" target="_blank">(View attachment)</a></div>'
                     },
-                    {field: 'remarks', displayName: 'Remarks', visible: true,
+                    {field: 'remarks', displayName: 'Remarks', visible: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         headerCellClass: 'blue', cellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
@@ -221,7 +221,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         displayName: 'Year',
                         width: 100,
                         visible: true,
-                        enableCellEdit: false,
+                        enableCellEdit: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
                             '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">{{row.entity.year}}</div>'
                     },
@@ -230,13 +230,13 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         displayName: 'Month',
                         width: 100,
                         visible: true,
-                        enableCellEdit: false,
+                        enableCellEdit: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) == -1">{{COL_FIELD CUSTOM_FILTERS}}</div>' +
                             '<div class="ui-grid-cell-contents" title="TOOLTIP" ng-if="[\'ADD\'].indexOf(row.entity.updateType) != -1">{{row.entity.month}}</div>'
                     },
-                    {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 150, visible: true, enableCellEdit: false},
+                    {field: 'lastModifiedUser', displayName: 'Last Modified By', width: 150, visible: true, enableCellEdit: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false},
                     {
-                        name: 'Buttons', displayName: '',  width: 50, enableCellEdit: false, enableFiltering: false, allowCellFocus: false,
+                        name: 'Buttons', displayName: '',  width: 50, enableCellEdit: false, enableFiltering: false, allowCellFocus: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="col-md-12" style="padding: 5px 20px">' +
                             '<div class="row"><button class="btn btn-sm icon-btn btn-success" ng-if="row.entity.editable" ng-click="grid.appScope.deleteItem(rowRenderIndex)"> <span class="fa fa-remove" style="padding-left:10px;" ></span></button></div>' +
                             '</div>'
