@@ -182,7 +182,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
                         aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
-                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
                     {
@@ -193,7 +193,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
                         aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
-                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
                     {
@@ -204,7 +204,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         cellClass: 'text-right blue',
                         cellFilter: 'number:0',
                         aggregationType: uiGridConstants.aggregationTypes.sum, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
-                        // footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
+                        footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
                     {field: 'hyperlink', displayName: 'Attachment', visible: true, width: 120, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,

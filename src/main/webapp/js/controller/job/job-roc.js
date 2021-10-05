@@ -1,5 +1,5 @@
-mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', '$interval', '$window',
-    function ($scope, rocService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, $interval, $window) {
+mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', '$interval', '$window',
+    function ($scope, rocService, forecastService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, $interval, $window) {
         $scope.GlobalParameter = GlobalParameter;
         $scope.editable = false;
 
@@ -39,8 +39,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
 
         function getData(year, month) {
             var rocListApi = rocService.getRocListSummary($scope.jobNo, year, month);
+            var tenderRisk = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Contingency, GlobalParameter.forecast.TenderRisks);
+            var tenderOpps = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Contingency, GlobalParameter.forecast.TenderOpps);
+            var others = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Contingency, GlobalParameter.forecast.Others);
+            var risk = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Risks, GlobalParameter.forecast.Risks);
+            var opps = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Risks, GlobalParameter.forecast.Opps);
 
-            $q.all([rocListApi])
+            $q.all([rocListApi, tenderRisk, tenderOpps, others, risk, opps])
                 .then(function (data) {
                     $scope.data = {};
                     var rocList = data[0];
@@ -56,6 +61,11 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', '$uibModal', '$cookies
                             curr.movementWorst = curr.amountWorst - curr.previousAmountWorst;
                         }
                     }
+                    $scope.data.tenderRisk = data[1];
+                    $scope.data.tenderOpps = data[2];
+                    $scope.data.others = data[3];
+                    $scope.data.risk = data[4];
+                    $scope.data.opps = data[5];
                 });
         }
 

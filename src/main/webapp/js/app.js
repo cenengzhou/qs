@@ -215,6 +215,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 					name: 'app',
 					files: [
 						'js/service/roc-service.js?@PROJECT_VERSION@',
+						'js/service/forecast-service.js?@PROJECT_VERSION@',
 						'js/controller/job/job-roc.js?@PROJECT_VERSION@',
 						'js/controller/job/modal/job-roc-add-modal.js?@PROJECT_VERSION@',
 						'js/controller/job/modal/job-roc-history-modal.js?@PROJECT_VERSION@',

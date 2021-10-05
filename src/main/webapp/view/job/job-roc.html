@@ -45,7 +45,52 @@
 
 
     <!-- begin section-container -->
-    <div class="section-container ">
+    <div class="section-container " style="padding-top: 0px">
+
+        <div class="row">
+            <div class="col-lg-3 col-xs-12">
+                <div class="widget widget-stat bg-warning text-white" style="padding-top: 10px; padding-bottom: 10px">
+                    <div class="widget-stat-icon" style="font-size: 30px">
+                        <i class="fa fa-dollar"></i>
+                    </div>
+                    <div class="widget-stat-info">
+                        <div class="widget-stat-title">Above the Line</div>
+                        <div class="widget-stat-number">{{
+                            data.tenderRisk.forecast.amount +
+                            data.tenderOpps.forecast.amount + data.others.forecast.amount
+                        | currency}}</div>
+                        <div class="widget-stat-text"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-md-3 col-xs-12">
+                <div class="widget widget-stat bg-success text-white" style="padding-top: 10px; padding-bottom: 10px">
+<!--                    <div class="widget-stat-btn">-->
+<!--                        <a href="" ng-click="showRetentionDetails()"><i class="fa fa-info-circle fa-2x"></i></a>-->
+<!--                    </div>-->
+                    <div class="widget-stat-icon" style="font-size: 30px">
+                        <i class="fa fa-dollar"></i>
+                    </div>
+                    <div class="widget-stat-info">
+                        <div class="widget-stat-title">Below the Line</div>
+                        <div class="widget-stat-number">{{data.risk.forecast.amount + data.opps.forecast.amount
+                        | currency}}</div>
+                        <div class="widget-stat-text"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-xs-12">
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-12">
+            </div>
+            <!-- ./col -->
+
+        </div>
+
         <!-- begin row -->
         <div class="box box-primary" style="margin-bottom: 0px">
             <div class="box-header with-border">
