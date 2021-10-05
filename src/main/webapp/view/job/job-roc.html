@@ -56,9 +56,10 @@
                     <div class="widget-stat-info">
                         <div class="widget-stat-title">Above the Line</div>
                         <div class="widget-stat-number">{{
-                            data.tenderRisk.forecast.amount +
-                            data.tenderOpps.forecast.amount + data.others.forecast.amount
-                        | currency}}</div>
+                                    (data.tenderRisk.forecast.amount ? data.tenderRisk.forecast.amount : 0)
+                                            + (data.tenderOpps.forecast.amount ? data.tenderOpps.forecast.amount : 0)
+                                            + (data.others.forecast.amount ? data.others.forecast.amount : 0)
+                        | currency:undefined:0}}</div>
                         <div class="widget-stat-text"></div>
                     </div>
                 </div>
@@ -74,8 +75,10 @@
                     </div>
                     <div class="widget-stat-info">
                         <div class="widget-stat-title">Below the Line</div>
-                        <div class="widget-stat-number">{{data.risk.forecast.amount + data.opps.forecast.amount
-                        | currency}}</div>
+                        <div class="widget-stat-number">{{
+                            (data.risk.forecast.amount ? data.risk.forecast.amount : 0)
+                            + (data.opps.forecast.amount ? data.opps.forecast.amount : 0)
+                        | currency:undefined:0}}</div>
                         <div class="widget-stat-text"></div>
                     </div>
                 </div>

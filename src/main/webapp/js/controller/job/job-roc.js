@@ -202,7 +202,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 }
                 changeList.push(item);
             }
-            rocService.saveRocDetails($scope.jobNo, changeList)
+            rocService.saveRocDetails($scope.jobNo, changeList, $scope.year, $scope.month)
                 .then(function (data) {
                     if (data.length != 0) {
                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);

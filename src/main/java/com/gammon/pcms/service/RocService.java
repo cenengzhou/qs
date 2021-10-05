@@ -337,9 +337,11 @@ public class RocService {
 		return "";
 	}
 
-	public String saveRocDetails(String noJob, List<RocWrapper> rocWrapperList) {
+	public String saveRocDetails(String noJob, List<RocWrapper> rocWrapperList, int year, int month) {
 		String error = "";
 		try {
+			checkRocDetailOrCreateNew(noJob, year, month);
+
 			for (RocWrapper rocWrapper : rocWrapperList) {
 				Long rocId = rocWrapper.getId();
 				ROC_DETAIL rocDetailWrapper = rocWrapper.getRocDetail();
@@ -399,6 +401,11 @@ public class RocService {
 				}
 
 			}
+
+//			// calculate roc detail
+			String calculateRoc = calculateRocDetailAmountAndMonthlyMovementByPeriod(noJob, year, month);
+			if (!calculateRoc.equals(""))
+				return calculateRoc;
 		} catch (Exception e) {
 			error = "ROC Detail cannot be saved";
 			e.printStackTrace();
@@ -413,6 +420,10 @@ public class RocService {
 			if (roc.getStatus().equals(ROC.CLOSED)) {
 				return "ROC is closed";
 			}
+
+			// check roc detail and create set of roc details
+			checkRocDetailOrCreateNew(jobNo, year, month);
+
 
 			// handle changes
 			List<ROC_SUBDETAIL> changeList = new ArrayList<>();
@@ -454,7 +465,7 @@ public class RocService {
 			rocSubdetailRepository.save(changeList);
 
 			// calculate roc detail
-			String calculateRoc = calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, roc.getId(), year, month);
+			String calculateRoc = calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, year, month);
 			if (!calculateRoc.equals(""))
 				return calculateRoc;
 
@@ -465,14 +476,30 @@ public class RocService {
 		return result;
 	}
 
+	private void checkRocDetailOrCreateNew(String jobNo, int year, int month) {
+		List<ROC_DETAIL> saveList = new ArrayList<>();
+		List<ROC> liveRocListByJobNo = rocRepository.findLiveRocListByJobNo(jobNo);
+		for (ROC liveRoc : liveRocListByJobNo) {
+			ROC_DETAIL detailByRocIdAndYearMonth = rocDetailRepository.findDetailByRocIdAndYearMonth(liveRoc.getId(), year, month);
+			if (detailByRocIdAndYearMonth == null) {
+				ROC_DETAIL newRocDetail = findDetailBackwardOrCreateOne(year, month, liveRoc);
+				saveList.add(newRocDetail);
+			}
+		}
+		rocDetailRepository.save(saveList);
+	}
 
-	public String calculateRocDetailAmountAndMonthlyMovementByPeriod(String jobNo, Long rocId, int year, int month) {
+
+	public String calculateRocDetailAmountAndMonthlyMovementByPeriod(String jobNo, int year, int month) {
 		String error = "";
 		try {
 //			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
 			YearMonth yearMonth = YearMonth.of(year, month);
 
-			calculateRocDetailAmount(rocId, yearMonth);
+			List<ROC> liveRocListByJobNo = rocRepository.findLiveRocListByJobNo(jobNo);
+			for (ROC liveRoc:liveRocListByJobNo) {
+				calculateRocDetailAmount(liveRoc.getId(), yearMonth);
+			}
 
 			// calculate monthly movement
 			String calculateMonthlyMovement = rocIntegrationService.calculateRocSummaryToMonthlyMovement(jobNo, yearMonth.getYear(), yearMonth.getMonthValue());
@@ -480,7 +507,7 @@ public class RocService {
 				return calculateMonthlyMovement;
 
 		} catch (Exception e) {
-			error = "Failed to calculate roc amount. Job No: "+jobNo+", ROC id: " + rocId;
+			error = "Failed to calculate roc amount. Job No: "+jobNo;
 			e.printStackTrace();
 		}
 		return error;
@@ -497,9 +524,12 @@ public class RocService {
 
 		// find sum by the period
 		ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocIdAndEndPeriod(roc.getId(), yearMonth.getYear(), yearMonth.getMonthValue());
-		rocDetail.setAmountBest(summary.getAmountBest());
-		rocDetail.setAmountExpected(summary.getAmountExpected());
-		rocDetail.setAmountWorst(summary.getAmountWorst());
+		if (summary.getAmountBest() != null)
+			rocDetail.setAmountBest(summary.getAmountBest());
+		if (summary.getAmountExpected() != null)
+			rocDetail.setAmountExpected(summary.getAmountExpected());
+		if (summary.getAmountWorst() != null)
+			rocDetail.setAmountWorst(summary.getAmountWorst());
 
 		ROC_DETAIL saveRocDetail = rocDetailRepository.save(rocDetail);
 
@@ -534,12 +564,9 @@ public class RocService {
 		try {
 			if (jobNo.isEmpty())
 				throw new IllegalArgumentException("invalid parameters");
-			List<ROC> rocList = rocRepository.findByJobNo(jobNo);
-			for (ROC roc : rocList) {
-				String s =  calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, roc.getId(), year, month);
-				if (!s.equals(""))
-					return s;
-			}
+			String s =  calculateRocDetailAmountAndMonthlyMovementByPeriod(jobNo, year, month);
+			if (!s.equals(""))
+				return s;
 		} catch (Exception e) {
 			error = "ROC cannot be recalculated";
 			e.printStackTrace();

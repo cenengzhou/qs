@@ -199,13 +199,15 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function saveRocDetails(jobNo, rocDetails) {
+	function saveRocDetails(jobNo, rocDetails, year, month) {
 		var request = $http({
 			method: "post",
 			url: "service/roc/saveRocDetails",
 			dataType: "application/json;charset=UTF-8",
 			params: {
-				jobNo: jobNo
+				jobNo: jobNo,
+				year: year,
+				month: month
 			},
 			data: rocDetails
 		});

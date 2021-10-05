@@ -213,10 +213,10 @@ public class RocController {
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','saveRocDetails', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "saveRocDetails", method = RequestMethod.POST)
-	public String saveRocDetails(@RequestParam(required = true) String jobNo, @RequestBody List<RocWrapper> rocWrapperList){
+	public String saveRocDetails(@RequestParam(required = true) String jobNo, @RequestBody List<RocWrapper> rocWrapperList, @RequestParam(required = true) int year, @RequestParam(required = true) int month){
 		String result = "";
 		try{
-			result = rocService.saveRocDetails(jobNo, rocWrapperList);
+			result = rocService.saveRocDetails(jobNo, rocWrapperList, year, month);
 		}catch(Exception e){
 			result  = "ROC cannot be created.";
 			e.printStackTrace();
