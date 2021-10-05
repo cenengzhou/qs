@@ -15,10 +15,10 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 /**
  * koeyyeung
@@ -107,13 +107,18 @@ public class JasperReportHelper {
 	 * The report is not yet added to the report, until it is add to compiled and added to the report, it still in process status.
 	 * Call compileAndAddToReport() to add it.
 	 */
-	public JasperReportHelper setCurrentReport(@SuppressWarnings("rawtypes") List wrapperList, String templateFilenameWithFullPath, Map<String, Object> parameters){
+	public JasperReportHelper setCurrentReport(@SuppressWarnings("rawtypes") List wrapperList,
+			String templateFilenameWithFullPath, Map<String, Object> parameters) {
 		this.setCurrentWrapperList(wrapperList);
 		this.setCurrentTemplateFilenameWithFullPath(templateFilenameWithFullPath);
 		this.setCurrentParameters(parameters);
 		return this;
 	}
 	
+	public ByteArrayOutputStream exportAsExcel() throws JRException, IOException {
+		return exportAsExcel(null);
+	}
+
 	/**
 	 * 
 	 * @return
@@ -122,15 +127,20 @@ public class JasperReportHelper {
 	 * 
 	 * Export the reports as Excel
 	 */
-	public ByteArrayOutputStream exportAsExcel() throws JRException, IOException{
-		if(sheetNames.size() < reports.size()){
-			int sizeDiff = reports.size()-sheetNames.size();
+	public ByteArrayOutputStream exportAsExcel(SimpleXlsxReportConfiguration xlsxReportConfig) throws JRException, IOException {
+		if (sheetNames.size() < reports.size()) {
+			int sizeDiff = reports.size() - sheetNames.size();
 			int initSheet = sheetNames.size();
-			for(int i = 0 ; i < sizeDiff; i++)
-				this.sheetNames.add("Sheet "+(++initSheet));
+			for (int i = 0; i < sizeDiff; i++)
+				this.sheetNames.add("Sheet " + (++initSheet));
 		}
-		
-		return callJasperReportsToExcel(this.reports,this.sheetNames.toArray(new String[]{}));
+
+		return exportAsExcel(this.sheetNames.toArray(new String[] {}), xlsxReportConfig);
+	}
+
+	
+	public ByteArrayOutputStream exportAsExcel(String[] sheetNames, SimpleXlsxReportConfiguration xlsxReportConfig) throws JRException, IOException {
+		return callJasperReportsToExcel(this.reports, sheetNames, xlsxReportConfig);
 	}
 	
 	/**
@@ -191,30 +201,33 @@ public class JasperReportHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static ByteArrayOutputStream callJasperReportsToExcel(@SuppressWarnings("rawtypes") List jasperReports, String[] sheetNames)throws JRException, IOException {
+	private static ByteArrayOutputStream callJasperReportsToExcel(@SuppressWarnings("rawtypes") List jasperReports, String[] sheetNames, SimpleXlsxReportConfiguration xlsxReportConfig)throws JRException, IOException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
 	
 		//Convert Jasper Report to Excel
-		JRXlsExporter excelFile = new JRXlsExporter();
+		JRXlsxExporter excelFile = new JRXlsxExporter();
 
 		excelFile.setExporterInput(SimpleExporterInput.getInstance(jasperReports));
 		excelFile.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
 		
-		SimpleXlsReportConfiguration xlsReportConfig = new SimpleXlsReportConfiguration();
-		xlsReportConfig.setOnePagePerSheet(false);
-		xlsReportConfig.setDetectCellType(true);
-		xlsReportConfig.setWhitePageBackground(false);
-		xlsReportConfig.setRemoveEmptySpaceBetweenRows(true);
-		xlsReportConfig.setFontSizeFixEnabled(true);
-		xlsReportConfig.setIgnorePageMargins(true);
-		xlsReportConfig.setCollapseRowSpan(true);
-		xlsReportConfig.setIgnoreGraphics(true);
-		xlsReportConfig.setRemoveEmptySpaceBetweenColumns(true);
-		if(sheetNames.length>0){
-			xlsReportConfig.setSheetNames(sheetNames);
+		if (xlsxReportConfig == null) {
+			xlsxReportConfig = new SimpleXlsxReportConfiguration();
+			xlsxReportConfig.setOnePagePerSheet(false);
+			xlsxReportConfig.setDetectCellType(true);
+			xlsxReportConfig.setWhitePageBackground(false);
+			xlsxReportConfig.setRemoveEmptySpaceBetweenRows(true);
+			xlsxReportConfig.setFontSizeFixEnabled(true);
+			xlsxReportConfig.setIgnorePageMargins(true);
+			xlsxReportConfig.setCollapseRowSpan(true);
+			xlsxReportConfig.setIgnoreGraphics(true);
+			xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(true);
 		}
-		excelFile.setConfiguration(xlsReportConfig);
+		
+		if(sheetNames.length>0){
+			xlsxReportConfig.setSheetNames(sheetNames);
+		}
+		excelFile.setConfiguration(xlsxReportConfig);
 		excelFile.exportReport();
 	
 		return outputStream;

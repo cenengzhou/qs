@@ -8,6 +8,8 @@ import java.util.Date;
 
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -15,7 +17,6 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.gammon.pcms.helper.DateHelper;
@@ -26,26 +27,7 @@ import com.gammon.pcms.helper.DateHelper;
  * migrate from poi 3.2 to poi 3.9 
  * support both .xls and .xlsx files 
  */
-public class ExcelWorkbook { 
-    public static final short ALIGN_H_CENTER = XSSFCellStyle.ALIGN_CENTER;
-    public static final short ALIGN_H_JUSTIFY = XSSFCellStyle.ALIGN_JUSTIFY;
-    public static final short ALIGN_H_LEFT = XSSFCellStyle.ALIGN_LEFT;
-    public static final short ALIGN_H_RIGHT = XSSFCellStyle.ALIGN_RIGHT;
-    
-    public static final short ALIGN_V_TOP = XSSFCellStyle.VERTICAL_TOP;
-    public static final short ALIGN_V_BOTTOM = XSSFCellStyle.VERTICAL_BOTTOM;
-    public static final short ALIGN_V_CENTER = XSSFCellStyle.VERTICAL_CENTER;
-    public static final short ALIGN_V_JUSTIFY = XSSFCellStyle.VERTICAL_JUSTIFY;
-    
-    public static final short BORDER_THIN = XSSFCellStyle.BORDER_THIN;
-    public static final short BORDER_THICK = XSSFCellStyle.BORDER_THICK;
-    public static final short BORDER_DOUBLE = XSSFCellStyle.BORDER_DOUBLE;
-    
-    public static final short PAGE_MARGIN_LEFT = XSSFSheet.LeftMargin;
-    public static final short PAGE_MARGIN_RIGHT = XSSFSheet.RightMargin;
-    public static final short PAGE_MARGIN_TOP = XSSFSheet.TopMargin;
-    public static final short PAGE_MARGIN_BOTTOM = XSSFSheet.BottomMargin;
-    
+public class ExcelWorkbook {  
     public static final String SUMMARY_SHEET_CONTENT_FONT = "summarySheet_contentFont";
     public static final String SUMMARY_SHEET_HEADER_FONT = "summarySheet_headerFont";
     
@@ -64,7 +46,7 @@ public class ExcelWorkbook {
         wb.createSheet();
 
         XSSFFont boldFont = this.wb.createFont();
-        boldFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+        boldFont.setBold(true);
         boldStyle = wb.createCellStyle();
         boldStyle.setFont(boldFont);
         
@@ -76,23 +58,23 @@ public class ExcelWorkbook {
         XSSFFont negativeRedFont = this.wb.createFont(); /**added by heisonwong**/
         negativeRedStyle = wb.createCellStyle();
         negativeRedStyle.setFont(negativeRedFont);
-        negativeRedStyle.setAlignment(ALIGN_H_RIGHT);
+        negativeRedStyle.setAlignment(HorizontalAlignment.RIGHT);
         negativeRedStyle.setDataFormat (wb.createDataFormat().getFormat("#,##0.00;[Red]-#,##0.00"));
         
         dateStyle = wb.createCellStyle();
-        dateStyle.setAlignment(ALIGN_H_RIGHT);
+        dateStyle.setAlignment(HorizontalAlignment.RIGHT);
         dateStyle.setDataFormat(wb.createDataFormat().getFormat("dd/MM/yyyy"));
         
         this.boldAndUnderlinedFont = this.wb.createFont();
         this.boldAndUnderlinedFont.setUnderline(XSSFFont.U_SINGLE);
-        this.boldAndUnderlinedFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+        this.boldAndUnderlinedFont.setBold(true);
         
         this.summarySheet_fontSize_content = this.wb.createFont();
         this.summarySheet_fontSize_content.setFontHeightInPoints((short)10);
 
         this.summarySheet_fontSize_header = this.wb.createFont();
         this.summarySheet_fontSize_header.setFontHeightInPoints((short)12);
-        this.summarySheet_fontSize_header.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+        this.summarySheet_fontSize_header.setBold(true);
     }
     
     public ExcelWorkbook(XSSFWorkbook wb) {
@@ -135,10 +117,10 @@ public class ExcelWorkbook {
         }
     }
     
-    public void setCellAlignment(short alignment, int row, int col) {
+    public void setCellAlignment(HorizontalAlignment alignment, int row, int col) {
         XSSFCell cell = locateCell(row, col);
         try {
-            CellUtil.setAlignment(cell, this.wb, alignment);
+            CellUtil.setAlignment(cell, alignment);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -178,7 +160,7 @@ public class ExcelWorkbook {
         Date tmpDate = isValidDate(value) ? DateHelper.parseDate(value) : null;
         if (tmpDate != null) {
             try {
-                CellUtil.setCellStyleProperty(cell, this.wb, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));
+                CellUtil.setCellStyleProperty(cell, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));
             } catch(Exception ex) {
                 ex.printStackTrace();
             }            
@@ -186,7 +168,7 @@ public class ExcelWorkbook {
         } 
         else if(GenericValidator.isDouble(value)){  
             cell.setCellValue(Double.parseDouble(value)); 
-            cell.setCellType(XSSFCell.CELL_TYPE_NUMERIC);
+            cell.setCellType(CellType.NUMERIC);
         }
         else{
             cell.setCellValue(new XSSFRichTextString(value));
@@ -221,7 +203,7 @@ public class ExcelWorkbook {
 	        Date tmpDate = isValidDate(value) ? DateHelper.parseDate(value) : null;
 	        if (tmpDate != null) {
 	            try {
-	                CellUtil.setCellStyleProperty(cell, this.wb, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));
+	                CellUtil.setCellStyleProperty(cell, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));
 	            } catch(Exception ex) {
 	                ex.printStackTrace();
 	            }            
@@ -229,7 +211,7 @@ public class ExcelWorkbook {
 	        } 
 	        else if(GenericValidator.isDouble(value)){  
 	            cell.setCellValue(Double.parseDouble(value)); 
-	            cell.setCellType(XSSFCell.CELL_TYPE_NUMERIC);
+	            cell.setCellType(CellType.NUMERIC);
 	        }
 	        else{
 	            cell.setCellValue(new XSSFRichTextString(value));

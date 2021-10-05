@@ -114,18 +114,26 @@
                                      class="md-warn md-align-top-left" flex> Display Live & Closed Item
                         </md-checkbox>
                     </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-danger btn-block "
-                                ng-click="addRoc()">
-                            <i class="fa fa-plus"></i> Add ROC
+                    <div class="col-md-4">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-danger btn-block "
+                                    ng-click="addRoc()">
+                                <i class="fa fa-plus"></i> Add ROC
+                            </button>
+                        </div>
+                        
+                        <div class="col-md-4">
+                        <button class="btn btn-block btn-primary"
+                        ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
                         </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-block btn-success"
+                            ng-click="downloadRocReport('xlsx')"><span class="fa fa-download"></span> Download
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="col-md-2">
-                    <button class="btn btn-block btn-primary"
-                    ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
-                    </button>
-                    </div>
                     <!--				<div class="col-md-2">-->
                     <!--					<button type="button" class="btn btn-purple btn-block " ng-disabled="buttonTimer > 0"-->
                     <!--							ng-click="recalculateRoc()">-->

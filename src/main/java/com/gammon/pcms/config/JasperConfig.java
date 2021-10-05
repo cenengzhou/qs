@@ -11,7 +11,14 @@ public class JasperConfig {
 	@Value("${jasper.template}")
 	private String templatePath;
 
+	@Value("${jasper.report.roc}")
+	private String reportRoc;
+
 	public String getTemplatePath() {
 		return templatePath;
+	}
+
+	public String getReportRoc() {
+		return reportRoc;
 	}
 }

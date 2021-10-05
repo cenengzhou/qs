@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,9 +34,7 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 				i++;
 			this.sheet = wb.getSheetAt(i);
 			linePointer = 0;
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		}catch (IOException ex) {
+		} catch (IOException ex) {
 			logger.log(Level.SEVERE, "ExcelWorkbookProcessor Exception",ex);
 		}
 	}
@@ -59,10 +56,10 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 	      if(row != null){
 	    	  for (int i=0; i<line.length;i++) {
 	    		  if (row.getCell(i) != null) {
-	    			  if (row.getCell(i).getCellType() == Cell.CELL_TYPE_STRING) {
+	    			  if (row.getCell(i).getCellType() == CellType.STRING) {
 	    				  line[i] = row.getCell(i).getRichStringCellValue().getString();
 	    			  } 
-	    			  else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC ) {
+	    			  else if (row.getCell(i).getCellType() == CellType.NUMERIC ) {
 	    				  //line[i] = (new Double(row.getCell(i).getNumericCellValue())).toString();
 	    				  buffer = new StringBuffer();
 
@@ -79,13 +76,13 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 	    				  //logger.info("STRING row "+ i +" "+ resultString);
 
 	    			  }
-	    			  else if(row.getCell(i).getCellType() == Cell.CELL_TYPE_FORMULA){
-	    				  if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+	    			  else if(row.getCell(i).getCellType() == CellType.FORMULA){
+	    				  if(row.getCell(i).getCachedFormulaResultType() == CellType.NUMERIC)
 	    					  line[i] = Double.toString(row.getCell(i).getNumericCellValue());
-	    				  else if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+	    				  else if(row.getCell(i).getCachedFormulaResultType() == CellType.STRING)
 	    					  line[i] = row.getCell(i).getRichStringCellValue().getString();
 	    			  }
-	    			  else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_BLANK) {
+	    			  else if (row.getCell(i).getCellType() == CellType.BLANK) {
 	    			  } else {
 	    				  logger.info("Unexpected cell type!!! " + row.getCell(i).getCellType());
 	    			  }
@@ -106,7 +103,7 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 		boolean loop=true;
 		Row row = sheet.getRow(linePointer);
 		while(loop){
-			if(row.getCell(numOfCol)!=null && row.getCell(numOfCol).getCellType() != Cell.CELL_TYPE_BLANK){
+			if(row.getCell(numOfCol)!=null && row.getCell(numOfCol).getCellType() != CellType.BLANK){
 				numOfCol++;
 			}
 			else{
@@ -117,4 +114,3 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 		return numOfCol;
 	}
 }
-

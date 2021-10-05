@@ -1,5 +1,5 @@
-mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', '$interval', '$window',
-    function ($scope, rocService, forecastService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, $interval, $window) {
+mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$uibModal', '$cookies', 'modalService', '$sce', '$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'confirmService', 'GlobalMessage', 'GlobalHelper', '$interval', '$window',
+    function ($scope, rocService, forecastService, $uibModal, $cookies, modalService, $sce, $state, GlobalParameter, rootscopeService, $timeout, $q, uiGridConstants, uiGridGroupingConstants, confirmService, GlobalMessage, GlobalHelper, $interval, $window) {
         $scope.GlobalParameter = GlobalParameter;
         $scope.editable = false;
 
@@ -36,6 +36,11 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 // if (findUser.length > 0 && findUser[0])
                 //     $scope.person.selectedItem = findUser[0];
             });
+
+        $scope.downloadRocReport = function(format = "xlsx") {
+            var url = 'service/report/downloadRocExcel?jobNumber=' + $scope.jobNo + '&year=' + $scope.year + '&month=' + $scope.month + "&format=" + format;
+ 		    GlobalHelper.downloadFile(url);
+        }
 
         function getData(year, month) {
             var rocListApi = rocService.getRocListSummary($scope.jobNo, year, month);

@@ -1,10 +1,37 @@
 package com.gammon.pcms.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.ToDoubleFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.dao.RocClassDescMapRepository;
 import com.gammon.pcms.dao.RocDetailRepository;
 import com.gammon.pcms.dao.RocRepository;
 import com.gammon.pcms.dao.RocSubdetailRepository;
+import com.gammon.pcms.dto.IRocDetailJasperWrapper;
+import com.gammon.pcms.dto.RocAmountWrapper;
+import com.gammon.pcms.dto.RocCaseWrapper;
+import com.gammon.pcms.dto.RocDetailJasperWrapper;
+import com.gammon.pcms.dto.RocJasperWrapper;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.RocDateUtils;
 import com.gammon.pcms.model.ROC;
 import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
@@ -13,20 +40,17 @@ import com.gammon.pcms.model.ROC_SUBDETAIL;
 import com.gammon.pcms.wrapper.RocWrapper;
 import com.gammon.qs.dao.RocDetailHBDao;
 import com.gammon.qs.dao.RocHBDao;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.util.JasperReportHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 @Transactional
 @Service
@@ -57,6 +81,14 @@ public class RocService {
 
 	@Autowired
 	private MessageConfig messageConfig;
+	
+	@Autowired
+	private transient JasperConfig jasperConfig;
+
+	@Autowired
+	private JobInfoService jobInfoService;
+
+	private static String noDataMarker = "NO DATA";
 
 	public List<RocWrapper> getRocWrapperList(String jobNo, int year, int month) {
 		if (jobNo.isEmpty() || !(month >= 1 && month <= 12))
@@ -515,6 +547,147 @@ public class RocService {
 		return error;
 	}
 
-	public Date today() {return new Date();}
-}
+	public Date today() {
+		return new Date();
+	}
+	
+	public ByteArrayOutputStream GenerateRocReport(String jobNumber, int year, int month, String format) {
+		String templateName = jasperConfig.getReportRoc();
+		RocJasperWrapper wrapper = this.prepareRocJasperWrapper(templateName, jobNumber, year, month);
+		List<RocJasperWrapper> reportWrapperList = Arrays.asList(wrapper);
+		Map<String, Object> parameters = new HashMap<String, Object>();
 
+
+		try {
+			JasperReportHelper reportHelper = JasperReportHelper.get()
+					.setCurrentReport(
+						reportWrapperList,
+						FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + templateName,
+						parameters
+					)
+					.compileAndAddReport();
+			switch(format.toLowerCase()){
+				case "xlsx":
+					SimpleXlsxReportConfiguration xlsxReportConfig = new SimpleXlsxReportConfiguration();
+					xlsxReportConfig.setOnePagePerSheet(true);
+					xlsxReportConfig.setDetectCellType(true);
+					xlsxReportConfig.setWhitePageBackground(true);
+					xlsxReportConfig.setRemoveEmptySpaceBetweenRows(false);
+					xlsxReportConfig.setFontSizeFixEnabled(true);
+					xlsxReportConfig.setIgnorePageMargins(false);
+					xlsxReportConfig.setCollapseRowSpan(false);
+					xlsxReportConfig.setIgnoreGraphics(false);
+					xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(false);
+					return reportHelper.exportAsExcel(new String[] { "Summary", "Appendix 5a Contingencies", "Appendix 5b Risk & Opps" }, xlsxReportConfig);
+				case "pdf":
+					return reportHelper.exportAsPDF();
+				default:
+					throw new FileNotFoundException("format " + format + " not supported");
+			}
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+	}
+
+	private RocJasperWrapper prepareRocJasperWrapper(String templateName, String jobNumber, int year, int month) {
+		JobInfo job;
+		try{
+			job = jobInfoService.obtainJob(jobNumber);
+		} catch (Exception e) {
+			logger.error("error", e);
+			throw new IllegalArgumentException("cannot generate RocJasperWrapper: " + jobNumber + "-" + year + "-" + month);
+		}
+		RocJasperWrapper wrapper = new RocJasperWrapper();
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month - 1, 1);
+		wrapper.setAsAtDate(new SimpleDateFormat("MMM-yyyy").format(calendar.getTime()));
+		wrapper.setProjectNumber(jobNumber);
+		wrapper.setProjectName(job.getDescription());
+
+		List<IRocDetailJasperWrapper> currentList = rocRepository.getRocJasperWrapper(jobNumber, year, month);
+		List<IRocDetailJasperWrapper> previousList = rocRepository.getRocJasperWrapper(jobNumber, year, month - 1);
+
+		wrapper.setSumCaseTenderRisks(generateRocCaseWrapper(ROC.TENDER_RISK, currentList, previousList));
+		wrapper.setSumCaseTenderOpps(generateRocCaseWrapper(ROC.TENDER_OPPS, currentList, previousList));
+		wrapper.setSumCaseTenderOther(generateRocCaseWrapper(ROC.CONTINGENCY, currentList, previousList));
+		wrapper.setSumCaseRisks(generateRocCaseWrapper(ROC.RISK, currentList, previousList));
+		wrapper.setSumCaseOpps(generateRocCaseWrapper(ROC.OPPS, currentList, previousList));
+
+		List<IRocDetailJasperWrapper> detailsTenderRisks = this.filterRocDetailsList(ROC.TENDER_RISK, currentList);
+		List<IRocDetailJasperWrapper> detailsTenderOppss = this.filterRocDetailsList(ROC.TENDER_OPPS, currentList);
+		List<IRocDetailJasperWrapper> detailsTenderOther =  this.filterRocDetailsList(ROC.CONTINGENCY, currentList);
+		List<IRocDetailJasperWrapper> detailsRisks = this.filterRocDetailsList(ROC.RISK, currentList);
+		List<IRocDetailJasperWrapper> detailsOpps = this.filterRocDetailsList(ROC.OPPS, currentList);
+		
+		switch (templateName) {
+			case "RisksOppsContingenciesCombineDetail":
+				Comparator<IRocDetailJasperWrapper> compareByCategoryId = Comparator
+				.comparing(IRocDetailJasperWrapper::getCategory).reversed()
+				.thenComparing(IRocDetailJasperWrapper::getRocId);
+				
+				List<IRocDetailJasperWrapper> detailsContingencies = Stream
+				.of(detailsTenderRisks, detailsTenderOppss, detailsTenderOther)
+				.flatMap(Collection::stream)
+				.sorted(compareByCategoryId)
+				.collect(Collectors.toList());
+				
+				List<IRocDetailJasperWrapper> detailsRisksOpps = Stream
+				.of(detailsRisks, detailsOpps)
+				.flatMap(Collection::stream)
+				.sorted(compareByCategoryId)
+				.collect(Collectors.toList());
+				
+				wrapper.getDetailsContingencies().addAll(addNoDataRocDetailJasperWrapper(detailsContingencies));
+				wrapper.getDetailsRisksOpps().addAll(addNoDataRocDetailJasperWrapper(detailsRisksOpps));
+				break;
+			default:
+				wrapper.setDetailsTenderRisks(addNoDataRocDetailJasperWrapper(detailsTenderRisks));
+				wrapper.setDetailsTenderOpps(addNoDataRocDetailJasperWrapper(detailsTenderOppss));
+				wrapper.setDetailsTenderOther(addNoDataRocDetailJasperWrapper(detailsTenderOther));
+				wrapper.setDetailsRisks(addNoDataRocDetailJasperWrapper(detailsRisks));
+				wrapper.setDetailsOpps(addNoDataRocDetailJasperWrapper(detailsOpps));
+				break;
+		}
+		return wrapper;
+	}
+	
+	private List<IRocDetailJasperWrapper> filterRocDetailsList(String category, List<IRocDetailJasperWrapper> list) {
+		List<IRocDetailJasperWrapper> wrapperList = list.stream().filter(d -> d.getCategory().equals(category))
+				.collect(Collectors.toList());
+		return wrapperList;
+	}
+	
+	private List<IRocDetailJasperWrapper> addNoDataRocDetailJasperWrapper(List<IRocDetailJasperWrapper> list) {
+		return list.size() > 0 ? list : Arrays.asList(new RocDetailJasperWrapper(0, 0, 0, "", "", "", noDataMarker, ""));
+	}
+
+	private boolean isNoDataWrapper(IRocDetailJasperWrapper wrapper) {
+		return wrapper.getRemark().equals(noDataMarker);
+	}
+	
+	private RocCaseWrapper generateRocCaseWrapper(
+		String category, 
+		List<IRocDetailJasperWrapper> currentList,
+		List<IRocDetailJasperWrapper> previousList
+	) {
+		RocAmountWrapper best = this.generateRocAmountWrapper(category, currentList, previousList, r -> r.getAmountBest());
+		RocAmountWrapper relistic = this.generateRocAmountWrapper(category, currentList, previousList, r -> r.getAmountRealistic());
+		RocAmountWrapper worst = this.generateRocAmountWrapper(category, currentList, previousList, r -> r.getAmountWorst());
+
+		RocCaseWrapper wrapper = new RocCaseWrapper(best, relistic, worst);
+		return wrapper;
+	}
+
+	private RocAmountWrapper generateRocAmountWrapper(
+		String category, List<IRocDetailJasperWrapper> currentList,
+		List<IRocDetailJasperWrapper> previousList,
+		ToDoubleFunction<? super IRocDetailJasperWrapper> mapper
+	) {
+		return new RocAmountWrapper(
+			this.filterRocDetailsList(category, currentList).stream().mapToDouble(mapper).sum(),
+			this.filterRocDetailsList(category, previousList).stream().mapToDouble(mapper).sum()
+		);
+	}
+	
+}

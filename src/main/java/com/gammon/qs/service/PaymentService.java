@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -944,7 +945,7 @@ public class PaymentService{
 			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getAsAtDate()), true);
 			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getScIpaReceivedDate()), true);
 			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getCertIssueDate()), true);
-			doc.setCellAlignment(ExcelWorkbook.ALIGN_H_RIGHT, numberOfRows, 10);
+			doc.setCellAlignment(HorizontalAlignment.RIGHT, numberOfRows, 10);
 			numberOfRows++;
 
 		}

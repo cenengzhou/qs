@@ -1,0 +1,1859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ROC Report" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="dd3e4ebb-1d82-4611-a3e4-7c21e8710b1e">
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBeanListByCategory"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#CCCCCC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#DDDDDD">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="detailsTenderRisksDataset" uuid="74c5a754-82f0-4fed-8a92-af200ad81ff1">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBean"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rocId" class="java.lang.String">
+			<fieldDescription><![CDATA[rocId]]></fieldDescription>
+		</field>
+		<field name="projectRef" class="java.lang.String">
+			<fieldDescription><![CDATA[projectRef]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<fieldDescription><![CDATA[description]]></fieldDescription>
+		</field>
+		<field name="amountBest" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountBest]]></fieldDescription>
+		</field>
+		<field name="amountRealistic" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountRealistic]]></fieldDescription>
+		</field>
+		<field name="amountWorst" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountWorst]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<variable name="sumTenderRisksRealistic" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountRealistic}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="detailstenderOppsDataset" uuid="552272aa-fddc-4024-9bc5-6e89dac48bee">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBean"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rocId" class="java.lang.String">
+			<fieldDescription><![CDATA[rocId]]></fieldDescription>
+		</field>
+		<field name="projectRef" class="java.lang.String">
+			<fieldDescription><![CDATA[projectRef]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<fieldDescription><![CDATA[description]]></fieldDescription>
+		</field>
+		<field name="amountBest" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountBest]]></fieldDescription>
+		</field>
+		<field name="amountRealistic" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountRealistic]]></fieldDescription>
+		</field>
+		<field name="amountWorst" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountWorst]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<variable name="sumTenderOppsRealistic" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountRealistic}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="detailsTenderOtherDataset" uuid="d3e9444e-61b2-4678-ae51-8ea4b3b8c0f3">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBean"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rocId" class="java.lang.String">
+			<fieldDescription><![CDATA[rocId]]></fieldDescription>
+		</field>
+		<field name="projectRef" class="java.lang.String">
+			<fieldDescription><![CDATA[projectRef]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<fieldDescription><![CDATA[description]]></fieldDescription>
+		</field>
+		<field name="amountBest" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountBest]]></fieldDescription>
+		</field>
+		<field name="amountRealistic" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountRealistic]]></fieldDescription>
+		</field>
+		<field name="amountWorst" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountWorst]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<variable name="sumTenderOtherRealistic" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountRealistic}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="detailsRisksDataset" uuid="9205cc47-85e9-478a-9417-083229baebe0">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBean"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rocId" class="java.lang.String">
+			<fieldDescription><![CDATA[rocId]]></fieldDescription>
+		</field>
+		<field name="projectRef" class="java.lang.String">
+			<fieldDescription><![CDATA[projectRef]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<fieldDescription><![CDATA[description]]></fieldDescription>
+		</field>
+		<field name="amountBest" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountBest]]></fieldDescription>
+		</field>
+		<field name="amountRealistic" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountRealistic]]></fieldDescription>
+		</field>
+		<field name="amountWorst" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountWorst]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<variable name="sumRisksBest" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountBest}]]></variableExpression>
+		</variable>
+		<variable name="sumRisksRealistic" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountRealistic}]]></variableExpression>
+		</variable>
+		<variable name="sumRisksWorst" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountWorst}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="detailsOppsDataset" uuid="fc81b567-ca80-415c-a588-0ac6058e1516">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBean"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rocId" class="java.lang.String">
+			<fieldDescription><![CDATA[rocId]]></fieldDescription>
+		</field>
+		<field name="projectRef" class="java.lang.String">
+			<fieldDescription><![CDATA[projectRef]]></fieldDescription>
+		</field>
+		<field name="description" class="java.lang.String">
+			<fieldDescription><![CDATA[description]]></fieldDescription>
+		</field>
+		<field name="amountBest" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountBest]]></fieldDescription>
+		</field>
+		<field name="amountRealistic" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountRealistic]]></fieldDescription>
+		</field>
+		<field name="amountWorst" class="java.lang.Double">
+			<fieldDescription><![CDATA[amountWorst]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<variable name="sumOppsBest" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountBest}]]></variableExpression>
+		</variable>
+		<variable name="sumOppsRealistic" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountRealistic}]]></variableExpression>
+		</variable>
+		<variable name="sumOppsWorst" class="java.lang.Double" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{amountWorst}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="asAtDate" class="java.lang.String">
+		<fieldDescription><![CDATA[asAtDate]]></fieldDescription>
+	</field>
+	<field name="projectName" class="java.lang.String">
+		<fieldDescription><![CDATA[projectName]]></fieldDescription>
+	</field>
+	<field name="projectNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[projectNumber]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderRisks" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderRisks]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderOpps" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderOpps]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderOther" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderOther]]></fieldDescription>
+	</field>
+	<field name="sumCaseRisks" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseRisks]]></fieldDescription>
+	</field>
+	<field name="sumCaseOpps" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseOpps]]></fieldDescription>
+	</field>
+	<field name="detailsTenderRisks" class="java.util.List">
+		<fieldDescription><![CDATA[detailsTenderRisks]]></fieldDescription>
+	</field>
+	<field name="detailsTenderOpps" class="java.util.List">
+		<fieldDescription><![CDATA[detailsTenderOpps]]></fieldDescription>
+	</field>
+	<field name="detailsTenderOther" class="java.util.List">
+		<fieldDescription><![CDATA[detailsTenderOther]]></fieldDescription>
+	</field>
+	<field name="detailsRisks" class="java.util.List">
+		<fieldDescription><![CDATA[detailsRisks]]></fieldDescription>
+	</field>
+	<field name="detailsOpps" class="java.util.List">
+		<fieldDescription><![CDATA[detailsOpps]]></fieldDescription>
+	</field>
+	<variable name="returnSumTenderRisks" class="java.lang.Double"/>
+	<variable name="returnSumTenderOpps" class="java.lang.Double"/>
+	<variable name="returnSumTenderOther" class="java.lang.Double"/>
+	<variable name="returnSumRisksBest" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealistic" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorst" class="java.lang.Double"/>
+	<variable name="returnSumOppsBest" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealistic" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorst" class="java.lang.Double"/>
+	<pageHeader>
+		<band height="80">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="d80041d6-c116-45d9-9104-d681bd409a64"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<text><![CDATA[Project Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="0039e77c-bdce-41eb-84e4-9b1b3e7c4d00"/>
+				<text><![CDATA[Project Number]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="0" width="260" height="20" uuid="e13e8551-cad6-4b67-a68f-6491670401d1"/>
+				<textFieldExpression><![CDATA[$F{projectName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="40" width="260" height="20" uuid="034d4e3a-f5ec-42ef-a065-7e18a1c34f83"/>
+				<textFieldExpression><![CDATA[$F{projectNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="0" width="140" height="20" uuid="2e466010-2399-4d03-a1f6-08a2ca9bd60b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["As At: " + $F{asAtDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="260" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement style="Table_CH" x="0" y="0" width="560" height="240" backcolor="rgba(255, 255, 255, 0.0)" uuid="7f7ce9aa-3e4c-4a97-9273-787117ff56e3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="120" height="40" backcolor="#D9D9D9" uuid="1a8d0347-3f83-4858-a5fa-c80a0d86a1ed">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Above the Line]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="120" y="0" width="130" height="20" backcolor="#D9D9D9" uuid="5b4a6b84-84d6-43fd-8c52-096d671159c5"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Current Month]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="120" y="20" width="130" height="20" backcolor="#D9D9D9" uuid="9984ce67-4408-4320-82c2-ccab14b5dc89"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="40" width="120" height="20" uuid="e527a662-f67b-4c6a-b4c7-555803d8361a"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Tender Risks]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="60" width="120" height="20" uuid="792477ad-6fc2-4bd8-bed7-b5d68d3bd246"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Tender Opps]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="100" width="120" height="20" backcolor="#D9D9D9" uuid="55fe7b78-b076-4733-a99c-644139895ed5"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Contingencies]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="270" y="0" width="130" height="20" backcolor="#D9D9D9" uuid="a643a988-b292-4b8f-bae6-d4d7bf29b815"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Previous Month]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="270" y="20" width="130" height="20" backcolor="#D9D9D9" uuid="978c65a5-fdd3-4e1e-ace1-b9f9b8f0cf37"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="120" y="40" width="130" height="20" uuid="555c0056-4cfa-4ae2-8cca-c7e0bcf08cfb"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="120" y="60" width="130" height="20" uuid="648b8d5a-76c4-4f66-a582-33d2fb0e575d"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="120" y="100" width="130" height="20" backcolor="#D9D9D9" uuid="ce5dc3fa-4d27-4839-9bca-11ba807514fb"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getCurrent() + $F{sumCaseTenderOpps}.getRealistic().getCurrent() + $F{sumCaseTenderOther}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="270" y="100" width="130" height="20" backcolor="#D9D9D9" uuid="2797e1af-0c06-47f4-bafa-785aa0569a61"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getPrevious() + $F{sumCaseTenderOpps}.getRealistic().getPrevious() + $F{sumCaseTenderOther}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="270" y="60" width="130" height="20" uuid="1cf37417-16f4-4623-84ef-5acbf1618c33"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="270" y="40" width="130" height="20" uuid="292e6320-719b-410e-b3a1-713fe741cdb3"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="140" width="120" height="20" backcolor="#D9D9D9" uuid="fea126d4-6c3d-46ca-b3da-ee4c297331da"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Below the Line]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="120" y="140" width="40" height="20" backcolor="#D9D9D9" uuid="7d974593-b128-417e-913a-c1dbe2e6892d"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="160" width="120" height="20" uuid="e82af502-9303-4ee8-9b16-23c2d06df7ac"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Risks]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="180" width="120" height="20" uuid="ecab6090-28ff-47c5-b33c-71e443053f19"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Opps]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="200" width="120" height="20" backcolor="#D9D9D9" uuid="28b28085-d6db-42cc-a275-2d445b91cbb4"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Risk & Opps]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="120" y="160" width="40" height="20" uuid="c8e6ebab-635e-4215-a1a1-98c1bb3b6cb1"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="120" y="180" width="40" height="20" uuid="02019a33-3b4a-4c2f-9e79-adbff2004137"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="120" y="200" width="40" height="20" backcolor="#D9D9D9" uuid="1b7e082e-b964-41b4-b51b-505033d3acef"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getCurrent() + $F{sumCaseOpps}.getBest().getCurrent()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="160" y="140" width="50" height="20" backcolor="#D9D9D9" uuid="a9ae9fc7-51ac-4da0-8336-be202da39ee2"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="210" y="140" width="40" height="20" backcolor="#D9D9D9" uuid="7d539c1c-b627-4fb8-8abd-8df82f53f57f"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="160" y="200" width="50" height="20" backcolor="#D9D9D9" uuid="96d5b4d2-6d5d-4737-91ff-ceb8271d25e8"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getCurrent() + $F{sumCaseOpps}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="160" y="180" width="50" height="20" uuid="d7f9b066-eaac-4a53-b386-a35c47664b4c"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="160" y="160" width="50" height="20" uuid="2ad73298-ee08-42a5-8e69-017e164c8328"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="210" y="200" width="40" height="20" backcolor="#D9D9D9" uuid="41b6e122-6bfd-4514-bf66-682fdfa09555"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getCurrent() + $F{sumCaseOpps}.getWorst().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="210" y="180" width="40" height="20" uuid="1670bbb1-f31d-469c-a616-68988d8c78b4"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="210" y="160" width="40" height="20" uuid="9d668b67-370e-4295-a44d-a923af0fdeb3"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getCurrent()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="420" y="0" width="140" height="20" backcolor="#D9D9D9" uuid="ed3dc5bb-ade8-493d-abe1-8ec082c81de0"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Movement]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="420" y="20" width="140" height="20" backcolor="#D9D9D9" uuid="f8750185-e2f4-4a85-b70b-c7f4eebb7107"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="420" y="40" width="140" height="20" uuid="587c2029-0ae3-4678-925e-fabf68c8071a"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="420" y="60" width="140" height="20" uuid="be88e7af-2d29-4e40-b583-5f7fab4c60c8"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="420" y="100" width="140" height="20" backcolor="#D9D9D9" uuid="25abdbbf-1e4d-4e18-a303-7a2b730b820c"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getMovement() + $F{sumCaseTenderOpps}.getRealistic().getMovement() + $F{sumCaseTenderOther}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="270" y="140" width="40" height="20" backcolor="#D9D9D9" uuid="8d629c47-2392-4e8f-9093-ea3f3e7f5b2f"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="270" y="160" width="40" height="20" uuid="f5beee0f-e4ad-414b-8c4e-4d37233935d3"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="270" y="180" width="40" height="20" uuid="b3304f8e-d915-4b48-8145-36ea7a9ea307"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="270" y="200" width="40" height="20" backcolor="#D9D9D9" uuid="96bd6f87-c7f0-4c2c-b9e8-9f8501a91390"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getPrevious() + $F{sumCaseOpps}.getBest().getPrevious()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="310" y="140" width="50" height="20" backcolor="#D9D9D9" uuid="f2443083-e74f-42cf-a0df-2d19762cb0f9"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="360" y="140" width="40" height="20" backcolor="#D9D9D9" uuid="64ad0607-dc21-4041-b1ba-a09e29cd1093"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="310" y="200" width="50" height="20" backcolor="#D9D9D9" uuid="494e3dba-d452-453f-992f-4a1fac6e3405"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getPrevious() + $F{sumCaseOpps}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="310" y="180" width="50" height="20" uuid="420eb410-b6a2-485a-ba57-c66e8ce5e2e3"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="310" y="160" width="50" height="20" uuid="42e55a68-4598-497a-8ed1-dfa538e01702"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="360" y="200" width="40" height="20" backcolor="#D9D9D9" uuid="9a16bc1e-b760-4fa0-971a-8a46357cff17"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getPrevious() + $F{sumCaseOpps}.getWorst().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="360" y="180" width="40" height="20" uuid="fd90fbf1-5da6-4e99-a1ae-2b226e37476a"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="360" y="160" width="40" height="20" uuid="e65c8d2c-8ee8-41eb-88a2-20d1328aafa6"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getPrevious()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="420" y="140" width="50" height="20" backcolor="#D9D9D9" uuid="505e159c-e70e-42f4-9471-c1181181bf96">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="420" y="160" width="50" height="20" uuid="66f8f11a-d9e5-4ec6-94be-6f6a6e5b0932">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="420" y="180" width="50" height="20" uuid="19d2ce19-dd0c-4ca5-af6d-23997b3adbbb">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="420" y="200" width="50" height="20" backcolor="#D9D9D9" uuid="16dba7cf-08a2-4d2e-98e3-47437868d29f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getMovement() + $F{sumCaseOpps}.getBest().getMovement()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="470" y="140" width="50" height="20" backcolor="#D9D9D9" uuid="886d06e0-bc19-4204-9ae3-463f6d62ce34">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="520" y="140" width="40" height="20" backcolor="#D9D9D9" uuid="44c249cb-69b0-417e-829b-a5fd67fd2db1">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="470" y="200" width="50" height="20" backcolor="#D9D9D9" uuid="66ed38bf-56f9-42a3-8b54-73d9b890483e">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getMovement() + $F{sumCaseOpps}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="470" y="180" width="50" height="20" uuid="5fb94615-be03-452d-bb59-1381594adbad">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="470" y="160" width="50" height="20" uuid="d3fde5cd-e6ed-4c7e-93a8-dc959ad1417f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement mode="Opaque" x="520" y="200" width="40" height="20" backcolor="#D9D9D9" uuid="b78bf33a-e837-4d0a-9f87-a3d2ad8bc9bc">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getMovement() + $F{sumCaseOpps}.getWorst().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="520" y="180" width="40" height="20" uuid="9d6c6ad7-a7d0-49ef-ab87-e8acfa0868bf">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="520" y="160" width="40" height="20" uuid="ed3a9236-a0cb-4019-92f6-dce2c5dc84b7">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getMovement()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="80" width="120" height="20" uuid="5d2284c6-b13e-46c5-9327-8d8d83a5fd54"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Other]]></text>
+				</staticText>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="120" y="80" width="130" height="20" uuid="1b25958a-4d3e-494f-958d-8b5b2aed5b1d"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="270" y="80" width="130" height="20" uuid="378adf88-1077-448b-87b0-77658ef4a007"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###;(-#,###)">
+					<reportElement x="420" y="80" width="140" height="20" uuid="1d9c4e29-23a7-4b6c-bf00-7daeffb8a38e"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+			</frame>
+			<break>
+				<reportElement x="0" y="250" width="560" height="1" uuid="0c76df09-a336-4576-971b-c46db10914ca">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</break>
+		</band>
+		<band height="45">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="560" height="45" uuid="4828b331-4dcf-4d9f-b680-accc5f98cdb7">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="false"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="detailsTenderRisksDataset" uuid="3b3f93ad-3aca-4b4a-946e-09621e0ae0cc">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detailsTenderRisks})]]></dataSourceExpression>
+						<returnValue fromVariable="sumTenderRisksRealistic" toVariable="returnSumTenderRisks"/>
+					</datasetRun>
+					<jr:columnGroup width="280" uuid="589dacea-bff5-4ada-bf6a-55d5e4df044b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="280" height="15" uuid="ba86a84c-db58-4403-988e-f5beac0f6efc">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Tender Risks]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="50" uuid="4f2c8b64-3cfa-4677-ace4-3f2d4a8f75a1">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<staticText>
+									<reportElement x="0" y="0" width="50" height="15" uuid="07f64f4b-852e-485f-a1ad-9bee3589d35c">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement textAlignment="Center">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[ROC ID]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="dae2c861-2e67-4631-928a-144837c423f8"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{rocId}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="70" uuid="12b8f960-5e63-4cb0-a388-1a12e78f0c4a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<staticText>
+									<reportElement x="0" y="0" width="70" height="15" uuid="3452d81a-292d-4664-923a-a10b4c6bfebb">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement>
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Project Ref]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="70" height="15" uuid="12150ea2-e5fa-4c3e-9ad4-0a9a23868a21"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{projectRef}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="160" uuid="004314ef-ef10-4993-ad5f-b2d742979d2d">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="160" height="15" uuid="3d192f40-5398-406b-83fe-c81d5049b6d5">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement textAlignment="Center">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Description]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</jr:columnFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="160" height="15" uuid="57c23473-88ac-47ce-85c8-647159eb1572"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="100" uuid="cae70aab-5c3f-474e-8f3c-08e6eb797654">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="15" uuid="a7e0a3c3-beaa-4f53-a731-085a9f284ad9"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Realistic]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="cfaad57d-74bd-4bb0-826b-098f596ac5be">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumTenderRisksRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="b1f37c6e-28b2-48d7-bd04-cbc1d23e9021"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="180" uuid="adfb6a51-9478-4d9d-8d46-a4fba4f9c006">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="180" height="15" uuid="7ad329f4-c7e7-4023-926f-a9937f2cee93"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Remarks \ Action]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2"/>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="180" height="15" uuid="aef95f93-e4d9-425a-98f4-48ded122b610"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="560" height="30" uuid="11a5261e-cc5a-4334-b3db-e1e4ea8de951">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="false"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="detailstenderOppsDataset" uuid="0cc9213b-b71d-46af-a37d-457ae4b1e7d2">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detailsTenderOpps})]]></dataSourceExpression>
+						<returnValue fromVariable="sumTenderOppsRealistic" toVariable="returnSumTenderOpps"/>
+					</datasetRun>
+					<jr:columnGroup width="280" uuid="765b8769-07bd-4042-bcf3-e9551b80d769">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="280" height="15" uuid="4205fe16-5e1c-4a5b-ac44-5bedc0047a26"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Tender Opps]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="50" uuid="535c992d-e207-4553-9f7a-227f9309e158">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</jr:columnFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="69661ee4-e5ee-42ea-ad27-50a19cbd598b"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{rocId}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="70" uuid="3d496c46-da3c-4d8e-9f10-4e50130f63c9">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="70" height="15" uuid="c7b89808-583f-4d91-bb4a-754364e0d356"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{projectRef}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="160" uuid="4d7b9c59-9c37-4915-bc02-8726c28f247b">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="160" height="15" uuid="25ee23f4-29e5-4bf5-a62c-edd297f894a5"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="100" uuid="d333b850-f573-467e-8dce-7525d755d6ca">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="ea8ac1d0-e9a3-43b5-a82d-db09babe5a42"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumTenderOppsRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="f88e2fef-1441-411b-a12c-f4b58e8bd1cb"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="180" uuid="5905955b-a743-48d9-ae5b-df4b3685ff79">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2"/>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="180" height="15" uuid="58a4d92c-ea4d-4e60-a727-ba72bf60e8d3"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="560" height="30" uuid="70936648-82e2-4f20-8893-3e479f2bd39b">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="false"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="detailsTenderOtherDataset" uuid="7a122de1-3faf-48a6-9257-adddee7957ed">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detailsTenderOther})]]></dataSourceExpression>
+						<returnValue fromVariable="sumTenderOtherRealistic" toVariable="returnSumTenderOther"/>
+					</datasetRun>
+					<jr:columnGroup width="280" uuid="3ca40609-c6a2-4c03-a227-334d6b86e925">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="280" height="15" uuid="f8d59eb1-b410-43a9-8e21-345df440b6d3">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Other contingencies]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="50" uuid="72d73852-adfd-49a5-aa78-8f6f34eaeaf0">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="a1020e79-a363-4d63-9cc5-1e536f01f916"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{rocId}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="70" uuid="bdc07f35-6cfe-4c3f-a576-d63b214e11e7">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="70" height="15" uuid="ab3b9514-21d1-48b4-b044-01627c7832cb"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{projectRef}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="160" uuid="82c55796-7a1f-4131-8819-34b42f511af9">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="160" height="15" uuid="a25064bf-772b-40c3-a797-ed4796273477"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="100" uuid="0be79003-2065-427b-b2a1-8e994b42d1e5">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="f91387fa-5292-4901-8f09-9ab0b9e73fb1"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumTenderOtherRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="100" height="15" uuid="d35fed0b-e95d-4822-b392-96f2e19a507e"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="180" uuid="b871488e-9966-4326-97af-abf815e0b441">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2"/>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="180" height="15" uuid="8f9dc10e-3ee0-4468-b775-fc2bd848242e"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="20" width="280" height="20" backcolor="#D9D9D9" uuid="68fbaa61-083d-4339-9fe8-e860508634a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Contingencies (Above the Line)]]></text>
+			</staticText>
+			<textField pattern="#,###;(-#,###)">
+				<reportElement x="280" y="20" width="100" height="20" backcolor="#D9D9D9" uuid="3311f24c-7670-4828-a3cb-26ab0da2282c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textFieldExpression><![CDATA[$V{returnSumTenderRisks} + $V{returnSumTenderOpps} + $V{returnSumTenderOther}]]></textFieldExpression>
+			</textField>
+			<break>
+				<reportElement x="0" y="55" width="560" height="1" uuid="e2a9f077-90ad-4b41-8836-8ef4d6939c74">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</break>
+		</band>
+		<band height="45">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="560" height="45" uuid="f5078ac9-62c5-475c-b916-16279547d9a3">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="false"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="detailsRisksDataset" uuid="db69c184-3908-4e9d-a4f4-82fdc69c2190">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detailsRisks})]]></dataSourceExpression>
+						<returnValue fromVariable="sumRisksBest" toVariable="returnSumRisksBest"/>
+						<returnValue fromVariable="sumRisksRealistic" toVariable="returnSumRisksRealistic"/>
+						<returnValue fromVariable="sumRisksWorst" toVariable="returnSumRisksWorst"/>
+					</datasetRun>
+					<jr:columnGroup width="240" uuid="a860b5df-3f0d-4682-b4e9-3260e8734b85">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="240" height="15" uuid="3dae2476-907e-4825-8a1b-a9a56c0da446">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Risks (Below the Line)]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="50" uuid="ae9ec113-2b1d-4918-a69a-7eb2fa5e3c33">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<staticText>
+									<reportElement x="0" y="0" width="50" height="15" uuid="8643a877-192d-49b3-99d9-c49e2f854004">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement textAlignment="Center">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[ROC ID]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="a0ad5b17-11d9-4d8c-8ceb-0d73572b419d"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{rocId}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="70" uuid="eb831d19-d3a8-4897-ac6e-9ffbcb457132">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<staticText>
+									<reportElement x="0" y="0" width="70" height="15" uuid="52ca9829-28be-4a84-8730-825a32a1625a">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement>
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Project Ref]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="70" height="15" uuid="a2c1d62b-2cc5-4890-a647-4733b1316c53"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{projectRef}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="120" uuid="8247c5a9-67b0-48ca-9015-0dc46e517f3a">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<staticText>
+									<reportElement x="0" y="0" width="120" height="15" uuid="31cbfe9c-42bb-463f-a5ba-105f400f7b03">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box padding="1"/>
+									<textElement textAlignment="Center">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Description]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</jr:columnFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="120" height="15" uuid="096bd84d-a733-4199-bc5f-1beaa37f47df"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="60" uuid="fc09af05-82fc-4eb8-901c-e63a9490811d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="15" uuid="70bbb9dd-e221-49a7-b71e-745587ea0409"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Best]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="dc1f4603-9ca0-43b7-994f-ddca90ad92d0">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumRisksBest}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="de8d653c-5176-4fba-9fa6-ab13a52ee50c"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountBest}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="a53947f0-09a0-49fc-81dc-3ad1b08cc043">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="15" uuid="eba8556b-d40d-46ea-8e6e-bc542d297b7e"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Realistic]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="0fb24380-fdc9-402c-a924-02c9db25259c">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumRisksRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="ac0e8194-c95c-4369-ac18-dd8bf83889a3"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="3c8cad1e-303b-4193-b570-0ff9ba007bca">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="15" uuid="e0bd02d4-5b52-439a-8d45-4745ab6f040e"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Worst]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="be813924-a36f-4ae7-bdd2-622b6e666b84">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumRisksWorst}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="b7431a3c-a269-4a3d-a414-332bc8d64e7d"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountWorst}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="f99f4083-c9db-421a-8f0c-18c870dc946d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table_CH" height="15" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="15" uuid="efe5fd02-9310-46a0-906f-91d2667c87a4"/>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Remarks \ Action]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2"/>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="140" height="15" uuid="29439b16-c8f4-4e7e-8d3f-2a02fedccc50"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="560" height="30" uuid="225dbe83-4cc9-4366-ad9d-f1593267c4f2">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="false"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="detailsOppsDataset" uuid="709653b2-1af4-47a3-8e28-79ba3416d5da">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detailsTenderRisks})]]></dataSourceExpression>
+						<returnValue fromVariable="sumOppsBest" toVariable="returnSumOppsBest"/>
+						<returnValue fromVariable="sumOppsRealistic" toVariable="returnSumOppsRealistic"/>
+						<returnValue fromVariable="sumOppsWorst" toVariable="returnSumOppsWorst"/>
+					</datasetRun>
+					<jr:columnGroup width="240" uuid="e20aeadc-b8fc-4512-9ec8-1d98b036b8b5">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="240" height="15" uuid="d9587503-6deb-4817-8d4f-6705a1371993">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Opps (Below the Line)]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="50" uuid="4b61f7a2-9ebb-4c6d-929f-05d97e3272d8">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="74bcff5a-e94e-4b9b-8c21-f05e748f39d9"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{rocId}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="70" uuid="efd6bc86-6a61-4917-9a33-66af7cf9780a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="70" height="15" uuid="d723884b-1744-4015-8457-48daafecbbc9"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{projectRef}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="120" uuid="f86ec17c-4caa-4a05-a3f9-f3e70edbbfe5">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnFooter style="Table_CH" height="0" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</jr:columnFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="120" height="15" uuid="9ee4b487-a0d8-4394-85cc-6aa0deeee001"/>
+									<box padding="1"/>
+									<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="60" uuid="9e81a26f-d41d-43f2-9137-557951be88c2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="cb2e4eea-d3fe-41fe-bac5-95508a24cb92">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumOppsBest}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="42304d74-7c76-4f9b-aaf3-e0d934842861"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountBest}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="87f52fbd-2d82-4f7b-a454-ca93f3a3f11a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="18720cf5-f30f-4851-ad73-9d33b2162006">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumOppsRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="0163ffed-d4f3-402d-b23c-6a89270433b1"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountRealistic}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="803dbd86-7c73-49b0-8671-13f93e91e0fd">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="c1ab3780-ec40-4195-8923-c84967abd8ad">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$V{sumOppsWorst}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField pattern="#,###;(-#,###)">
+								<reportElement x="0" y="0" width="60" height="15" uuid="bd11815e-8a80-4e78-a941-5c260c877d3f"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{amountWorst}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="19d9666e-9b79-479a-bba5-1651f14348dc">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnFooter style="Table_CH" height="15" rowSpan="2"/>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="140" height="15" uuid="4e85abcb-48b5-418b-9259-34c1f71758d2"/>
+								<box padding="1"/>
+								<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="60">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,###;(-#,###)">
+				<reportElement x="240" y="20" width="60" height="20" backcolor="#D9D9D9" uuid="1ee1a08d-373b-49fc-9124-7bcacc9c5800">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textFieldExpression><![CDATA[$V{returnSumRisksBest} + $V{returnSumOppsBest}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="210" height="20" backcolor="#D9D9D9" uuid="adf4cc10-6044-4cc6-9e16-a1765312a872">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Risk & Opps (Below the Line)]]></text>
+			</staticText>
+			<textField pattern="#,###;(-#,###)">
+				<reportElement x="300" y="20" width="60" height="20" backcolor="#D9D9D9" uuid="4b6b4090-bca3-4772-a376-31bcb8267e65">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textFieldExpression><![CDATA[$V{returnSumRisksRealistic} + $V{returnSumOppsRealistic}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###;(-#,###)">
+				<reportElement x="360" y="20" width="60" height="20" backcolor="#D9D9D9" uuid="3592786e-de76-4de0-ab54-7aa41b68972d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="3"/>
+				<textFieldExpression><![CDATA[$V{returnSumRisksWorst} + $V{returnSumOppsWorst}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

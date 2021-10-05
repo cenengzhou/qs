@@ -3,7 +3,9 @@ package com.gammon.pcms.web.controller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.service.RocService;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.PaymentService;
@@ -52,6 +55,8 @@ public class ReportController {
 	private SubcontractService subcontractService;
 	@Autowired
 	private PaymentService paymentService;
+	@Autowired
+	private RocService rocService;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ReportController','generateSubcontractLiabilityReport', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value="subcontractLiabilityReportExport",method=RequestMethod.GET)
@@ -133,7 +138,32 @@ public class ReportController {
 			}
 		}
 	}
-	
+		
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ReportController','generatePrintBQResourceRecociliationReport', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value="downloadRocExcel",method=RequestMethod.GET)
+	public void downloadRocExcel(@RequestParam(required=true,value="jobNumber") String jobNumber, @RequestParam int year, @RequestParam int month, @RequestParam String format,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(year, month - 1, 1);
+			String filename = "ROC Report " + jobNumber + "-" + new SimpleDateFormat("MMM-yyyy").format(calendar.getTime()) + "." + format;
+			ByteArrayOutputStream outputStream = this.rocService.GenerateRocReport(jobNumber, year, month, format);
+			response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+			response.setContentLength(outputStream.size());
+			response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+			response.getOutputStream().write(outputStream.toByteArray());
+			response.getOutputStream().flush();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+		} finally{
+			try {
+				response.getOutputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ReportController','generatePrintBQResourceRecociliationReport', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value="printBQRecourseReconciliationReport",method=RequestMethod.GET)
 	public void generatePrintBQResourceRecociliationReport(@RequestParam(required=true,value="jobNumber") String jobNumber,
