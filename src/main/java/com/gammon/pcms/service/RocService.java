@@ -649,6 +649,7 @@ public class RocService {
 		
 		switch (templateName) {
 			case "RisksOppsContingenciesCombineDetail":
+			case "RisksOppsContingenciesLanscape":
 				Comparator<IRocDetailJasperWrapper> compareByCategoryId = Comparator
 				.comparing(IRocDetailJasperWrapper::getCategory).reversed()
 				.thenComparing(IRocDetailJasperWrapper::getRocId);
