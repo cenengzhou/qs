@@ -108,58 +108,61 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
             // return row.entity.group == grid.appScope.newGroup;
             return row.treeNode.aggregations[10].groupVal == grid.appScope.newGroup;
         }
-
-        $scope.addRoc = function() {
-            var newRow = {
-                // "createdUser": "michaelkll",
-                // "createdDate": "2021-09-14T07:40:59.000+0000",
-                // "lastModifiedUser": "michaelkll",
-                // "lastModifiedDate": "2021-09-14T10:24:20.000+0000",
-                // "systemStatus": "ACTIVE",
-                // "id": 1,
-                "group": $scope.newGroup,
-                "projectNo": $scope.jobNo,
-                "projectRef": null,
-                "rocCategory": null,
-                "classification": null,
-                "impact": null,
-                "description": null,
-                "status": "Live",
-                "rocOwner": null,
-                "openDate": new Date($scope.year, $scope.month-1),
-                "closedDate": null,
-                "rocDetail": {
+        $scope.isAddingRow = false;
+        $scope.addRoc = function () {
+            if (!$scope.isAddingRow) {
+                var newRow = {
                     // "createdUser": "michaelkll",
-                    // "createdDate": "2021-09-14T08:13:58.000+0000",
+                    // "createdDate": "2021-09-14T07:40:59.000+0000",
                     // "lastModifiedUser": "michaelkll",
                     // "lastModifiedDate": "2021-09-14T10:24:20.000+0000",
                     // "systemStatus": "ACTIVE",
-                    // "id": 3,
-                    // "amountBest": 0,
-                    // "amountExpected": 20,
-                    // "amountWorst": 0,
-                    // "previousAmountBest": 0,
-                    // "previousAmountExpected": 20,
-                    // "previousAmountWorst": 0,
-                    "remarks": null,
-                    "year": 2021,
-                    "month": 9,
+                    // "id": 1,
+                    "group": $scope.newGroup,
+                    "projectNo": $scope.jobNo,
+                    "projectRef": null,
+                    "rocCategory": null,
+                    "classification": null,
+                    "impact": null,
+                    "description": null,
                     "status": "Live",
-                    // "movementBest": 0,
-                    // "movementExpected": 0,
-                    // "movementWorst": 0
-                },
-                "assignedNo": null,
-                "cutoffDate": null
-            };
-            newRow.updateType = 'ADD';
-            $scope.gridOptions.data.splice(0,0,newRow);
-            $timeout(function() {
-                $scope.gridApi.cellNav.scrollToFocus(
-                    $scope.gridOptions.data[0],
-                    $scope.gridOptions.columnDefs[3]
-                );
-            }, 100);
+                    "rocOwner": null,
+                    "openDate": new Date($scope.year, $scope.month-1),
+                    "closedDate": null,
+                    "rocDetail": {
+                        // "createdUser": "michaelkll",
+                        // "createdDate": "2021-09-14T08:13:58.000+0000",
+                        // "lastModifiedUser": "michaelkll",
+                        // "lastModifiedDate": "2021-09-14T10:24:20.000+0000",
+                        // "systemStatus": "ACTIVE",
+                        // "id": 3,
+                        // "amountBest": 0,
+                        // "amountExpected": 20,
+                        // "amountWorst": 0,
+                        // "previousAmountBest": 0,
+                        // "previousAmountExpected": 20,
+                        // "previousAmountWorst": 0,
+                        "remarks": null,
+                        "year": 2021,
+                        "month": 9,
+                        "status": "Live",
+                        // "movementBest": 0,
+                        // "movementExpected": 0,
+                        // "movementWorst": 0
+                    },
+                    "assignedNo": null,
+                    "cutoffDate": null
+                };
+                newRow.updateType = 'ADD';
+                $scope.gridOptions.data.splice(0, 0, newRow);
+                $scope.isAddingRow = true;
+                $timeout(function() {
+                    $scope.gridApi.cellNav.scrollToFocus(
+                        $scope.gridOptions.data[0],
+                        $scope.gridOptions.columnDefs[3]
+                    );
+                }, 100);
+            }
         }
 
         $scope.openEditRocDialog = function (rowEntity) {
@@ -212,6 +215,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                         $scope.gridApi.rowEdit.setRowsClean(dataRows);
                         getData($scope.year, $scope.month);
                         $scope.gridApi.core.refresh();
+                        $scope.isAddingRow = false;
                         // $window.location.reload();
                     }
                 });
