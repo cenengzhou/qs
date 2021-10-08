@@ -81,7 +81,7 @@ public class RocService {
 
 	@Autowired
 	private MessageConfig messageConfig;
-	
+
 	@Autowired
 	private transient JasperConfig jasperConfig;
 
@@ -101,10 +101,10 @@ public class RocService {
 			// filter roc by year month
 			List<ROC> filterRocList = new ArrayList<>();
 			for (ROC r : rocList) {
-				YearMonth createdYearMonth = RocDateUtils.findYearMonthFromCutoffDate(r.getOpenDate(), getCutoffDate());
+				YearMonth createdYearMonth = RocDateUtils.findYearMonthFromDate(r.getOpenDate());
 				if (inputYearMonth.isAfter(createdYearMonth) || inputYearMonth.equals(createdYearMonth)) {
 					if (r.getStatus().equals(ROC.CLOSED)) {
-						YearMonth closedYearMonth = RocDateUtils.findYearMonthFromCutoffDate(r.getClosedDate(), getCutoffDate());
+						YearMonth closedYearMonth = RocDateUtils.findYearMonthFromDate(r.getClosedDate());
 						if (inputYearMonth.isAfter(closedYearMonth))
 							continue;
 					}
@@ -253,7 +253,7 @@ public class RocService {
 			ROC newRocResult = rocRepository.save(newRoc);
 
 			// create detail
-			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(roc.getOpenDate(), getCutoffDate());
+			YearMonth yearMonth = RocDateUtils.findYearMonthFromDate(roc.getOpenDate());
 			ROC_DETAIL newRocDetail = new ROC_DETAIL(yearMonth.getYear(), yearMonth.getMonthValue(), newRocResult);
 			if (rocDetail != null && rocDetail.getRemarks() != null && !rocDetail.getRemarks().isEmpty()) {
 				newRocDetail.setRemarks(rocDetail.getRemarks());
@@ -305,7 +305,7 @@ public class RocService {
 	private String handleRocStatusChange(String noJob, ROC roc, ROC dbRoc) {
 		String oldStatus = dbRoc.getStatus();
 		String newStatus = roc.getStatus();
-		YearMonth todayYearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
+		YearMonth todayYearMonth = RocDateUtils.findYearMonthFromDate(today());
 		ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
 		if (rocDetail == null) {
 			rocDetail = findDetailBackwardOrCreateOne(todayYearMonth.getYear(), todayYearMonth.getMonthValue(), roc);
@@ -324,7 +324,7 @@ public class RocService {
 				rocSubdetailRepository.updateSubdetailToZeroByRocIdAndPeriod(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
 
 			} else {
-				if (!RocDateUtils.compareDatePeriodCutoff(today(), dbRoc.getClosedDate(), getCutoffDate())) {
+				if (!RocDateUtils.compareDatePeriod(today(), dbRoc.getClosedDate())) {
 					return "Cannot reopen other month period";
 				}
 				dbRoc.setClosedDate(null);
@@ -345,7 +345,6 @@ public class RocService {
 			for (RocWrapper rocWrapper : rocWrapperList) {
 				Long rocId = rocWrapper.getId();
 				ROC_DETAIL rocDetailWrapper = rocWrapper.getRocDetail();
-//				YearMonth todayYearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
 				YearMonth yearMonth = YearMonth.of(rocDetailWrapper.getYear(), rocDetailWrapper.getMonth());
 
 				// handle ROC (add/ update)
@@ -493,7 +492,6 @@ public class RocService {
 	public String calculateRocDetailAmountAndMonthlyMovementByPeriod(String jobNo, int year, int month) {
 		String error = "";
 		try {
-//			YearMonth yearMonth = RocDateUtils.findYearMonthFromCutoffDate(today(), getCutoffDate());
 			YearMonth yearMonth = YearMonth.of(year, month);
 
 			List<ROC> liveRocListByJobNo = rocRepository.findLiveRocListByJobNo(jobNo);
@@ -524,12 +522,19 @@ public class RocService {
 
 		// find sum by the period
 		ROC_SUBDETAIL summary = rocSubdetailRepository.findSumByRocIdAndEndPeriod(roc.getId(), yearMonth.getYear(), yearMonth.getMonthValue());
+		BigDecimal amountBest = new BigDecimal(0);
+		BigDecimal amountExpected = new BigDecimal(0);
+		BigDecimal amountWorst = new BigDecimal(0);
 		if (summary.getAmountBest() != null)
-			rocDetail.setAmountBest(summary.getAmountBest());
+			amountBest = summary.getAmountBest();
 		if (summary.getAmountExpected() != null)
-			rocDetail.setAmountExpected(summary.getAmountExpected());
+			amountExpected = summary.getAmountExpected();
 		if (summary.getAmountWorst() != null)
-			rocDetail.setAmountWorst(summary.getAmountWorst());
+			amountWorst = summary.getAmountWorst();
+
+		rocDetail.setAmountBest(amountBest);
+		rocDetail.setAmountExpected(amountExpected);
+		rocDetail.setAmountWorst(amountWorst);
 
 		ROC_DETAIL saveRocDetail = rocDetailRepository.save(rocDetail);
 
@@ -557,8 +562,6 @@ public class RocService {
 		return uniqleResult;
 	}
 
-	public int getCutoffDate() {return Integer.parseInt(messageConfig.getRocCutoffDate());}
-
 	public String recalculateRoc(String jobNo, int year, int month) {
 		String error = "";
 		try {
@@ -577,7 +580,7 @@ public class RocService {
 	public Date today() {
 		return new Date();
 	}
-	
+
 	public ByteArrayOutputStream GenerateRocReport(String jobNumber, int year, int month, String format) {
 		String templateName = jasperConfig.getReportRoc();
 		RocJasperWrapper wrapper = this.prepareRocJasperWrapper(templateName, jobNumber, year, month);
@@ -646,26 +649,26 @@ public class RocService {
 		List<IRocDetailJasperWrapper> detailsTenderOther =  this.filterRocDetailsList(ROC.CONTINGENCY, currentList);
 		List<IRocDetailJasperWrapper> detailsRisks = this.filterRocDetailsList(ROC.RISK, currentList);
 		List<IRocDetailJasperWrapper> detailsOpps = this.filterRocDetailsList(ROC.OPPS, currentList);
-		
+
 		switch (templateName) {
 			case "RisksOppsContingenciesCombineDetail":
 			case "RisksOppsContingenciesLanscape":
 				Comparator<IRocDetailJasperWrapper> compareByCategoryId = Comparator
 				.comparing(IRocDetailJasperWrapper::getCategory).reversed()
 				.thenComparing(IRocDetailJasperWrapper::getRocId);
-				
+
 				List<IRocDetailJasperWrapper> detailsContingencies = Stream
 				.of(detailsTenderRisks, detailsTenderOppss, detailsTenderOther)
 				.flatMap(Collection::stream)
 				.sorted(compareByCategoryId)
 				.collect(Collectors.toList());
-				
+
 				List<IRocDetailJasperWrapper> detailsRisksOpps = Stream
 				.of(detailsRisks, detailsOpps)
 				.flatMap(Collection::stream)
 				.sorted(compareByCategoryId)
 				.collect(Collectors.toList());
-				
+
 				wrapper.getDetailsContingencies().addAll(addNoDataRocDetailJasperWrapper(detailsContingencies));
 				wrapper.getDetailsRisksOpps().addAll(addNoDataRocDetailJasperWrapper(detailsRisksOpps));
 				break;
@@ -679,13 +682,13 @@ public class RocService {
 		}
 		return wrapper;
 	}
-	
+
 	private List<IRocDetailJasperWrapper> filterRocDetailsList(String category, List<IRocDetailJasperWrapper> list) {
 		List<IRocDetailJasperWrapper> wrapperList = list.stream().filter(d -> d.getCategory().equals(category))
 				.collect(Collectors.toList());
 		return wrapperList;
 	}
-	
+
 	private List<IRocDetailJasperWrapper> addNoDataRocDetailJasperWrapper(List<IRocDetailJasperWrapper> list) {
 		return list.size() > 0 ? list : Arrays.asList(new RocDetailJasperWrapper(0, 0, 0, "", "", "", noDataMarker, ""));
 	}
@@ -693,9 +696,9 @@ public class RocService {
 	private boolean isNoDataWrapper(IRocDetailJasperWrapper wrapper) {
 		return wrapper.getRemark().equals(noDataMarker);
 	}
-	
+
 	private RocCaseWrapper generateRocCaseWrapper(
-		String category, 
+		String category,
 		List<IRocDetailJasperWrapper> currentList,
 		List<IRocDetailJasperWrapper> previousList
 	) {
@@ -717,5 +720,5 @@ public class RocService {
 			this.filterRocDetailsList(category, previousList).stream().mapToDouble(mapper).sum()
 		);
 	}
-	
+
 }

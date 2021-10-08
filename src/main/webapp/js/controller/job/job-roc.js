@@ -18,23 +18,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
 
         initOptions();
 
-        rocService.getCutoffDate().then(function(data) {
-            $scope.cutoffDate = data;
-            var d = new Date();
-            if (d.getDate() <= $scope.cutoffDate) {
-                d.setMonth(d.getMonth() - 1);
-            }
-            $scope.month = d.getMonth() + 1;
-            $scope.year = d.getFullYear();
-            $scope.monthYear = $scope.year + '-' + $scope.month;
-        });
-
         rootscopeService.gettingAllUser()
             .then(function (data) {
                 self.repos = data;
-                // var findUser = self.repos.filter(function(x) { return x.username == $scope.rocOwner});
-                // if (findUser.length > 0 && findUser[0])
-                //     $scope.person.selectedItem = findUser[0];
+
+                var d = new Date();
+                $scope.month = d.getMonth() + 1;
+                $scope.year = d.getFullYear();
+                $scope.monthYear = $scope.year + '-' + $scope.month;
             });
 
         $scope.downloadRocReport = function(format = "xlsx") {
@@ -150,8 +141,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                         // "movementExpected": 0,
                         // "movementWorst": 0
                     },
-                    "assignedNo": null,
-                    "cutoffDate": null
+                    "assignedNo": null
                 };
                 newRow.updateType = 'ADD';
                 $scope.gridOptions.data.splice(0, 0, newRow);

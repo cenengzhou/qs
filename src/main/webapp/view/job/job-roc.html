@@ -107,10 +107,7 @@
                                    ng-model-options="{ updateOn: 'blur' }">
                         </div>
                     </div>
-                    <div class="col-md-3 text-red" ng-if="cutoffDate > 0">** Cutoff Date: {{cutoffDate}}th of each
-                        month
-                    </div>
-                    <div class="col-md-3" ng-if="cutoffDate <= 0"></div>
+                    <div class="col-md-3 text-red"></div>
                     <div class="col-md-3 text-right">
                         <md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()"
                                      aria-label="Show Closed Item"

@@ -12,8 +12,6 @@ public class RocWrapper extends ROC implements Serializable{
 	private ROC_DETAIL rocDetail;
 	private Long assignedNo;
 
-	private String cutoffDate;
-
 	private String updateType;
 
 	public RocWrapper() {
@@ -55,14 +53,6 @@ public class RocWrapper extends ROC implements Serializable{
 
 	public void setAssignedNo(Long assignedNo) {
 		this.assignedNo = assignedNo;
-	}
-
-	public String getCutoffDate() {
-		return cutoffDate;
-	}
-
-	public void setCutoffDate(String cutoffDate) {
-		this.cutoffDate = cutoffDate;
 	}
 
 	public String getUpdateType() {

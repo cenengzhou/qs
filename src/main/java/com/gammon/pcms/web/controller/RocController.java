@@ -30,12 +30,6 @@ public class RocController {
 	@Autowired
 	private RocAdminService rocAdminService;
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getCutoffDate', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "getCutoffDate", method = RequestMethod.GET)
-	public int getCutoffDate(){
-		return rocService.getCutoffDate();
-	}
-
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "getRocAdmin/{jobNo}/{rocCategory}/{description}", method = RequestMethod.GET)
 	public ROC getRocAdmin(@PathVariable String jobNo, @PathVariable String rocCategory, @PathVariable String description){

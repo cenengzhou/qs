@@ -1,7 +1,6 @@
 mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
-		getCutoffDate: getCutoffDate,
 		getRocAdmin: getRocAdmin,
 		getRocDetailListAdmin: getRocDetailListAdmin,
 		getRocSubdetailListAdmin: getRocSubdetailListAdmin,
@@ -25,14 +24,6 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		getRocDetailHistory: getRocDetailHistory,
 		recalculateRoc: recalculateRoc
     });
-
-	function getCutoffDate() {
-		var request = $http({
-			method: 'GET',
-			url: "service/roc/getCutoffDate"
-		});
-		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-	}
 
 	function getRocAdmin(jobNo, rocCategory, description) {
 		var request = $http({
