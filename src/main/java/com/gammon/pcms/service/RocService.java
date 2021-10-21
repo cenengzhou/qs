@@ -31,6 +31,7 @@ import com.gammon.pcms.dto.RocAmountWrapper;
 import com.gammon.pcms.dto.RocCaseWrapper;
 import com.gammon.pcms.dto.RocDetailJasperWrapper;
 import com.gammon.pcms.dto.RocJasperWrapper;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.RocDateUtils;
 import com.gammon.pcms.model.ROC;
@@ -608,7 +609,7 @@ public class RocService {
 					xlsxReportConfig.setCollapseRowSpan(false);
 					xlsxReportConfig.setIgnoreGraphics(false);
 					xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(false);
-					return reportHelper.exportAsExcel(new String[] { "Summary", "Appendix 5a Contingencies", "Appendix 5b Risk & Opps" }, xlsxReportConfig);
+					return reportHelper.exportAsExcel(jasperConfig.getSheetNames(), xlsxReportConfig);
 				case "pdf":
 					return reportHelper.exportAsPDF();
 				default:
@@ -622,7 +623,7 @@ public class RocService {
 
 	private RocJasperWrapper prepareRocJasperWrapper(String templateName, String jobNumber, int year, int month) {
 		JobInfo job;
-		try{
+		try {
 			job = jobInfoService.obtainJob(jobNumber);
 		} catch (Exception e) {
 			logger.error("error", e);
@@ -636,7 +637,11 @@ public class RocService {
 		wrapper.setProjectName(job.getDescription());
 
 		List<IRocDetailJasperWrapper> currentList = rocRepository.getRocJasperWrapper(jobNumber, year, month);
-		List<IRocDetailJasperWrapper> previousList = rocRepository.getRocJasperWrapper(jobNumber, year, month - 1);
+		
+		// month is NOT zero based
+		Calendar previousCalendar = DateHelper.getPreviousMonthCalendar(year, month - 1);
+		int previousMonthOneBased = previousCalendar.get(Calendar.MONTH) + 1;
+		List<IRocDetailJasperWrapper> previousList = rocRepository.getRocJasperWrapper(jobNumber, previousCalendar.get(Calendar.YEAR), previousMonthOneBased);
 
 		wrapper.setSumCaseTenderRisks(generateRocCaseWrapper(ROC.TENDER_RISK, currentList, previousList));
 		wrapper.setSumCaseTenderOpps(generateRocCaseWrapper(ROC.TENDER_OPPS, currentList, previousList));
@@ -644,15 +649,15 @@ public class RocService {
 		wrapper.setSumCaseRisks(generateRocCaseWrapper(ROC.RISK, currentList, previousList));
 		wrapper.setSumCaseOpps(generateRocCaseWrapper(ROC.OPPS, currentList, previousList));
 
-		List<IRocDetailJasperWrapper> detailsTenderRisks = this.filterRocDetailsList(ROC.TENDER_RISK, currentList);
-		List<IRocDetailJasperWrapper> detailsTenderOppss = this.filterRocDetailsList(ROC.TENDER_OPPS, currentList);
-		List<IRocDetailJasperWrapper> detailsTenderOther =  this.filterRocDetailsList(ROC.CONTINGENCY, currentList);
-		List<IRocDetailJasperWrapper> detailsRisks = this.filterRocDetailsList(ROC.RISK, currentList);
-		List<IRocDetailJasperWrapper> detailsOpps = this.filterRocDetailsList(ROC.OPPS, currentList);
+		List<IRocDetailJasperWrapper> detailsTenderRisks = this.rocDetailMovementList(ROC.TENDER_RISK, currentList, previousList);
+		List<IRocDetailJasperWrapper> detailsTenderOppss = this.rocDetailMovementList(ROC.TENDER_OPPS, currentList, previousList);
+		List<IRocDetailJasperWrapper> detailsTenderOther = this.rocDetailMovementList(ROC.CONTINGENCY, currentList, previousList);
+		List<IRocDetailJasperWrapper> detailsRisks = this.rocDetailMovementList(ROC.RISK, currentList, previousList);
+		List<IRocDetailJasperWrapper> detailsOpps = this.rocDetailMovementList(ROC.OPPS, currentList, previousList);
 
 		switch (templateName) {
 			case "RisksOppsContingenciesCombineDetail":
-			case "RisksOppsContingenciesLanscape":
+			case "RisksOppsContingenciesLandscape":
 				Comparator<IRocDetailJasperWrapper> compareByCategoryId = Comparator
 				.comparing(IRocDetailJasperWrapper::getCategory).reversed()
 				.thenComparing(IRocDetailJasperWrapper::getRocId);
@@ -683,6 +688,38 @@ public class RocService {
 		return wrapper;
 	}
 
+	private List<IRocDetailJasperWrapper> rocDetailMovementList(String category, List<IRocDetailJasperWrapper> currentList, List<IRocDetailJasperWrapper> previousList){
+		List<IRocDetailJasperWrapper> currentWrapperList = this.filterRocDetailsList(category, currentList);
+		List<IRocDetailJasperWrapper> previousWrapperList = this.filterRocDetailsList(category, previousList);
+		List<IRocDetailJasperWrapper> resultList = new ArrayList<>();
+		for (IRocDetailJasperWrapper c : currentWrapperList) {
+			Calendar previousCalendar = DateHelper.getPreviousMonthCalendar(c.getYear(), c.getMonth() - 1);
+			int previousMonthOneBased = previousCalendar.get(Calendar.MONTH) + 1;
+			IRocDetailJasperWrapper p = previousWrapperList.stream()
+			.filter(w -> 
+				w.getRocId() == c.getRocId() && 
+				w.getYear() == previousCalendar.get(Calendar.YEAR) &&
+				w.getMonth() == previousMonthOneBased
+			).findAny().orElse(null);
+			resultList.add(this.setRocDetailMovement(c, p));
+		}
+		return resultList;
+	}
+	
+	private IRocDetailJasperWrapper setRocDetailMovement(IRocDetailJasperWrapper c, IRocDetailJasperWrapper p) {
+		RocDetailJasperWrapper r = RocDetailJasperWrapper.convert(c);
+		double previousBest = 0, previousRealistic = 0, previousWorst = 0;
+		if (p != null) {
+			previousBest = p.getAmountBest();
+			previousRealistic = p.getAmountRealistic();
+			previousWorst = p.getAmountWorst();
+		}
+		r.setAmountBestMovement(c.getAmountBest() - previousBest);
+		r.setAmountRealisticMovement(c.getAmountRealistic() - previousRealistic);
+		r.setAmountWorstMovement(c.getAmountWorst() - previousWorst);
+		return r;
+	}
+	
 	private List<IRocDetailJasperWrapper> filterRocDetailsList(String category, List<IRocDetailJasperWrapper> list) {
 		List<IRocDetailJasperWrapper> wrapperList = list.stream().filter(d -> d.getCategory().equals(category))
 				.collect(Collectors.toList());
@@ -690,7 +727,7 @@ public class RocService {
 	}
 
 	private List<IRocDetailJasperWrapper> addNoDataRocDetailJasperWrapper(List<IRocDetailJasperWrapper> list) {
-		return list.size() > 0 ? list : Arrays.asList(new RocDetailJasperWrapper(0, 0, 0, "", "", "", noDataMarker, ""));
+		return list.size() > 0 ? list : Arrays.asList(new RocDetailJasperWrapper(noDataMarker));
 	}
 
 	private boolean isNoDataWrapper(IRocDetailJasperWrapper wrapper) {

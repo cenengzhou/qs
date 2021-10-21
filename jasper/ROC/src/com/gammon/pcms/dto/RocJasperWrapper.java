@@ -44,7 +44,6 @@ public class RocJasperWrapper {
 		this.detailsRisksOpps = detailsRisksOpps;
 	}
 
-
 	public RocJasperWrapper(String asAtDate, String projectName, String projectNumber, RocCaseWrapper sumCaseTenderRisks,
 			RocCaseWrapper sumCaseTenderOpps, RocCaseWrapper sumCaseTenderOther, RocCaseWrapper sumCaseRisks,
 			RocCaseWrapper sumCaseOpps, List<IRocDetailJasperWrapper> detailsTenderRisks,

@@ -33,13 +33,20 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 	@Query(
 		value = "select " +
 		"d.AMOUNT_BEST as amountBest, " +
+		"d.AMOUNT_BEST as amountBestMovement, " +
 		"d.AMOUNT_EXPECTED as amountRealistic, " +
+		"d.AMOUNT_EXPECTED as amountRealisticMovement, " +
 		"d.AMOUNT_WORST as amountWorst, " +
+		"d.AMOUNT_WORST as amountWorstMovement, " +
 		"r.ROC_CAT as category, " +
 		"r.DESCRIPTION as description, " +
+		"r.IMPACT as impact, " +
+		"r.ITEM_NO as itemNo, " +	
+		"d.MONTH as month, " +
 		"r.PROJECT_REF as projectRef, " +
 		"d.REMARKS as remark, " +
-		"r.ITEM_NO as rocId " +	
+		"d.ID_ROC as rocId, " +
+		"d.year as year " +
 		"from {h-schema}ROC r " + 
 		"left join {h-schema}ROC_DETAIL d on d.ID_ROC = r.ID " +
 		"where r.PROJECT_NO = :projectNo " +
@@ -47,5 +54,35 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 		"and d.MONTH = :month " +
 		"order by r.ROC_CAT desc, r.ITEM_NO asc",
 		nativeQuery = true)
- 	public List<IRocDetailJasperWrapper> getRocJasperWrapper(@Param("projectNo") String projectNo,  @Param("year") int year, @Param("month") int month);
+	public List<IRocDetailJasperWrapper> getRocJasperWrapper(@Param("projectNo") String projectNo, @Param("year") int year, @Param("month") int month);
+	 
+	@NotFound(action = NotFoundAction.IGNORE)
+	@Query(
+		value = "select " +
+		"d.AMOUNT_BEST as amountBest, " +
+		"(d.AMOUNT_BEST - pd.AMOUNT_BEST) AS amountBestMovement, " +
+		"d.AMOUNT_EXPECTED as amountRealistic, " +
+		"(d.AMOUNT_EXPECTED - pd.AMOUNT_EXPECTED) AS amountRealisticMovement, " +
+		"d.AMOUNT_WORST as amountWorst, " +
+		"(d.AMOUNT_WORST - pd.AMOUNT_WORST) AS amountWorstMovement, " +
+		"r.ROC_CAT as category, " +
+		"r.DESCRIPTION as description, " +
+		"r.IMPACT as impact, " +
+		"r.ITEM_NO as itemNo, " +
+		"d.MONTH as month, " +
+		"r.PROJECT_REF as projectRef, " +
+		"d.REMARKS as remark, " +
+		"d.ID_ROC as rocId, " +
+		"d.year as year " +
+		"from {h-schema}ROC r " +
+		"left join {h-schema}ROC_DETAIL d on d.ID_ROC = r.ID " +
+		"LEFT JOIN  " +
+		"(SELECT AMOUNT_BEST, AMOUNT_EXPECTED, AMOUNT_WORST, id_roc, YEAR, MONTH FROM {h-schema}ROC_DETAIL ) pd " +
+		"ON pd.ID_ROC = r.id AND pd.YEAR = :prevMonthYear AND pd.MONTH = prevMonth " +
+		"where r.PROJECT_NO = :projectNo " +
+		"and d.YEAR = :year " +
+		"and d.MONTH = :month " +
+		"order by r.ROC_CAT desc, r.ITEM_NO asc",
+		nativeQuery = true)
+ 	public List<IRocDetailJasperWrapper> getRocJasperWrapper(@Param("projectNo") String projectNo,  @Param("year") int year, @Param("month") int month, @Param("prevMonthYear") int prevMonthYear, @Param("prevMonth") int prevMonth);		
 }

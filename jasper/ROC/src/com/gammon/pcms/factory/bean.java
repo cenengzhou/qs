@@ -19,6 +19,15 @@ public class bean {
 	public static final String RISK = "Risk";
 	public static final String OPPS = "Opps";
 	
+	public static final String INCREASED_TURNOVER= "Increased Turnover";
+	public static final String INCREASED_COST= "Increased Cost";
+	public static final String REDUCED_TURNOVER= "Reduced Turnover";
+	public static final String REDUCED_COST = "Reduced Cost";
+	
+	public static String[] turnoverImplacts = new String[] {REDUCED_TURNOVER, INCREASED_TURNOVER};
+	public static String[] costImplacts = new String[] {REDUCED_COST, INCREASED_COST};
+	public static String[] implacts = new String[] { INCREASED_TURNOVER, INCREASED_COST, REDUCED_TURNOVER, REDUCED_COST};
+	
 	public static Collection<RocJasperWrapper> createBeanCollection() {
 		List<RocJasperWrapper> list = new ArrayList<>();
 
@@ -85,45 +94,21 @@ public class bean {
 
 	static RocDetailJasperWrapper generateRocDetailWrapper(String desc) {
 		count++;
-		return (RocDetailJasperWrapper) new RocDetailJasperWrapper( "id" + count, "projectRef " + count, desc, desc + " " + count, getRandomNumber(0, 1000), getRandomNumber(0, 1000), getRandomNumber(0, 1000), "remark" + count );
-//		return (RocDetailJasperWrapper) new RocDetailJasperWrapper() {
-//
-//			@Override
-//			public String getRocId() {
-//				return "id" + count;
-//			}
-//
-//			@Override
-//			public String getProjectRef() {
-//				return "projectRef " + count;
-//			}
-//
-//			@Override
-//			public String getDescription() {
-//				return desc + " " + count;
-//			}
-//
-//			@Override
-//			public double getAmountBest() {
-//				return getRandomNumber(0, 1000);
-//			}
-//
-//			@Override
-//			public double getAmountRealistic() {
-//				return getRandomNumber(0, 1000);
-//			}
-//
-//			@Override
-//			public double getAmountWorst() {
-//				return getRandomNumber(0, 1000);
-//			}
-//
-//			@Override
-//			public String getRemark() {
-//				return "remark" + count;
-//			}
-//			
-//		};
+		String implact = implacts[getRandomNumber(0,3)];
+		return new RocDetailJasperWrapper(
+			getRandomNumber(0, 1000), 
+			getRandomNumber(0, 1000), 
+			getRandomNumber(0, 1000), 
+			getRandomNumber(0, 1000), 
+			getRandomNumber(0, 1000), 
+			getRandomNumber(0, 1000), 
+				desc,
+				desc + " " + implact + " "+ count,
+				implact,
+				"projectRef " + count,
+				"remark" + count,
+				"id" + count
+		);
 	}
 	
 	static int getRandomNumber(int min, int max) {

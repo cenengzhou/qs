@@ -63,8 +63,15 @@ public class DateHelper {
 	 * For JDE Infoamtion Default value for Updated Time
 	 */
 	public static final Integer getTimeLastUpdated() {
-		Integer timeLastUpdated = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 10000 + Calendar.getInstance().get(Calendar.MINUTE) * 100 + Calendar.getInstance().get(Calendar.SECOND);
+		Integer timeLastUpdated = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 10000
+				+ Calendar.getInstance().get(Calendar.MINUTE) * 100 + Calendar.getInstance().get(Calendar.SECOND);
 		return timeLastUpdated;
 	}
 
+	public static Calendar getPreviousMonthCalendar(int year, int zeroBasedMonth) {
+		Calendar previousMonthCalendar = Calendar.getInstance();
+			previousMonthCalendar.set(year, zeroBasedMonth, 1);
+			previousMonthCalendar.add(Calendar.MONTH, -1);
+			return previousMonthCalendar;
+	}
 }

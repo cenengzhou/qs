@@ -2,100 +2,217 @@ package com.gammon.pcms.dto;
 
 public class RocDetailJasperWrapper implements IRocDetailJasperWrapper {
 
-	private String rocId;
-	private String projectRef;
-	private String category;
-	private String description;
-	private double amountBest;
-	private double amountRealistic;
-	private double amountWorst;
-	private String remark;
+  private double amountBest;
+  private double amountBestMovement;
+  private double amountRealistic;
+  private double amountRealisticMovement;
+  private double amountWorst;
+  private double amountWorstMovement;
+  private String category;
+  private String description;
+  private String impact;
+  private String itemNo;
+  private int month;
+  private String projectRef;
+  private String remark;
+  private int rocId;
+  private int year;
+  
+  public RocDetailJasperWrapper() {
+  }
 
-	public RocDetailJasperWrapper() {
-	}
+  public RocDetailJasperWrapper(String remark) {
+    this.remark = remark;
+  }
+  
+  public RocDetailJasperWrapper(
+    double amountBest, double amountBestMovement, 
+    double amountRealistic, double amountRealisticMovement, 
+    double amountWorst, double amountWorstMovement, 
+    String category, String description, String impact, String itemNo, 
+    String projectRef, String remark) {
+    this.amountBest = amountBest;
+    this.amountBestMovement = amountBestMovement;
+    this.amountRealistic = amountRealistic;
+    this.amountRealisticMovement = amountRealisticMovement;
+    this.amountWorst = amountWorst;
+    this.amountWorstMovement = amountWorstMovement;
+    this.category = category;
+    this.description = description;
+    this.impact = impact;
+    this.itemNo = itemNo;
+    this.projectRef = projectRef;
+    this.remark = remark;
+  }
 
-	public RocDetailJasperWrapper(String rocId, String projectRef, String category, String description,
-			double amountBest, double amountRealistic, double amountWorst, String remark) {
-		super();
-		this.rocId = rocId;
-		this.projectRef = projectRef;
-		this.category = category;
-		this.description = description;
-		this.amountBest = amountBest;
-		this.amountRealistic = amountRealistic;
-		this.amountWorst = amountWorst;
-		this.remark = remark;
-	}
+  public RocDetailJasperWrapper(
+    double amountBest, double amountBestMovement, 
+    double amountRealistic, double amountRealisticMovement, 
+    double amountWorst, double amountWorstMovement, 
+    String category, String description, String impact, String itemNo, 
+      int month, String projectRef, String remark, int rocId, int year) {
+    this.amountBest = amountBest;
+    this.amountBestMovement = amountBestMovement;
+    this.amountRealistic = amountRealistic;
+    this.amountRealisticMovement = amountRealisticMovement;
+    this.amountWorst = amountWorst;
+    this.amountWorstMovement = amountWorstMovement;
+    this.category = category;
+    this.description = description;
+    this.impact = impact;
+    this.itemNo = itemNo;
+    this.month = month;
+    this.projectRef = projectRef;
+    this.remark = remark;
+    this.rocId = rocId;
+    this.year = year;
+  }
 
-	public String getRocId() {
-		return rocId;
-	}
+  public static RocDetailJasperWrapper convert(IRocDetailJasperWrapper wrapper) {
+    RocDetailJasperWrapper result = new RocDetailJasperWrapper(
+    wrapper.getAmountBest(), wrapper.getAmountBestMovement(),
+    wrapper.getAmountRealistic(), wrapper.getAmountRealisticMovement(),
+    wrapper.getAmountWorst(), wrapper.getAmountWorstMovement(),
+    wrapper.getCategory(), 
+    wrapper.getDescription(),
+    wrapper.getImpact(),
+    wrapper.getItemNo(),
+    wrapper.getMonth(),
+    wrapper.getProjectRef(),
+    wrapper.getRemark(),
+    wrapper.getRocId(),
+    wrapper.getYear()
+    );
+    return result;
+  }
+  
+  public double getAmountBest() {
+    return amountBest;
+  }
 
-	public void setRocId(String rocId) {
-		this.rocId = rocId;
-	}
+  public void setAmountBest(double amountBest) {
+    this.amountBest = amountBest;
+  }
 
-	public String getProjectRef() {
-		return projectRef;
-	}
+  public double getAmountBestMovement() {
+    return amountBestMovement;
+  }
 
-	public void setProjectRef(String projectRef) {
-		this.projectRef = projectRef;
-	}
+  public void setAmountBestMovement(double amountBestMovement) {
+    this.amountBestMovement = amountBestMovement;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public double getAmountRealistic() {
+    return amountRealistic;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setAmountRealistic(double amountRealistic) {
+    this.amountRealistic = amountRealistic;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public double getAmountRealisticMovement() {
+    return amountRealisticMovement;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setAmountRealisticMovement(double amountRealisticMovement) {
+    this.amountRealisticMovement = amountRealisticMovement;
+  }
 
-	public double getAmountBest() {
-		return amountBest;
-	}
+  public double getAmountWorst() {
+    return amountWorst;
+  }
 
-	public void setAmountBest(double amountBest) {
-		this.amountBest = amountBest;
-	}
+  public void setAmountWorst(double amountWorst) {
+    this.amountWorst = amountWorst;
+  }
 
-	public double getAmountRealistic() {
-		return amountRealistic;
-	}
+  public double getAmountWorstMovement() {
+    return amountWorstMovement;
+  }
 
-	public void setAmountRealistic(double amountRealistic) {
-		this.amountRealistic = amountRealistic;
-	}
+  public void setAmountWorstMovement(double amountWorstMovement) {
+    this.amountWorstMovement = amountWorstMovement;
+  }
 
-	public double getAmountWorst() {
-		return amountWorst;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public void setAmountWorst(double amountWorst) {
-		this.amountWorst = amountWorst;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getRemark() {
-		return remark;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	@Override
-	public String toString() {
-		return "RocDetailJasperWrapper [rocId=" + rocId + ", projectRef=" + projectRef + ", category=" + category
-				+ ", description=" + description + ", amountBest=" + amountBest + ", amountRealistic=" + amountRealistic
-				+ ", amountWorst=" + amountWorst + ", remark=" + remark + "]";
-	}
+  public String getImpact() {
+    return impact;
+  }
+
+  public void setImpact(String impact) {
+    this.impact = impact;
+  }
+
+  public String getItemNo() {
+    return itemNo;
+  }
+
+  public void setItemNo(String itemNo) {
+    this.itemNo = itemNo;
+  }
+
+  public int getMonth() {
+    return month;
+  }
+
+  public void setMonth(int month) {
+    this.month = month;
+  }
+
+  public String getProjectRef() {
+    return projectRef;
+  }
+
+  public void setProjectRef(String projectRef) {
+    this.projectRef = projectRef;
+  }
+
+  public String getRemark() {
+    return remark;
+  }
+
+  public void setRemark(String remark) {
+    this.remark = remark;
+  }
+
+  public int getRocId() {
+    return rocId;
+  }
+
+  public void setRocId(int rocId) {
+    this.rocId = rocId;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public void setYear(int year) {
+    this.year = year;
+  }
+
+  @Override
+  public String toString() {
+    return "RocDetailJasperWrapper [amountBest=" + amountBest + ", amountBestMovement=" + amountBestMovement
+        + ", amountRealistic=" + amountRealistic + ", amountRealisticMovement=" + amountRealisticMovement
+        + ", amountWorst=" + amountWorst + ", amountWorstMovement=" + amountWorstMovement + ", category=" + category
+        + ", description=" + description + ", impact=" + impact + ", itemNo=" + itemNo + ", month=" + month
+        + ", projectRef=" + projectRef + ", remark=" + remark + ", rocId=" + rocId + ", year=" + year + "]";
+  }
 
 }
