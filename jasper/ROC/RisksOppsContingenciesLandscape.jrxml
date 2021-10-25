@@ -412,10 +412,6 @@
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["As At: " + $F{asAtDate}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="602" y="45" width="100" height="30" forecolor="#FF0015" uuid="dee71446-7534-441f-9f47-0968ae98b956"/>
-				<text><![CDATA[1]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
