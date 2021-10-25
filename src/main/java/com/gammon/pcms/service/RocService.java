@@ -45,6 +45,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.util.JasperReportHelper;
 
+import net.sf.jasperreports.engine.JRParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -595,8 +596,7 @@ public class RocService {
 						reportWrapperList,
 						FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + templateName,
 						parameters
-					)
-					.compileAndAddReport();
+					);
 			switch(format.toLowerCase()){
 				case "xlsx":
 					SimpleXlsxReportConfiguration xlsxReportConfig = new SimpleXlsxReportConfiguration();
@@ -605,13 +605,14 @@ public class RocService {
 					xlsxReportConfig.setWhitePageBackground(true);
 					xlsxReportConfig.setRemoveEmptySpaceBetweenRows(false);
 					xlsxReportConfig.setFontSizeFixEnabled(true);
-					xlsxReportConfig.setIgnorePageMargins(false);
+					xlsxReportConfig.setIgnorePageMargins(true);
 					xlsxReportConfig.setCollapseRowSpan(false);
 					xlsxReportConfig.setIgnoreGraphics(false);
 					xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(false);
-					return reportHelper.exportAsExcel(jasperConfig.getSheetNames(), xlsxReportConfig);
+					parameters.put(JRParameter.IS_IGNORE_PAGINATION, true);
+					return reportHelper.compileAndAddReport().exportAsExcel(jasperConfig.getSheetNames(), xlsxReportConfig);
 				case "pdf":
-					return reportHelper.exportAsPDF();
+					return reportHelper.compileAndAddReport().exportAsPDF();
 				default:
 					throw new FileNotFoundException("format " + format + " not supported");
 			}
