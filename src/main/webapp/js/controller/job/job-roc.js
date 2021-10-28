@@ -21,11 +21,6 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
         rootscopeService.gettingAllUser()
             .then(function (data) {
                 self.repos = data;
-
-                var d = new Date();
-                $scope.month = d.getMonth() + 1;
-                $scope.year = d.getFullYear();
-                $scope.monthYear = $scope.year + '-' + $scope.month;
             });
 
         $scope.downloadRocReport = function(format = "xlsx") {
@@ -246,6 +241,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 exporterMenuPdf: false,
                 groupingNullLabel: '',
                 rowEditWaitInterval: -1,
+                enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi = gridApi;
                     $scope.gridApi.grid.registerDataChangeCallback(function () {
@@ -639,6 +635,10 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                             col.editDropdownOptionsArray = strArrToObjArr(data[1]);
                     }
 
+                    var d = new Date();
+                    $scope.month = d.getMonth() + 1;
+                    $scope.year = d.getFullYear();
+                    $scope.monthYear = $scope.year + '-' + $scope.month;
                 });
 
         }

@@ -31,6 +31,15 @@
         width: 100%;
         height: auto;
     }
+
+    .job-roc-grid .ui-grid-viewport {
+        height: 100% !important;
+    }
+
+    .job-roc-grid .ui-grid-canvas {
+        height: auto !important;
+        min-height: 250px;
+    }
 </style>
 <script>
     function textareaAutosize(event, element) {
@@ -161,8 +170,8 @@
                                 <div id="grid" class="job-roc-grid" save-and-restore-grid-state="roc_details"
                                      ui-grid-save-state ui-grid="gridOptions" ui-grid-grouping 
                                      ui-grid-move-columns ui-grid-resize-columns ui-grid-exporter ui-grid-edit
-                                     ui-grid-row-edit ui-grid-cellnav
-                                     class="grid" resize ng-style="resizeWithOffset(250)"></div>
+                                     ui-grid-row-edit ui-grid-cellnav ui-grid-auto-resize
+                                     class="grid" resize ng-style="{height: 'auto'}"></div>
                                 <label class="blue">* Blue columns are editable. Please press the "Save Details" to save
                                     the changes.</label>
 <!--                                <p class="text-red">Person: {{person}}, Item: {{item}}</p>-->

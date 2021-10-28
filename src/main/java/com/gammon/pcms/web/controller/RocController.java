@@ -101,7 +101,7 @@ public class RocController {
 	public String addRoc(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){
 		String result = "";
 		try{
-			result = rocService.addRoc(jobNo, roc, null);
+			result = rocService.addRoc(jobNo, roc, null, 0, 0);
 		}catch(Exception e){
 			result  = "ROC cannot be created.";
 			e.printStackTrace();
@@ -116,7 +116,7 @@ public class RocController {
 	public String updateRoc(@RequestParam(required = true) String jobNo, @RequestBody ROC roc){
 		String result = "";
 		try{
-			result = rocService.updateRoc(jobNo, roc);
+			result = rocService.updateRoc(jobNo, roc, 0, 0);
 		}catch(Exception e){
 			result  = "ROC cannot be created.";
 			e.printStackTrace();

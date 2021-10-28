@@ -173,6 +173,7 @@ public class RocService {
 		if (rocId != null) {
 			result = rocSubdetailRepository.findByRocId(rocId);
 			Long counter = 1L;
+			result = result.stream().filter(x -> !YearMonth.of(x.getYear(), x.getMonth()).isAfter(YearMonth.of(year, month))).collect(Collectors.toList());
 			for (ROC_SUBDETAIL subdetail : result) {
 				subdetail.setAssignedNo(counter);
 				counter++;
@@ -224,7 +225,7 @@ public class RocService {
 		return error;
 	}
 
-	public String addRoc(String noJob, ROC roc, ROC_DETAIL rocDetail) {
+	public String addRoc(String noJob, ROC roc, ROC_DETAIL rocDetail, int year, int month) {
 		String error = "";
 		try {
 			// perform roc validation
@@ -250,7 +251,7 @@ public class RocService {
 					roc.getStatus(),
 					roc.getRocOwner(),
 					roc.getOpenDate(),
-					roc.getStatus().equals(ROC.CLOSED) ? findClosedPeriod() : null
+					roc.getStatus().equals(ROC.CLOSED) ? findClosedPeriod(year, month) : null
 			);
 			ROC newRocResult = rocRepository.save(newRoc);
 
@@ -269,11 +270,14 @@ public class RocService {
 		return error;
 	}
 
-	private Date findClosedPeriod() {
-		return Date.from(YearMonth.now().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+	private Date findClosedPeriod(int year, int month) {
+		YearMonth yearMonth = YearMonth.now();
+		if (year > 0 && month >= 1 && month <= 12)
+			yearMonth = YearMonth.of(year, month);
+		return Date.from(yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
-	public String updateRoc(String noJob, ROC roc) {
+	public String updateRoc(String noJob, ROC roc, int year, int month) {
 		String error = "";
 		try {
 			// perform roc validation
@@ -289,7 +293,7 @@ public class RocService {
 			dbRoc.setImpact(roc.getImpact());
 
 			// handle status change (Live or Closed)
-			String rocStatusChange = handleRocStatusChange(noJob, roc, dbRoc);
+			String rocStatusChange = handleRocStatusChange(noJob, roc, dbRoc, year, month);
 			if (rocStatusChange != "") return rocStatusChange;
 
 			dbRoc.setDescription(roc.getDescription());
@@ -304,17 +308,17 @@ public class RocService {
 		return error;
 	}
 
-	private String handleRocStatusChange(String noJob, ROC roc, ROC dbRoc) {
+	private String handleRocStatusChange(String noJob, ROC roc, ROC dbRoc, int year, int month) {
 		String oldStatus = dbRoc.getStatus();
 		String newStatus = roc.getStatus();
-		YearMonth todayYearMonth = RocDateUtils.findYearMonthFromDate(today());
+		YearMonth todayYearMonth = YearMonth.of(year, month);
 		ROC_DETAIL rocDetail = rocDetailRepository.findDetailByRocIdAndYearMonth(dbRoc.getId(), todayYearMonth.getYear(), todayYearMonth.getMonthValue());
 		if (rocDetail == null) {
 			rocDetail = findDetailBackwardOrCreateOne(todayYearMonth.getYear(), todayYearMonth.getMonthValue(), roc);
 		}
 		if (!oldStatus.equals(newStatus)) {
 			if (newStatus.equals(ROC.CLOSED)) {
-				dbRoc.setClosedDate(findClosedPeriod());
+				dbRoc.setClosedDate(findClosedPeriod(year, month));
 
 				// zero out figures
 				rocDetail.setAmountBest(BigDecimal.valueOf(0));
@@ -364,7 +368,7 @@ public class RocService {
 							rocWrapper.getOpenDate(),
 							null
 					);
-					String s = addRoc(noJob, newRoc, rocWrapper.getRocDetail());
+					String s = addRoc(noJob, newRoc, rocWrapper.getRocDetail(), year, month);
 					if (s != "") return s;
 
 				} else if (rocWrapper.getUpdateType().equals("UPDATE")) {
@@ -387,7 +391,7 @@ public class RocService {
 							rocWrapper.getOpenDate(),
 							rocWrapper.getClosedDate()
 					);
-					String s = updateRoc(noJob, newRoc);
+					String s = updateRoc(noJob, newRoc, year, month);
 					if (s != "") return s;
 
 					// handle ROC detail
