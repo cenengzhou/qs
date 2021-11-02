@@ -49,7 +49,9 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 		"d.year as year " +
 		"from {h-schema}ROC r " + 
 		"left join {h-schema}ROC_DETAIL d on d.ID_ROC = r.ID " +
-		"where r.PROJECT_NO = :projectNo " +
+		"where " + 
+		"r.SYSTEM_STATUS='ACTIVE' and r.STATUS='Live' " +
+		"and r.PROJECT_NO = :projectNo " +
 		"and d.YEAR = :year " +
 		"and d.MONTH = :month " +
 		"order by r.ROC_CAT desc, r.ITEM_NO asc",
@@ -79,7 +81,9 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 		"LEFT JOIN  " +
 		"(SELECT AMOUNT_BEST, AMOUNT_EXPECTED, AMOUNT_WORST, id_roc, YEAR, MONTH FROM {h-schema}ROC_DETAIL ) pd " +
 		"ON pd.ID_ROC = r.id AND pd.YEAR = :prevMonthYear AND pd.MONTH = prevMonth " +
-		"where r.PROJECT_NO = :projectNo " +
+		"where " + 
+		"r.SYSTEM_STATUS='ACTIVE' and r.STATUS='Live' " +
+		"and r.PROJECT_NO = :projectNo " +
 		"and d.YEAR = :year " +
 		"and d.MONTH = :month " +
 		"order by r.ROC_CAT desc, r.ITEM_NO asc",
