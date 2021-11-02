@@ -17,7 +17,8 @@ public interface RocDetailRepository extends JpaRepository<ROC_DETAIL, Long>{
 	ROC_DETAIL findDetailByRocIdAndYearMonth(@Param("idRoc") Long idRoc, @Param("year") int year, @Param("month") int month);
 
 	@Query("select new com.gammon.pcms.wrapper.RocSummaryWrapper(b.projectNo, a.year, a.month, b.rocCategory, sum(a.amountExpected)) from ROC_DETAIL a " +
-			"left join a.roc b where b.projectNo=:jobNo and a.year=:year and a.month=:month and a.systemStatus='ACTIVE' " +
+			"left join a.roc b where b.projectNo=:jobNo and a.year=:year and a.month=:month " + 
+			"and a.systemStatus='ACTIVE' and a.status='Live' and b.systemStatus='ACTIVE' and b.status='Live' " +
 			"group by b.projectNo, a.year, a.month, b.rocCategory")
 	List<RocSummaryWrapper> findSumOfAmountExpectedGroupByRocCat(@Param("jobNo") String jobNo, @Param("year") int year, @Param("month") int month);
 
