@@ -1645,6 +1645,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 													 'js/controller/admin/admin-Revisions-Roc.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-RocDetail.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-RocSubdetail.js?@PROJECT_VERSION@',
+													 'js/controller/admin/admin-Revisions-RocCutoff.js?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Subcontract.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
                            'view/admin/admin-Revisions-Addendum.html?@PROJECT_VERSION@',
@@ -1655,7 +1656,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 													 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@',
 													 'view/admin/admin-Revisions-Roc.html?@PROJECT_VERSION@',
 													 'view/admin/admin-Revisions-RocDetail.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@'
+													 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@',
+													 'view/admin/admin-Revisions-RocCutoff.html?@PROJECT_VERSION@'
                     ]
                 });
             }]
@@ -1763,6 +1765,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/RocSubdetail',
 		templateUrl: 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsRocSubdetailCtrl'
+	})
+	.state('admin.Revisions.RocCutoff', {
+		url: '/RocCutoff',
+		templateUrl: 'view/admin/admin-Revisions-RocCutoff.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsRocCutoffCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',

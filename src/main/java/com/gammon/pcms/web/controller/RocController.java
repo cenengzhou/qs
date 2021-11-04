@@ -4,6 +4,7 @@ import com.gammon.pcms.model.ROC;
 import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
 import com.gammon.pcms.model.ROC_DETAIL;
 import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.model.RocCutoffPeriod;
 import com.gammon.pcms.service.RocAdminService;
 import com.gammon.pcms.service.RocService;
 import com.gammon.pcms.wrapper.RocWrapper;
@@ -29,6 +30,12 @@ public class RocController {
 
 	@Autowired
 	private RocAdminService rocAdminService;
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getCutoffPeriod', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getCutoffPeriod", method = RequestMethod.GET)
+	public RocCutoffPeriod getCutoffPeriod(){
+		return rocService.getCutoffPeriod();
+	}
 
 	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "getRocAdmin/{jobNo}/{rocCategory}/{description}", method = RequestMethod.GET)
@@ -198,6 +205,21 @@ public class RocController {
 			result = rocAdminService.updateRocSubdetailListAdmin(jobNo, rocSubdetailList);
 		}catch(Exception e){
 			result  = "ROC Subdetail annot be updated.";
+			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+				throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+		}
+		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','updateRocCutoffAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateRocCutoffAdmin", method = RequestMethod.POST)
+	public String updateRocCutoffAdmin(@RequestBody RocCutoffPeriod rocCutoffPeriod){
+		String result = "";
+		try{
+			result = rocAdminService.updateRocCutoffAdmin(rocCutoffPeriod);
+		}catch(Exception e){
+			result  = "RocCutoffPeriod cannot be updated.";
 			e.printStackTrace();
 			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
 				throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());

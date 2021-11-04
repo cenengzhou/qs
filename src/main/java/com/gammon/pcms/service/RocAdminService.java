@@ -1,11 +1,13 @@
 package com.gammon.pcms.service;
 
+import com.gammon.pcms.dao.RocCutoffPeriodRepository;
 import com.gammon.pcms.dao.RocDetailRepository;
 import com.gammon.pcms.dao.RocRepository;
 import com.gammon.pcms.dao.RocSubdetailRepository;
 import com.gammon.pcms.model.ROC;
 import com.gammon.pcms.model.ROC_DETAIL;
 import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.model.RocCutoffPeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class RocAdminService {
 
 	@Autowired
 	private RocSubdetailRepository rocSubdetailRepository;
+
+	@Autowired
+	private RocCutoffPeriodRepository rocCutoffPeriodRepository;
 
 	public ROC getRocAdmin(String jobNo, String rocCategory, String description) {
 		if (jobNo.isEmpty() || description.isEmpty())
@@ -127,6 +132,21 @@ public class RocAdminService {
 			}
 		} catch (Exception e) {
 			error = "ROC Subdetail cannot be updated";
+			e.printStackTrace();
+		}
+		return error;
+	}
+
+	public String updateRocCutoffAdmin(RocCutoffPeriod rocCutoffPeriod) {
+		String error = "";
+		try {
+			RocCutoffPeriod db = rocCutoffPeriodRepository.findOne(1L);
+			db.setCutoffDate(rocCutoffPeriod.getCutoffDate());
+			db.setPeriod(rocCutoffPeriod.getPeriod());
+			rocCutoffPeriodRepository.save(rocCutoffPeriod);
+
+		} catch (Exception e) {
+			error = "RocCutoffPeriod cannot be updated";
 			e.printStackTrace();
 		}
 		return error;

@@ -1,5 +1,39 @@
 package com.gammon.pcms.service;
 
+import com.gammon.pcms.config.JasperConfig;
+import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.dao.RocClassDescMapRepository;
+import com.gammon.pcms.dao.RocCutoffPeriodRepository;
+import com.gammon.pcms.dao.RocDetailRepository;
+import com.gammon.pcms.dao.RocRepository;
+import com.gammon.pcms.dao.RocSubdetailRepository;
+import com.gammon.pcms.dto.IRocDetailJasperWrapper;
+import com.gammon.pcms.dto.RocAmountWrapper;
+import com.gammon.pcms.dto.RocCaseWrapper;
+import com.gammon.pcms.dto.RocDetailJasperWrapper;
+import com.gammon.pcms.dto.RocJasperWrapper;
+import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.helper.FileHelper;
+import com.gammon.pcms.helper.RocDateUtils;
+import com.gammon.pcms.model.ROC;
+import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
+import com.gammon.pcms.model.ROC_DETAIL;
+import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.model.RocCutoffPeriod;
+import com.gammon.pcms.wrapper.RocWrapper;
+import com.gammon.qs.dao.RocDetailHBDao;
+import com.gammon.qs.dao.RocHBDao;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.util.JasperReportHelper;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -19,40 +53,6 @@ import java.util.Optional;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.gammon.pcms.config.JasperConfig;
-import com.gammon.pcms.config.MessageConfig;
-import com.gammon.pcms.dao.RocClassDescMapRepository;
-import com.gammon.pcms.dao.RocDetailRepository;
-import com.gammon.pcms.dao.RocRepository;
-import com.gammon.pcms.dao.RocSubdetailRepository;
-import com.gammon.pcms.dto.IRocDetailJasperWrapper;
-import com.gammon.pcms.dto.RocAmountWrapper;
-import com.gammon.pcms.dto.RocCaseWrapper;
-import com.gammon.pcms.dto.RocDetailJasperWrapper;
-import com.gammon.pcms.dto.RocJasperWrapper;
-import com.gammon.pcms.helper.DateHelper;
-import com.gammon.pcms.helper.FileHelper;
-import com.gammon.pcms.helper.RocDateUtils;
-import com.gammon.pcms.model.ROC;
-import com.gammon.pcms.model.ROC_CLASS_DESC_MAP;
-import com.gammon.pcms.model.ROC_DETAIL;
-import com.gammon.pcms.model.ROC_SUBDETAIL;
-import com.gammon.pcms.wrapper.RocWrapper;
-import com.gammon.qs.dao.RocDetailHBDao;
-import com.gammon.qs.dao.RocHBDao;
-import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.service.JobInfoService;
-import com.gammon.qs.util.JasperReportHelper;
-
-import net.sf.jasperreports.engine.JRParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 @Transactional
 @Service
@@ -83,6 +83,9 @@ public class RocService {
 
 	@Autowired
 	private MessageConfig messageConfig;
+
+	@Autowired
+	private RocCutoffPeriodRepository rocCutoffPeriodRepository;
 
 	@Autowired
 	private transient JasperConfig jasperConfig;
@@ -180,7 +183,7 @@ public class RocService {
 
 				subdetail.setEditable(
 						RocDateUtils.compareYearMonthPeriod(
-								YearMonth.of(year, month),
+								YearMonth.parse(rocCutoffPeriodRepository.findPeriod()),
 								YearMonth.of(subdetail.getYear(), subdetail.getMonth())
 						)
 				);
@@ -567,6 +570,8 @@ public class RocService {
 		List<ROC_DETAIL> uniqleResult = auditHistory.stream().filter(RocDateUtils.distinctByKey(x -> x.getLastModifiedDate())).collect(Collectors.toList());
 		return uniqleResult;
 	}
+
+	public RocCutoffPeriod getCutoffPeriod() {return rocCutoffPeriodRepository.findOne(1L);}
 
 	public String recalculateRoc(String jobNo, int year, int month) {
 		String error = "";

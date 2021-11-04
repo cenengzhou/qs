@@ -7,6 +7,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         $scope.roc = modalParam.roc;
         $scope.year = parseInt(modalParam.year);
         $scope.month = parseInt(modalParam.month);
+        $scope.editable = modalParam.editable;
 
         initGrid();
 

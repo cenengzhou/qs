@@ -1,0 +1,53 @@
+<div>
+    <form name="RevisionsRocCutoffRecord"
+          ng-submit="onSubmitRocCutoffRecord()">
+        <div class="row" style="padding: 20px">
+            <div class="row" resize ng-style="resizeWithOffset(330)">
+                <fieldset>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocCutoffRecord_cutoffDate" class="control-label">Cutoff Date</label>
+                            <div>
+                                <div class="input-group"
+                                     moment-picker="RocCutoffRecord.cutoffDate"
+                                     format="DD MMM, YYYY" start-view="hour" today="true">
+									<span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <input class="form-control"
+                                           id="RocCutoffRecord_cutoffDate"
+                                           ng-model="RocCutoffRecord.cutoffDate">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="RocCutoffRecord_period" class="control-label">Period</label>
+                            <div>
+                                <div class="input-group"
+                                     moment-picker="RocCutoffRecord.period"
+                                     format="YYYY-MM" start-view="year" today="true">
+									<span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <input class="form-control"
+                                           id="RocCutoffRecord_period"
+                                           ng-model-options="{ updateOn: 'blur' }"
+                                           ng-model="RocCutoffRecord.period">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <div class="row">
+                <button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Update
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

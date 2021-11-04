@@ -55,7 +55,7 @@
 
                     <div class="col-md-2">
                         <button type="button"
-                                class="btn btn-block btn-danger"
+                                class="btn btn-block btn-danger" ng-show="editable"
                                 ng-click="addItem()">
                             <i class="fa fa-plus-circle"></i> <small>Add</small>
                         </button>
@@ -72,7 +72,7 @@
             </div>
             <div class="box-footer">
                 <button class="btn btn-primary btn-block" type="button"
-                        ng-click="saveAll()" ng-hide="disableButtons" ng-disabled="disableButtons">
+                        ng-click="saveAll()" ng-hide="disableButtons || !editable" ng-disabled="disableButtons">
                     <span class="fa fa-save"></span> Save All
                 </button>
             </div>

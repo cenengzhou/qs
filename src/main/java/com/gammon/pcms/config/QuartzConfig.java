@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.gammon.pcms.scheduler.job.RocCutoffDateUpdateJob;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -111,6 +112,29 @@ public class QuartzConfig {
 	private String jobDescriptionHousekeepAuditTable;
 	@Value("${pcms.scheduler.job.cronExpression.housekeepAuditTable}")
 	private String jobCronExpressionHousekeepAuditTable;
+	//8. ROC
+	@Value("${pcms.scheduler.job.description.rocCutoffTable}")
+	private String jobDescriptionRocCutoffTable;
+
+	public String getJobDescriptionRocCutoffTable() {
+		return jobDescriptionRocCutoffTable;
+	}
+
+	public void setJobDescriptionRocCutoffTable(String jobDescriptionRocCutoffTable) {
+		this.jobDescriptionRocCutoffTable = jobDescriptionRocCutoffTable;
+	}
+
+	public String getJobCronExpressionRocCutoffTable() {
+		return jobCronExpressionRocCutoffTable;
+	}
+
+	public void setJobCronExpressionRocCutoffTable(String jobCronExpressionRocCutoffTable) {
+		this.jobCronExpressionRocCutoffTable = jobCronExpressionRocCutoffTable;
+	}
+
+	@Value("${pcms.scheduler.job.cronExpression.rocCutoffTable}")
+	private String jobCronExpressionRocCutoffTable;
+
 	
 	@Value("#{${quartz.setting}}")
 	private Map<String, Object> quartzSetting;
@@ -346,6 +370,17 @@ public class QuartzConfig {
 		return bean;
 	}
 
+	@Bean
+	public CronTriggerFactoryBean cronTriggerRocCutoff() {
+		CronTriggerFactoryBean bean = new CronTriggerFactoryBean();
+		bean.setStartDelay(10000);
+		bean.setTimeZone(TimeZone.getTimeZone(pcmsQuartzTimezone));
+		bean.setJobDetail(jobDetailRocCutoff().getObject());
+		bean.setCronExpression(jobCronExpressionRocCutoffTable);
+		bean.setDescription(jobDescriptionRocCutoffTable);
+		return bean;
+	}
+
 	/**
 	 * 7b. Housekeep Audit table Quartz Job Detail
 	 */
@@ -353,6 +388,14 @@ public class QuartzConfig {
 	public JobDetailFactoryBean jobDetailAuditHousekeep() {
 		JobDetailFactoryBean bean = new JobDetailFactoryBean();
 		bean.setJobClass(AuditHousekeepJob.class);
+		bean.setDurability(true);
+		return bean;
+	}
+
+	@Bean
+	public JobDetailFactoryBean jobDetailRocCutoff() {
+		JobDetailFactoryBean bean = new JobDetailFactoryBean();
+		bean.setJobClass(RocCutoffDateUpdateJob.class);
 		bean.setDurability(true);
 		return bean;
 	}
@@ -393,7 +436,8 @@ public class QuartzConfig {
 		                        jobDetailJDEF58001Synchronization().getObject(),
 		                        jobDetailJDEF58011Synchronization().getObject(), 
 		                        jobDetailMainCertificateSynchronization().getObject(),
-		                        jobDetailAuditHousekeep().getObject());
+		                        jobDetailAuditHousekeep().getObject(),
+								jobDetailRocCutoff().getObject());
 		// setup triggers
 		scheduler.setTriggers(	cronTriggerPackageSnapshotGeneration().getObject(),
 								cronTriggerPaymentPosting().getObject(),
@@ -401,7 +445,8 @@ public class QuartzConfig {
 								cronTriggerJDEF58001Synchronization().getObject(),
 								cronTriggerJDEF58011Synchronization().getObject(),
 								cronTriggerMainCertificateSynchronization().getObject(),
-								cronTriggerAuditHousekeep().getObject());
+								cronTriggerAuditHousekeep().getObject(),
+								cronTriggerRocCutoff().getObject());
 		return scheduler;
 	}
 

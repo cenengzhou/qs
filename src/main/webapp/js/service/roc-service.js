@@ -11,6 +11,7 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		updateRocAdmin: updateRocAdmin,
 		updateRocDetailListAdmin: updateRocDetailListAdmin,
 		updateRocSubdetailListAdmin: updateRocSubdetailListAdmin,
+		updateRocCutoffAdmin: updateRocCutoffAdmin,
 		saveRocDetails: saveRocDetails,
 		saveSubdetailList: saveSubdetailList,
 		deleteRocAdmin: deleteRocAdmin,
@@ -20,6 +21,7 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		getRocCategoryList: getRocCategoryList,
 		getImpactList: getImpactList,
 		getStatusList: getStatusList,
+		getCutoffPeriod: getCutoffPeriod,
 		getRocHistory: getRocHistory,
 		getRocDetailHistory: getRocDetailHistory,
 		recalculateRoc: recalculateRoc
@@ -93,6 +95,14 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		var request = $http({
 			method: 'GET',
 			url: "service/roc/getStatusList"
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function getCutoffPeriod() {
+		var request = $http({
+			method: 'GET',
+			url: "service/roc/getCutoffPeriod"
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
@@ -174,6 +184,16 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 				jobNo: jobNo
 			},
 			data: rocSubdetailList
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function updateRocCutoffAdmin(rocCutoff) {
+		var request = $http({
+			method: "post",
+			url: "service/roc/updateRocCutoffAdmin",
+			dataType: "application/json;charset=UTF-8",
+			data: rocCutoff
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}

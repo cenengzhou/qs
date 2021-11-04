@@ -18,6 +18,12 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
 
         initOptions();
 
+        rocService.getCutoffPeriod().then(function(data) {
+            $scope.cutoffDate = data;
+            $scope.cutoffDate.periodInFormat = moment(data.period, 'YYYY-MM').format('MMM, YYYY');
+            $scope.monthYear = $scope.cutoffDate.period;
+        });
+
         rootscopeService.gettingAllUser()
             .then(function (data) {
                 self.repos = data;
@@ -58,6 +64,14 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                     $scope.data.risk = data[4];
                     $scope.data.opps = data[5];
                 });
+        }
+
+        function isEditable() {
+            return $scope.editable;
+        }
+
+        function editableStyle(grid, row, col, rowRenderIndex, colRenderIndex) {
+            return $scope.editable ? 'blue' : '';
         }
 
         function customCellClass(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -299,7 +313,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                     // },
                     {
                         field: 'rocCategory', displayName: "Category", width: 120, enableCellEdit: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
-                        headerCellClass: 'blue', cellClass: 'blue',
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         // grouping: {groupPriority: 0},
                         // sort: {priority: 0, direction: uiGridConstants.DESC},
@@ -316,36 +330,34 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                     {field: 'classification', width: 200, visible: true, enableCellEdit: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
-                        headerCellClass: 'blue', cellClass: 'blue',
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable,
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="row.groupHeader"></div>' +
                         '<div class="ui-grid-cell-contents ui-grid-cell-contents-break" ng-if="!row.groupHeader">{{ MODEL_COL_FIELD }}</div>' 
                     },
                     {field: 'impact', width: 120, visible: true, enableCellEdit: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
-                        headerCellClass: 'blue', cellClass: 'blue'
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable
                     },
                     {field: 'rocDetail.status', displayName: 'Status', width: 60, visible: true, enableCellEdit: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         // filter: {term: 'Live'},
                         editableCellTemplate: 'ui-grid/dropdownEditor',
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
-                        headerCellClass: 'blue', cellClass: 'blue'
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable
                     },
                     {field: 'projectRef', displayName: "Project R&O Ref.", width: 100, enableCellEdit: true, visible: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
-                        headerCellClass: 'blue', cellClass: 'blue'
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable
                     },
                     {field: 'description', displayName: "Description", width: 150, enableCellEdit: true, visible: true, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
-                        cellClass: 'blue',
-                        headerCellClass: 'blue',
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable,
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
                     {
                         field: 'rocOwner',
                         displayName: 'Owner',
-                        cellClass: 'blue',
-                        headerCellClass: 'blue',
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable,
                         width: 180, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         editableCellTemplate: '' +
                         '<md-autocomplete style="text-align:center" ng-blur="grid.appScope.autocompleteBlur(row)"' +
@@ -525,8 +537,8 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                         field: 'rocDetail.remarks',
                         displayName: "Remarks / Actions to be taken",
                         width: 150,
-                        cellClass: 'blue',
-                        headerCellClass: 'blue', groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
+                        headerCellClass: editableStyle, cellClass: editableStyle, cellEditableCondition: isEditable,
+                        groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         cellTemplate: '<div class="ui-grid-cell-contents ui-grid-cell-contents-break">{{ MODEL_COL_FIELD }}</div>',
                         editableCellTemplate: '<textarea class="roc-remarks-textarea" ui-grid-editor rows="1" cols="1" maxlength="4000" ng-model="MODEL_COL_FIELD" onfocus="textareaAutosize(event, this)" onkeydown="textareaAutosize(event, this)" onmousedown="textareaAutosize(event, this)" />'
                     },
@@ -574,7 +586,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
         }
 
         $scope.editRocSubdetail = function(entity) {
-            modalService.open('xxlg', 'view/job/modal/job-roc-subdetail.html', 'JobRocSubdetailCtrl', 'UPDATE', { 'roc': entity, 'year': $scope.year, 'month': $scope.month });
+            modalService.open('xxlg', 'view/job/modal/job-roc-subdetail.html', 'JobRocSubdetailCtrl', 'UPDATE', { 'roc': entity, 'year': $scope.year, 'month': $scope.month, 'editable' : $scope.editable });
         }
 
         $scope.viewRocHistory = function(entity) {
@@ -598,6 +610,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
 
                 $scope.period = moment().month($scope.month - 1).format('MMM');
                 $scope.lastPeriod = moment().month($scope.month - 2).format('MMM');
+
+                $scope.editable = ($scope.monthYear == $scope.cutoffDate.period);
+
+                $timeout(function() {
+                    $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
+                }, 300)
+
 
             }
 
@@ -634,11 +653,6 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                         else if (col.field === 'rocCategory')
                             col.editDropdownOptionsArray = strArrToObjArr(data[1]);
                     }
-
-                    var d = new Date();
-                    $scope.month = d.getMonth() + 1;
-                    $scope.year = d.getFullYear();
-                    $scope.monthYear = $scope.year + '-' + $scope.month;
                 });
 
         }

@@ -116,7 +116,7 @@
                                    ng-model-options="{ updateOn: 'blur' }">
                         </div>
                     </div>
-                    <div class="col-md-3 text-red"></div>
+                    <div class="col-md-3 text-red">** Cutoff Date: {{cutoffDate.cutoffDate}}, Period: {{cutoffDate.periodInFormat}}</div>
                     <div class="col-md-3 text-right">
                         <md-checkbox ng-model="showClosedItem" ng-change="displayClosedItem()"
                                      aria-label="Show Closed Item"
@@ -125,14 +125,14 @@
                     </div>
                     <div class="col-md-4">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-danger btn-block " ng-disabled="isAddingRow"
+                            <button type="button" class="btn btn-danger btn-block " ng-disabled="isAddingRow || !editable"
                                     ng-click="addRoc()">
                                 <i class="fa fa-plus"></i> Add ROC
                             </button>
                         </div>
                         
                         <div class="col-md-4">
-                        <button class="btn btn-block btn-primary"
+                        <button class="btn btn-block btn-primary" ng-disabled="!editable"
                         ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
                         </button>
                         </div>
