@@ -55,6 +55,7 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 		.then(
 				function( data ) {
 					$scope.jobDates = data;
+					$scope.anticipatedCompletionDateOldVal = $scope.jobDates.anticipatedCompletionDate;
 				});
 	}
 	
@@ -158,6 +159,12 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			$scope.job.provision = "N";
 
 		$scope.job.isParentCompanyGuarantee = $scope.parentCompanyGuaranteeOptions.selected;
+		
+		//Snapshot last forecast anticipatedCompletionDate
+		if(moment($scope.jobDates.anticipatedCompletionDate).diff(moment($scope.anticipatedCompletionDateOldVal), 'days') !=0 ){
+			$scope.job.actualPCCDate = $scope.anticipatedCompletionDateOldVal;
+		
+		}
 		
 		updateJobInfoAndDates($scope.job, $scope.jobDates)
 		
