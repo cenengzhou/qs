@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2021-11-11</version>
+	<version>2021-11-12</version>
 	<packaging>war</packaging>
 
 	<scm>
