@@ -124,21 +124,28 @@
                         </md-checkbox>
                     </div>
                     <div class="col-md-4">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <button type="button" class="btn btn-danger btn-block " ng-disabled="isAddingRow || !editable"
                                     ng-click="addRoc()">
                                 <i class="fa fa-plus"></i> Add ROC
                             </button>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                         <button class="btn btn-block btn-primary"
                         ng-click="saveRocDetails()"><span class="fa fa-save"></span> Save Details
                         </button>
                         </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-3">
                             <button class="btn btn-block btn-success"
-                            ng-click="downloadRocReport('xlsx')"><span class="fa fa-download"></span> Download
+                            ng-click="downloadRocReport('xlsx')"><span class="fa fa-file-excel-o"></span> Excel
+                            </button>
+                        </div>
+
+                        <div class="col-md-3">
+                            <button class="btn btn-block btn-warning"
+                                    ng-click="downloadRocReport('pdf')"><span class="fa fa-file-pdf-o"></span> PDF
                             </button>
                         </div>
                     </div>

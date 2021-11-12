@@ -573,6 +573,39 @@ public class RocService {
 
 	public RocCutoffPeriod getCutoffPeriod() {return rocCutoffPeriodRepository.findOne(1L);}
 
+	public String deleteRoc(Long rocId) {
+		String error = "";
+		try {
+			ROC roc = rocRepository.findOne(rocId);
+			if (roc != null) {
+				List<YearMonth> affectYearMonth = new ArrayList<>();
+
+				roc.inactivate();
+
+				for (ROC_DETAIL rocDetail : roc.getRocDetails()) {
+					rocDetail.inactivate();
+					affectYearMonth.add(YearMonth.of(rocDetail.getYear(), rocDetail.getMonth()));
+				}
+
+				for (ROC_SUBDETAIL rocSubdetail : roc.getRocSubdetails()) {
+					rocSubdetail.inactivate();
+				}
+
+				for (YearMonth ym : affectYearMonth) {
+					String s = calculateRocDetailAmountAndMonthlyMovementByPeriod(roc.getProjectNo(), ym.getYear(), ym.getMonthValue());
+					if (!s.equals(""))
+						return s;
+				}
+
+			}
+		} catch (Exception e) {
+			error = "ROC cannot be deleted";
+			e.printStackTrace();
+		}
+		return error;
+
+	}
+
 	public String recalculateRoc(String jobNo, int year, int month) {
 		String error = "";
 		try {

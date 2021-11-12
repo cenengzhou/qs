@@ -14,9 +14,10 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		updateRocCutoffAdmin: updateRocCutoffAdmin,
 		saveRocDetails: saveRocDetails,
 		saveSubdetailList: saveSubdetailList,
-		deleteRocAdmin: deleteRocAdmin,
+		deleteRocListAdmin: deleteRocListAdmin,
 		deleteRocDetailListAdmin: deleteRocDetailListAdmin,
 		deleteRocSubdetailListAdmin: deleteRocSubdetailListAdmin,
+		deleteRoc: deleteRoc,
 		getRocClassDescMap: getRocClassDescMap,
 		getRocCategoryList: getRocCategoryList,
 		getImpactList: getImpactList,
@@ -27,26 +28,37 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		recalculateRoc: recalculateRoc
     });
 
-	function getRocAdmin(jobNo, rocCategory, description) {
+	function getRocAdmin(jobNo, itemNo) {
 		var request = $http({
 			method: 'GET',
-			url: "service/roc/getRocAdmin/" + jobNo + "/" + rocCategory + "/" + description
+			url: "service/roc/getRocAdmin/" + jobNo,
+			params: {
+				itemNo: itemNo
+			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function getRocDetailListAdmin(jobNo, rocCategory, description) {
+	function getRocDetailListAdmin(jobNo, itemNo, period) {
 		var request = $http({
 			method: 'GET',
-			url: "service/roc/getRocDetailListAdmin/" + jobNo + "/" + rocCategory + "/" + description
+			url: "service/roc/getRocDetailListAdmin/" + jobNo,
+			params: {
+				itemNo: itemNo,
+				period: period
+			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function getRocSubdetailListAdmin(jobNo, rocCategory, description) {
+	function getRocSubdetailListAdmin(jobNo, itemNo, period) {
 		var request = $http({
 			method: 'GET',
-			url: "service/roc/getRocSubdetailListAdmin/" + jobNo + "/" + rocCategory + "/" + description
+			url: "service/roc/getRocSubdetailListAdmin/" + jobNo,
+			params: {
+				itemNo: itemNo,
+				period: period
+			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
@@ -149,7 +161,7 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function updateRocAdmin(jobNo, roc) {
+	function updateRocAdmin(jobNo, rocList) {
 		var request = $http({
 			method: "post",
 			url: "service/roc/updateRocAdmin",
@@ -157,7 +169,7 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 			params: {
 				jobNo: jobNo
 			},
-			data: roc
+			data: rocList
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
@@ -241,15 +253,15 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function deleteRocAdmin(jobNo, roc) {
+	function deleteRocListAdmin(jobNo, rocList) {
 		var request = $http({
 			method: "post",
-			url: "service/roc/deleteRocAdmin",
+			url: "service/roc/deleteRocListAdmin",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo
 			},
-			data: roc
+			data: rocList
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
@@ -276,6 +288,17 @@ mainApp.service('rocService', ['$http', '$q', '$log', 'GlobalHelper',  function(
 				jobNo: jobNo
 			},
 			data: rocSubdetailList
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function deleteRoc(rocId) {
+		var request = $http({
+			method: "post",
+			url: "service/roc/deleteRoc",
+			dataType: "application/json;charset=UTF-8",
+			params: {},
+			data: rocId
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}

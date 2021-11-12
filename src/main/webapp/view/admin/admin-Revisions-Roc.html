@@ -1,190 +1,38 @@
-<div>
-    <div class="row well">
-        <form name="RevisionsRocSearch"
-              ng-submit="onSubmitRocSearch()" class="form">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
-                       ng-change="canAdminJob(RocSearch.jobNo)"
-                       id="RocSearch_jobNo" ng-model="RocSearch.jobNo">
-            </div>
-            <div class="col-md-3">
-                <select class="form-control"
-                        id="RocSearch_rocCategory"
-                        ng-model="RocSearch.rocCategory"
-                        ng-options="o as o for o in rocCategoryOptions" required></select>
-            </div>
-            <div class="col-md-3">
-                <input type="text" class="form-control"
-                       placeholder="Description:" id="RocSearch_description"
-                       ng-model="RocSearch.description">
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-block btn-primary" id="RocSearch_submit"
-                        ng-disabled="!adminSearchBtn">Search
-                </button>
-            </div>
-        </form>
-    </div>
-    <form name="RevisionsRocRecord"
-          ng-submit="onSubmitRocRecord()">
-        <div class="row" style="padding: 20px" ng-show="RocRecord !== undefined">
-            <div class="row" resize ng-style="resizeWithOffset(330)">
-                <fieldset>
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_projectNo" class="control-label">Job Number</label>
-                            <div>
-                                <input type="text" class="form-control" id="RocRecord_projectNo"
-                                       value="{{RocRecord.projectNo}}" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_projectRef" class="control-label">Project R&O Ref</label>
-                            <div>
-                                <input type="text" class="form-control" id="RocRecord_projectRef"
-                                       ng-model="RocRecord.projectRef">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_rocCategory" class="control-label">ROC Category</label>
-                            <div>
-                                <div class="input-group col-md-12">
-                                    <select class="form-control"
-                                            id="RocRecord_rocCategory"
-                                            ng-model="RocRecord.rocCategory"
-                                            ng-options="o as o for o in rocCategoryOptions" required></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_classification" class="control-label">Classification</label>
-                            <div>
-                                <div class="input-group col-md-12">
-                                    <select class="form-control"
-                                            id="RocRecord_classification"
-                                            ng-model="RocRecord.classification"
-                                            ng-options="o as o for o in classificationOptions" required></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_impact" class="control-label">Impact</label>
-                            <div>
-                                <div class="input-group col-md-12">
-                                    <select class="form-control"
-                                            id="RocRecord_impact"
-                                            ng-model="RocRecord.impact"
-                                            ng-options="o as o for o in impactOptions" required></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_description_2" class="control-label">Description</label>
-                            <div>
-                                <input type="text" class="form-control" id="RocRecord_description_2"
-                                       ng-model="RocRecord.description" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_status" class="control-label">Status</label>
-                            <div>
-                                <div class="input-group col-md-12">
-                                    <select class="form-control"
-                                            id="RocRecord_status"
-                                            ng-model="RocRecord.status"
-                                            ng-options="o as o for o in statusOptions" required></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_rocOwner" class="control-label">ROC Owner</label>
-                            <div>
-                                <md-autocomplete id="RocRecord_rocOwner"
-                                                style="text-align:center"
-                                                 md-require-match="true"
-                                                 md-delay="300"
-                                                 md-autoselect="true"
-                                                 md-clear-button="!person.disabled"
-                                                 ng-disabled="person.disabled"
-                                                 md-selected-item="person.selectedItem"
-                                                 md-search-text-change="searchTextChange(person.searchText, person)"
-                                                 md-search-text="person.searchText"
-                                                 md-selected-item-change="selectedItemChange(item, person)"
-                                                 md-items="item in querySearch(person.searchText)"
-                                                 md-item-text="item.username"
-                                                 md-min-length="3"
-                                                 placeholder="Input Username..."
-                                                 md-menu-class="autocomplete-custom-template"
-                                                 md-menu-container-class="custom-container">
-                                    <md-item-template>
-                                        <span class="item-title">
-                                            <span><strong>{{item.fullName}}</strong></span>
-                                        </span>
-                                        <span class="item-metadata">
-                                            <span>
-                                                <small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>
-                                            </span>
-                                        </span>
-                                    </md-item-template>
-                                </md-autocomplete>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="padding: 5px">
-                        <div class="form-group">
-                            <label for="RocRecord_closedDate" class="control-label">Closed Date</label>
-                            <div>
-                                <div class="input-group"
-                                     moment-picker="RocRecord.closedDate"
-                                     format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
-									<span class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </span>
-                                    <input class="form-control"
-                                           id="RocRecord_closedDate"
-                                           ng-model="RocRecord.closedDate">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </fieldset>
-            </div>
-
-            <div class="row"
-                 ng-show="true || RocRecord.projectNo !== undefined">
-                <button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary"
-                        ng-disabled="!adminSearchBtn">Update
-                </button>
-            </div>
-            <div class="row"
-                 ng-show="true || RocRecord.projectNo !== undefined">
-                <button ng-show="showQSAdmin" ng-click="deleteRoc()" type="button" class="btn btn-block btn-success"
-                        ng-disabled="!adminSearchBtn">Delete
-                </button>
-            </div>
+<div class="row well">
+    <form name="RevisionsRocSearch"
+          ng-submit="onSubmitRocSearch()" class="form">
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
+                   ng-change="canAdminJob(RocSearch.jobNo)"
+                   id="RocSearch_jobNo" ng-model="RocSearch.jobNo">
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control"
+                   placeholder="Item No (Optional):" id="RocSearch_itemNo"
+                   ng-model="RocSearch.itemNo">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-block btn-primary" id="RocSearch_submit"
+                    ng-disabled="!adminSearchBtn">Search
+            </button>
         </div>
     </form>
+</div>
+<div class="col-md-12">
+    <br>
+    <div id="" save-and-restore-grid-state="admin_revisions_roc" ui-grid-save-state ui-grid="gridOptions"
+         external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns
+         ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+         resize ng-style="resizeWithOffset(365)">
+    </div>
+    <div class="row">
+        <button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary"
+                ng-disabled="!adminSearchBtn">Update Roc
+        </button>
+    </div>
+    <div class="row">
+        <button ng-show="showQSAdmin && gridApi.selection.getSelectedRows().length > 0" ng-click="deleteRows()" type="button" class="btn btn-block btn-success"
+                ng-disabled="!adminSearchBtn">Delete {{gridApi.selection.getSelectedRows().length}} rows
+        </button>
+    </div>
 </div>

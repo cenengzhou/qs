@@ -39,6 +39,7 @@ mainApp.controller('AdminRevisionsRocDetailCtrl', ['$scope', 'modalService', 'Gl
             rowEditWaitInterval: -1,
             columnDefs: [
                 {field: 'id', width: '120', displayName: "ID", enableCellEdit: false, visible: false},
+                {field: 'itemNo', width: '120', displayName: "Item No", enableCellEdit: false},
                 {field: 'year', width: '120', displayName: "Year", enableCellEdit: false},
                 {field: 'month', width: '120', displayName: "Month", enableCellEdit: false},
                 {
@@ -52,8 +53,8 @@ mainApp.controller('AdminRevisionsRocDetailCtrl', ['$scope', 'modalService', 'Gl
                     footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
                 },
                 {
-                    field: "amountExpected",
-                    displayName: "Expected Case",
+                    field: "amountRealistic",
+                    displayName: "Realistic",
                     enableCellEdit: $scope.canEdit,
                     width: 110,
                     cellClass: 'text-right',
@@ -72,7 +73,16 @@ mainApp.controller('AdminRevisionsRocDetailCtrl', ['$scope', 'modalService', 'Gl
                     footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
                 },
                 {field: 'remarks', displayName: "Remarks", enableCellEdit: $scope.canEdit},
-                {field: 'systemStatus', width: '120', displayName: "Status", enableCellEdit: false}
+                {field: 'status', width: '120', displayName: "Status",
+                    editableCellTemplate: 'ui-grid/dropdownEditor',
+                    editDropdownValueLabel: 'value',
+                    editDropdownOptionsArray: [{id: 'Live', value: 'Live'}, {id: 'Closed', value: 'Closed'}]
+                },
+                {field: 'systemStatus', width: '120', displayName: "System Status",
+                    editableCellTemplate: 'ui-grid/dropdownEditor',
+                    editDropdownValueLabel: 'value',
+                    editDropdownOptionsArray: [{id: 'ACTIVE', value: 'ACTIVE'}, {id: 'INACTIVE', value: 'INACTIVE'}]
+                }
             ]
         }
 
@@ -115,6 +125,7 @@ mainApp.controller('AdminRevisionsRocDetailCtrl', ['$scope', 'modalService', 'Gl
                                     $scope.gridApi.rowEdit.setRowsClean(selectedRows);
                                     if (data == '') {
                                         modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Roc Detail deleted');
+                                        $scope.gridApi.selection.clearSelectedRows();
                                         onSubmitRocDetailSearch();
                                     }
                                 }
@@ -133,7 +144,11 @@ mainApp.controller('AdminRevisionsRocDetailCtrl', ['$scope', 'modalService', 'Gl
         }
 
         function onSubmitRocDetailSearch() {
-            rocService.getRocDetailListAdmin($scope.RocDetailSearch.jobNo, $scope.RocDetailSearch.rocCategory, $scope.RocDetailSearch.description)
+            if (GlobalHelper.checkNull([$scope.RocDetailSearch.jobNo, $scope.RocDetailSearch.period])) {
+                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please enter job number and period!");
+                return;
+            }
+            rocService.getRocDetailListAdmin($scope.RocDetailSearch.jobNo, $scope.RocDetailSearch.itemNo, $scope.RocDetailSearch.period)
                 .then(function (data) {
                     $scope.gridOptions.data = data;
                     $scope.rocDetailList = data;

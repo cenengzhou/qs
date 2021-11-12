@@ -3,6 +3,8 @@ package com.gammon.pcms.dao;
 import java.util.List;
 
 import com.gammon.pcms.dto.IRocDetailJasperWrapper;
+import com.gammon.pcms.dto.RocAndRocDetailWrapper;
+import com.gammon.pcms.dto.RocAndRocSubdetailWrapper;
 import com.gammon.pcms.model.ROC;
 
 import org.hibernate.annotations.NotFound;
@@ -88,5 +90,18 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 		"and d.MONTH = :month " +
 		"order by r.ROC_CAT desc, r.ITEM_NO asc",
 		nativeQuery = true)
- 	public List<IRocDetailJasperWrapper> getRocJasperWrapper(@Param("projectNo") String projectNo,  @Param("year") int year, @Param("month") int month, @Param("prevMonthYear") int prevMonthYear, @Param("prevMonth") int prevMonth);		
+ 	public List<IRocDetailJasperWrapper> getRocJasperWrapper(@Param("projectNo") String projectNo,  @Param("year") int year, @Param("month") int month, @Param("prevMonthYear") int prevMonthYear, @Param("prevMonth") int prevMonth);
+
+	@Query("select new com.gammon.pcms.dto.RocAndRocSubdetailWrapper(a.itemNo, b.id, b.description, b.amountBest, b.amountExpected, b.amountWorst, b.year, b.month, b.hyperlink, b.remarks, b.systemStatus) from ROC a join a.rocSubdetails b " +
+			"where a.projectNo=:projectNo and b.year=:year and b.month=:month " +
+			"order by a.itemNo, b.createdDate desc")
+	List<RocAndRocSubdetailWrapper> getRocSubdetailListAdmin(@Param("projectNo") String projectNo, @Param("year") int year, @Param("month") int month);
+
+	@Query("select new com.gammon.pcms.dto.RocAndRocDetailWrapper(a.itemNo, b.id, b.year, b.month, b.amountBest, b.amountExpected, b.amountWorst, b.remarks, b.status, b.systemStatus) from ROC a join a.rocDetails b " +
+			"where a.projectNo=:projectNo and b.year=:year and b.month=:month " +
+			"order by a.itemNo, b.createdDate desc")
+	List<RocAndRocDetailWrapper> getRocDetailListAdmin(@Param("projectNo") String projectNo, @Param("year") int year, @Param("month") int month);
+
+	@Query("select a from ROC a where a.projectNo=:projectNo order by a.itemNo")
+	List<ROC> getRocListAdmin(@Param("projectNo") String projectNo);
 }

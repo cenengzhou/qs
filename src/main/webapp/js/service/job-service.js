@@ -8,6 +8,7 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	updateJobInfo: 	updateJobInfo,
     	updateJobDates:	updateJobDates,
     	updateJobInfoAndDates: updateJobInfoAndDates,
+    	updateParentCompanyGuarantee: updateParentCompanyGuarantee,
     	getJobDetailList: 	getJobDetailList,
     	obtainAllJobCompany: obtainAllJobCompany,
     	obtainAllJobDivision: obtainAllJobDivision,
@@ -88,7 +89,15 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+
+    function updateParentCompanyGuarantee(job) {
+        var request = $http({
+            method: "post",
+            url: "service/job/updateParentCompanyGuarantee",
+            data: job
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
     
     function getJobDetailList() {
         var request = $http({

@@ -1010,6 +1010,14 @@
 												ng-disabled="disableFields || !roles['has_QS_DOC']"
 												required></select>
 									</div>
+									<div class="form-group col-md-2">
+										<label>&nbsp;</label>
+										<a class="btn btn-purple btn-block" ng-click="saveParentCompanyGuarantee()" ng-disabled="disableFields" ng-show="roles['has_QS_DOC']">
+											Save
+											<i class="fa fa-floppy-o"></i>
+										</a>
+									</div>
+
 								</div>
 							</div>
 						</div>

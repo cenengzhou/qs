@@ -7,15 +7,17 @@
                    id="RocDetailSearch_jobNo" ng-model="RocDetailSearch.jobNo">
         </div>
         <div class="col-md-3">
-            <select class="form-control"
-                    id="RocDetailSearch_rocCategory"
-                    ng-model="RocDetailSearch.rocCategory"
-                    ng-options="o as o for o in rocCategoryOptions" required></select>
+            <input type="text" class="form-control"
+                   placeholder="Item No (Optional):" id="RocDetailSearch_itemNo"
+                   ng-model="RocDetailSearch.itemNo">
         </div>
         <div class="col-md-3">
-            <input type="text" class="form-control"
-                   placeholder="Description:" id="RocDetailSearch_description"
-                   ng-model="RocDetailSearch.description">
+            <div class="input-group" moment-picker="RocDetailSearch.period" format="YYYY-MM"
+                 start-view="year" today="true">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <input class="form-control" ng-model="RocDetailSearch.period"
+                       ng-model-options="{ updateOn: 'blur' }">
+            </div>
         </div>
         <div class="col-md-3">
             <button type="submit" class="btn btn-block btn-primary" id="RocDetailSearch_submit"

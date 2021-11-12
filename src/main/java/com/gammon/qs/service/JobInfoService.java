@@ -243,6 +243,17 @@ public class JobInfoService {
 		return error;
 	}
 
+	public String updateParentCompanyGuarantee(JobInfo job) throws Exception {
+		String error = "";
+
+		JobInfo dbJobInfo = getJobInfo(job.getId());
+		dbJobInfo.setIsParentCompanyGuarantee(job.getIsParentCompanyGuarantee());
+		if (!this.jobHBDao.updateJob(dbJobInfo)){
+			error = "Failed to update parent company guarantee.";
+		}
+		return error;
+	}
+
 	public JobInfo getJobInfo(Long id) throws Exception {
 		return jobHBDao.get(id);
 	}

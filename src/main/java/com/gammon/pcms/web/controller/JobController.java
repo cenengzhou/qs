@@ -149,6 +149,20 @@ public class JobController {
 		return result;
 	}
 
+	@PreAuthorize(value = "@GSFService.isRoleExisted('JobController','updateParentCompanyGuarantee', @securityConfig.getRolePcmsQsDoc())")
+	@RequestMapping(value = "updateParentCompanyGuarantee", method = RequestMethod.POST)
+	public String updateParentCompanyGuarantee(@Valid @RequestBody JobInfo job){
+		String result = null;
+		try {
+			result = jobService.updateParentCompanyGuarantee(job);
+		} catch (Exception e) {
+			result = "Parent Company Guarantee cannot be updated.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		}
+		return result;
+	}
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','obtainAllJobCompany', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainAllJobCompany", method = RequestMethod.GET)
 	public List<String> obtainAllJobCompany() throws DatabaseOperationException{

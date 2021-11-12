@@ -157,8 +157,6 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			$scope.job.provision = "Y";
 		else
 			$scope.job.provision = "N";
-
-		$scope.job.isParentCompanyGuarantee = $scope.parentCompanyGuaranteeOptions.selected;
 		
 		//Snapshot last forecast anticipatedCompletionDate
 		if(moment($scope.jobDates.anticipatedCompletionDate).diff(moment($scope.anticipatedCompletionDateOldVal), 'days') !=0 ){
@@ -169,6 +167,18 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 		updateJobInfoAndDates($scope.job, $scope.jobDates)
 		
 	};
+
+	$scope.saveParentCompanyGuarantee = function () {
+		$scope.job.isParentCompanyGuarantee = $scope.parentCompanyGuaranteeOptions.selected;
+		jobService.updateParentCompanyGuarantee($scope.job).then(function(data){
+			if(data.length>0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+			}else{
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Parent Company Guarantee has been updated successfully.");
+				$state.reload();
+			}
+		});
+	}
 	
 	function updateJobInfoAndDates(job, jobDates){
 		jobService.updateJobInfoAndDates(job, jobDates)

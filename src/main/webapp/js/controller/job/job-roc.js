@@ -57,6 +57,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                             curr.movementExpected = curr.amountExpected - curr.previousAmountExpected;
                             curr.movementWorst = curr.amountWorst - curr.previousAmountWorst;
                         }
+                        rocList[i].canDelete = (moment(rocList[i].openDate).format('YYYY-MM') == $scope.monthYear);
                     }
                     $scope.data.tenderRisk = data[1];
                     $scope.data.tenderOpps = data[2];
@@ -548,6 +549,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                             // '<div class="row" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-success" ng-click="grid.appScope.openEditRocDialog(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px;" ></span> Edit Owner</button></div>' +
                             '<div class="row m-t-5" ng-if="!row.groupHeader && (row.entity.createdDate != row.entity.lastModifiedDate) && (row.entity !== null && row.entity.id !== null && row.entity.id >= 0)"><button class="btn btn-sm icon-btn btn-info" ng-click="grid.appScope.viewRocHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px" ></span> History</button></div>' +
                             '<div class="row m-t-5" ng-if="!row.groupHeader"><button class="btn btn-sm icon-btn btn-warning" ng-click="grid.appScope.editRocSubdetail(row.entity)"> <span class="fa fa-pencil" style="padding-left:10px" ></span> Subdetail</button></div>' +
+                            '<div class="row m-t-5" ng-if="!row.groupHeader && row.entity.canDelete && grid.appScope.editable"><button class="btn btn-sm icon-btn btn-danger" ng-click="grid.appScope.deleteRoc(row.entity)"> <span class="fa fa-trash" style="padding-left:10px" ></span> Delete</button></div>' +
                             '</div>'
                     },
                     {field: 'rocDetail.year', displayName: 'Year', width: 100, visible: false, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false},
@@ -598,6 +600,22 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Cannot view roc history.");
             }
 
+        }
+
+        $scope.deleteRoc = function(entity) {
+            confirmService.show({}, {bodyText: GlobalMessage.deleteRoc})
+                .then(function (response) {
+                    if (response === 'Yes') {
+                        rocService.deleteRoc(entity.id).then(function(data) {
+                            if (data.length != 0) {
+                                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+                            } else {
+                                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "ROC is deleted.");
+                                getData($scope.year, $scope.month);
+                            }
+                        });
+                    }
+                });
         }
 
         $scope.$watch('monthYear', function (newValue, oldValue) {
