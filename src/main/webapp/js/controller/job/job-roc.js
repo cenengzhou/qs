@@ -13,6 +13,8 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
         $scope.buttonTimer = 0;
 
         $scope.person = {};
+        
+        $scope.excludeJobList = [];
 
         initGrid();
 
@@ -22,6 +24,13 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
             $scope.cutoffDate = data;
             $scope.cutoffDate.periodInFormat = moment(data.period, 'YYYY-MM').format('MMM, YYYY');
             $scope.monthYear = $scope.cutoffDate.period;
+           
+            
+            if(data.excludeJobList != null){
+	            $scope.excludeJobList = data.excludeJobList.split(",").map(function(item) {
+	            	  return item.trim();
+	            }); 
+            }
         });
 
         rootscopeService.gettingAllUser()
@@ -29,7 +38,7 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 self.repos = data;
             });
 
-        $scope.downloadRocReport = function(format = "xlsx") {
+        $scope.downloadRocReport = function(format) {
             var url = 'service/report/downloadRocExcel?jobNumber=' + $scope.jobNo + '&year=' + $scope.year + '&month=' + $scope.month + "&format=" + format;
  		    GlobalHelper.downloadFile(url);
         }
@@ -57,7 +66,11 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                             curr.movementExpected = curr.amountExpected - curr.previousAmountExpected;
                             curr.movementWorst = curr.amountWorst - curr.previousAmountWorst;
                         }
-                        rocList[i].canDelete = (moment(rocList[i].openDate).format('YYYY-MM') == $scope.monthYear);
+                        
+                        if ($scope.excludeJobList.indexOf($scope.jobNo) > -1)
+                        	rocList[i].canDelete = false;
+                        else
+                        	rocList[i].canDelete = (moment(rocList[i].openDate).format('YYYY-MM') == $scope.monthYear);
                     }
                     $scope.data.tenderRisk = data[1];
                     $scope.data.tenderOpps = data[2];
@@ -629,7 +642,12 @@ mainApp.controller('JobRocCtrl', ['$scope', 'rocService', 'forecastService', '$u
                 $scope.period = moment().month($scope.month - 1).format('MMM');
                 $scope.lastPeriod = moment().month($scope.month - 2).format('MMM');
 
-                $scope.editable = ($scope.monthYear == $scope.cutoffDate.period);
+            	$scope.editable = ($scope.monthYear == $scope.cutoffDate.period);
+            	
+            	//exclude jobs from period cutoff control from specified list 
+                if ($scope.excludeJobList.indexOf($scope.jobNo) > -1){
+                	$scope.editable = true;
+                }
 
                 $timeout(function() {
                     $scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );

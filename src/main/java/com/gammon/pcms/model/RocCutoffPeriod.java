@@ -43,6 +43,7 @@ public class RocCutoffPeriod extends BasePersistedObject {
 	private Long id;
 	private Date cutoffDate;
 	private String period;
+	private String excludeJobList;
 
 	@Override
 	public String toString() {
@@ -50,6 +51,7 @@ public class RocCutoffPeriod extends BasePersistedObject {
 				"id=" + id +
 				", cutoffDate=" + cutoffDate +
 				", period='" + period + '\'' +
+				", excludeJobList='" + excludeJobList + '\'' +
 				'}';
 	}
 
@@ -84,6 +86,15 @@ public class RocCutoffPeriod extends BasePersistedObject {
 
 	public void setPeriod(String period) {
 		this.period = period;
+	}
+
+	@Column(name = "EXCLUDE_JOB_LIST")
+	public String getExcludeJobList() {
+		return excludeJobList;
+	}
+
+	public void setExcludeJobList(String excludeJobList) {
+		this.excludeJobList = excludeJobList;
 	}
 
 
