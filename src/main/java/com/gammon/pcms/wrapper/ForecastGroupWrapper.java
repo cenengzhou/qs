@@ -14,9 +14,11 @@ public class ForecastGroupWrapper implements Serializable{
 	private ForecastWrapper actualCost;
 	private ForecastWrapper turnover;
 	private ForecastWrapper cost;
+	private ForecastWrapper siteProfit;
 	private ForecastWrapper tenderRisk;
 	private ForecastWrapper tenderOpps;
 	private ForecastWrapper others;
+	private ForecastWrapper totalContingency;
 	private ForecastWrapper risk;
 	private ForecastWrapper opps;
 	private ForecastWrapper unTurnover;
@@ -96,6 +98,18 @@ public class ForecastGroupWrapper implements Serializable{
 	}
 	public void setCriticalProgrammeList(List<ForecastWrapper> criticalProgrammeList) {
 		this.criticalProgrammeList = criticalProgrammeList;
+	}
+	public ForecastWrapper getSiteProfit() {
+		return siteProfit;
+	}
+	public void setSiteProfit(ForecastWrapper siteProfit) {
+		this.siteProfit = siteProfit;
+	}
+	public ForecastWrapper getTotalContingency() {
+		return totalContingency;
+	}
+	public void setTotalContingency(ForecastWrapper totalContingency) {
+		this.totalContingency = totalContingency;
 	}
 	
 	

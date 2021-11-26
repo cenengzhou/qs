@@ -380,9 +380,11 @@ public class ForecastService {
 			repository.save(wrapper.getActualCost().getForecast());
 			repository.save(wrapper.getTurnover().getForecast());
 			repository.save(wrapper.getCost().getForecast());
+			repository.save(wrapper.getSiteProfit().getForecast());
 			repository.save(wrapper.getTenderRisk().getForecast());
 			repository.save(wrapper.getTenderOpps().getForecast());
 			repository.save(wrapper.getOthers().getForecast());
+			repository.save(wrapper.getTotalContingency().getForecast());
 			repository.save(wrapper.getRisk().getForecast());
 			repository.save(wrapper.getOpps().getForecast());
 			repository.save(wrapper.getUnTurnover().getForecast());

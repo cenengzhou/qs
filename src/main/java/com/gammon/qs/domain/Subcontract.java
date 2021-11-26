@@ -104,6 +104,9 @@ public class Subcontract extends BasePersistedObject {
 	public static final String DIRECT_PAYMENT = "D";
 	public static final String NO_PAYMENT = "N";
 
+	//Singapore Exchange Rate
+	public static final BigDecimal EXCHANGE_RATE_SGP = new BigDecimal(5.7826);
+	
 	private JobInfo jobInfo;
 
 	private String packageNo;

@@ -833,15 +833,24 @@ public class SubcontractService {
 			variedSubcontract = true;
 		}
 		//2. Tender Variance
-		else if(tenderVarianceList != null && tenderVarianceList.size()>0){
-			logger.info("2. Tender Variance exist");
-			variedSubcontract = true;
+		else if (tenderVarianceList != null && tenderVarianceList.size() > 0) {
+			// Executive Commercial Director (Award > $10M)
+			BigDecimal exchangeRateToHKD = new BigDecimal(1.0);
+
+			if (jobNo.startsWith("14"))
+				exchangeRateToHKD = Subcontract.EXCHANGE_RATE_SGP;
+
+			if (CalculationUtil.roundToBigDecimal(tenderBudget.multiply(exchangeRateToHKD), 2).compareTo(new BigDecimal(10000000)) > 0) {
+				logger.info("2. Tender Variance exist");
+				variedSubcontract = true;
+			}
+
 		}
 		//3. Status Change Execution of SC - (Y)
-		else if("Y".equals(rcmTender.getStatusChangeExecutionOfSC())){
+		/*else if("Y".equals(rcmTender.getStatusChangeExecutionOfSC())){
 			logger.info("3. Status Change Execution of SC - (Y)");
 			variedSubcontract = true;
-		}
+		}*/
 		//4. Tender List < 3
 		else if(tenderList.size()<3){
 			logger.info("4. Tender List < 3");

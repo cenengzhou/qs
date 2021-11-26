@@ -24,8 +24,10 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
     	var unCost = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.UnsecuredEoJ, GlobalParameter.forecast.UnsecuredCost);
     	var actualTurnover = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Actual, GlobalParameter.forecast.InternalValuation);
     	var actualCost = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Actual, GlobalParameter.forecast.Cost);
+    	var siteProfit = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.EoJ, GlobalParameter.forecast.SiteProfit);
+    	var totalContingency = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.Contingency, GlobalParameter.forecast.TotalContingency);
     	
-    	$q.all([turnover, cost, tenderRisk, tenderOpps, others, risk, opps, unTurnover, unCost, actualTurnover, actualCost])
+    	$q.all([turnover, cost, tenderRisk, tenderOpps, others, risk, opps, unTurnover, unCost, actualTurnover, actualCost, siteProfit, totalContingency])
     		.then(function (data){
     			$scope.data = {};
     			$scope.data.turnover = data[0];
@@ -39,6 +41,8 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
     			$scope.data.unCost = data[8];
     			$scope.data.actualTurnover = data[9];
     			$scope.data.actualCost = data[10];
+    			$scope.data.siteProfit = data[11];
+    			$scope.data.totalContingency = data[12];
     			
     			getCriticalProgramRFList(year, month);
     			getLatestForecastPeriod();
@@ -87,7 +91,6 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
 	
 	$scope.update = function(){
 		$scope.editable = false;
-		//console.log($scope.data);
 		forecastService.saveByJobNo($scope.jobNo, $scope.data)
 		.then(
 				function( data ) {

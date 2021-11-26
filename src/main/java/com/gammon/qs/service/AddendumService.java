@@ -950,7 +950,7 @@ public class AddendumService{
 			String currency = accountCodeWSDao.obtainCurrencyCode(subcontract.getJobInfo().getJobNumber());
 			BigDecimal exchangeRateToHKD = new BigDecimal(1.0);
 			if ("SGP".equals(currency))
-				exchangeRateToHKD = new BigDecimal(5.0);
+				exchangeRateToHKD = Subcontract.EXCHANGE_RATE_SGP;
 
 				String company = subcontract.getJobInfo().getCompany();
 				String vendorNo = subcontract.getVendorNo();
@@ -958,7 +958,7 @@ public class AddendumService{
 				String approvalType="SM";
 				if (CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2).compareTo(new BigDecimal(250000.0)) > 0 
 						|| addendum.getAmtAddendum().compareTo(
-								CalculationUtil.roundToBigDecimal(subcontract.getOriginalSubcontractSum().multiply(new BigDecimal(0.25)), 2) 
+								CalculationUtil.roundToBigDecimal(subcontract.getSubcontractSum().multiply(new BigDecimal(0.25)), 2) 
 						) > 0)
 					approvalType = "SL";
 				String approvalSubType = subcontract.getApprovalRoute();
