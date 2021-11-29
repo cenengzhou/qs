@@ -1990,7 +1990,7 @@ public class PaymentService{
 									return error;
 								}
 							}
-						certAmount = paymentCert.getSubcontract().getSubcontractSum().doubleValue();
+						//certAmount = paymentCert.getSubcontract().getSubcontractSum().doubleValue();
 					}
 				} else {
 					// For Direct Payment
