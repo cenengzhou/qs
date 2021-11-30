@@ -63,6 +63,9 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	@Value("#{'${delayPostProvisionJobList}'.split(',')}")
 	private List<String> delayPostProvisionJobList;
 
+	@Value("#{'${excludeInternalTradeRoutes}'.split(',')}")
+	private List<String> excludeInternalTradeRoutes;
+
 	public static final String GSF_APPLICATION_CODE = "QS";
 	public static final String GSF_GETROLE = "GetRole";
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
@@ -279,8 +282,18 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		System.setProperty("ws.jde.server.url", getWsJde("URL"));
 	}
 
-	public List<String> getDelayPostProvisionJobList(){
+	public List<String> getDelayPostProvisionJobList() {
 		return this.delayPostProvisionJobList;
 	}
 
+	public List<String> getExcludeInternalTradeRoutes() {
+		if (this.excludeInternalTradeRoutes.get(0).equals("${excludeInternalTradeRoutes}")) {
+			this.excludeInternalTradeRoutes = Arrays.asList(new String[] { "FR", "RM", "VA", "VB" });
+		}
+		return this.excludeInternalTradeRoutes;
+	}
+
+	public void setExcludeInternalTradeRoutes(List<String> excludeInternalTradeRoutes) {
+		this.excludeInternalTradeRoutes = excludeInternalTradeRoutes;
+	}
 }

@@ -454,7 +454,7 @@ public class MainCertService {
 		
 		logger.info("Submitting Negative Main Cert for Approval------> Job: "+jobNumber+" - Main Cert No.:"+mainCertNumber+" - Cert Amount: "+CalculationUtil.round(certAmount,2));
 		resultMsg = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNumber, mainCertNumber.toString(), "0", "",
-				approvalType, "", certAmount, currency, securityService.getCurrentUser().getUsername());
+				approvalType, "", certAmount, currency, securityService.getCurrentUser().getUsername(), null);
 		
 		//Update Main Cert Status = 200 (Waiting For Approval)
 		if (resultMsg == null || "".equals(resultMsg.trim())) {

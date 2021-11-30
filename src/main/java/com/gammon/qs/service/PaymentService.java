@@ -565,7 +565,7 @@ public class PaymentService{
 			}
 
 			logger.info("PaymentStatus: " + paymentCert.getPaymentStatus() + " FinQS0Review: " + job.getFinQS0Review());
-			errorMessage = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNo.toString(), vendorNo, vendorName, approvalType, approvalSubType, certAmount, currencyCode, userID);
+			errorMessage = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNo.toString(), vendorNo, vendorName, approvalType, approvalSubType, certAmount, currencyCode, userID, null);
 
 		} catch (Exception e) {
 			logger.info("Failed to submit Payment Review. \n ");
@@ -2042,7 +2042,7 @@ public class PaymentService{
 					currencyCode = getCompanyBaseCurrency(jobNo);
 
 					resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, jobNo, subcontractNo.toString(), vendorNo, vendorName,
-							approvalType, approvalSubType, certAmount, currencyCode, securityServiceImpl.getCurrentUser().getUsername());
+							approvalType, approvalSubType, certAmount, currencyCode, securityServiceImpl.getCurrentUser().getUsername(), subcontract.getInternalJobNo());
 				}
 
 				logger.info("resultMsg" + resultMsg);
