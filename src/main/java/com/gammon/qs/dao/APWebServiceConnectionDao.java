@@ -79,7 +79,7 @@ public class APWebServiceConnectionDao {
 			logger.log(Level.SEVERE,e.getMessage(),e);
 			errorMsg = "Approval " + requestObj.getOrderType() + 
 			" subtype " + (StringUtils.isBlank(requestObj.getApprovalSubType()) ? "NA" : requestObj.getApprovalSubType()) +
-			(requestObj.getApprovalSubType().indexOf("IT") > -1 ? " for internal trade" : "") +
+			(requestObj.getApprovalSubType() != null && requestObj.getApprovalSubType().indexOf("IT") > -1 ? " for internal trade" : "") +
 			" cannot be created. Please contact helpdesk.";
 		}
 		return errorMsg;
