@@ -236,19 +236,23 @@
 												</tbody>
 											</table>
 										</td>
-										<td>${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]}</td>
+										<td>${companyCurrencyCode!""} ${((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0)) ?string["#,##0.00"]}
+											[#if companyCurrencyCode != rcmTenderer.currencyCode]
+											<label>(${rcmTenderer.currencyCode!""} ${(((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0))/(rcmTenderer.exchangeRate!0)) ?string["#,##0.00"]})</label>
+											[/#if]
+										</td>
 									</tr>
 									<tr>
 										<td>Tender &amp; \ or Latest Forecast Budget *</td>
-										<td>${rcmTenderer.currencyCode!""} ${(budgetTender.budgetAmount!0)?string["#,##0.00"]}</td>
+										<td>${companyCurrencyCode!""} ${(budgetTender.budgetAmount!0)?string["#,##0.00"]}</td>
 									</tr>
 									<tr>
 										<td>Buying Gain \ (Loss)</td>
-										<td>${rcmTenderer.currencyCode!""} ${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</td>
+										<td>${companyCurrencyCode!""} ${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</td>
 									</tr>
 									<tr class="border1t">
 										<td>Package Stretch Target ([#if subcontract.amountPackageStretchTarget?? \and subcontract.amountPackageStretchTarget &gt; 0 \and rcmTenderer.budgetAmount?? \and rcmTenderer.budgetAmount &gt; 0]${((1 - (subcontract.amountPackageStretchTarget / rcmTenderer.budgetAmount))  * 100)?string["0.##"]}[#else]&nbsp;[/#if]% )</td>
-										<td>${rcmTenderer.currencyCode!""} ${subcontract.amountPackageStretchTarget!0}</td>
+										<td>${companyCurrencyCode!""} ${subcontract.amountPackageStretchTarget!0}</td>
 									</tr>
 								</tbody>
 							</table>
