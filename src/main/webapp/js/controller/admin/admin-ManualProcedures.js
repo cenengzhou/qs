@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'systemService', 'GlobalParameter',
-		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, systemService, GlobalParameter) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'systemService', 'GlobalParameter', 'rocService',
+		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, systemService, GlobalParameter, rocService) {
 	$scope.provisionGlDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.auditTables = [];
 	$scope.auditTableName = '';
@@ -44,6 +44,25 @@ mainApp.controller('AdminManualProceduresCtrl',
 		});
 	};
 	
+	//ROC
+	rocService.getCutoffPeriod().then(function(data) {
+        $scope.RocCutoffRecord = data;
+    });
+
+   
+    $scope.onSubmitRocCutoffRecord = function () {
+            rocService.updateRocCutoffAdmin($scope.RocCutoffRecord)
+                .then(
+                    function (data) {
+                        if (data.length != 0)
+                            modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+                        else
+                            modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "RocCutoff updated.");
+                    }, function (message) {
+                        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', message);
+                    });
+    };
+    
 	$scope.onSubmitGenerateSubcontractSnapshot = function(){
 //		$scope.blockProcedures.start({hideMessage:true, hideAnimate:true});
 		subcontractService.generateSCPackageSnapshotManually()

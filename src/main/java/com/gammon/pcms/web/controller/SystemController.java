@@ -116,7 +116,7 @@ public class SystemController {
 		return auditConfig.getAuditInfoMap();
 	}
 
-	@PreAuthorize(value = " @GSFService.isFnEnabled('SystemController','housekeepAuditTable', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('SystemController','housekeepAuditTable', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "housekeepAuditTable", method = RequestMethod.POST)
 	public int housekeepAuditTable(@RequestParam String tableName) throws DataAccessException, SQLException{
 		int result = auditHousekeepService.housekeekpByAuditTableName(tableName);

@@ -403,21 +403,21 @@ public class SubcontractController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','runProvisionPostingManually', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('SubcontractController','runProvisionPostingManually', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam Date glDate){
 		subcontractService.runProvisionPostingManually(jobNumber, glDate, false);
 		mailContentGenerator.sendAdminFnEmail("runProvisionPostingManually", "jobNumber:" + jobNumber + " glDate:" + glDate);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','generateSCPackageSnapshotManually', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('SubcontractController','generateSCPackageSnapshotManually', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
 	public void generateSCPackageSnapshotManually(){
 		packageSnapshotGenerationService.generateSCPackageSnapshotManually();
 		mailContentGenerator.sendAdminFnEmail("generateSCPackageSnapshotManually", "");
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateF58001FromSCPackageManually', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('SubcontractController','updateF58001FromSCPackageManually', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "updateF58001FromSCPackageManually", method = RequestMethod.POST)
 	public void updateF58001FromSCPackageManually(){
 		subcontractService.updateF58001FromSCPackageManually();

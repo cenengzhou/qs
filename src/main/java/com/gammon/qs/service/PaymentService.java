@@ -1426,7 +1426,7 @@ public class PaymentService{
 					if(paymentDetailInDB != null){
 						SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
 
-						if(scDetail != null && !"C2".equals(scDetail.getLineType())){
+						if(scDetail != null){ // && !"C2".equals(scDetail.getLineType())
 							scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
 
 
@@ -1444,7 +1444,7 @@ public class PaymentService{
 								}
 							}
 
-							if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
+							if(("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType()))   && paymentDetail.getCumAmount() >0){
 								error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 								logger.info(error);
 								return error;
@@ -1480,7 +1480,7 @@ public class PaymentService{
 
 
 							//Update C2 of corresponding subcontract
-							try {
+							/*try {
 								if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType())) && scDetail.getCorrSCLineSeqNo()!=null){
 									SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) scDetailDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 									if(scDetailsCC != null){
@@ -1501,7 +1501,7 @@ public class PaymentService{
 								}
 							} catch (DataAccessException e) {
 								e.printStackTrace();
-							}
+							}*/
 
 						}
 					}

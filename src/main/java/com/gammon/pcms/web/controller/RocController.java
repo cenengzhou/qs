@@ -39,19 +39,19 @@ public class RocController {
 		return rocService.getCutoffPeriod();
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocAdmin', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRocAdmin/{jobNo}", method = RequestMethod.GET)
 	public List<ROC> getRocAdmin(@PathVariable String jobNo, @RequestParam(required = false) String itemNo){
 		return rocAdminService.getRocAdmin(jobNo, itemNo);
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocDetailListAdmin', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRocDetailListAdmin/{jobNo}", method = RequestMethod.GET)
 	public List<RocAndRocDetailWrapper> getRocDetailListAdmin(@PathVariable String jobNo, @RequestParam(required = false) String itemNo, @RequestParam(required = true) String period){
 		return rocAdminService.getRocDetailListAdmin(jobNo, itemNo, period);
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocSubdetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','getRocSubdetailListAdmin', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRocSubdetailListAdmin/{jobNo}", method = RequestMethod.GET)
 	public List<RocAndRocSubdetailWrapper> getRocSubdetailListAdmin(@PathVariable String jobNo, @RequestParam(required = false) String itemNo, @RequestParam(required = true) String period){
 		return rocAdminService.getRocSubdetailListAdmin(jobNo, itemNo, period);
@@ -214,7 +214,7 @@ public class RocController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','updateRocCutoffAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('RocController','updateRocCutoffAdmin', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "updateRocCutoffAdmin", method = RequestMethod.POST)
 	public String updateRocCutoffAdmin(@RequestBody RocCutoffPeriod rocCutoffPeriod){
 		String result = "";

@@ -183,7 +183,7 @@ public class PaymentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updateF58011FromSCPaymentCertManually', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('PaymentController','updateF58011FromSCPaymentCertManually', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
@@ -204,7 +204,7 @@ public class PaymentController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','runPaymentPosting', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('PaymentController','runPaymentPosting', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();

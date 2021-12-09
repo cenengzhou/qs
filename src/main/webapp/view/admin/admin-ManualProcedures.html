@@ -28,7 +28,7 @@
 									id="auditTableName"
 									ng-model="auditTableName"></select>
 						</div>
-						<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Housekeep</button>
+						<button ng-show="showIMSAdmin" type="submit" class="btn btn-block btn-primary">Housekeep</button>
 					</div>
 				</div>
 			</form>
@@ -53,12 +53,16 @@
 									<input class="form-control" type="text" name="provisionGlDate.singleDate" ng-model="provisionGlDate"/>
 								</div>
 						</div>
-						<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Post</button>
+						<button ng-show="showIMSAdmin" type="submit" class="btn btn-block btn-primary">Post</button>
 					</div>
 				</div>
 			</form>
 		</div>
 
+		<div class="col-md-4 col-sm-12" ng-include src="'view/admin/admin-RocCutoff.html?@PROJECT_VERSION@'"></div>
+		
+		
+		
 		<div class="col-md-4 col-sm-12">
 			<form name="generateSubcontractSnapshotForm"
 				ng-submit="onSubmitGenerateSubcontractSnapshot()">
@@ -75,7 +79,7 @@
 							</tr>
 							<tr>
 								<td>
-									<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Generate
+									<button ng-show="showIMSAdmin" type="submit" class="btn btn-block btn-primary">Generate
 										Snapshot</button>
 								</td>
 							</tr>
@@ -85,8 +89,7 @@
 				</div>
 			</form>
 		</div>
-	</div>
-	<div class="row row-eq-height col-sm-12" vertilize-container >
+	
 		<div class="col-md-4 col-sm-12">
 			<form name="postSubcontractPaymentForm"
 				ng-submit="onSubmitPostSubcontractPayment()">
@@ -102,7 +105,7 @@
 							</tr>
 							<tr>
 								<td>
-									<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Post</button>
+									<button ng-show="showIMSAdmin" type="submit" class="btn btn-block btn-primary">Post</button>
 								</td>
 							</tr>
 						</table>
@@ -127,7 +130,7 @@
 							</tr>
 							<tr>
 								<td>
-									<button ng-show="showQSAdmin" class="btn btn-block btn-primary">Synchronize</button>
+									<button ng-show="showIMSAdmin" class="btn btn-block btn-primary">Synchronize</button>
 								</td>
 							</tr>
 						</table>
@@ -151,7 +154,7 @@
 						</tr>
 						<tr>
 							<td>
-								<button ng-show="showQSAdmin" class="btn btn-block btn-primary">Synchronize</button>
+								<button ng-show="showIMSAdmin" class="btn btn-block btn-primary">Synchronize</button>
 							</td>
 						</tr>
 					</table>
@@ -175,7 +178,7 @@
 						</tr>
 						<tr>
 							<td>
-								<button ng-show="showQSAdmin" class="btn btn-block btn-primary">Synchronize</button>
+								<button ng-show="showIMSAdmin" class="btn btn-block btn-primary">Synchronize</button>
 							</td>
 						</tr>
 					</table>
@@ -197,7 +200,7 @@
 						</tr>
 						<tr>
 							<td>
-								<button ng-show="showQSAdmin" class="btn btn-block btn-primary">Recalculate</button>
+								<button ng-show="showIMSAdmin" class="btn btn-block btn-primary">Recalculate</button>
 							</td>
 						</tr>
 					</table>
@@ -205,6 +208,9 @@
 			</div>
 			</form>
 		</div>
+		
+		
+		
 		
 	</div>
 	<!-- end #content -->

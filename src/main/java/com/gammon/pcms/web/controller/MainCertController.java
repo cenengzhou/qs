@@ -151,7 +151,7 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('MainCertController','updateMainCertFromF03B14Manually', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('MainCertController','updateMainCertFromF03B14Manually', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "updateMainCertFromF03B14Manually", method = RequestMethod.POST)
 	public Boolean updateMainCertFromF03B14Manually(){
 		Boolean result = mainCertService.updateMainCertFromF03B14Manually();

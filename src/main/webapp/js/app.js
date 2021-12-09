@@ -1644,20 +1644,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 													 'js/controller/admin/admin-Revisions-MonthlyMovement.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-Roc.js?@PROJECT_VERSION@',
 													 'js/controller/admin/admin-Revisions-RocDetail.js?@PROJECT_VERSION@',
-													 'js/controller/admin/admin-Revisions-RocSubdetail.js?@PROJECT_VERSION@',
-													 'js/controller/admin/admin-Revisions-RocCutoff.js?@PROJECT_VERSION@',
-                           'view/admin/admin-Revisions-Subcontract.html?@PROJECT_VERSION@',
-                           'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
-                           'view/admin/admin-Revisions-Addendum.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-MainCert.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-Transit.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-Tender.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-TenderDetail.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-MonthlyMovement.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-Roc.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-RocDetail.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-RocSubdetail.html?@PROJECT_VERSION@',
-													 'view/admin/admin-Revisions-RocCutoff.html?@PROJECT_VERSION@'
+													 'js/controller/admin/admin-Revisions-RocSubdetail.js?@PROJECT_VERSION@'
+													
                     ]
                 });
             }]

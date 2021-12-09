@@ -1,6 +1,6 @@
 mainApp.controller('AdminRevisionsRocCtrl',
-    ['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'rocService', 'confirmService', '$state', '$q', '$timeout',
-        function ($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, rocService, confirmService, $state, $q, $timeout) {
+    ['$scope', 'modalService',  'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'rocService', 'confirmService',  '$q', '$timeout',
+        function ($scope,  modalService, rootscopeService, GlobalHelper, GlobalParameter, rocService, confirmService,  $q, $timeout) {
             $scope.GlobalParameter = GlobalParameter;
 
             $scope.RocSearch = {};

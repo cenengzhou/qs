@@ -330,10 +330,10 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			if(!validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', validateMessage(rowEntity, MSG_LINETYPE_GENERATED_BY_SYSTEM));
 			}
-			if(rowEntity.lineType == "C2"){
+			/*if(rowEntity.lineType == "C2"){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 
 						"C2 should be entered by corresponding subcontract.");
-			}
+			}*/
 		});
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
