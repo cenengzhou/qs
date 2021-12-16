@@ -79,18 +79,25 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 	}
 
 	$scope.calculatePaymentDueDate = function() {
-		if($scope.paymentTerms != "QS0" && $scope.payment.bypassPaymentTerms =="N"){
+		if($scope.paymentTerms != "QS0" ){
 			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
 			.then(
 					function( data ) {
 						if(data!=null){
 							if(data.valid ==true){
 								if(data.dueDate !=null){
+									if($scope.payment.bypassPaymentTerms =="N"){
+										$scope.payment.dueDate = data.dueDate;
+									}
 									
-									$scope.payment.dueDate = data.dueDate;
+									$scope.payment.originalDueDate = data.dueDate;
 								}
-								else
-									$scope.payment.dueDate = null;
+								else{
+									if($scope.payment.bypassPaymentTerms =="N"){
+										$scope.payment.dueDate = null;
+									}
+									$scope.payment.originalDueDate = null;
+								}
 							}
 							else
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.errorMsg);

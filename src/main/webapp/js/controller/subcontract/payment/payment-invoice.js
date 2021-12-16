@@ -18,22 +18,46 @@ mainApp.controller('PaymentInvoiceCtrl',
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', message);
 			}
 			else{
-				if($scope.payment.certAmount < 0 || $scope.payment.certAmount == 0){
+				
+				if($scope.payment.bypassPaymentTerms == "Y"){
 					var modalOptions = {
-							bodyText: 'The Certificate Amount is less than or equal to $0.00.<br/>Do you still wish to submit the payment?'
+							bodyText: "Please attach a summary sheet of Early Release Payment for the whole project.<br/>"
+								+"1.	All related subcontracts and their respective early release amounts<br/>"
+								+"2.	Total early release amount for the project<br/>"
+								+"3.	Project cashflow<br/>"
+								+"4.	Justification"
 					};
 
 					confirmService.showModal({}, modalOptions).then(function (result) {
 						if(result == "Yes"){
-							submitPayment();
+							alertForZeroAmountPayment();
 						}
 					});
+					
 				}else
-					submitPayment();
+					alertForZeroAmountPayment();
+				
 			}
 		}
 	}
 
+	function alertForZeroAmountPayment() {
+		if($scope.payment.certAmount < 0 || $scope.payment.certAmount == 0){
+			var modalOptions = {
+					bodyText: 'The Certificate Amount is less than or equal to $0.00.<br/>Do you still wish to submit the payment?'
+			};
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					submitPayment();
+				}
+			});
+		}else
+			submitPayment();
+		
+	}
+	
+	
 	function loadData() {
 		if($scope.paymentCertNo != ""){
 			getPaymentCert();

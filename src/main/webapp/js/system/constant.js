@@ -445,7 +445,7 @@ mainApp.constant('GlobalParameter', {
 		EoJ: 'EoJ',
 		Turnover: 'Turnover',
 		Cost: 'Cost',
-		SiteProfit: 'Site Profit',
+		SiteProfit: 'RGP',
 		Contingency: 'Contingency',
 		TenderRisks: 'Tender Risks',
 		TenderOpps: 'Tender Opps',

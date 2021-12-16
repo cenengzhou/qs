@@ -63,6 +63,7 @@ import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
@@ -143,6 +144,8 @@ public class HTMLService implements Serializable{
 	private MasterListService masterListService;
 	@Autowired
 	private AddendumService addendumService;
+	@Autowired
+	private MainCertService mainCertService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -153,8 +156,7 @@ public class HTMLService implements Serializable{
 		List<PaymentCert> scPaymentCertList = null;
 		MasterListVendor masterList = new MasterListVendor();
 
-		String strIpaOrInvoiceReceivedDate = null;
-		String strCertIssueDate = null;
+		String strMainCertDueDate = null;
 		Double postedIVAmt = new Double(0);
 		Double maxRetentionAmount = new Double(0);
 		
@@ -190,8 +192,8 @@ public class HTMLService implements Serializable{
 			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNumber, subcontractNumber, String.valueOf(currentPaymentNo));
 			
 			mainCertNumber 		= paymentCertViewWrapper.getMainCertNo();
-			strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
-			strCertIssueDate = DateHelper.formatDate(paymentCert.getCertIssueDate(), GlobalParameter.DATE_FORMAT);
+			//strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
+			//strCertIssueDate = DateHelper.formatDate(paymentCert.getOriginalDueDate(), GlobalParameter.DATE_FORMAT);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,8 +202,24 @@ public class HTMLService implements Serializable{
 		try {
 			scPackage = subcontractHBDao.obtainSCPackage(paymentCertViewWrapper.getJobNumber(), paymentCertViewWrapper.getSubContractNo().toString());
 			maxRetentionAmount = CalculationUtil.round(scPackage.getRetentionAmount().doubleValue(), 2);
-			if(mainCertNumber != 0)
+			if(mainCertNumber != 0){
 				clientCertAmount = mainCertWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNumber).getAmount();
+				
+				
+				//Get Parent Job Main Cert Due Date
+				List<String> parentJobList = jobInfoService.obtainParentJobList(jobNumber);
+				String parentJobNo = jobNumber;
+				while(parentJobList.size()==1){//loop until it gets the actual parent job
+					parentJobNo = parentJobList.get(0);
+					parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
+				}
+				
+				
+				MainCert parentMainCert = mainCertService.getCertificate(jobNumber, mainCertNumber);
+				if(parentMainCert != null)
+					strMainCertDueDate = DateHelper.formatDate( parentMainCert.getCertDueDate(), GlobalParameter.DATE_FORMAT);
+					
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -252,8 +270,7 @@ public class HTMLService implements Serializable{
 		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
 		data.put("postedIVAmt", postedIVAmt != null ? postedIVAmt : new Double(0));
 		data.put("mainCertNumber", mainCertNumber);
-		data.put("strIpaOrInvoiceReceivedDate", strIpaOrInvoiceReceivedDate != null ? strIpaOrInvoiceReceivedDate : "");
-		data.put("strCertIssueDate", strCertIssueDate != null ? strCertIssueDate : "");
+		data.put("strMainCertDueDate", strMainCertDueDate != null ? strMainCertDueDate : "");
 		data.put("strPaymentStatus", strPaymentStatus);
 		data.put("currentPaymentNo", currentPaymentNo);
 		data.put("maxRetentionAmount", maxRetentionAmount);

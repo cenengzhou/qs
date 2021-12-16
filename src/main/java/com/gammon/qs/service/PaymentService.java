@@ -185,16 +185,15 @@ public class PaymentService{
 		return scPaymentCertWrapperList;
 	}
 	
-	public PaymentCertViewWrapper calculatePaymentCertificateSummary(String jobNumber, String packageNo, Integer paymentCertNo) throws Exception {
+	public PaymentCertViewWrapper calculatePaymentCertificateSummary(String jobNumber, String packageNo, PaymentCert scPaymentCert) throws Exception {
 		PaymentCertViewWrapper result = new PaymentCertViewWrapper();
-		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.getPaymentDetail(jobNumber, packageNo, paymentCertNo);
-		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
+		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.getPaymentDetail(jobNumber, packageNo, scPaymentCert.getPaymentCertNo());
 		Subcontract scPackage = scPaymentCert.getSubcontract();
 
 		result.setJobNumber(jobNumber);
 		result.setJobDescription(scPackage.getJobInfo().getDescription());
 		result.setMainCertNo(scPaymentCert.getMainContractPaymentCertNo()==null? new Integer(0) : scPaymentCert.getMainContractPaymentCertNo());
-		result.setPaymentCertNo(paymentCertNo);
+		result.setPaymentCertNo(scPaymentCert.getPaymentCertNo());
 		result.setSubContractNo(scPackage.getPackageNo());
 		result.setSubcontractorDescription(masterListService.searchVendorAddressDetails(scPackage.getVendorNo()).getVendorName());
 
@@ -1042,11 +1041,12 @@ public class PaymentService{
 	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo) throws Exception {
 		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
 
-		// Get the Basic Payment Cert information
-		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
-
 		// BEGIN: Get the Payment Cert additional information
 		PaymentCert scpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
+				
+		// Get the Basic Payment Cert information
+		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, scpaymentCert);
+
 		Subcontract scPackage = scpaymentCert.getSubcontract();
 
 		MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
@@ -1827,6 +1827,12 @@ public class PaymentService{
 				
 				//update bypassPaymentTerms
 				scPaymentCert.setBypassPaymentTerms(paymentCert.getBypassPaymentTerms());
+				
+				//Update OriginalDueDate
+				if (paymentCert.getBypassPaymentTerms().equals(PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString()))
+					scPaymentCert.setOriginalDueDate(paymentCert.getOriginalDueDate());
+				else 
+					scPaymentCert.setOriginalDueDate(null);
 				
 				paymentCertDao.update(scPaymentCert);
 			} catch (DataAccessException e) {
