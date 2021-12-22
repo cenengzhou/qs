@@ -33,10 +33,7 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					else
 						$scope.job.innovationApplicable = false;
 					
-					if($scope.job.provision == "Y")
-						$scope.job.provision = true;
-					else
-						$scope.job.provision = false;
+					
 
 					if (data.isParentCompanyGuarantee)
 						$scope.parentCompanyGuaranteeOptions.selected = data.isParentCompanyGuarantee;
@@ -153,10 +150,7 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			$scope.job.innovationApplicable = "0";
 		}
 		
-		if($scope.job.provision == true)
-			$scope.job.provision = "Y";
-		else
-			$scope.job.provision = "N";
+	
 		
 		//Snapshot last forecast anticipatedCompletionDate
 		if(moment($scope.jobDates.anticipatedCompletionDate).diff(moment($scope.anticipatedCompletionDateOldVal), 'days') !=0 ){

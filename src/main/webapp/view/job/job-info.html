@@ -458,11 +458,13 @@
 							<div class="row">
 								<label class="col-md-4">Provision Posting</label>
 
-								<div class="col-md-6" >
-									<input type="checkbox" data-ios-toggle="toggle"
-										data-style="ios" data-onstyle="primary"
-										data-offstyle="warning" data-on="Allow Posting"
-										data-off="No Posting" ng-model="job.provision" ng-disabled="!isQsAdmin">
+								<div class="col-md-4" >
+										<select 
+											class="form-control"
+											ng-model="job.provision" 
+											ng-disabled="!isQsAdmin"
+											ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Allow Posting'}, {'key': 'N', 'value':'No Posting'}]">
+										</select>
 								</div>
 
 							</div>
