@@ -1,5 +1,7 @@
 package com.gammon.pcms.config;
 
+import com.gammon.pcms.helper.FileHelper;
+
 import org.apache.log4j.PropertyConfigurator;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +17,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import com.gammon.pcms.helper.FileHelper;
 
 @Configuration
 @EnableWebMvc

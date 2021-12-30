@@ -14,6 +14,16 @@ import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gammon.pcms.config.AdminTestConfig;
+import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.dto.rs.consumer.gsf.GetFunctionSecurity;
+import com.gammon.pcms.helper.RestTemplateHelper;
+import com.gammon.qs.webservice.WSConfig;
+import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,16 +42,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.ws.client.core.WebServiceTemplate;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gammon.pcms.config.AdminTestConfig;
-import com.gammon.pcms.config.WebServiceConfig;
-import com.gammon.pcms.dto.rs.consumer.gsf.GetFunctionSecurity;
-import com.gammon.pcms.helper.RestTemplateHelper;
-import com.gammon.qs.webservice.WSConfig;
-import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
+import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 @RestController
 @RequestMapping(value = "admintest/")
@@ -503,7 +505,13 @@ public class AdminTestController implements InitializingBean{
 				requestString = requestString.replace("'", "\"");
 				Object request = objectMapper.readValue(requestString, Class.forName(details.get("requestClass")));
 				Object response = webServiceTemplate.marshalSendAndReceive(request, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-				String result = "SOAP Test response:" + StringUtils.substring(response.toString(), 0, 255);
+				String result = "SOAP Test response:" + StringUtils.substring(response.toString(), 0, 255);WebServiceMessageSender[] wsSenders = webServiceTemplate.getMessageSenders();
+				HttpComponentsMessageSender sender = (HttpComponentsMessageSender) wsSenders[0];
+				logger.info(
+					webServiceTemplate.getDefaultUri() + 
+					" ReadTimeout:" + org.apache.http.params.HttpConnectionParams.getSoTimeout(sender.getHttpClient().getParams()) + 
+					" ConnectionTimeout:" + org.apache.http.params.HttpConnectionParams.getConnectionTimeout(sender.getHttpClient().getParams())
+				);
 				logger.info(result);
 				testResult.setResult(result);
 				testResult.setStatus(true);

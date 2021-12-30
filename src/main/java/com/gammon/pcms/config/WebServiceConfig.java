@@ -8,6 +8,13 @@ import java.util.Properties;
 
 import javax.security.auth.callback.CallbackHandler;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gammon.qs.webservice.WSConfig;
+
 import org.apache.ws.security.WSConstants;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +31,6 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.gammon.qs.webservice.WSConfig;
 //@EnableWs
 @Configuration
 @ComponentScan(basePackages = {"com.gammon.qs.webservice"})
@@ -71,6 +71,12 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
 	public static final String GSF_GETJOBSECURITY = "GetJobSecurity";
 	public static final String GSF_GETUSERLISTWITHSTAFFID = "GetUserListWithStaffID";
+	
+	@Value("${ws.ReadTimeout:60000}")
+	private int wsReadTimeout;
+
+	@Value("${ws.ConnectionTimeout:60000}")
+	private int wsConnectionTimeout;
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
@@ -295,5 +301,13 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 
 	public void setExcludeInternalTradeRoutes(List<String> excludeInternalTradeRoutes) {
 		this.excludeInternalTradeRoutes = excludeInternalTradeRoutes;
+	}
+
+	public int getWsReadTimeout() {
+		return this.wsReadTimeout;
+	}
+	
+	public int getWsConnectionTimeout(){
+		return this.wsConnectionTimeout;
 	}
 }

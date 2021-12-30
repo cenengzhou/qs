@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,11 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 @Configuration
-public class ServletConfig extends WebMvcConfigurerAdapter {
+public class ServletConfig extends WebMvcConfigurerAdapter implements InitializingBean {
 
 	@Autowired
 	@Qualifier("SessionInterceptor")
@@ -31,6 +34,9 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private HttpServletRequest servletRequest;
+	
+	@Autowired
+	private List<WebServiceTemplate> webServiceTemplateList;
 	
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -93,10 +99,20 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 		return bean;
 	}
 	
-	public String getBaseUrl(){
+	public String getBaseUrl() {
 		String hostname = servletRequest.getServerName();
 		int port = servletRequest.getServerPort();
 		String contextPath = servletRequest.getContextPath();
 		return "http://" + hostname + ":" + port + "/" + (contextPath.isEmpty() ? "" : contextPath + "/");
+	}
+	
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		HttpComponentsMessageSender messageSender =  new HttpComponentsMessageSender();
+		messageSender.setReadTimeout(webServiceConfig.getWsReadTimeout());
+		messageSender.setConnectionTimeout(webServiceConfig.getWsConnectionTimeout());
+		webServiceTemplateList.forEach(t -> {
+			t.setMessageSender(messageSender);
+		});
 	}
 }

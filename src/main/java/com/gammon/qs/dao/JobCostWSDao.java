@@ -7,14 +7,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.ws.transport.http.HttpComponentsMessageSender;
-
 import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListRequestObj;
 import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListResponseObj;
 import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeRequestObj;
@@ -52,6 +44,13 @@ import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
 import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
 import com.gammon.qs.wrapper.monthEndResult.AccountLedgerWrapper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 @Repository
 public class JobCostWSDao {
 
@@ -98,10 +97,10 @@ public class JobCostWSDao {
 
 			logger.info("call WS(getAccountIDListByJobWebServiceTemplate): Request Object -"+
 						" JobNumber: "+requestObj.getJobNumber());
-			HttpComponentsMessageSender messageSender =  new HttpComponentsMessageSender();
-			messageSender.setReadTimeout(60000);
-			messageSender.setConnectionTimeout(60000);
-			getAccountIDListByJobWebServiceTemplate.setMessageSender(messageSender);
+			// HttpComponentsMessageSender messageSender =  new HttpComponentsMessageSender();
+			// messageSender.setReadTimeout(60000);
+			// messageSender.setConnectionTimeout(60000);
+			// getAccountIDListByJobWebServiceTemplate.setMessageSender(messageSender);
 			GetAccountIDListByJobResponseListObj responseListObj = (GetAccountIDListByJobResponseListObj) getAccountIDListByJobWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 	
 			JobInfo job = new JobInfo();

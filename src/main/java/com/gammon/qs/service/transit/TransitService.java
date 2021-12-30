@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -220,11 +222,34 @@ public class TransitService implements Serializable {
 		}
 	}
 	
-	private void logInfoSkipLine(int currentLine, String message){
+	private void logInfoSkipLine(int currentLine, String message) {
 		int skipAmount = 1000;
-		if(currentLine % skipAmount == 0){
+		if (currentLine % skipAmount == 0) {
 			logger.info(message + currentLine);
 		}
+	}
+
+	public String transitHeaderValidateAndLock(Transit header) {
+		String errorMessage = "";
+		if(header == null){
+			errorMessage = "Please create a header before importing items";
+		}
+		else if (Transit.TRANSIT_COMPLETED.equals(header.getStatus())) {
+			errorMessage = "Transit for this job has already been completed";
+		}
+		
+		if (BasePersistedAuditObject.LOCKED.equals(header.getSystemStatus())) {
+			errorMessage = "Transit is locked, please reload and try import again later";
+		} else {
+			try {
+				transitHeaderDao.lock(header);
+			} catch (IllegalAccessException e) {
+				logger.error("Exception:", e);
+				errorMessage = e.getMessage();
+			}
+		}
+		logger.info("transitHeaderValidateAndLock " + header.getJobNumber() + ":" + errorMessage);
+		return errorMessage;
 	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
@@ -235,21 +260,13 @@ public class TransitService implements Serializable {
 		warningList = new ArrayList<String>();
 		
 		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(header == null){
-			response.setMessage("Please create a header before importing items");
+		String validateError = transitHeaderValidateAndLock(header);
+		if (StringUtils.isNotBlank(validateError)) {
+			errorList.add(validateError);
+			response.setMessage(validateError);
 			return response;
 		}
-		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
-			response.setMessage("Transit for this job has already been completed");
-			return response;
-		}
-		try {
-			transitHeaderDao.lock(header);
-		}catch(IllegalAccessException e) {
-			e.printStackTrace();
-			response.setMessage(e.getMessage());
-			return response;
-		}
+		
 		transitResourceDao.deleteResourcesByHeader(header);
 		transitBqDao.deleteTransitBqItemsByHeader(header);
 		
@@ -481,17 +498,12 @@ public class TransitService implements Serializable {
 		TransitImportResponse response = new TransitImportResponse();
 		
 		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
-			response.setMessage("Transit for this job has already been completed");
+		String validateError = transitHeaderValidateAndLock(header);
+		if (StringUtils.isNotBlank(validateError)) {
+			response.setMessage(validateError);
 			return response;
 		}
-		try {
-			transitHeaderDao.lock(header);
-		}catch(IllegalAccessException e) {
-			e.printStackTrace();
-			response.setMessage(e.getMessage());
-			return response;
-		}
+
 		errorList = new ArrayList<String>();
 		// added by brian on 20110225
 		warningList = new ArrayList<String>();
@@ -835,7 +847,7 @@ public class TransitService implements Serializable {
 		for(String error : errorList){
 			doc.insertRow(new String[]{error});
 		}
-		errorList = null;
+		errorList = new ArrayList<String>();
 		return excel;
 	}
 	
@@ -851,7 +863,7 @@ public class TransitService implements Serializable {
 		for(String warning : warningList){
 			doc.insertRow(new String[]{warning});
 		}
-		warningList = null;
+		warningList = new ArrayList<String>();
 		return excel;
 	}
 	
