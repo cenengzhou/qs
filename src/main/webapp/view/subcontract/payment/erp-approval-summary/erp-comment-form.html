@@ -1,0 +1,66 @@
+<div id="erp-comment-form" ng-controller="ErpCommentFormCtrl">
+    <div style="font-weight: bold; text-decoration: underline; margin-bottom: 20px">ERP Approval Summary Comments</div>
+    <div style="font-weight: bold; margin-bottom: 20px">These comments are the intended impact based on this approval in isolation & subject to end of the month consolidation</div>
+    <div class="row">
+        <div class="col-md-4">
+            <b>Summary</b>
+        </div>
+        <div class="col-md-8 form-group">
+            <textarea class="form-control" ng-disabled="tabDisableButtons"
+                      style="overflow: hidden; box-sizing: border-box;height:auto;"
+                      ng-model="summary.summary"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <b>EOJ Position</b>
+        </div>
+        <div class="col-md-8 form-group">
+            <textarea class="form-control" ng-disabled="tabDisableButtons"
+                      style="overflow: hidden; box-sizing: border-box;height:auto;"
+                      ng-model="summary.eoj"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <b>Contingencies</b>
+        </div>
+        <div class="col-md-8 form-group">
+            <textarea class="form-control" ng-disabled="tabDisableButtons"
+                      style="overflow: hidden; box-sizing: border-box;height:auto;"
+                      ng-model="summary.contingencies"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <b>Risk and Opps</b>
+        </div>
+        <div class="col-md-8 form-group">
+            <textarea class="form-control" ng-disabled="tabDisableButtons"
+                      style="overflow: hidden; box-sizing: border-box;height:auto;"
+                      ng-model="summary.riskOpps"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <b>Others</b>
+        </div>
+        <div class="col-md-8 form-group">
+            <textarea class="form-control" ng-disabled="tabDisableButtons"
+                      style="overflow: hidden; box-sizing: border-box;height:auto;"
+                      ng-model="summary.others"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <a class="btn btn-primary btn-block" ng-click="update()" ng-hide="tabDisableButtons">Update
+            <i class="fa fa-floppy-o"></i>
+        </a>
+    </div>
+
+
+
+</div>

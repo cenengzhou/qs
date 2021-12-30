@@ -79,7 +79,19 @@ public class PaymentCertViewWrapper implements Serializable{
 
 	private String companyBaseCurrency;
 	private Double exchangeRate;
-	
+
+	private Double previousCertGrossValue;
+	private Double previousCertContraCharge;
+	private Double previousCertNetValue;
+
+	private Double savingGrossValue;
+	private Double savingContraCharge;
+	private Double savingNetValue;
+
+	private Double amtToPayGrossValue;
+	private Double amtToPayContraCharge;
+	private Double amtToPayNetValue;
+
 	public PaymentCertViewWrapper(){
 		paymentCertNo = new Integer (0);
 		mainCertNo = new Integer (0);
@@ -616,4 +628,77 @@ public class PaymentCertViewWrapper implements Serializable{
 	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
+
+	public Double getPreviousCertGrossValue() {
+		return previousCertGrossValue;
+	}
+
+	public void setPreviousCertGrossValue(Double previousCertGrossValue) {
+		this.previousCertGrossValue = previousCertGrossValue;
+	}
+
+	public Double getPreviousCertContraCharge() {
+		return previousCertContraCharge;
+	}
+
+	public void setPreviousCertContraCharge(Double previousCertContraCharge) {
+		this.previousCertContraCharge = previousCertContraCharge;
+	}
+
+	public Double getPreviousCertNetValue() {
+		return previousCertNetValue;
+	}
+
+	public void setPreviousCertNetValue(Double previousCertNetValue) {
+		this.previousCertNetValue = previousCertNetValue;
+	}
+
+	public Double getSavingGrossValue() {
+		return savingGrossValue;
+	}
+
+	public void setSavingGrossValue(Double savingGrossValue) {
+		this.savingGrossValue = savingGrossValue;
+	}
+
+	public Double getSavingContraCharge() {
+		return savingContraCharge;
+	}
+
+	public void setSavingContraCharge(Double savingContraCharge) {
+		this.savingContraCharge = savingContraCharge;
+	}
+
+	public Double getSavingNetValue() {
+		return savingNetValue;
+	}
+
+	public void setSavingNetValue(Double savingNetValue) {
+		this.savingNetValue = savingNetValue;
+	}
+
+	public Double getAmtToPayGrossValue() {
+		return amtToPayGrossValue;
+	}
+
+	public void setAmtToPayGrossValue(Double amtToPayGrossValue) {
+		this.amtToPayGrossValue = amtToPayGrossValue;
+	}
+
+	public Double getAmtToPayContraCharge() {
+		return amtToPayContraCharge;
+	}
+
+	public void setAmtToPayContraCharge(Double amtToPayContraCharge) {
+		this.amtToPayContraCharge = amtToPayContraCharge;
+	}
+
+	public Double getAmtToPayNetValue() {
+		return amtToPayNetValue;
+	}
+
+	public void setAmtToPayNetValue(Double amtToPayNetValue) {
+		this.amtToPayNetValue = amtToPayNetValue;
+	}
+
 }

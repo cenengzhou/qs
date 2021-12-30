@@ -1,0 +1,75 @@
+<div id="subcontract-final-form" ng-controller="SubcontractFinalFormCtrl">
+   <div style="font-weight: bold; text-decoration: underline; margin-bottom: 20px">Subcontract Final Account</div>
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="col-md-12">&nbsp;</label>
+                </div>
+                <div class="col-md-4">
+                    <label class="col-md-12">Gross Value</label>
+                </div>
+                <div class="col-md-4">
+                    <label class="col-md-12">Contra Charges</label>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="col-md-12">A) Subcontract Final Account Application</label>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" ng-disabled="tabDisableButtons"
+                               ng-model="payment.finalAccountAppAmt" ng-currency>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" ng-disabled="tabDisableButtons"
+                               ng-model="payment.finalAccountAppCCAmt" ng-currency>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="col-md-12">B) Latest Budget (FCST)</label>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" ng-disabled="tabDisableButtons"
+                               ng-model="payment.latestBudgetAmt" ng-currency>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" ng-disabled="tabDisableButtons"
+                               ng-model="payment.latestBudgetAmtCC" ng-currency>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="col-md-12">Final Account Comments</label>
+
+                </div>
+                <div class="form-group input-group col-md-8">
+                    <textarea class="form-control" ng-disabled="tabDisableButtons"
+                              style="overflow: hidden; box-sizing: border-box;height:auto;"
+                              ng-model="payment.commentsFinalAccount"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-footer">
+            <a class="btn btn-primary btn-block" ng-click="update()" ng-hide="tabDisableButtons">Update
+                <i class="fa fa-floppy-o"></i>
+            </a>
+        </div>
+    </div>
+    <div>
+
+    </div>
+</div>

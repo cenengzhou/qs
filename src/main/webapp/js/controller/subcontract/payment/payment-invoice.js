@@ -85,10 +85,10 @@ mainApp.controller('PaymentInvoiceCtrl',
 					$scope.paymentCertSummary = data;
 				});
 		
-		/*htmlService.makeHTMLStringForSCPaymentCert({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, paymentNo: $cookies.get('paymentCertNo'), htmlVersion: 'W'})
-		.then(function(data){
-			$scope.invoiceHtml = GlobalHelper.formTemplate(data);
-		});*/
+		// htmlService.makeHTMLStringForSCPaymentCert({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, paymentNo: $cookies.get('paymentCertNo'), htmlVersion: 'W'})
+		// .then(function(data){
+		// 	$scope.invoiceHtml = GlobalHelper.formTemplate(data);
+		// });
 	}
 	
 	function submitPayment() {

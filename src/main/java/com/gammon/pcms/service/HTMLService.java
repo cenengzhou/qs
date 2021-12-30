@@ -12,8 +12,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.ApprovalSummary;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.qs.service.AddendumService;
+import com.gammon.qs.service.ApprovalSummaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +148,8 @@ public class HTMLService implements Serializable{
 	private AddendumService addendumService;
 	@Autowired
 	private MainCertService mainCertService;
+	@Autowired
+	private ApprovalSummaryService approvalSummaryService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -255,10 +259,18 @@ public class HTMLService implements Serializable{
 			strPaymentStatus = "Posted To Finance";
 			break;
 		}
+		ApprovalSummary approvalSummary = null;
+		if (paymentCert != null || paymentCert.getId() != null) {
+			approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.PaymentCertNameObject, String.valueOf(paymentCert.getId()));
+
+		}
+
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("payment");
 		data.put("template", template);
+		data.put("paymentType", paymentCert.getIntermFinalPayment());
+		data.put("approvalSummary", approvalSummary);
 		data.put("logo", freemarkerConfig.getPaths("logo"));
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
@@ -275,9 +287,8 @@ public class HTMLService implements Serializable{
 		data.put("currentPaymentNo", currentPaymentNo);
 		data.put("maxRetentionAmount", maxRetentionAmount);
 		
-		
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
-			
+
 		return strHTMLCodingContent;
 	}
 	

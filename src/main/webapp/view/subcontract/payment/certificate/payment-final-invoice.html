@@ -1,0 +1,307 @@
+<script>
+    window.PrintElem = function(elem)
+    {
+        var hideElements = document.querySelectorAll(".invoice");
+        for (var i=0; i < hideElements.length; i++) {
+            hideElements[i].style.display = "none";
+        }
+        var printElement = document.getElementById(elem);
+        printElement.style.display = "block";
+
+        window.print();
+
+        for (var i=0; i < hideElements.length; i++) {
+            hideElements[i].style.display = "block";
+        }
+
+        return true;
+    }
+</script>
+
+<style>
+    #final-invoice .signature-underline {
+        border-bottom: 1px solid black !important;
+        vertical-align: bottom;
+    }
+</style>
+
+<div class="invoice" id="final-invoice">
+    <div class="invoice-logo m-l-5 pull-right">
+        <div class="table-border">
+            <h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
+        </div>
+        <h5>PDS/08/Form 3a</h5>
+        <span class="pull-right hidden-print"> <a href="javascript:;"
+                                                  onclick="window.PrintElem('final-invoice')" id="printBtn"
+                                                  class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+				<i class="fa fa-print m-r-3"></i> Print
+		</a>
+		</span>
+    </div>
+
+    <div class="invoice-logo m-l-5">
+        <div>
+            <img src="image/gammon.bmp" class="logo" style="width: 128px" />
+            <h5>{{paymentCertSummary.companyName}}</h5>
+        </div>
+    </div>
+
+
+    <h5 class="invoice-title" align="center">APPROVAL FOR AGREEMENT OF SUB-CONTRACT FINAL ACCOUNT</h5>
+
+
+    <div class="invoice-header">
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td><b>Project No:</b></td>
+                <td colspan="3">{{paymentCertSummary.jobNumber}}</td>
+            </tr>
+            <tr>
+                <td><b>Project Name:</b></td>
+                <td colspan="3">{{paymentCertSummary.jobDescription}}</td>
+            </tr>
+            <tr>
+                <td><b>Draft Final Account For:</b></td>
+                <td colspan="3">{{paymentCertSummary.subcontractorNo}} - {{paymentCertSummary.subcontractorDescription}}</td>
+            </tr>
+            <tr>
+                <td><b>Sub-Contract No:</b></td>
+                <td>{{paymentCertSummary.subContractNo}}</td>
+                <td><b>Original Sub-Contract Sum (HK$):</b></td>
+                <td class="text-right">{{subcontract.originalSubcontractSum | currency}}</td>
+            </tr>
+            <tr>
+                <td><b>Trade:</b></td>
+                <td colspan="3">{{paymentCertSummary.subContractDescription}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-body">
+        <div style="border: 1px solid black">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Gross Value</b>
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Contra Charges</b>
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Net Value</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>A) Sub-Contract Final Account Application</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.finalAccountAppAmt != null">{{payment.finalAccountAppAmt | currency}}</span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.finalAccountAppCCAmt != null">{{-payment.finalAccountAppCCAmt | currency}}</span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.finalAccountAppAmt != null && payment.finalAccountAppCCAmt != null">
+                            {{payment.finalAccountAppAmt - payment.finalAccountAppCCAmt | currency}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>B) Latest budget (FCST)</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.latestBudgetAmt != null">{{payment.latestBudgetAmt | currency}}</span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.latestBudgetAmtCC != null">{{-payment.latestBudgetAmtCC | currency}}</span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="payment.latestBudgetAmt != null && payment.latestBudgetAmtCC != null">
+                            {{payment.latestBudgetAmt - payment.latestBudgetAmtCC | currency}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>C) This Final Account</b>
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.subTotal4 | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ -paymentCertSummary.lessContraChargesTotal | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.subTotal5 | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>B-C) Saving/ Increase * EoJ FC</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="paymentCertSummary.savingGrossValue != null">
+                            {{ paymentCertSummary.savingGrossValue | currency}}
+                        </span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="paymentCertSummary.savingContraCharge != null">
+                            {{ -paymentCertSummary.savingContraCharge | currency}}
+                        </span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="paymentCertSummary.savingNetValue != null">
+                            {{ paymentCertSummary.savingNetValue | currency}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>D) Last Certificate</b>
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.previousCertGrossValue | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ -paymentCertSummary.previousCertContraCharge | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.previousCertNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>C-D) Amount still to pay</b>
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.amtToPayGrossValue | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ -paymentCertSummary.amtToPayContraCharge | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ paymentCertSummary.amtToPayNetValue | currency}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="border-left: 1px solid black; border-right: 1px solid black; padding: 0 20px">
+            <div><b>Comments (e.g. reason for increase):</b></div>
+            <div>{{payment.commentsFinalAccount}}</div>
+
+        </div>
+        <div style="border: 1px solid black; padding: 0 20px">
+            <div>
+                <i>“Latest interim certificate and draft Form 3b (Statement of Final Account) to be attached”</i>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="invoice-footer">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td colspan="4" style="font-weight: bold; text-decoration: underline">Prepared by</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>AQS/ QS/ PQS/ SPQS</b></td>
+                <td class="signature-underline">{{payment.lastModifiedUser}}</td>
+                <td style="width: 10%"><b>Date</b></td>
+                <td class="signature-underline">{{payment.lastModifiedDate | date: 'MMM d, yyyy'}}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="font-weight: bold; text-decoration: underline">Approved by</td>
+            </tr>
+            <tr>
+                <td><b>Senior Quantity Surveyor</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Managing Quantity Surveyor/ Commercial Team Leader</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Project Leader</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4"><i>Other approvals via ERP Approval System as per Delegated Levels of Authority (DLOA)
+                    and Project Delivery System (PDS) **</i></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -906,12 +906,33 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                          'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
                          'js/service/attachment-service.js?@PROJECT_VERSION@',
                          'js/service/main-cert-service.js?@PROJECT_VERSION@',
-                         ] 
+                         ]
                 });
             }]
         },
 		controller: 'AttachmentMainCtrl'
 	})
+
+	.state('subcontract.payment.erp-approval-summary', {
+		url: "/erp-approval-summary",
+		templateUrl: "view/subcontract/payment/payment-erp-tab.html?@PROJECT_VERSION@",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/subcontract/erp-approval-summary/payment-erp-tab.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/erp-approval-summary/subcontract-final-form.js?@PROJECT_VERSION@',
+						'js/service/html-service.js?@PROJECT_VERSION@',
+						'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		},
+		controller: 'ErpApprovalTabCtrl',
+	})
+
 	.state('subcontract.payment.invoice', {
 		url: "/invoice",
 		templateUrl: "view/subcontract/payment/payment-invoice.html?@PROJECT_VERSION@",
@@ -921,8 +942,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/payment/payment-invoice.js?@PROJECT_VERSION@',
-                           'js/service/html-service.js?@PROJECT_VERSION@'
-                    ] 
+					       'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+                           'js/service/html-service.js?@PROJECT_VERSION@',
+                           'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+                    ]
                 });
             }]
         },

@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.hr.HrUser;
+import com.gammon.pcms.service.HrService;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,6 @@ import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
@@ -1042,10 +1043,49 @@ public class PaymentService{
 		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
 
 		// BEGIN: Get the Payment Cert additional information
-		PaymentCert scpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
-				
+		Integer paymentCertNoInt = new Integer(paymentCertNo);
+		PaymentCert scpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt);
+
 		// Get the Basic Payment Cert information
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, scpaymentCert);
+
+		paymentCertViewWrapper.setPreviousCertGrossValue(Double.valueOf(0));
+		paymentCertViewWrapper.setPreviousCertContraCharge(Double.valueOf(0));
+		paymentCertViewWrapper.setPreviousCertNetValue(Double.valueOf(0));
+
+		if (scpaymentCert.getIntermFinalPayment().equals("F")
+					&& paymentCertNoInt > 1) {
+			PaymentCert prevScpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt-1);
+
+			PaymentCertViewWrapper prevPaymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, prevScpaymentCert);
+
+			// prepare gross value, contra charge and net value
+			Double bGrossValue = scpaymentCert.getLatestBudgetAmt() == null ? null : scpaymentCert.getLatestBudgetAmt().doubleValue();
+			Double bContraCharge = scpaymentCert.getLatestBudgetAmtCC() == null ? null : scpaymentCert.getLatestBudgetAmtCC().doubleValue();
+			Double bNetValue = scpaymentCert.getLatestBudgetAmt() == null || scpaymentCert.getLatestBudgetAmtCC() == null ? null : bGrossValue - bContraCharge;
+			Double cGrossValue = paymentCertViewWrapper.getSubTotal4();
+			Double cContraCharge = paymentCertViewWrapper.getLessContraChargesTotal();
+			Double cNetValue = paymentCertViewWrapper.getSubTotal5();
+			Double dGrossValue = prevPaymentCertViewWrapper.getSubTotal4();
+			Double dContraCharge = prevPaymentCertViewWrapper.getLessContraChargesTotal();
+			Double dNetValue = prevPaymentCertViewWrapper.getSubTotal5();
+
+			// final payment summary
+			if (bGrossValue != null && cGrossValue != null)
+				paymentCertViewWrapper.setSavingGrossValue(bGrossValue - cGrossValue);
+			if (bContraCharge != null && cContraCharge != null)
+				paymentCertViewWrapper.setSavingContraCharge(bContraCharge - cContraCharge);
+			if (bNetValue != null && cNetValue != null)
+				paymentCertViewWrapper.setSavingNetValue(bNetValue - cNetValue);
+
+			paymentCertViewWrapper.setPreviousCertGrossValue(dGrossValue);
+			paymentCertViewWrapper.setPreviousCertContraCharge(dContraCharge);
+			paymentCertViewWrapper.setPreviousCertNetValue(dNetValue);
+
+			paymentCertViewWrapper.setAmtToPayGrossValue(cGrossValue-dGrossValue);
+			paymentCertViewWrapper.setAmtToPayContraCharge(cContraCharge-dContraCharge);
+			paymentCertViewWrapper.setAmtToPayNetValue(cNetValue-dNetValue);
+		}
 
 		Subcontract scPackage = scpaymentCert.getSubcontract();
 
@@ -1824,7 +1864,13 @@ public class PaymentService{
 					scPaymentCert.setDueDate(paymentCert.getDueDate());
 				if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
 					scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
-				
+
+				scPaymentCert.setFinalAccountAppAmt(paymentCert.getFinalAccountAppAmt());
+				scPaymentCert.setFinalAccountAppCCAmt(paymentCert.getFinalAccountAppCCAmt());
+				scPaymentCert.setLatestBudgetAmt(paymentCert.getLatestBudgetAmt());
+				scPaymentCert.setLatestBudgetAmtCC(paymentCert.getLatestBudgetAmtCC());
+				scPaymentCert.setCommentsFinalAccount(paymentCert.getCommentsFinalAccount());
+
 				//update bypassPaymentTerms
 				scPaymentCert.setBypassPaymentTerms(paymentCert.getBypassPaymentTerms());
 				

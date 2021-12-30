@@ -1,0 +1,33 @@
+<div class="invoice" ng-controller="ErpCommentFormCtrl">
+    <div>
+        <div style="font-weight: bold; text-decoration: underline; margin-bottom: 15px">ERP Approval Summary</div>
+        <div>
+            <div>These comments are the intended impact based on this approval in isolation & subject to end of the month consolidation</div>
+            <br>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td style="width: 150px"><b>Summary: </b></td>
+                    <td style="white-space: pre-wrap;">{{summary.summary}}</td>
+                </tr>
+                <tr>
+                    <td><b>Position: </b></td>
+                    <td style="white-space: pre-wrap;">{{summary.eoj}}</td>
+                </tr>
+                <tr>
+                    <td><b>Contingencies: </b></td>
+                    <td style="white-space: pre-wrap;">{{summary.contingencies}}</td>
+                </tr>
+                <tr>
+                    <td><b>Risk and Opps: </b></td>
+                    <td style="white-space: pre-wrap;">{{summary.riskOpps}}</td>
+                </tr>
+                <tr>
+                    <td><b>Others: </b></td>
+                    <td style="white-space: pre-wrap;">{{summary.others}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
