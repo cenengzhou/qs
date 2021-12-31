@@ -754,13 +754,13 @@ a:visited, span.MsoHyperlinkFollowed {
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
 														</td>
 														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppCCAmt??>-${(paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppCCAmt??>${(paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
 														</td>
 														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppAmt?? && paymentCert.finalAccountAppCCAmt??>${(paymentCert.finalAccountAppAmt-paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppAmt?? && paymentCert.finalAccountAppCCAmt??>${(paymentCert.finalAccountAppAmt+paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 													</tr>
 													<tr>
@@ -774,13 +774,13 @@ a:visited, span.MsoHyperlinkFollowed {
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
 														</td>
 														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmtCC??>-${(paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmtCC??>${(paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
 														</td>
 														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmt?? && paymentCert.latestBudgetAmtCC??>${(paymentCert.latestBudgetAmt-paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmt?? && paymentCert.latestBudgetAmtCC??>${(paymentCert.latestBudgetAmt+paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 													</tr>
 													<tr>
@@ -814,7 +814,7 @@ a:visited, span.MsoHyperlinkFollowed {
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
 														</td>
 														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingContraCharge??>${((-paymentCertViewWrapper.savingContraCharge))?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingContraCharge??>${((paymentCertViewWrapper.savingContraCharge))?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
@@ -834,7 +834,7 @@ a:visited, span.MsoHyperlinkFollowed {
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
 														</td>
 														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertContraCharge??>${((-paymentCertViewWrapper.previousCertContraCharge))?string["#,##0.00"]!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertContraCharge??>${((paymentCertViewWrapper.previousCertContraCharge))?string["#,##0.00"]!0}</#if></span></p>
 														</td>
 														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
@@ -854,7 +854,7 @@ a:visited, span.MsoHyperlinkFollowed {
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
 														</td>
 														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayContraCharge??>${((-paymentCertViewWrapper.amtToPayContraCharge)?string["#,##0.00"])!0}</#if></span></p>
+															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayContraCharge??>${((paymentCertViewWrapper.amtToPayContraCharge)?string["#,##0.00"])!0}</#if></span></p>
 														</td>
 														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
 															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>

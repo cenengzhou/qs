@@ -115,14 +115,14 @@
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.finalAccountAppCCAmt != null">{{-payment.finalAccountAppCCAmt | currency}}</span>
+                        <span ng-if="payment.finalAccountAppCCAmt != null">{{payment.finalAccountAppCCAmt | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
                         <span ng-if="payment.finalAccountAppAmt != null && payment.finalAccountAppCCAmt != null">
-                            {{payment.finalAccountAppAmt - payment.finalAccountAppCCAmt | currency}}
+                            {{payment.finalAccountAppAmt + payment.finalAccountAppCCAmt | currency}}
                         </span>
                     </td>
                 </tr>
@@ -137,14 +137,14 @@
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.latestBudgetAmtCC != null">{{-payment.latestBudgetAmtCC | currency}}</span>
+                        <span ng-if="payment.latestBudgetAmtCC != null">{{payment.latestBudgetAmtCC | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
                         <span ng-if="payment.latestBudgetAmt != null && payment.latestBudgetAmtCC != null">
-                            {{payment.latestBudgetAmt - payment.latestBudgetAmtCC | currency}}
+                            {{payment.latestBudgetAmt + payment.latestBudgetAmtCC | currency}}
                         </span>
                     </td>
                 </tr>
@@ -182,7 +182,7 @@
                     </td>
                     <td class="text-right">
                         <span ng-if="paymentCertSummary.savingContraCharge != null">
-                            {{ -paymentCertSummary.savingContraCharge | currency}}
+                            {{ paymentCertSummary.savingContraCharge | currency}}
                         </span>
                     </td>
                     <td>
@@ -205,7 +205,7 @@
                         +
                     </td>
                     <td class="text-right">
-                        {{ -paymentCertSummary.previousCertContraCharge | currency}}
+                        {{ paymentCertSummary.previousCertContraCharge | currency}}
                     </td>
                     <td>
                         =
@@ -225,7 +225,7 @@
                         +
                     </td>
                     <td class="text-right">
-                        {{ -paymentCertSummary.amtToPayContraCharge | currency}}
+                        {{ paymentCertSummary.amtToPayContraCharge | currency}}
                     </td>
                     <td>
                         =
