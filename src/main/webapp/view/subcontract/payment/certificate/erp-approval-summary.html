@@ -1,3 +1,20 @@
+<script>
+    window.PrintElem = function(displayId, hideClass)
+    {
+        var hideElements = document.querySelectorAll(hideClass);
+        for (var i=0; i < hideElements.length; i++) {
+            hideElements[i].style.display = "none";
+        }
+        var printElement = document.getElementById(displayId);
+        printElement.style.display = "block";
+        window.print();
+        for (var i=0; i < hideElements.length; i++) {
+            hideElements[i].style.display = "block";
+        }
+        return true;
+    }
+</script>
+
 <div class="invoice" ng-controller="ErpCommentFormCtrl">
     <div>
         <div style="font-weight: bold; text-decoration: underline; margin-bottom: 15px">ERP Approval Summary</div>
