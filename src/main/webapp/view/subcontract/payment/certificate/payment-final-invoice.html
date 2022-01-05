@@ -95,15 +95,13 @@
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.finalAccountAppCCAmt != null">{{-payment.finalAccountAppCCAmt | currency}}</span>
+                        <span ng-if="payment.finalAccountAppCCAmt != null">{{payment.finalAccountAppCCAmt | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.finalAccountAppAmt != null && payment.finalAccountAppCCAmt != null">
-                            {{payment.finalAccountAppAmt - payment.finalAccountAppCCAmt | currency}}
-                        </span>
+                        {{(payment.finalAccountAppAmt == null ? 0 : payment.finalAccountAppAmt) + (payment.finalAccountAppCCAmt == null ? 0 : payment.finalAccountAppCCAmt) | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -117,15 +115,13 @@
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.latestBudgetAmtCC != null">{{-payment.latestBudgetAmtCC | currency}}</span>
+                        <span ng-if="payment.latestBudgetAmtCC != null">{{payment.latestBudgetAmtCC | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.latestBudgetAmt != null && payment.latestBudgetAmtCC != null">
-                            {{payment.latestBudgetAmt - payment.latestBudgetAmtCC | currency}}
-                        </span>
+                        {{(payment.latestBudgetAmt == null ? 0 : payment.latestBudgetAmt) + (payment.latestBudgetAmtCC == null ? 0 : payment.latestBudgetAmtCC) | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -162,16 +158,14 @@
                     </td>
                     <td class="text-right">
                         <span ng-if="paymentCertSummary.savingContraCharge != null">
-                            {{ -paymentCertSummary.savingContraCharge | currency}}
+                            {{ paymentCertSummary.savingContraCharge | currency}}
                         </span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        <span ng-if="paymentCertSummary.savingNetValue != null">
-                            {{ paymentCertSummary.savingNetValue | currency}}
-                        </span>
+                        {{ paymentCertSummary.savingNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -185,7 +179,7 @@
                         +
                     </td>
                     <td class="text-right">
-                        {{ -paymentCertSummary.previousCertContraCharge | currency}}
+                        {{ paymentCertSummary.previousCertContraCharge | currency}}
                     </td>
                     <td>
                         =
@@ -205,7 +199,7 @@
                         +
                     </td>
                     <td class="text-right">
-                        {{ -paymentCertSummary.amtToPayContraCharge | currency}}
+                        {{ paymentCertSummary.amtToPayContraCharge | currency}}
                     </td>
                     <td>
                         =

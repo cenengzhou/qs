@@ -1060,14 +1060,14 @@ public class PaymentService{
 			PaymentCertViewWrapper prevPaymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, prevScpaymentCert);
 
 			// prepare gross value, contra charge and net value
-			Double bGrossValue = scpaymentCert.getLatestBudgetAmt() == null ? null : scpaymentCert.getLatestBudgetAmt().doubleValue();
-			Double bContraCharge = scpaymentCert.getLatestBudgetAmtCC() == null ? null : scpaymentCert.getLatestBudgetAmtCC().doubleValue();
-			Double bNetValue = scpaymentCert.getLatestBudgetAmt() == null || scpaymentCert.getLatestBudgetAmtCC() == null ? null : bGrossValue - bContraCharge;
+			Double bGrossValue = scpaymentCert.getLatestBudgetAmt() == null ? 0 : scpaymentCert.getLatestBudgetAmt().doubleValue();
+			Double bContraCharge = scpaymentCert.getLatestBudgetAmtCC() == null ? 0 : scpaymentCert.getLatestBudgetAmtCC().doubleValue();
+			Double bNetValue = bGrossValue + bContraCharge;
 			Double cGrossValue = paymentCertViewWrapper.getSubTotal4();
-			Double cContraCharge = paymentCertViewWrapper.getLessContraChargesTotal();
+			Double cContraCharge = -paymentCertViewWrapper.getLessContraChargesTotal();
 			Double cNetValue = paymentCertViewWrapper.getSubTotal5();
 			Double dGrossValue = prevPaymentCertViewWrapper.getSubTotal4();
-			Double dContraCharge = prevPaymentCertViewWrapper.getLessContraChargesTotal();
+			Double dContraCharge = -prevPaymentCertViewWrapper.getLessContraChargesTotal();
 			Double dNetValue = prevPaymentCertViewWrapper.getSubTotal5();
 
 			// final payment summary
