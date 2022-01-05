@@ -193,7 +193,7 @@ public class TransitController {
 		}
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsImsAdmin(), @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "unlockTransitAdmin", method = RequestMethod.POST)
 	public void unlockTransitAdmin(@RequestParam(required = true) String jobNumber) throws Exception {
 		String result = jobInfoService.canAdminJob(jobNumber);

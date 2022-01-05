@@ -21,9 +21,9 @@
 					<li role="presentation" ng-class="{active:isSelected('AddendumDetail')} "><a href ui-sref="admin.Revisions.AddendumDetail({activeTab:'AddendumDetail'})" ng-click="selectTab('AddendumDetail')">Addendum Detail</a></li>
 					<li role="presentation" ng-class="{active:isSelected('MainCert')}"><a href ui-sref="admin.Revisions.MainCert({activeTab:'MainCert'})" ng-click="selectTab('MainCert')">Main Certificate</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Repackaging')}"><a href ui-sref="admin.Revisions.Repackaging({activeTab:'Repackaging'})" ng-click="selectTab('Repackaging')">Repackaging</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Approval')}"><a href ui-sref="admin.Revisions.Approval({activeTab:'Approval'})" ng-click="selectTab('Approval')">Approval</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Approval')}" ng-if="showIMSEnquiry || showIMSAdmin"><a href ui-sref="admin.Revisions.Approval({activeTab:'Approval'})" ng-click="selectTab('Approval')">Approval</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Attachment')}"><a href ui-sref="admin.Revisions.Attachment({activeTab:'Attachment'})" ng-click="selectTab('Attachment')">Attachment</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Transit')}"><a href ui-sref="admin.Revisions.Transit({activeTab:'Transit'})" ng-click="selectTab('Transit')">Transit</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Transit')}" ng-if="showIMSEnquiry || showIMSAdmin"><a href ui-sref="admin.Revisions.Transit({activeTab:'Transit'})" ng-click="selectTab('Transit')">Transit</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Tender')}"><a href ui-sref="admin.Revisions.Tender({activeTab:'Tender'})" ng-click="selectTab('Tender')">Tender</a></li>
 					<li role="presentation" ng-class="{active:isSelected('TenderDetail')}"><a href ui-sref="admin.Revisions.TenderDetail({activeTab:'TenderDetail'})" ng-click="selectTab('TenderDetail')">Tender Detail</a></li>
 					<li role="presentation" ng-class="{active:isSelected('MonthlyMovement')}"><a href ui-sref="admin.Revisions.MonthlyMovement({activeTab:'MonthlyMovement'})" ng-click="selectTab('MonthlyMovement')">Monthly Movement</a></li>

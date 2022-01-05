@@ -55,6 +55,7 @@ import com.gammon.qs.service.admin.MailContentGenerator;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -131,6 +132,7 @@ public class APController {
 		return responseObj;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(path = {"service/ap/completeAwardApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}"},  method = RequestMethod.GET)
 	public CompleteAwardApprovalResponse completeAwardApprovalAdmin(	HttpServletRequest request,
 										@PathVariable String jobNumber,
@@ -188,6 +190,7 @@ public class APController {
 		return responseObj;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(path = {"service/ap/completeAddendumApprovalAdmin/{jobNumber}/{packageNo}/{user}/{approvalDecision}"}, method = RequestMethod.GET)
 	public CompleteAddendumApprovalResponse completeAddendumApprovalAdmin(HttpServletRequest request,
 																@PathVariable String jobNumber,
@@ -244,7 +247,8 @@ public class APController {
 		return responseObj;
 	}
 
-		@RequestMapping(path = {"service/ap/completeMainCertApprovalAdmin/{jobNumber}/{mainCertNo}/{approvalDecision}"},
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
+	@RequestMapping(path = {"service/ap/completeMainCertApprovalAdmin/{jobNumber}/{mainCertNo}/{approvalDecision}"},
 							method = RequestMethod.GET)
 	public CompleteMainCertApprovalResponse completeMainCertApprovalAdmin(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
@@ -287,16 +291,19 @@ public class APController {
 	public CompletePaymentApprovalResponse completePaymentApproval(	HttpServletRequest request,
 														@PathVariable String jobNumber,
 														@PathVariable String packageNo,
-														@PathVariable String approvalDecision) {
+			@PathVariable String approvalDecision) {
 		CompletePaymentApprovalRequest requestObj = new CompletePaymentApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovalDecision(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		CompletePaymentApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completePaymentApproval", requestObj, CompletePaymentApprovalResponse.class);
+		CompletePaymentApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":"
+				+ request.getServerPort() + request.getContextPath() + "/ws/completePaymentApproval", requestObj,
+				CompletePaymentApprovalResponse.class);
 		return responseObj;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(path = {"service/ap/completePaymentApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}"}, 
 							method = RequestMethod.GET)
 	public CompletePaymentApprovalResponse completePaymentApprovalAdmin(	HttpServletRequest request,
@@ -352,6 +359,7 @@ public class APController {
 		return responseObj;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','invalidateSessionList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(path = {"service/ap/completeSplitTerminateApprovalAdmin/{jobNumber}/{packageNo}/{approvalDecision}/{splitOrTerminate}"},
 							method = RequestMethod.GET)
 	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApprovalAdmin(	HttpServletRequest request,
