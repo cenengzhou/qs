@@ -72,10 +72,10 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	public static final String GSF_GETJOBSECURITY = "GetJobSecurity";
 	public static final String GSF_GETUSERLISTWITHSTAFFID = "GetUserListWithStaffID";
 	
-	@Value("${ws.ReadTimeout:60000}")
+	@Value("${ws.ReadTimeout}")
 	private int wsReadTimeout;
 
-	@Value("${ws.ConnectionTimeout:60000}")
+	@Value("${ws.ConnectionTimeout}")
 	private int wsConnectionTimeout;
 	
 	@Bean
