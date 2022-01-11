@@ -6,6 +6,8 @@ mainApp.controller('PaymentInvoiceCtrl',
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	$scope.disableButtons = true;
 	loadData();
+
+	$scope.customPrint = GlobalHelper.customPrint;
 	
 	$scope.submit =  function(){
 		if($scope.payment.paymentStatus == "PND"){

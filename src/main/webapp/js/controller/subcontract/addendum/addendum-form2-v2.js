@@ -3,6 +3,7 @@ mainApp.controller('AddendumForm2v2Ctrl', ['$scope', 'modalService', 'addendumSe
 
         $scope.addendumNo = $cookies.get('addendumNo');
         var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
+        $scope.customPrint = GlobalHelper.customPrint;
 
         loadData();
 

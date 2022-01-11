@@ -38,6 +38,8 @@ import javax.persistence.Table;
 public class ApprovalSummary extends BasePersistedObject {
 
     public static final String PaymentCertNameObject = "PAYMENT_CERT";
+    public static final String SubcontractNameObject = "SUBCONTRACT";
+    public static final String AddendumNameObject = "ADDENDUM";
 
     private Long id;
     private Long idTable;

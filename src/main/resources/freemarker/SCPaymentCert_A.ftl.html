@@ -585,434 +585,402 @@ a:visited, span.MsoHyperlinkFollowed {
 		<o:p>&nbsp;</o:p>
 	</p>
 
-	<div>
-		<div style="font-weight: bold; text-decoration: underline; margin-bottom: 15px">ERP Approval Summary</div>
-		<div>
-			<div>These comments are the intended impact based on this approval in isolation &amp; subject to end of the month consolidation</div>
-			<br>
-			<table>
-				<tbody>
-				<tr>
-					<td valign="top" style='width: 150px'><b>Summary: </b></td>
-					<td style="white-space: pre-wrap; word-break: break-all;"><#if approvalSummary??>${approvalSummary.summary!""}</#if></td>
-				</tr>
-				<tr>
-					<td valign="top"><b>EOJ Position: </b></td>
-					<td style="white-space: pre-wrap; word-break: break-all;"><#if approvalSummary??>${approvalSummary.eoj!""}</#if></td>
-				</tr>
-				<tr>
-					<td valign="top"><b>Contingencies: </b></td>
-					<td style="white-space: pre-wrap; word-break: break-all;"><#if approvalSummary??>${approvalSummary.contingencies!""}</#if></td>
-				</tr>
-				<tr>
-					<td valign="top"><b>Risk and Opps: </b></td>
-					<td style="white-space: pre-wrap; word-break: break-all;"><#if approvalSummary??>${approvalSummary.riskOpps!""}</#if></td>
-				</tr>
-				<tr>
-					<td valign="top"><b>Others: </b></td>
-					<td style="white-space: pre-wrap; word-break: break-all;"><#if approvalSummary??>${approvalSummary.others!""}</#if></td>
-				</tr>
-				</tbody>
-			</table>
-</div>
-</div>
+	<#if paymentType=='F'>
+	<#include "ErpApprovalSummary.ftl.html">
+	<hr>
 
-<#if paymentType=='F'>
-<hr>
-
-<table style="border: none;width:7.0in;background:white;border-collapse:collapse;">
-	<tbody>
-	<tr>
-		<td style="padding: 0.2in;vertical-align: top;">
-			<table style="border: none;width:580.0pt;border-collapse:collapse;">
-				<tbody>
-				<tr>
-					<td style="width: 580pt;padding: 0in;vertical-align: top;">
-						<table style="border: none;border-collapse:collapse;">
-							<tbody>
-							<tr>
-								<td style="width: 311.3pt;padding: 0in 5.4pt;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:27.0pt;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:20px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'><img width="152" height="41" src="https://www.gammonconstruction.com/images/header-logo.png" alt="https://www.gammonconstruction.com/images/header-logo.png"></span></p>
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:13px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'>Gammon Construction Limited</span></strong></p>
-								</td>
-								<td style="width: 311.35pt;padding: 0in 5.4pt;vertical-align: top;">
-									<div align="right" style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'>
-										<table style="border: none;border-collapse:collapse;">
+	<table style="border: none;width:7.0in;background:white;border-collapse:collapse;">
+		<tbody>
+		<tr>
+			<td style="padding: 0.2in;vertical-align: top;">
+				<table style="border: none;width:580.0pt;border-collapse:collapse;">
+					<tbody>
+					<tr>
+						<td style="width: 580pt;padding: 0in;vertical-align: top;">
+							<table style="border: none;border-collapse:collapse;">
+								<tbody>
+								<tr>
+									<td style="width: 311.3pt;padding: 0in 5.4pt;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:27.0pt;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:20px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'><img width="152" height="41" src="https://www.gammonconstruction.com/images/header-logo.png" alt="https://www.gammonconstruction.com/images/header-logo.png"></span></p>
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:13px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'>Gammon Construction Limited</span></strong></p>
+									</td>
+									<td style="width: 311.35pt;padding: 0in 5.4pt;vertical-align: top;">
+										<div align="right" style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:107%;font-size:15px;font-family:"Calibri",sans-serif;'>
+											<table style="border: none;border-collapse:collapse;">
+												<tbody>
+												<tr>
+													<td style="width: 100.15pt;padding: 0in 5.4pt;height: 36.75pt;vertical-align: top;"><br></td>
+												</tr>
+												<tr>
+													<td style="width: 100.15pt;padding: 0in 5.4pt;height: 21.15pt;vertical-align: top;">
+														<p style='margin-top:0in;margin-right:0in;margin-bottom:        .0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:right;'><span style='font-size:13px;font-family:"Times New Roman",serif;'>PDS/08/Form 3a</span></p>
+													</td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 580pt;padding: 0in;vertical-align: top;">
+							<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:27.0pt;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><u><span style='font-size:15px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'>APPROVAL FOR AGREEMENT OF SUB-CONTRACT FINAL ACCOUNT</span></u></strong></p>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 580pt;padding: 0in;vertical-align: top;"><br></td>
+					</tr>
+					<tr>
+						<td style="width: 580pt;padding: 0in;vertical-align: top;">
+							<table style="border: none;width:580.4pt;border-collapse:collapse;">
+								<tbody>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;height: 2.9pt;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project No:</span></strong></p>
+									</td>
+									<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;height: 2.9pt;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.jobNumber!""}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project Name:</span></strong></p>
+									</td>
+									<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.jobDescription!""}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Draft Final Account For:</span></strong></p>
+									</td>
+									<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subcontractorNo!""} - ${paymentCertViewWrapper.subcontractorDescription!""}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:30.0pt;margin-bottom:      7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Sub-Contract No:</span></strong></p>
+									</td>
+									<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subContractNo!""}</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Original Sub-Contract Sum (HK$):&nbsp;</span></strong></p>
+									</td>
+									<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${scPackage.originalSubcontractSum?string["#,##0.00"]!0}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Trade:</span></strong></p>
+									</td>
+									<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subContractDescription!""}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4" style="width: 580.4pt;padding: 1.45pt 0.2in 0in;height: 26.85pt;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+										<table style="border-collapse:collapse;border:none;">
 											<tbody>
 											<tr>
-												<td style="width: 100.15pt;padding: 0in 5.4pt;height: 36.75pt;vertical-align: top;"><br></td>
+												<td style="width: 551.1pt;border: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+													<table style="border-collapse:collapse;border:none;">
+														<tbody>
+														<tr>
+															<td style="width: 141.15pt;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Gross Value</span></strong></p>
+															</td>
+															<td style="width: 29.95pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
+															</td>
+															<td style="width: 123.05pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Contra Charges</span></strong></p>
+															</td>
+															<td style="width: 0.5in;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
+															</td>
+															<td style="width: 110.9pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Net Value</span></strong></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>A) Sub-Contract Final Account Application</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppAmt??>${paymentCert.finalAccountAppAmt?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppCCAmt??>${(paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCert.finalAccountAppAmt!0+paymentCert.finalAccountAppCCAmt!0)?string["#,##0.00"]!0}</span></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>B) Latest budget (FCST)</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmt??>${paymentCert.latestBudgetAmt?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmtCC??>${(paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCert.latestBudgetAmt!0+paymentCert.latestBudgetAmtCC!0)?string["#,##0.00"]!0}</span></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>C) This Final Account</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.subTotal4?string["#,##0.00"])!0}</span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>-${(paymentCertViewWrapper.lessContraChargesTotal)?string["#,##0.00"]!0}</span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.subTotal5?string["#,##0.00"])!0}</span></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>B-C) Saving/ Increase * EoJ FC</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingGrossValue??>${(paymentCertViewWrapper.savingGrossValue?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingContraCharge??>${((paymentCertViewWrapper.savingContraCharge))?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.savingNetValue?string["#,##0.00"])!0}</span></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>D) Last Certificate</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertGrossValue??>${(paymentCertViewWrapper.previousCertGrossValue?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertContraCharge??>${((paymentCertViewWrapper.previousCertContraCharge))?string["#,##0.00"]!0}</#if></span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertNetValue??>${(paymentCertViewWrapper.previousCertNetValue?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>C-D) Amount still to pay</span></strong></p>
+															</td>
+															<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayGrossValue??>${(paymentCertViewWrapper.amtToPayGrossValue?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+															<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
+															</td>
+															<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayContraCharge??>${((paymentCertViewWrapper.amtToPayContraCharge)?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+															<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
+															</td>
+															<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
+																<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayNetValue??>${(paymentCertViewWrapper.amtToPayNetValue?string["#,##0.00"])!0}</#if></span></p>
+															</td>
+														</tr>
+														</tbody>
+													</table>
+												</td>
 											</tr>
 											<tr>
-												<td style="width: 100.15pt;padding: 0in 5.4pt;height: 21.15pt;vertical-align: top;">
-													<p style='margin-top:0in;margin-right:0in;margin-bottom:        .0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:right;'><span style='font-size:13px;font-family:"Times New Roman",serif;'>PDS/08/Form 3a</span></p>
+												<td style="width: 551.1pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+													<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Comments (e.g. reason for increase):</span></strong></p>
+													<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.commentsFinalAccount!""}</span></p>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 551.1pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+													<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><em><span style='font-size:12px;font-family:"Nunito",serif;'>&ldquo;Latest interim certificate and draft Form 3b (Statement of Final Account) to be attached&rdquo;</span></em></p>
 												</td>
 											</tr>
 											</tbody>
 										</table>
-									</div>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 580pt;padding: 0in;vertical-align: top;">
-						<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:27.0pt;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><u><span style='font-size:15px;font-family:"Nunito",serif;color:#30373E;border:none windowtext 1.0pt;padding:0in;'>APPROVAL FOR AGREEMENT OF SUB-CONTRACT FINAL ACCOUNT</span></u></strong></p>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 580pt;padding: 0in;vertical-align: top;"><br></td>
-				</tr>
-				<tr>
-					<td style="width: 580pt;padding: 0in;vertical-align: top;">
-						<table style="border: none;width:580.4pt;border-collapse:collapse;">
-							<tbody>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;height: 2.9pt;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project No:</span></strong></p>
-								</td>
-								<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;height: 2.9pt;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.jobNumber!""}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project Name:</span></strong></p>
-								</td>
-								<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.jobDescription!""}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Draft Final Account For:</span></strong></p>
-								</td>
-								<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subcontractorNo!""} - ${paymentCertViewWrapper.subcontractorDescription!""}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:30.0pt;margin-bottom:      7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Sub-Contract No:</span></strong></p>
-								</td>
-								<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subContractNo!""}</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Original Sub-Contract Sum (HK$):&nbsp;</span></strong></p>
-								</td>
-								<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${scPackage.originalSubcontractSum?string["#,##0.00"]!0}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Trade:</span></strong></p>
-								</td>
-								<td colspan="3" style="width: 444.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCertViewWrapper.subContractDescription!""}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="4" style="width: 580.4pt;padding: 1.45pt 0.2in 0in;height: 26.85pt;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-									<table style="border-collapse:collapse;border:none;">
-										<tbody>
-										<tr>
-											<td style="width: 551.1pt;border: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
-												<table style="border-collapse:collapse;border:none;">
-													<tbody>
-													<tr>
-														<td style="width: 141.15pt;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Gross Value</span></strong></p>
-														</td>
-														<td style="width: 29.95pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
-														</td>
-														<td style="width: 123.05pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Contra Charges</span></strong></p>
-														</td>
-														<td style="width: 0.5in;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></strong></p>
-														</td>
-														<td style="width: 110.9pt;border-image: initial;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Net Value</span></strong></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>A) Sub-Contract Final Account Application</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppAmt??>${paymentCert.finalAccountAppAmt?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.finalAccountAppCCAmt??>${(paymentCert.finalAccountAppCCAmt)?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCert.finalAccountAppAmt!0+paymentCert.finalAccountAppCCAmt!0)?string["#,##0.00"]!0}</span></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>B) Latest budget (FCST)</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmt??>${paymentCert.latestBudgetAmt?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCert.latestBudgetAmtCC??>${(paymentCert.latestBudgetAmtCC)?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCert.latestBudgetAmt!0+paymentCert.latestBudgetAmtCC!0)?string["#,##0.00"]!0}</span></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>C) This Final Account</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.subTotal4?string["#,##0.00"])!0}</span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>-${(paymentCertViewWrapper.lessContraChargesTotal)?string["#,##0.00"]!0}</span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.subTotal5?string["#,##0.00"])!0}</span></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>B-C) Saving/ Increase * EoJ FC</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingGrossValue??>${(paymentCertViewWrapper.savingGrossValue?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.savingContraCharge??>${((paymentCertViewWrapper.savingContraCharge))?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'>${(paymentCertViewWrapper.savingNetValue?string["#,##0.00"])!0}</span></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>D) Last Certificate</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertGrossValue??>${(paymentCertViewWrapper.previousCertGrossValue?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertContraCharge??>${((paymentCertViewWrapper.previousCertContraCharge))?string["#,##0.00"]!0}</#if></span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.previousCertNetValue??>${(paymentCertViewWrapper.previousCertNetValue?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 141.15pt;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>C-D) Amount still to pay</span></strong></p>
-														</td>
-														<td style="width: 98.75pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayGrossValue??>${(paymentCertViewWrapper.amtToPayGrossValue?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-														<td style="width: 29.95pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>+</span></p>
-														</td>
-														<td style="width: 123.05pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayContraCharge??>${((paymentCertViewWrapper.amtToPayContraCharge)?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-														<td style="width: 0.5in;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>=</span></p>
-														</td>
-														<td style="width: 110.9pt;border-top: none;border-left: none;padding: 0in 5.4pt;vertical-align: top;">
-															<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-size:12px;font-family:"Nunito",serif;'><#if paymentCertViewWrapper.amtToPayNetValue??>${(paymentCertViewWrapper.amtToPayNetValue?string["#,##0.00"])!0}</#if></span></p>
-														</td>
-													</tr>
-													</tbody>
-												</table>
-											</td>
-										</tr>
-										<tr>
-											<td style="width: 551.1pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-												<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Comments (e.g. reason for increase):</span></strong></p>
-												<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.commentsFinalAccount!""}</span></p>
-											</td>
-										</tr>
-										<tr>
-											<td style="width: 551.1pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
-												<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><em><span style='font-size:12px;font-family:"Nunito",serif;'>&ldquo;Latest interim certificate and draft Form 3b (Statement of Final Account) to be attached&rdquo;</span></em></p>
-											</td>
-										</tr>
-										</tbody>
-									</table>
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><u><span style='font-size:12px;font-family:"Nunito",serif;'>Prepared by</span></u></strong><strong><u><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></u></strong></p>
-								</td>
-								<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>AQS/ QS/ PQS/ SPQS</span></strong></p>
-								</td>
-								<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.lastModifiedUser}</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
-								</td>
-								<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.lastModifiedDate?date?string("MMM d, yyyy")}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 135.8pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 166.9pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><u><span style='font-size:12px;font-family:"Nunito",serif;'>Approved by</span></u></strong><strong><u><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></u></strong></p>
-								</td>
-								<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>AQS/ QS/ PQS/ SPQS</span></strong></p>
-								</td>
-								<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
-								</td>
-								<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Managing Quantity Surveyor/ Commercial Team Leader</span></strong></p>
-								</td>
-								<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
-								</td>
-								<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project Leader</span></strong></p>
-								</td>
-								<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
-								</td>
-								<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 135.8pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-								<td style="width: 166.9pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="4" style="width: 580.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
-									<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><em><span style='font-size:12px;font-family:"Nunito",serif;'>Other approvals via ERP Approval System as per Delegated Levels of Authority (DLOA) and Project Delivery System (PDS) **</span></em></p>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</td>
-	</tr>
-	</tbody>
-</table>
-
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><u><span style='font-size:12px;font-family:"Nunito",serif;'>Prepared by</span></u></strong><strong><u><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></u></strong></p>
+									</td>
+									<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>AQS/ QS/ PQS/ SPQS</span></strong></p>
+									</td>
+									<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.lastModifiedUser}</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
+									</td>
+									<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>${paymentCert.lastModifiedDate?date?string("MMM d, yyyy")}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 135.8pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 166.9pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><u><span style='font-size:12px;font-family:"Nunito",serif;'>Approved by</span></u></strong><strong><u><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></u></strong></p>
+									</td>
+									<td style="width: 135.8pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 166.9pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>AQS/ QS/ PQS/ SPQS</span></strong></p>
+									</td>
+									<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
+									</td>
+									<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Managing Quantity Surveyor/ Commercial Team Leader</span></strong></p>
+									</td>
+									<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
+									</td>
+									<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Project Leader</span></strong></p>
+									</td>
+									<td style="width: 135.8pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><strong><span style='font-size:12px;font-family:"Nunito",serif;'>Date</span></strong></p>
+									</td>
+									<td style="width: 166.9pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid windowtext;padding: 1.45pt 0.2in 0in;vertical-align: bottom;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:12px;font-family:"Nunito",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 136pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 135.8pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 141.7pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+									<td style="width: 166.9pt;border: none;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:      right;'><span style='font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4" style="width: 580.4pt;padding: 1.45pt 0.2in 0in;vertical-align: top;">
+										<p style='margin-top:0in;margin-right:0in;margin-bottom:7.5pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><em><span style='font-size:12px;font-family:"Nunito",serif;'>Other approvals via ERP Approval System as per Delegated Levels of Authority (DLOA) and Project Delivery System (PDS) **</span></em></p>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<hr>
 </#if>
-<hr>
 
 <table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
 	   width=768

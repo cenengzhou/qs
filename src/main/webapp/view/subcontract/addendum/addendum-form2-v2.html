@@ -42,7 +42,8 @@
 	padding: 20px;
 }
 </style>
-<div class="invoice addendum-form2-v2" ng-hide="false">
+<ng-include src="'view/subcontract/payment/certificate/erp-approval-summary.html?@PROJECT_VERSION@'"></ng-include>
+<div class="invoice addendum-form2-v2" ng-hide="false" id="addendum-form2-v2">
 	<div class="invoice-logo m-l-5 pull-right">
 		<div class="table-border">
 			<h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
@@ -57,7 +58,7 @@
 		</div>
 		<div class="col-md-12">
 			<span class="pull-right hidden-print"> <a href="javascript:;"
-					onclick="window.print()" id="printBtn"
+					ng-click="customPrint('addendum-form2-v2', '.invoice')" id="printBtn"
 					class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
 						<i class="fa fa-print m-r-3"></i> Print
 				</a>

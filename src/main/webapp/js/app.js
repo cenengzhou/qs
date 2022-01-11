@@ -436,18 +436,43 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
         controller: 'SubcontractDatesCtrl'
 	})
+	.state('subcontract-award.erp-approval-summary', {
+		url: "/erp-approval-summary",
+		templateUrl: "view/subcontract/payment/erp-approval-summary/erp-comment-form.html?@PROJECT_VERSION@",
+		params: {
+			"nameObject": "SUBCONTRACT"
+		},
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+						'js/service/html-service.js?@PROJECT_VERSION@',
+						'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		},
+		// controller: 'ErpCommentFormCtrl',
+	})
 	.state('subcontract-award.summary', {
 		url: "/summary",
 		templateUrl: "view/subcontract/subcontract-award-summary.html?@PROJECT_VERSION@",
+		params: {
+			"nameObject": "SUBCONTRACT"
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
                	         'js/controller/subcontract/subcontract-award-summary.js?@PROJECT_VERSION@',
+					     'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
                	         'js/service/tender-service.js?@PROJECT_VERSION@',
                	         'js/service/jde-service.js?@PROJECT_VERSION@',
-               	         'js/service/html-service.js?@PROJECT_VERSION@'
+               	         'js/service/html-service.js?@PROJECT_VERSION@',
+					     'js/service/approval-summary-service.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]
@@ -743,16 +768,41 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'AddendumSummaryCtrl'
 	})
+	.state('subcontract.addendum.erp-approval-summary', {
+		url: "/erp-approval-summary",
+		templateUrl: "view/subcontract/payment/erp-approval-summary/erp-comment-form.html?@PROJECT_VERSION@",
+		params: {
+			"nameObject": "ADDENDUM"
+		},
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+						'js/service/html-service.js?@PROJECT_VERSION@',
+						'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		},
+		// controller: 'ErpCommentFormCtrl',
+	})
 	.state('subcontract.addendum.form2', {
 		url: "/form2",
 		templateUrl: "view/subcontract/addendum/addendum-form2-v2.html?@PROJECT_VERSION@",
+		params: {
+			'nameObject': 'ADDENDUM'
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/addendum/addendum-form2-v2.js?@PROJECT_VERSION@',
-                           'js/service/html-service.js?@PROJECT_VERSION@'
+                           'js/service/html-service.js?@PROJECT_VERSION@',
+					       'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+					       'js/service/approval-summary-service.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]
@@ -916,6 +966,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.payment.erp-approval-summary', {
 		url: "/erp-approval-summary",
 		templateUrl: "view/subcontract/payment/payment-erp-tab.html?@PROJECT_VERSION@",
+		params: {
+			"nameObject": "PAYMENT_CERT"
+		},
 		resolve: {
 			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
 				return $ocLazyLoad.load({
@@ -936,6 +989,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.payment.invoice', {
 		url: "/invoice",
 		templateUrl: "view/subcontract/payment/payment-invoice.html?@PROJECT_VERSION@",
+		params: {
+			"nameObject": "PAYMENT_CERT"
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({

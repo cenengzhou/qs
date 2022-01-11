@@ -23,24 +23,22 @@ public class ApprovalSummaryService {
 
 	public ApprovalSummary obtainApprovalSummary(String nameObject, String textKey) throws Exception{
 		ApprovalSummary approvalSummary = null;
-		switch (nameObject) {
-			case ApprovalSummary.PaymentCertNameObject:
-				approvalSummary = approvalSummaryRepository.getByTableNameAndTableId(nameObject, Long.valueOf(textKey));
-				break;
-			default:
-		}
+		approvalSummary = approvalSummaryRepository.getByTableNameAndTableId(nameObject, Long.valueOf(textKey));
 		return approvalSummary;
 	}
 
 	public String updateApprovalSummary(String jobNo, String nameObject, String textKey, ApprovalSummary approvalSummary) {
 		String result = "";
+		if (!nameObject.equals(ApprovalSummary.SubcontractNameObject) && !nameObject.equals(ApprovalSummary.PaymentCertNameObject) && !nameObject.equals(ApprovalSummary.AddendumNameObject)) {
+			return "invalid name object";
+		}
 		try {
 			ApprovalSummary dbSummary = approvalSummaryRepository.getByTableNameAndTableId(nameObject, Long.valueOf(textKey));
 			if (dbSummary == null) {
  				// create new record
 				dbSummary = new ApprovalSummary(
 						Long.valueOf(textKey),
-						ApprovalSummary.PaymentCertNameObject,
+						nameObject,
 						jobNo,
 						approvalSummary.getSummary(),
 						approvalSummary.getEoj(),

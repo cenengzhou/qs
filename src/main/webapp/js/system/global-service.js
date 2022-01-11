@@ -154,7 +154,23 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
 		uiGridFilters : uiGridFilters,
 		camelToNormalString: camelToNormalString,
-		downloadFile: downloadFile
+		downloadFile: downloadFile,
+		customPrint: customPrint
+	}
+
+	function customPrint(displayId, hideClass)
+	{
+		var hideElements = document.querySelectorAll(hideClass);
+		for (var i=0; i < hideElements.length; i++) {
+			hideElements[i].style.display = "none";
+		}
+		var printElement = document.getElementById(displayId);
+		printElement.style.display = "block";
+		window.print();
+		for (var i=0; i < hideElements.length; i++) {
+			hideElements[i].style.display = "block";
+		}
+		return true;
 	}
 	
     // ---

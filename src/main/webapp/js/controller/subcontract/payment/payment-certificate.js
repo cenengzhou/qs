@@ -121,10 +121,10 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 								$scope.payment.intermFinalPayment = 'F';
 							else
 								$scope.payment.intermFinalPayment = 'I';
-							
 						}else{
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate has been updated.");
 							loadData();
+							$scope.$parent.intermFinalPayment = $scope.payment.intermFinalPayment;
 						}
 					});
 	}
@@ -158,6 +158,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 					if($scope.payment.paymentStatus == "PND")
 						$scope.disableButtons = false;
 
+					$scope.$parent.intermFinalPayment = $scope.payment.intermFinalPayment;
 				});
 
 	}

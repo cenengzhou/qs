@@ -5,6 +5,9 @@
 </div>
 
 <ng-template #form4>
+  <div class="form4-erp-summary hidden-print">
+    <ng-container *ngIf="mode == 'f'">[#include "ErpApprovalSummary.ftl.html"]<hr></ng-container>
+  </div>
   <ng-container *ngTemplateOutlet="tableHead"></ng-container>
   <br />
   <ng-container *ngTemplateOutlet="tableTender"></ng-container>
@@ -19,6 +22,8 @@
   <br />
   <ng-container *ngTemplateOutlet="dates"></ng-container>
 </ng-template>
+
+
 
 <ng-template #tableHead>
   <table id="tableHead">

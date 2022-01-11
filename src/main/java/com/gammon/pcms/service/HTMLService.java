@@ -330,6 +330,8 @@ public class HTMLService implements Serializable{
 		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode: "");
 		data.put("workScopeDescription", workScopeDescription);
 		data.put("paymentTerms", paymentTerms);
+		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.SubcontractNameObject, String.valueOf(subcontract.getId()));
+		data.put("approvalSummary", approvalSummary);
 		
 		
 		
@@ -366,6 +368,8 @@ public class HTMLService implements Serializable{
 		data.put("addendum", addendum != null ? addendum : new Addendum());
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
 		data.put("summary", summary != null ? summary : "");
+		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.AddendumNameObject, String.valueOf(addendum.getId()));
+		data.put("approvalSummary", approvalSummary);
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 
