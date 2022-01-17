@@ -801,4 +801,71 @@ public class RocService {
 		);
 	}
 
+	public void cloneRocDetailForCutoffScheduler() {
+		logger.info("-- Start cloning ROC --");
+		List<String> jobNumberList = rocRepository.findAllJobNumber();
+		List<String> filterJobNumberList = new ArrayList<>();
+		YearMonth period = YearMonth.parse(getCutoffPeriod().getPeriod());
+		YearMonth lastPeriod = period.plusMonths(-1);
+		int totalNumberOfRocDetails = 0;
+
+		int seqNo = 1;
+
+		// 1. filter job number list
+		for (String jobNumber : jobNumberList) {
+			List<ROC> rocList = rocRepository.findLiveRocListByJobNo(jobNumber);
+			for (ROC roc : rocList) {
+				if (roc.getStatus().equals(ROC.CLOSED))
+					continue;
+				ROC_DETAIL currentMonth = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), period.getYear(), period.getMonthValue());
+				ROC_DETAIL lastMonth = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), lastPeriod.getYear(), lastPeriod.getMonthValue());
+				if (lastMonth != null && !lastMonth.getStatus().equals(ROC.CLOSED) && currentMonth == null) {
+					filterJobNumberList.add(jobNumber);
+					break;
+				}
+			}
+		}
+
+		int totalNumberOfJobs = filterJobNumberList.size();
+
+		// 2. copy roc detail from previous month
+		for (String jobNumber : filterJobNumberList) {
+			List<ROC> rocList = rocRepository.findLiveRocListByJobNo(jobNumber);
+			for (ROC roc: rocList) {
+				if (roc.getStatus().equals(ROC.CLOSED))
+					continue;
+
+				ROC_DETAIL currentMonth = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), period.getYear(), period.getMonthValue());
+				ROC_DETAIL lastMonth = rocDetailRepository.findDetailByRocIdAndYearMonth(roc.getId(), lastPeriod.getYear(), lastPeriod.getMonthValue());
+				if (lastMonth != null && !lastMonth.getStatus().equals(ROC.CLOSED) && currentMonth == null) {
+					try {
+						ROC_DETAIL newRecord = new ROC_DETAIL(
+								lastMonth.getAmountBest(), lastMonth.getAmountExpected(), lastMonth.getAmountWorst(),
+								lastMonth.getPreviousAmountBest(), lastMonth.getPreviousAmountExpected(), lastMonth.getPreviousAmountWorst(),
+								lastMonth.getRemarks(),
+								period.getYear(),
+								period.getMonthValue(),
+								lastMonth.getStatus(),
+								lastMonth.getRoc()
+						);
+						rocDetailRepository.save(newRecord);
+					} catch (Exception e) {
+						logger.info("[FAIL] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + jobNumber + ", Roc id = " + roc.getId() + ", From = " + lastPeriod + ", To = " + period + ", Exception message = " + e.getMessage());
+						throw e;
+					}
+					totalNumberOfRocDetails++;
+				}
+			}
+
+			logger.info("[SUCCESS] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + jobNumber + ", From = " + lastPeriod + ", To = " + period);
+			seqNo++;
+		}
+		logger.info("Total number of roc details = " + totalNumberOfRocDetails);
+		logger.info("Total number of jobs = " + totalNumberOfJobs);
+		logger.info(" -- End cloning ROC --");
+	}
+
+	public List<String> getJobList() {
+		return rocRepository.findAllJobNumber();
+	}
 }

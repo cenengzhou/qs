@@ -2,11 +2,13 @@ package com.gammon.pcms.scheduler.service;
 
 import com.gammon.pcms.dao.RocCutoffPeriodRepository;
 import com.gammon.pcms.model.RocCutoffPeriod;
+import com.gammon.pcms.service.RocService;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -24,6 +26,9 @@ public class RocCutoffDateUpdateService {
 
     @Autowired
     private RocCutoffPeriodRepository rocCutoffPeriodRepository;
+
+    @Autowired
+    private RocService rocService;
 
     @PostConstruct
     public void init() {
@@ -45,7 +50,7 @@ public class RocCutoffDateUpdateService {
 
     @Transactional
     public void nextCutoffPeriod() {
-		logger.info("------------------------rocCutoffPeriod(START)----------------------------");
+		logger.info("------------------------rocCutoffPeriod v2(START)----------------------------");
 		String content="";
 		Date startTime = new Date();
 		try {
@@ -57,7 +62,17 @@ public class RocCutoffDateUpdateService {
 
 		try {
             RocCutoffPeriod byID = rocCutoffPeriodRepository.findOne(1L);
+            String beforeCutoffDate = String.valueOf(byID.getCutoffDate().toString());
+            String beforePeriod = String.valueOf(byID.getPeriod());
 
+            StopWatch watch = new StopWatch("ROC Job Stopwatch - Period: " + byID.getPeriod());
+
+            watch.start("1. Clone ROC Detail");
+            // Clone ROC Detail
+            rocService.cloneRocDetailForCutoffScheduler();
+            watch.stop();
+
+            watch.start("2. Update cutoff date");
             // Next Period
             YearMonth nextYearMonth = YearMonth.parse(byID.getPeriod()).plusMonths(1);
 
@@ -73,9 +88,13 @@ public class RocCutoffDateUpdateService {
             byID.setPeriod(nextYearMonth.toString());
 
             RocCutoffPeriod save = rocCutoffPeriodRepository.save(byID);
+            watch.stop();
 
-            logger.info("Cutoff Date: " + save.getCutoffDate().toString());
-            logger.info("Period: " + save.getPeriod().toString());
+            logger.info("-- Start updating period --");
+            logger.info("Cutoff Date: " + beforeCutoffDate + " -> " + save.getCutoffDate().toString());
+            logger.info("Period: " + beforePeriod + " -> " + save.getPeriod());
+            logger.info("-- End updating period --");
+            logger.info(watch.prettyPrint());
 
 		} catch (Exception e) {
 			String exceptionMessage = e.getMessage();
@@ -94,7 +113,7 @@ public class RocCutoffDateUpdateService {
 			e2.printStackTrace();
 		}
 
-		logger.info("-----------------------rocCutoffPeriod(END)------------------------------");
+		logger.info("-----------------------rocCutoffPeriod v2(END)------------------------------");
     }
 
 }

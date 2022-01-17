@@ -460,7 +460,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/summary",
 		templateUrl: "view/subcontract/subcontract-award-summary.html?@PROJECT_VERSION@",
 		params: {
-			"nameObject": "SUBCONTRACT"
+			"nameObject": "SUBCONTRACT",
+			'redirectTo': 'subcontract-award.erp-approval-summary'
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -792,7 +793,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/form2",
 		templateUrl: "view/subcontract/addendum/addendum-form2-v2.html?@PROJECT_VERSION@",
 		params: {
-			'nameObject': 'ADDENDUM'
+			'nameObject': 'ADDENDUM',
+			'redirectTo': 'subcontract.addendum.erp-approval-summary'
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -990,7 +992,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/invoice",
 		templateUrl: "view/subcontract/payment/payment-invoice.html?@PROJECT_VERSION@",
 		params: {
-			"nameObject": "PAYMENT_CERT"
+			"nameObject": "PAYMENT_CERT",
+			'redirectTo': 'subcontract.payment.erp-approval-summary'
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy

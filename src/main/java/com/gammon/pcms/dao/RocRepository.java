@@ -27,6 +27,9 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 	@Query("select a from ROC a where a.projectNo = :projectNo and a.systemStatus='ACTIVE' and a.status='Live'")
 	List<ROC> findLiveRocListByJobNo(@Param("projectNo") String projectNo);
 
+	@Query("select distinct a.projectNo from ROC a where a.systemStatus='ACTIVE' and a.status='Live'")
+	List<String> findAllJobNumber();
+
 	ROC findByProjectNoAndRocCategoryAndDescriptionAndSystemStatus(String projectNo, String rocCategory, String description, String systemStatus);
 
 	ROC findTopByProjectNoOrderByItemNoDesc(String projectNo);
@@ -52,7 +55,7 @@ public interface RocRepository extends JpaRepository<ROC, Long>{
 		"from {h-schema}ROC r " + 
 		"left join {h-schema}ROC_DETAIL d on d.ID_ROC = r.ID " +
 		"where " + 
-		"r.SYSTEM_STATUS='ACTIVE' and r.STATUS='Live' " +
+		"r.SYSTEM_STATUS='ACTIVE' and d.SYSTEM_STATUS='ACTIVE' and r.STATUS='Live' " +
 		"and r.PROJECT_NO = :projectNo " +
 		"and d.YEAR = :year " +
 		"and d.MONTH = :month " +

@@ -1,0 +1,5 @@
+ALTER session SET current_schema = PCMSDATADEV;
+
+create index ROC_JOB on ROC(PROJECT_NO);
+create index ROC_DETAIL_YM on ROC_DETAIL(ID_ROC, YEAR, MONTH);
+create index ROC_SUBDETAIL_YM on ROC_SUBDETAIL(ID_ROC, YEAR, MONTH);

@@ -71,6 +71,20 @@ public class ROC_DETAIL extends BasePersistedObject {
 	public ROC_DETAIL() {
 	}
 
+	public ROC_DETAIL(BigDecimal amountBest, BigDecimal amountExpected, BigDecimal amountWorst, BigDecimal previousAmountBest, BigDecimal previousAmountExpected, BigDecimal previousAmountWorst, String remarks, Integer year, Integer month, String status, ROC roc) {
+		this.amountBest = amountBest;
+		this.amountExpected = amountExpected;
+		this.amountWorst = amountWorst;
+		this.previousAmountBest = previousAmountBest;
+		this.previousAmountExpected = previousAmountExpected;
+		this.previousAmountWorst = previousAmountWorst;
+		this.remarks = remarks;
+		this.year = year;
+		this.month = month;
+		this.status = status;
+		this.roc = roc;
+	}
+
 	public ROC_DETAIL(int year, int month, ROC roc) {
 		this.year = year;
 		this.month = month;
