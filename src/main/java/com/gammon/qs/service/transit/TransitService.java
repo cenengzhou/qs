@@ -229,6 +229,10 @@ public class TransitService implements Serializable {
 		}
 	}
 
+	public void unlockTransitHeader(Transit header) {
+		transitHeaderDao.unlock(header);
+	}
+
 	public String transitHeaderValidateAndLock(Transit header) {
 		String errorMessage = "";
 		if(header == null){
@@ -477,7 +481,7 @@ public class TransitService implements Serializable {
 		}
 		else
 			response.setMessage(GlobalParameter.TRANSIT_ERROR);
-		transitHeaderDao.unlock(header);
+		unlockTransitHeader(header);
 		return response;
 	}
 	
@@ -813,7 +817,7 @@ public class TransitService implements Serializable {
 			errorList.add(message);
 			logger.error("import resource exception:", e);
 		}
-		transitHeaderDao.unlock(header);
+		unlockTransitHeader(header);
 		if(errorList.size() == 0){
 			transitResourceDao.saveResources(resources);
 			header.setStatus(Transit.RESOURCES_IMPORTED);
@@ -1364,7 +1368,7 @@ public class TransitService implements Serializable {
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
-		transitHeaderDao.unlock(header);
+		unlockTransitHeader(header);
 		return null;
 	}
 	
@@ -1522,7 +1526,7 @@ public class TransitService implements Serializable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			transitHeaderDao.unlock(header);
+			unlockTransitHeader(header);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		} catch (ValidateBusinessLogicException e) {
