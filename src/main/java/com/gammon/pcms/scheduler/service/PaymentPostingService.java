@@ -31,10 +31,12 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.service.SupplierMasterService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
+import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
 @Component
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PaymentPostingService {
@@ -61,6 +63,8 @@ public class PaymentPostingService {
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
+	@Autowired
+	private SupplierMasterService supplierMasterRepository;
 	/**
 	 * To run payment posting
 	 *
@@ -90,6 +94,24 @@ public class PaymentPostingService {
 		List<PaymentCert> paymentCerts = scPaymentCertDao.getSCPaymentCertsPCS();
 		for (PaymentCert paymentCert : paymentCerts) {
 			try {
+				/**@author koeyyeung
+				 * 19 Jan, 2022
+				 * **/
+				//Check hold payment
+				Integer addressNumber = new Integer(paymentCert.getSubcontract().getVendorNo());
+				SupplierMasterWrapper supplierMasterWrapper = supplierMasterRepository.obtainSupplierMaster(addressNumber);
+				//Validation 2: No payment can be posted if subcontractor has been hold or with empty info
+				if(supplierMasterWrapper==null){
+					String error = paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo" +addressNumber+" - Unable to verify its Hold Payment Status. Supplier Master Information doesn't exist.";
+					logger.info(error);
+					continue;
+				}
+				else if(supplierMasterWrapper.getHoldPaymentCode().equals(PaymentCert.HOLD_PAYMENT)){
+					String error= paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo" +addressNumber+"are being hold. No payment can be posted to JDE.";
+					logger.info(error);
+					continue;
+				}	
+				
 				//Update invalid Due Date
 				if (paymentCert.getDueDate() == null)
 					paymentCert = this.calculateAndUpdatePaymentDueDate(paymentCert);

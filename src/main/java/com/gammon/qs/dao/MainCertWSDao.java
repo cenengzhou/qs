@@ -127,7 +127,7 @@ public class MainCertWSDao {
 		requestObj.setIpaRetentionforNSCAmtReleased(mainCert.getAppliedRetentionforNSCNDSCReleased());
 		requestObj.setIpaStatus("300");
 		requestObj.setJobNumber(mainCert.getJobNo());
-		requestObj.setMainContractorAppliedAmt(mainCert.getAppliedMainContractorAmount());
+		requestObj.setMainContractorAppliedAmt(mainCert.getAppliedMainContractorAmount() + mainCert.getAppliedClaimsAmount().doubleValue() + mainCert.getAppliedVariationAmount().doubleValue());
 		requestObj.setMainContractorAppliedRetentionAmt(mainCert.getAppliedMainContractorRetention());
 		Double mosAmount = mainCert.getAppliedMOSAmount() == null ? Double.valueOf(0) : mainCert.getAppliedMOSAmount();
 		Double advancePayment = mainCert.getAppliedAdvancePayment() == null ? Double.valueOf(0) : mainCert.getAppliedAdvancePayment();
