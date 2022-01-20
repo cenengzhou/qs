@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.jde.webservice.serviceRequester.GetSupplierMasterManager_Refactor.getSupplierMaster.SupplierMasterResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -26,6 +27,7 @@ import com.gammon.qs.dao.PaymentWSDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.dao.SupplierMasterWSDao;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
@@ -64,7 +66,7 @@ public class PaymentPostingService {
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
-	private SupplierMasterService supplierMasterRepository;
+	private SupplierMasterWSDao supplierMasterWSDao;
 	/**
 	 * To run payment posting
 	 *
@@ -99,7 +101,7 @@ public class PaymentPostingService {
 				 * **/
 				//Check hold payment
 				Integer addressNumber = new Integer(paymentCert.getSubcontract().getVendorNo());
-				SupplierMasterWrapper supplierMasterWrapper = supplierMasterRepository.obtainSupplierMaster(addressNumber);
+				SupplierMasterResponseObj supplierMasterWrapper = supplierMasterWSDao.obtainSupplierMaster(addressNumber);
 				//Validation 2: No payment can be posted if subcontractor has been hold or with empty info
 				if(supplierMasterWrapper==null){
 					String error = paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo" +addressNumber+" - Unable to verify its Hold Payment Status. Supplier Master Information doesn't exist.";
@@ -107,7 +109,7 @@ public class PaymentPostingService {
 					continue;
 				}
 				else if(supplierMasterWrapper.getHoldPaymentCode().equals(PaymentCert.HOLD_PAYMENT)){
-					String error= paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo" +addressNumber+"are being hold. No payment can be posted to JDE.";
+					String error= paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo. " +addressNumber+" are being hold. No payment can be posted to JDE.";
 					logger.info(error);
 					continue;
 				}	
