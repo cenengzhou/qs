@@ -74,8 +74,11 @@
 										data-click="panel-collapse"><i class="fa fa-minus"></i> </a>
 								</div>
 								<div class="panel-title">
-									<b>Certificate No.: {{cert.certificateNumber}}</b> <label
-										class="m-l-10"><b>Client Cert No.: {{cert.clientCertNo}}</b></label>
+									<b>Certificate No.: {{cert.certificateNumber}}</b>
+									<label class="m-l-10"><b>Client Cert No.:</b></label>
+									<label class="m-l-10" ng-show="disableButtons || cert.certificateStatus !=120"><b>{{cert.clientCertNo}}</b></label>
+									<input type="text" class=" input-sm  text-black text-right"
+										   ng-model="cert.clientCertNo" ng-hide="disableButtons || cert.certificateStatus !=120">
 									<label class="m-l-10"> <b>Posting Amount
 										{{postingAmount = (cert.certifiedMainContractorAmount +
 												cert.certifiedNSCNDSCAmount + cert.certifiedClaimsAmount+ cert.certifiedVariationAmount+

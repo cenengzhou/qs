@@ -531,6 +531,70 @@
 						</div>
 					</div>
 
+					<div class="col-md-6" style="padding: 5px">
+						<div class="form-group">
+							<label for="MainCertRecord_appliedClaimsAmount"
+								   class="control-label">Applied Claims Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedClaimsAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+																				ng-model-options="{ updateOn: 'blur' }" class="form-control"
+																				id="MainCertRecord_appliedClaimsAmount"
+																				name="MainCertRecord_appliedClaimsAmount"
+																				ng-model="MainCertRecord.appliedClaimsAmount">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6" style="padding: 5px">
+						<div class="form-group">
+							<label for="MainCertRecord_certifiedRetentionforNSCNDSCReleased"
+								   class="control-label">Certified Claims Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedClaimsAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+																				ng-model-options="{ updateOn: 'blur' }" class="form-control"
+																				id="MainCertRecord_certifiedClaimsAmount"
+																				name="MainCertRecord_certifiedClaimsAmount"
+																				ng-model="MainCertRecord.certifiedClaimsAmount">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6" style="padding: 5px">
+						<div class="form-group">
+							<label for="MainCertRecord_appliedClaimsAmount"
+								   class="control-label">Applied Variation Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedVariationAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+																				ng-model-options="{ updateOn: 'blur' }" class="form-control"
+																				id="MainCertRecord_appliedVariationAmount"
+																				name="MainCertRecord_appliedVariationAmount"
+																				ng-model="MainCertRecord.appliedVariationAmount">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6" style="padding: 5px">
+						<div class="form-group">
+							<label for="MainCertRecord_certifiedRetentionforNSCNDSCReleased"
+								   class="control-label">Certified Variation Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedVariationAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+																				ng-model-options="{ updateOn: 'blur' }" class="form-control"
+																				id="MainCertRecord_certifiedVariationAmount"
+																				name="MainCertRecord_certifiedVariationAmount"
+																				ng-model="MainCertRecord.certifiedVariationAmount">
+							</div>
+						</div>
+					</div>
+
 				</fieldset>
 
 				<fieldset>

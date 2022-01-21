@@ -66,7 +66,7 @@
 
 	<br>
 
-	<div class="fixed-container">
+	<div resize ng-style="resizeWithOffset(jobListOffset)" id="job-list">
 		<div class="row" id="joblabelDiv">
 			<div class="col-md-4 col-lg-3 animated fadeIn"
 				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">

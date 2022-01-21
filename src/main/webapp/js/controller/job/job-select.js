@@ -46,6 +46,7 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode'
 					$scope.jobs = $scope.jobs.concat(response.jobs);
 					$scope.jobs.sort(function(a,b){return a.jobNo - b.jobNo;});
 					blockUI.stop();
+					$scope.jobListOffset = document.getElementById('job-list').offsetTop;
 				});
 				}, 150);
 			}
