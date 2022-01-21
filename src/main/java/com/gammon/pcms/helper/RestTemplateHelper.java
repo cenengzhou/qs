@@ -88,15 +88,14 @@ public class RestTemplateHelper {
 		HttpEntity<Object> requestEntity = new HttpEntity<>(requestObject, httpHeaders);
 
 		// Response
-		logger.debug("***");
-		logger.debug("***URL:" + url);
-		logger.debug("***username:" + username);
-		logger.debug("***password:" + password);
-		logger.debug("***httpMethod:" + httpMethod);
-		logger.debug("***authHeader:" + authHeader);
-		logger.debug("***requestObject:" + requestObject);
-		logger.debug("***responseClass:" + responseClass);
-		logger.debug("***");
+		logger.info("***");
+		logger.info("***URL:" + url);
+		logger.info("***username:" + username);
+		logger.info("***httpMethod:" + httpMethod);
+		logger.info("***authHeader:" + authHeader);
+		logger.info("***requestObject:" + requestObject);
+		logger.info("***responseClass:" + responseClass);
+		logger.info("***");
 		
 		return restTemplate.exchange(url, httpMethod, requestEntity, responseClass);
 	}
