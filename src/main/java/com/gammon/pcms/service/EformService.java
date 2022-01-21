@@ -49,15 +49,16 @@ public class EformService {
 					put(APP_CODE_KEY, webServiceConfig.getWsWfParam(APP_CODE_KEY));
 					put(FORM_CODE_KEY, formCode);
 				}});
-		return restTemplateHelper.restCall(
+		String refNoString = restTemplateHelper.restCall(
 					wfBaseUrl + apiUrl, 
 					username, 
 					password, 
 					HttpMethod.POST, 
 					AuthHeader.Basic,
 					requestObject, 
-					Long.class
-				).getBody();
+					String.class
+		).getBody();
+		return Long.valueOf(refNoString);
 	}
 
 	@SuppressWarnings({ "unchecked", "serial" })
