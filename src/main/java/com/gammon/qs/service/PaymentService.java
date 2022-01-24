@@ -2150,8 +2150,9 @@ public class PaymentService{
 				"RA".equals(scPaymentDetail.getLineType().trim()) || 
 				"RT".equals(scPaymentDetail.getLineType().trim())
 			) {
-				retentionAmount += scPaymentDetail.getCumAmount();
-				logger.info("Retention add:" + scPaymentDetail.getLineType() + " amount:" + scPaymentDetail.getCumAmount());
+				double cumAmount = scPaymentDetail.getCumAmount();
+				retentionAmount = retentionAmount + cumAmount;
+				logger.info("   Retention add:" + scPaymentDetail.getLineType() + " cumAmount:" + cumAmount + " retentionAmount:" + retentionAmount);
 			}			
 			logger.info("LineType:" + scPaymentDetail.getLineType() + " amount:" + scPaymentDetail.getCumAmount());
 		}
@@ -2184,8 +2185,8 @@ public class PaymentService{
 		else if(scPaymentCert.getAsAtDate().after(currentPeriod.getTime()))
 			throw new ValidateBusinessLogicException("As at Date should be on or before current period");
 
-		logger.info(jobPackageCertNoString +" retentionAmount:" + retentionAmount + " isDirectPayment:" + scPaymentCert.getDirectPayment());
-		if (retentionAmount<0 && !PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
+		logger.info(jobPackageCertNoString +" retentionAmount:" + CalculationUtil.round(retentionAmount, 2) + " isDirectPayment:" + scPaymentCert.getDirectPayment());
+		if (CalculationUtil.round(retentionAmount, 2) < 0 && !PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
 			throw new ValidateBusinessLogicException("Retention Balance is less than zero");
 
 		//Validation 5 - Final Payment (To be submitted one)
