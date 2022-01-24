@@ -2124,7 +2124,8 @@ public class PaymentService{
 	
 	@SuppressWarnings("static-access")
 	public boolean ableToSubmit(PaymentCert scPaymentCert, List<SubcontractDetail> scDetailsList, List<PaymentCertDetail> scPaymentDetailList) throws ValidateBusinessLogicException{
-		logger.info("SCPaymentLogic.ableToSubmit");
+		String jobPackageCertNoString = scPaymentCert.getJobNo() + "-" + scPaymentCert.getPackageNo() + "-" + scPaymentCert.getPaymentCertNo();
+		logger.info(jobPackageCertNoString + "SCPaymentLogic.ableToSubmit");
 		
 		// Validation 1 - Payment Status that can submit for payment
 		if (!"PND".equals(scPaymentCert.getPaymentStatus()) && !"UFR".equals(scPaymentCert.getPaymentStatus()))
@@ -2142,8 +2143,15 @@ public class PaymentService{
 		//Validation 4 - Calculate Retention Amount
 		double retentionAmount=0.00;
 		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
-			if (scPaymentDetail.getLineType() != null && "RR".equals(scPaymentDetail.getLineType().trim()) || "RA".equals(scPaymentDetail.getLineType().trim()) || "RT".equals(scPaymentDetail.getLineType().trim()))
-				retentionAmount+=scPaymentDetail.getCumAmount();
+			if (
+			scPaymentDetail.getLineType() != null && "RR".equals(scPaymentDetail.getLineType().trim()) ||
+				"RA".equals(scPaymentDetail.getLineType().trim()) || 
+				"RT".equals(scPaymentDetail.getLineType().trim())
+			) {
+				retentionAmount += scPaymentDetail.getCumAmount();
+				logger.info("Retention add:" + scPaymentDetail.getLineType() + " amount:" + scPaymentDetail.getCumAmount());
+			}			
+			logger.info("LineType:" + scPaymentDetail.getLineType() + " amount:" + scPaymentDetail.getCumAmount());
 		}
 		
 		//RT + RA + RR must be less than or equal to maximum retention amount (round to 2 d.p. for comparison)
@@ -2174,6 +2182,7 @@ public class PaymentService{
 		else if(scPaymentCert.getAsAtDate().after(currentPeriod.getTime()))
 			throw new ValidateBusinessLogicException("As at Date should be on or before current period");
 
+		logger.info(jobPackageCertNoString +" retentionAmount:" + retentionAmount + " isDirectPayment:" + scPaymentCert.getDirectPayment());
 		if (retentionAmount<0 && !PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
 			throw new ValidateBusinessLogicException("Retention Balance is less than zero");
 
