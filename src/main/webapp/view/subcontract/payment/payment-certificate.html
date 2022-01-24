@@ -93,6 +93,15 @@
 								</div>
 							</div>
 
+							<div class="col-md-12" ng-if="payment.bypassPaymentTerms=='Y'">
+								<div class="form-group input-group col-md-12">
+									<label>Early Release Reason</label>
+									<textarea class="form-control" ng-disabled="disableButtons"
+											  style="overflow: hidden; box-sizing: border-box;height:auto;"
+											  ng-model="payment.explanation" required></textarea>
+								</div>
+							</div>
+
 							<div class="col-md-4">
 								<div class="form-group"
 									ng-show="paymentTerms== 'QS3' || paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">

@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import com.gammon.pcms.model.hr.HrUser;
-import com.gammon.pcms.service.HrService;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +104,7 @@ public class PaymentService{
 	private AttachmentService attachmentService;
 	@Autowired
 	private MainCertWSDao mainContractCertificateWSDao;
-	
+
 	@Autowired
 	private CreateGLWSDao createGLDao;
 	@Autowired
@@ -150,15 +148,15 @@ public class PaymentService{
 	 * **/
 	private List<PaymentCertWrapper> obtainSCPaymentCertWrapperList(List<PaymentCert> scPaymentCerts) throws DatabaseOperationException{
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<PaymentCertWrapper>();
-		
+
 		for (PaymentCert scPaymentCert : scPaymentCerts) {
 			PaymentCertWrapper wrapper = new PaymentCertWrapper();
-		
+
 			wrapper.setJobInfo(scPaymentCert.getSubcontract().getJobInfo());
 			wrapper.setJobNo(scPaymentCert.getJobNo());
 			wrapper.setPackageNo(scPaymentCert.getPackageNo());
 			wrapper.setSubcontract(scPaymentCert.getSubcontract());
-			
+
 			wrapper.setPaymentCertNo(scPaymentCert.getPaymentCertNo());
 			wrapper.setPaymentStatus(scPaymentCert.getPaymentStatus());
 			wrapper.setDirectPayment(scPaymentCert.getDirectPayment());
@@ -175,7 +173,7 @@ public class PaymentService{
 			wrapper.setRemeasureContractSum(scPaymentCert.getRemeasureContractSum());
 
 			wrapper.setBypassPaymentTerms(scPaymentCert.getBypassPaymentTerms());
-			
+
 			/*Double certGSTPayable = scPaymentDetailDao.getCertGstPayable(scPaymentCert);
 			Double certGSTReceivable = scPaymentDetailDao.getCertGstReceivable(scPaymentCert);
 			wrapper.setGstPayable(certGSTPayable);
@@ -185,7 +183,7 @@ public class PaymentService{
 		}
 		return scPaymentCertWrapperList;
 	}
-	
+
 	public PaymentCertViewWrapper calculatePaymentCertificateSummary(String jobNumber, String packageNo, PaymentCert scPaymentCert) throws Exception {
 		PaymentCertViewWrapper result = new PaymentCertViewWrapper();
 		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.getPaymentDetail(jobNumber, packageNo, scPaymentCert.getPaymentCertNo());
@@ -200,16 +198,16 @@ public class PaymentService{
 
 		result.setSubcontractorNo(scPackage.getVendorNo());
 		result.setSubContractDescription(scPackage.getDescription());
-		
+
 		//Dates
 		result.setAsAtDate(DateHelper.formatDate(scPaymentCert.getAsAtDate(), GlobalParameter.DATE_FORMAT));
 		result.setDueDate(DateHelper.formatDate(scPaymentCert.getDueDate(), GlobalParameter.DATE_FORMAT));
-			
+
 		//Sub-contract Total Amount
 		Double SCTotalAmt = CalculationUtil.round(scPackage.getRemeasuredSubcontractSum().doubleValue(), 2);
 		result.setSubcontractSum(SCTotalAmt);
 
-		
+
 		String paymentStatus = scPaymentCert.getPaymentStatus();
 		String interimPaymentFlag = scPaymentCert.getIntermFinalPayment();
 		Double addendumAmount = scPaymentCert.getAddendumAmount();
@@ -217,24 +215,24 @@ public class PaymentService{
 		result.setAddendum(addendumAmount);
 
 		//Payment Type (interim/final)
-		if (interimPaymentFlag != null && "F".equalsIgnoreCase(interimPaymentFlag.trim())) 
+		if (interimPaymentFlag != null && "F".equalsIgnoreCase(interimPaymentFlag.trim()))
 			result.setPaymentType("Final");
-		 else 
+		 else
 			result.setPaymentType("Interim");
-		
+
 		//Re-factored by Tiky Wong
 		//Payment Status (PND, SBM, PCS, UFR, APR)
-		if (PaymentCert.PAYMENTSTATUS_PND_PENDING.equalsIgnoreCase(paymentStatus.trim())) 
+		if (PaymentCert.PAYMENTSTATUS_PND_PENDING.equalsIgnoreCase(paymentStatus.trim()))
 			result.setApprovalStatus(PaymentCert.PAYMENT_STATUS_DESCRIPTION.get(PaymentCert.PAYMENTSTATUS_PND_PENDING));
-		else if (PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED.equalsIgnoreCase(paymentStatus.trim())) 
+		else if (PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED.equalsIgnoreCase(paymentStatus.trim()))
 			result.setApprovalStatus(PaymentCert.PAYMENT_STATUS_DESCRIPTION.get(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED));
-		else if (PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING.equalsIgnoreCase(paymentStatus.trim())) 
+		else if (PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING.equalsIgnoreCase(paymentStatus.trim()))
 			result.setApprovalStatus(PaymentCert.PAYMENT_STATUS_DESCRIPTION.get(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING));
-		else if (PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW.equalsIgnoreCase(paymentStatus.trim())) 
+		else if (PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW.equalsIgnoreCase(paymentStatus.trim()))
 			result.setApprovalStatus(PaymentCert.PAYMENT_STATUS_DESCRIPTION.get(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW));
-		 else if (PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equalsIgnoreCase(paymentStatus.trim())) 
+		 else if (PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equalsIgnoreCase(paymentStatus.trim()))
 			result.setApprovalStatus(PaymentCert.PAYMENT_STATUS_DESCRIPTION.get(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
-		
+
 		result.setRevisedValue(addendumAmount + SCTotalAmt);
 		generatePaymentCertPreview(scPaymentDetailList, result);
 
@@ -269,7 +267,7 @@ public class PaymentService{
 		ArrayList<AccountMovementWrapper> cert_VO = new ArrayList<AccountMovementWrapper>();
 		ArrayList<AccountMovementWrapper> cert_OA = new ArrayList<AccountMovementWrapper>();
 		ArrayList<AccountMovementWrapper> cert_CC = new ArrayList<AccountMovementWrapper>();
-		
+
 		for (PaymentCertDetail scPaymentDetail : scPaymentDetailList) {
 			scLineType = scPaymentDetail.getLineType() != null ? scPaymentDetail.getLineType().trim() : "";
 			movement = scPaymentDetail.getMovementAmount();
@@ -340,15 +338,15 @@ public class PaymentService{
 	}
 
 	/**
-	 * Obtain the Main Contract Certificate from JDE   
-	 * 
+	 * Obtain the Main Contract Certificate from JDE
+	 *
 	 * A valid Main Contract Certificate: <br>
 	 * 1. Status = 300 (Posted to JDE)
 	 * 2. Main Contract Certificate Movement Amount should be > 0
-	 * 
-	 * 
+	 *
+	 *
 	 * @author Koey Yeung
-	 * 
+	 *
 	 * @author tikywong
 	 * modified on Aug 7, 2013 11:58:50 AM
 	 */
@@ -374,20 +372,20 @@ public class PaymentService{
 		return null;
 	}
 
-	
+
 
 	/*private PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert){
-		
+
 		PaymentDueDateAndValidationResponseWrapper wrapper = paymentPostingService.calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
 				paymentCert.getSubcontract().getPackageNo(),
 				paymentCert.getMainContractPaymentCertNo(),
 				paymentCert.getAsAtDate(),
 				paymentCert.getIpaOrInvoiceReceivedDate(),
 				paymentCert.getDueDate());
-		
+
 		if (wrapper.isvalid())
 			paymentCert.setDueDate(wrapper.getDueDate());
-		
+
 		return paymentCert;
 		//return paymentPostingService.calculateAndUpdatePaymentDueDate(paymentCert);
 	}*/
@@ -424,7 +422,7 @@ public class PaymentService{
 			return Boolean.FALSE;
 		}
 
-		
+
 		String userName = scPaymentCert.getLastModifiedUser();
 		//String company = scPaymentCert.getSubcontract().getJobInfo().getCompany();
 		//AppSubcontractStandardTerms systemConstant = null;
@@ -446,7 +444,7 @@ public class PaymentService{
 		if ("SBM".equals(scPaymentCert.getPaymentStatus()) || "UFR".equals(scPaymentCert.getPaymentStatus())) {
 			logger.info("Call toCompleteApprovalProcess (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
 			Subcontract scPackage = toCompleteApprovalProcess(scPaymentCert, approvalDecision);
-			
+
 			subcontractHBDao.updateSubcontract(scPackage);
 
 			if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
@@ -472,49 +470,49 @@ public class PaymentService{
 	 * modified on May 18, 2012 9:20:47 AM
 	 * Enhancement for SCPayment Review by Finance
 	 */
-	public Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, String approvalDecision)throws Exception{		
+	public Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, String approvalDecision)throws Exception{
 		if(scPaymentCert==null || approvalDecision==null)
 			throw new DatabaseOperationException(scPaymentCert==null?"SCPayment Certificate = null":"Approval Decision = null");
-		
+
 		Subcontract scPackage = scPaymentCert.getSubcontract();
 		if(scPackage==null)
 			throw new DatabaseOperationException("SC:"+scPaymentCert.getPackageNo()+" does not exist.");
-		
+
 		JobInfo job = scPaymentCert.getSubcontract().getJobInfo();
 		if(job==null)
 			throw new DatabaseOperationException("Job:"+scPaymentCert.getJobNo()+" does not exist.");
-		
+
 		//Approved
 		if("A".equals(approvalDecision.trim())){
-			logger.info("SCPayment Certificate Approval - APPROVED");		
+			logger.info("SCPayment Certificate Approval - APPROVED");
 			logger.info("Payment Term: "+scPackage.getPaymentTerms()+
 						" FinQS0Review: "+job.getFinQS0Review());
 						//"+ SystemConstant: "+systemConstant.getFinQS0Review());
-			
+
 			//SBM --> UFR / PCS
 			if(scPaymentCert.getPaymentStatus().equals("SBM")){
-				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") && 
+				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") &&
 					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D))){// &&
-					//(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))	
-					
+					//(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))
+
 					if(!job.getJobNumber().startsWith("14"))
 						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
 					else
 						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 				}
-				else	
+				else
 					scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
-				
+
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
 			}
 			//UFR --> PCS
 			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)){
 				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
-				
+
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW+"-->"+scPaymentCert.getPaymentStatus());
 			}
-			
-			return scPaymentCert.getSubcontract(); 
+
+			return scPaymentCert.getSubcontract();
 		}
 		//Rejected
 		else{
@@ -522,21 +520,21 @@ public class PaymentService{
 			//SBM --> PND
 			if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)){
 				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
-				
+
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
 			}
 			//UFR --> remain UFR and send error message back to Approval System
 			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW))
 				throw new ValidateBusinessLogicException("Payment cannot be rejected as it is going through the [Under Review by Finance] UFR process.");
-			
+
 			if(scPackage.getSubcontractStatus()==500 && PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment())){
 				scPaymentCert.setDirectPayment(PaymentCert.NON_DIRECT_PAYMENT);
 			}
-			
+
 			return scPaymentCert.getSubcontract();
 		}
 	}
-	
+
 	/**
 	 * @author tikywong
 	 * created on 12 June, 2012
@@ -604,23 +602,23 @@ public class PaymentService{
 		else
 			return "";
 	}
-	
+
 	/**
 	 * Created by Henry Lai
 	 * 13-Nov-2014
 	 */
 	@CanAccessJobChecking( checking = CanAccessJobCheckingType.BYPASS)
 	public List<ByteArrayInputStream> obtainAllPaymentCertificatesReport(String company, Date dueDate, String jobNumber, String dueDateType) throws Exception {
-	
+
 		JobInfo job = new JobInfo();
 		job.setJobNumber(jobNumber);
 		job.setCompany(company);
-		
+
 		Subcontract scPackage = new Subcontract();
 		scPackage.setPackageNo("");
 		scPackage.setVendorNo("");
 		scPackage.setPaymentTerms("");
-		
+
 		PaymentCertWrapper scPaymentCertWrapper = new PaymentCertWrapper();
 		scPaymentCertWrapper.setJobInfo(job);
 		scPaymentCertWrapper.setJobNo(jobNumber);
@@ -635,7 +633,7 @@ public class PaymentService{
 //		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
 //			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
 //			String canAccessJobString = "";
-//			logger.info(user.getFullname() + " can access job list: ");	
+//			logger.info(user.getFullname() + " can access job list: ");
 //			for(String canAccessJobNo : canAccessJobList){
 //				canAccessJobString += canAccessJobNo + ", ";
 //				JobInfo canAccessJobInfo = new JobInfo();
@@ -649,11 +647,11 @@ public class PaymentService{
 //		} else {
 			scPaymentCertWrapperList = obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType);
 //		}
-		
+
 		List<SCAllPaymentCertReportWrapper> scAllPaymentCertReportWrapperList = new ArrayList<SCAllPaymentCertReportWrapper>();
-		
+
 		for(int i=0; i<scPaymentCertWrapperList.size(); i++){
-			
+
 			SCAllPaymentCertReportWrapper scAllPaymentCertReportWrapper = new SCAllPaymentCertReportWrapper();
 			scAllPaymentCertReportWrapper.setCompany(scPaymentCertWrapperList.get(i).getJobInfo().getCompany());
 			scAllPaymentCertReportWrapper.setJobNo(scPaymentCertWrapperList.get(i).getJobNo());
@@ -697,7 +695,7 @@ public class PaymentService{
 				scAllPaymentCertReportWrapper.setCertIssueDate(date2String(scPaymentCertWrapperList.get(i).getCertIssueDate()));
 			else
 				scAllPaymentCertReportWrapper.setCertIssueDate("");
-			
+
 			//Find MainCertReceivedDate
 			if(scPaymentCertWrapperList.get(i).getMainContractPaymentCertNo()!=null){
 				String referenceNumber = scPaymentCertWrapperList.get(i).getJobInfo().getJobNumber();
@@ -717,12 +715,12 @@ public class PaymentService{
 			}else{
 				scAllPaymentCertReportWrapper.setMainCertReceivedDate("");
 			}
-			
+
 			scAllPaymentCertReportWrapperList.add(scAllPaymentCertReportWrapper);
 		}
-		
+
 		List<ByteArrayInputStream> outputStreamList = new ArrayList<ByteArrayInputStream>();
-		
+
 		// Generate 'All Payment Cert' Report
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(callJasperReport(scAllPaymentCertReportWrapperList, "PaymentCertificateReport").toByteArray());
 
@@ -736,15 +734,15 @@ public class PaymentService{
 	private ArrayList<AccountMovementWrapper> calculateAmountByAccount(PaymentCertDetail scPaymentDetail, ArrayList<AccountMovementWrapper> accList) {
 		boolean accFound = false;
 		for (AccountMovementWrapper accountRec : accList) {
-			if (((scPaymentDetail.getObjectCode() == null && accountRec.getObjectCode() == null) || (scPaymentDetail.getObjectCode().trim().equals(accountRec.getObjectCode()))) && 
+			if (((scPaymentDetail.getObjectCode() == null && accountRec.getObjectCode() == null) || (scPaymentDetail.getObjectCode().trim().equals(accountRec.getObjectCode()))) &&
 				((scPaymentDetail.getSubsidiaryCode() == null && accountRec.getSubsidiaryCode() == null) || (scPaymentDetail.getSubsidiaryCode().trim().equals(accountRec.getSubsidiaryCode())))) {
 				accFound = true;
-				
+
 				accountRec.setMovementAmount(accountRec.getMovementAmount() + scPaymentDetail.getMovementAmount());
 				accountRec.setTotalAmount(accountRec.getTotalAmount() + scPaymentDetail.getCumAmount());
 			}
 		}
-		
+
 		if (!accFound) {
 			AccountMovementWrapper newAcc = new AccountMovementWrapper();
 			//Object Code
@@ -767,7 +765,7 @@ public class PaymentService{
 				newAcc.setTotalAmount(0.0);
 			else
 				newAcc.setTotalAmount(scPaymentDetail.getCumAmount());
-			
+
 			//Add to account code list
 			accList.add(newAcc);
 		}
@@ -789,17 +787,17 @@ public class PaymentService{
 		Date asAtDate = null;
 		Date ipaOrInvoiceDate = null;
 		Date dueDate = null;
-		
+
 		if(asAtDateString !=null && asAtDateString.trim().length()>0)
 			asAtDate = DateHelper.parseDate("yyyy-MM-dd", asAtDateString);
-		
+
 		if(ipaOrInvoiceDateString !=null && ipaOrInvoiceDateString.trim().length()>0)
 			ipaOrInvoiceDate = DateHelper.parseDate("yyyy-MM-dd", ipaOrInvoiceDateString);
-		
+
 		if(dueDateString !=null && dueDateString.trim().length()>0)
 			dueDate = DateHelper.parseDate("yyyy-MM-dd", dueDateString);
-		
-		
+
+
 		return paymentPostingService.calculatePaymentDueDate(jobNumber, packageNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate, bypassPaymentTerms);
 	}
 
@@ -822,19 +820,19 @@ public class PaymentService{
 	public Boolean updateF58011FromSCPaymentCertManually () {
 		logger.info("-----------------------updateF58011FromSCPaymentCertManually(START)-------------------------");
 		boolean completed = false;
-		
+
 		try {
 			completed = paymentCertDao.callStoredProcedureToUpdateF58011();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		logger.info("------------------------updateF58011FromSCPaymentCertManually(END)---------------------------");
 		return completed;
-		
+
 	}
-	
-	
+
+
 	/**
 	 * @author irischau
 	 * created on 19 Feb, 2014
@@ -845,7 +843,7 @@ public class PaymentService{
 //		if ((jobNo.isEmpty() || "".equals(jobNo.trim())) && (company == null || "".equals(company.trim())) && (packageNo == null || "".equals(packageNo)) && (company == null || "".equals(company)) && (subcontractorNo == null || "".equals(subcontractorNo))) {
 //			return null;
 //		}
-		
+
 		//convert the information to a wrapper
 		JobInfo job = new JobInfo();
 		job.setJobNumber(jobNo);
@@ -868,7 +866,7 @@ public class PaymentService{
 		if(certIssueDate!=null)
 			tempscPaymentCertWrapper.setCertIssueDate(certIssueDate);
 		logger.info("dueDate : " + tempscPaymentCertWrapper.getDueDate() + " certIssueDate : " + tempscPaymentCertWrapper.getCertIssueDate());
-		
+
 //		User user = securityService.getCurrentUser();
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
 //		if(jobNo == null && !user.hasRole(securityConfig.getRolePcmsJobAll())){
@@ -888,7 +886,7 @@ public class PaymentService{
 //		} else {
 			scPaymentCertWrapperList = obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType);
 //		}
-		
+
 		logger.info("scPaymentCertWrapperList.size() : " + scPaymentCertWrapperList.size());
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
@@ -897,11 +895,11 @@ public class PaymentService{
 		logger.info("filename: " + filename);
 
 		// Column Headers
-		String[] colHeaders = new String[] { 
-										"Company", "Job No.", "Package No.", "Subcontractor No.", 
-										"Payment No.", "Main Certificateion No.", "Payment Term", 
-										"Status", "Direct Payment", "Interim/Final Payment", 
-										"Certificate Amount", "Due Date", "As at Date", 
+		String[] colHeaders = new String[] {
+										"Company", "Job No.", "Package No.", "Subcontractor No.",
+										"Payment No.", "Main Certificateion No.", "Payment Term",
+										"Status", "Direct Payment", "Interim/Final Payment",
+										"Certificate Amount", "Due Date", "As at Date",
 										"SC IPA Received Date", "Certificate Issue Date" };
 
 		doc.insertRow(colHeaders);
@@ -911,7 +909,7 @@ public class PaymentService{
 		int numberOfColumns = colHeaders.length;
 
 		doc.setCellFontBold(0, 0, 0, numberOfColumns);
-		
+
 		for (PaymentCertWrapper scPaymentCertWrapper : scPaymentCertWrapperList) {
 			doc.insertRow(new String[10]);
 			int inx = 0;
@@ -921,7 +919,7 @@ public class PaymentService{
 			doc.setCellValue(numberOfRows, inx++, scPaymentCertWrapper.getPackageNo(), true);
 			doc.setCellValue(numberOfRows, inx++, (scPaymentCertWrapper.getSubcontract() == null) ? "" : scPaymentCertWrapper.getSubcontract().getVendorNo(), true);
 			doc.setCellValue(numberOfRows, inx++, String.valueOf(scPaymentCertWrapper.getPaymentCertNo()), true);
-			doc.setCellValue(numberOfRows, inx++, (scPaymentCertWrapper.getMainContractPaymentCertNo() == null) ? "" : String.valueOf(scPaymentCertWrapper.getMainContractPaymentCertNo()), true); 
+			doc.setCellValue(numberOfRows, inx++, (scPaymentCertWrapper.getMainContractPaymentCertNo() == null) ? "" : String.valueOf(scPaymentCertWrapper.getMainContractPaymentCertNo()), true);
 			doc.setCellValue(numberOfRows, inx++, (scPaymentCertWrapper.getSubcontract() == null) ? "" : scPaymentCertWrapper.getSubcontract().getPaymentTerms(), true);
 			if (scPaymentCertWrapper.getPaymentStatus() != null) {
 				if (scPaymentCertWrapper.getPaymentStatus().equals("PND")){
@@ -968,16 +966,16 @@ public class PaymentService{
 		doc.setColumnWidth(inx++, 10);
 		doc.setColumnWidth(inx++, 20);
 		doc.setColumnWidth(inx++, 20);
-		
+
 		logger.info("END -> generatePaymentCertificateEnquiryExcel");
 
 		return excelFile;
 	}
-	
+
 	private String formatNumber(Double number, int decimalPlaces){
 		if(number !=null){
 			DecimalFormat myFormatter = new DecimalFormat("###,###,##0.00");
-			return myFormatter.format(number);	
+			return myFormatter.format(number);
 		}
 		String output = "0";
 		for (int i=0; i<decimalPlaces; i++){
@@ -988,7 +986,7 @@ public class PaymentService{
 		}
 		return output;
 	}
-	
+
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	/**
 	 * @author koeyyeung
@@ -998,12 +996,12 @@ public class PaymentService{
 	public String obtainPaymentHoldMessage(){
 		return messageConfig.getPaymentHoldMessage();
 	}
-	
+
 	public PaymentCert obtainPaymentLatestCert(String jobNumber, String packageNo) throws DatabaseOperationException{
 		return paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 	}
-	
-	
+
+
 	public Double obtainPaymentGstAmount(String jobNo, String subcontractNo, Integer paymentCertNo, String lineType) {
 		Double gstAmount = 0.0;
 		try {
@@ -1019,25 +1017,25 @@ public class PaymentService{
 		}
 		return gstAmount;
 	}
-	
+
 	public List<PaymentCert> getPaymentCertList(String jobNumber, String packageNo) throws DatabaseOperationException {
 		List<PaymentCert> paymeneCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 		return paymeneCertList;
 	}
-	
+
 	public PaymentCert obtainPaymentCertificate(String jobNumber, String packageNo,Integer paymentCertNo) throws DatabaseOperationException{
 		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
-		return scPaymentCert;	
+		return scPaymentCert;
 	}
-	
+
 	public List<PaymentCertDetail> obtainPaymentDetailList(String jobNumber, String packageNo, Integer paymentCertNo) throws Exception {
 		return paymentCertDao.obtainPaymentDetailList(jobNumber, packageNo, paymentCertNo);
 	}
-	
+
 	public Double getTotalPostedCertAmount(String jobNo, String subcontractNo) {
 		return paymentCertDao.getTotalPostedCertAmount(jobNo, subcontractNo);
 	}
-		
+
 // Generate Payment Cert Report
 	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo) throws Exception {
 		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
@@ -1158,11 +1156,11 @@ public class PaymentService{
 		paymentCertViewWrapper.setExchangeRate(exchangeRate);
 		// END: Get the Payment Cert additional information
 
-		
+
 		return paymentCertViewWrapper;
 	}
-	
-	
+
+
 	/**
 	 *@author koeyyeung
 	 *created on 13 Jul, 2016
@@ -1171,22 +1169,22 @@ public class PaymentService{
 		String error = "";
 		try {
 			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-			
+
 			if(subcontract == null){
 				error = "Subcontract Does not exist.";
 				return error;
 			}
-			
+
 			if(subcontract.getSubcontractStatus() == null || subcontract.getSubcontractStatus() <160){
 				error = "Please prepare Tender Analysis in order to issue Payment Requisition.";
 				return error;
 			}
-			
+
 			if(subcontract.getVendorNo() == null || subcontract.getVendorNo().length()==0){
 				error = "No recommended Tenderer has been selected yet.";
 				return error;
 			}
-			
+
 			if(subcontract.getPaymentStatus()!=null && "F".trim().equalsIgnoreCase(subcontract.getPaymentStatus().trim())){
 				error = "Subcontract is final paid.";
 				return error;
@@ -1197,13 +1195,14 @@ public class PaymentService{
 				error = "Payment number " +latestPaymentCert.getPaymentCertNo()+  " has not completed yet.";
 				return error;
 			}
-			
+
 			//1. Create new Payment
 			PaymentCert newPayment = new PaymentCert();
 			newPayment.setJobNo(jobNo);
 			newPayment.setSubcontract(subcontract);
 			newPayment.setPackageNo(subcontractNo);
-			
+			newPayment.setVendorNo(subcontract.getVendorNo());
+
 			if(latestPaymentCert!=null)
 				newPayment.setPaymentCertNo(latestPaymentCert.getPaymentCertNo()+1);
 			else
@@ -1873,12 +1872,15 @@ public class PaymentService{
 
 				//update bypassPaymentTerms
 				scPaymentCert.setBypassPaymentTerms(paymentCert.getBypassPaymentTerms());
-				
+
 				//Update OriginalDueDate
-				if (paymentCert.getBypassPaymentTerms().equals(PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString()))
+				if (paymentCert.getBypassPaymentTerms().equals(PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString())) {
 					scPaymentCert.setOriginalDueDate(paymentCert.getOriginalDueDate());
-				else 
+					scPaymentCert.setExplanation(paymentCert.getExplanation());
+				} else {
 					scPaymentCert.setOriginalDueDate(null);
+					scPaymentCert.setExplanation(null);
+				}
 				
 				paymentCertDao.update(scPaymentCert);
 			} catch (DataAccessException e) {

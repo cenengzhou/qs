@@ -68,6 +68,17 @@
 				</fieldset>
 
 				<fieldset>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_vendorNo"
+								   class="control-label">Vendor No</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="PaymentCertRecord_vendorNo"
+									   ng-model="PaymentCertRecord.vendorNo">
+							</div>
+						</div>
+					</div>
 
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
@@ -252,7 +263,75 @@
 							</div>
 						</div>
 					</div>
+				</fieldset>
 
+				<fieldset>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_finalAccountAppAmt"
+								   class="control-label">Final Account App Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="PaymentCertRecord_finalAccountAppAmt"
+									   ng-model="PaymentCertRecord.finalAccountAppAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_finalAccountAppCCAmt"
+								   class="control-label">Final Account App CC Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="PaymentCertRecord_finalAccountAppCCAmt"
+									   ng-model="PaymentCertRecord.finalAccountAppCCAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_latestBudgetAmt"
+								   class="control-label">Latest Budget Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="PaymentCertRecord_latestBudgetAmt"
+									   ng-model="PaymentCertRecord.latestBudgetAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_latestBudgetAmtCC"
+								   class="control-label">Latest Budget CC Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="PaymentCertRecord_latestBudgetAmtCC"
+									   ng-model="PaymentCertRecord.latestBudgetAmtCC">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_commentsFinalAccount"
+								   class="control-label">Final Account Comments</label>
+							<div>
+								<textarea class="form-control" id="PaymentCertRecord_commentsFinalAccount"
+										  style="overflow: hidden; box-sizing: border-box;height:auto;"
+										  ng-model="PaymentCertRecord.commentsFinalAccount"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12" style="padding: 5px">
+						<div class="form-group">
+							<label for="PaymentCertRecord_explanation"
+								   class="control-label">Explanation</label>
+							<div>
+								<textarea class="form-control" id="PaymentCertRecord_explanation"
+										  style="overflow: hidden; box-sizing: border-box;height:auto;"
+										  ng-model="PaymentCertRecord.explanation"></textarea>
+							</div>
+						</div>
+					</div>
 				</fieldset>
 
 			</div>

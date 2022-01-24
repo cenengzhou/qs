@@ -102,7 +102,7 @@ public class PaymentCert extends BasePersistedObject {
 		PAYMENT_TERMS_DESCRIPTION.put("QS8", "QS8 -Pay when Paid + 0 day");
 		
 	}
-	
+
 	//Bypass Payment Terms
 	public enum BYPASS_PAYMENT_TERMS {Y, N};
 	
@@ -136,7 +136,10 @@ public class PaymentCert extends BasePersistedObject {
 	private BigDecimal latestBudgetAmt;
 	private BigDecimal latestBudgetAmtCC;
 	private String commentsFinalAccount;
-	
+
+	private String vendorNo;
+	private String explanation;
+
 	
 	public PaymentCert() {
 		super();
@@ -360,6 +363,24 @@ public class PaymentCert extends BasePersistedObject {
 
 	public void setCommentsFinalAccount(String commentsFinalAccount) {
 		this.commentsFinalAccount = commentsFinalAccount;
+	}
+
+	@Column(name = "VENDORNO")
+	public String getVendorNo() {
+		return vendorNo;
+	}
+
+	public void setVendorNo(String vendorNo) {
+		this.vendorNo = vendorNo;
+	}
+
+	@Column(name = "EXPLANATION")
+	public String getExplanation() {
+		return explanation;
+	}
+
+	public void setExplanation(String explanation) {
+		this.explanation = explanation;
 	}
 	
 	@ManyToOne
