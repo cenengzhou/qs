@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gammon</groupId>
@@ -8,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<scm>
-		<connection>scm:git:https://github.com/gammonconstruction/erp.qs</connection>	
+		<connection>scm:git:https://github.com/gammonconstruction/erp.qs</connection>
 		<developerConnection>scm:git:[fetch=]https://github.com/gammonconstruction/erp.qs.git[push=]https://github.com/gammonconstruction/erp.qs.git</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/gammonconstruction/erp.qs</url>
@@ -32,6 +31,10 @@
 		<repository>
 			<id>mvnrepository</id>
 			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>jaspersoft-third-party</id>
+			<url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -170,7 +173,7 @@
 
 	<!-- ========================================== DEPENDENCIES ================================================= -->
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -365,7 +368,7 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-		
+
 		<!-- Hibernate: integate with unit test framework -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -511,11 +514,11 @@
 			<version>${jasperreports.version}</version>
 		</dependency>
 		<dependency>
-				<groupId>net.sf.jasperreports</groupId>
-				<artifactId>jasperreports-functions</artifactId>
-				<version>${jasperreports.version}</version>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>${jasperreports.version}</version>
 		</dependency>
-		
+
 
 		<!-- Apache Groovy: optionally typed and dynamic language, with static-typing and static compilation capabilities -->
 		<dependency>
@@ -558,7 +561,7 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
@@ -658,7 +661,7 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext7-core</artifactId>
@@ -1185,7 +1188,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 
@@ -1199,7 +1202,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 
@@ -1213,7 +1216,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
