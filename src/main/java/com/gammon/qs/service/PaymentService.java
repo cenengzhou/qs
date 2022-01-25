@@ -2154,7 +2154,6 @@ public class PaymentService{
 				retentionAmount = retentionAmount + cumAmount;
 				logger.info("   Retention add:" + scPaymentDetail.getLineType() + " cumAmount:" + cumAmount + " retentionAmount:" + retentionAmount);
 			}			
-			logger.info("LineType:" + scPaymentDetail.getLineType() + " amount:" + scPaymentDetail.getCumAmount());
 		}
 		
 		//RT + RA + RR must be less than or equal to maximum retention amount (round to 2 d.p. for comparison)
