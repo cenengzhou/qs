@@ -124,9 +124,9 @@ public class AdminService {
 	public List<JobInfo> obtainCanAccessJobInfoList(boolean isCompletedJob){
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
 		List<String> canAccessJobList = obtainCanAccessJobNoStringList();
-		for(int i=0; i < canAccessJobList.size(); i+=500){
+		for(int i=0; i < canAccessJobList.size(); i+=899){
 			int from = i;
-			int to = i+499 < canAccessJobList.size() ? i+499 : canAccessJobList.size(); 
+			int to = i+899 < canAccessJobList.size() ? i+899 : canAccessJobList.size(); 
 			logger.info("obtainCanAccessJobInfoList from:" + from + " to:" + to);
 			jobInfoSet.addAll(jobInfoHBDao.obtainJobInfoByJobNumberList(canAccessJobList.subList(from, to), isCompletedJob));
 		}
