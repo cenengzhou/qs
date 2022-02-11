@@ -24,6 +24,7 @@ import com.gammon.pcms.wrapper.RocWrapper;
 import com.gammon.qs.dao.RocDetailHBDao;
 import com.gammon.qs.dao.RocHBDao;
 import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.util.JasperReportHelper;
 import net.sf.jasperreports.engine.JRParameter;
@@ -92,6 +93,9 @@ public class RocService {
 
 	@Autowired
 	private JobInfoService jobInfoService;
+
+	@Autowired
+	private AttachmentService attachmentService;
 
 	private static String noDataMarker = "NO DATA";
 
@@ -452,6 +456,7 @@ public class RocService {
 					dbRecord.inactivate();
 					dbRecord.setRoc(roc);
 					changeList.add(dbRecord);
+					attachmentService.deleteAttachmentByRocSubdetail(dbRecord);
 				} else {
 					// handle update item
 					ROC_SUBDETAIL dbRecord = rocSubdetailRepository.findOne(subdetail.getId());

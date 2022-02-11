@@ -219,7 +219,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 						'js/controller/job/job-roc.js?@PROJECT_VERSION@',
 						'js/controller/job/modal/job-roc-add-modal.js?@PROJECT_VERSION@',
 						'js/controller/job/modal/job-roc-history-modal.js?@PROJECT_VERSION@',
-						'js/controller/job/modal/job-roc-subdetail-modal.js?@PROJECT_VERSION@'
+						'js/controller/job/modal/job-roc-subdetail-modal.js?@PROJECT_VERSION@',
+						'js/controller/attachment/attachment-main.js?@PROJECT_VERSION@',
+						'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
+						'js/service/attachment-service.js?@PROJECT_VERSION@',
+						'js/service/main-cert-service.js?@PROJECT_VERSION@',
+						'js/service/payment-service.js?@PROJECT_VERSION@',
+						'js/service/addendum-service.js?@PROJECT_VERSION@',
+						'js/service/subcontract-service.js?@PROJECT_VERSION@'
 					]
 				});
 			}]

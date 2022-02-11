@@ -31,6 +31,7 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 	$scope.textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
 	$scope.hideButton = false;
 //	$scope.isUpdatable = false;
+	$scope.isDeletable = true;
 	$scope.loadAttachmentFacade = attachmentService.obtainAttachmentList;
 	$scope.uploadAttachmentFacade = attachmentService.uploadAttachment;
 	$scope.deleteAttachmentFacade = attachmentService.deleteAttachment;
@@ -41,6 +42,13 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 		case GlobalParameter['AbstractAttachment'].JobInfoNameObject:
 			$scope.textKey = $scope.jobNo;
 			checkJobInfoUpdatable();
+			loadAttachment($scope.nameObject, $scope.textKey);
+			break;
+		case 'ROC_SUBDETAIL':
+			$scope.inBox = false;
+			$scope.isUpdatable = !$scope.disableButtons;
+			$scope.isDeletable = $scope.selectedRow.editable;
+			$scope.textKey = $scope.jobNo + '||' + $scope.subdetailId + '|';
 			loadAttachment($scope.nameObject, $scope.textKey);
 			break;
 		case GlobalParameter['AbstractAttachment'].AddendumNameObject:

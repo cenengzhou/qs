@@ -9,6 +9,31 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
         $scope.month = parseInt(modalParam.month);
         $scope.editable = modalParam.editable;
 
+        $scope.step = 1;
+        $scope.selectedRow = null;
+        $scope.subdetailId = null;
+
+        $scope.setStep = function(step) {
+            if (step == 2 && !$scope.selectedRow) {
+                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please select item.');
+                return;
+            }
+            if (step == 2 && $scope.gridOptions.data[0].updateType) {
+                modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please save before proceeding.');
+                return;
+            }
+            $scope.step = step;
+            if (step == 1) {
+                $timeout(function() {
+                    $scope.gridApi.selection.clearSelectedRows();
+                    $scope.gridApi.selection.selectRow($scope.selectedRow);
+                }, 300);
+            }
+
+        }
+
+        $scope.nameObject = 'ROC_SUBDETAIL';
+
         initGrid();
 
         handleRiskAndOpps();
@@ -121,6 +146,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 if (!isError) {
                     modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "ROC Subdetails have been updated.");
                     $scope.gridApi.rowEdit.setRowsClean(dataRows);
+                    clearRowSelection();
                     $rootScope.$broadcast('reloadRocList', {});
                     getData();
                 } else {
@@ -129,8 +155,19 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
             });
         }
 
+        function clearRowSelection() {
+            $scope.gridApi.selection.clearSelectedRows();
+            $scope.subdetailId = null;
+            $scope.selectedRow = null;
+        }
+
         function customRowTemplate() {
             return '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'text-black\' : !row.entity.editable }" role="{{col.isRowHeader ? \'rowheader\' : \'gridcell\'}}" ui-grid-cell></div>';
+        }
+
+        function selectedRowChanged(row) {
+            $scope.selectedRow = $scope.gridApi.selection.getSelectedCount() ? row.entity : null;
+            $scope.subdetailId = $scope.gridApi.selection.getSelectedCount() ? row.entity.id : null;
         }
 
         function initGrid() {
@@ -148,12 +185,14 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                 enableRowHeaderSelection: false,
                 exporterMenuPdf: false,
                 rowEditWaitInterval: -1,
+                multiSelect: false,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi = gridApi;
+                    gridApi.selection.on.rowSelectionChanged($scope, selectedRowChanged);
                 },
 
                 isRowSelectable: function(row) {
-                    return row.entity.editable && row.entity.updateType != 'DELETE';
+                    return row.entity.updateType != 'DELETE';
                 },
 
                 cellEditableCondition: function($scope) {
@@ -208,7 +247,7 @@ mainApp.controller('JobRocSubdetailCtrl', ['$scope', 'rocService', '$uibModalIns
                         footerCellTemplate: '<div class="ui-grid-cell-contents blue" >{{col.getAggregationValue() | number:0 }}</div>',
                         footerCellClass: 'text-right'
                     },
-                    {field: 'hyperlink', displayName: 'Attachment', visible: true, width: 120, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
+                    {field: 'hyperlink', displayName: 'Attachment', visible: false, width: 120, groupingShowAggregationMenu: false, groupingShowGroupingMenu: false,
                         headerCellClass: 'blue', cellClass: 'blue',
                         cellTemplate: '<div class="ui-grid-cell-contents"><a ng-if="row.entity.hyperlink" ng-href="{{row.entity.hyperlink}}" target="_blank">(View attachment)</a></div>'
                     },

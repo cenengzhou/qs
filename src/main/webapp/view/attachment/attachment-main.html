@@ -71,8 +71,8 @@
 
 						<div class="col-md-4">
 							<label 
-								class="btn btn-block btn-success" ng-click="isUpdatable && deleteAttachment()"
-								ng-disabled="!isUpdatable"> 
+								class="btn btn-block btn-success" ng-click="(isUpdatable && isDeletable) && deleteAttachment()"
+								ng-disabled="!(isUpdatable && isDeletable)">
 								<i class="glyphicon glyphicon-remove-circle"></i> 
 								Delete selected	Item
 							</label>

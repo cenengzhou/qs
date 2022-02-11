@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.ROC_SUBDETAIL;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -115,6 +116,9 @@ public class AttachmentService {
 		case Attachment.TransitNameObject:
 			nameTable = Attachment.TRANSIT_TABLE;
 			break;
+		case Attachment.RocSubdetailNameObject:
+			nameTable = Attachment.ROC_SUBDETAIL_TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("nameObject not defined:" + nameObject);
 		}
@@ -134,6 +138,9 @@ public class AttachmentService {
 		resultMap.put(Attachment.NAME_TABLE, nameTable);
 		try {
 			switch (nameObject) {
+			case Attachment.RocSubdetailNameObject:
+				resultMap.put(Attachment.ID_TABLE, altParam);
+				break;
 			case Attachment.JobInfoNameObject:
 				JobInfo jobInfo = jobInfoService.obtainJob(noJob);
 				resultMap.put(Attachment.ID_TABLE, jobInfo.getId().toString());
@@ -489,6 +496,12 @@ public class AttachmentService {
 	public void deleteAttachmentByMainCert(MainCert mainCert) throws Exception {
 		String textKey = mainCert.getJobNo() + "|--|" + mainCert.getCertificateNumber();
 		List<Attachment> attachmentList = obtainAttachmentList(Attachment.MainCertNameObject, textKey);
+		deleteAttachmentList(attachmentList);
+	}
+
+	public void deleteAttachmentByRocSubdetail(ROC_SUBDETAIL rocSubdetail) throws Exception {
+		String textKey = rocSubdetail.getRoc().getProjectNo() + "|--|" + rocSubdetail.getId();
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.RocSubdetailNameObject, textKey);
 		deleteAttachmentList(attachmentList);
 	}
 	
