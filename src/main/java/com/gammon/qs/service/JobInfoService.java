@@ -90,7 +90,7 @@ public class JobInfoService {
 	}
 
 	public List<JobInfo> getAllJobNoAndDescription() throws DatabaseOperationException {
-		return adminService.obtainCanAccessJobInfoList(null);
+		return adminService.obtainCanAccessJobInfoList(false);
 	}
 	
 	public List<JobInfo> getAllJobNoAndDescription(boolean isCompletedJob) {

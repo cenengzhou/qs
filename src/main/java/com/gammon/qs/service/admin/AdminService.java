@@ -111,10 +111,6 @@ public class AdminService {
 		return jobNumberList;
 	}
 	
-	public List<JobInfo> obtainCanAccessJobInfoList(Boolean isCompleted) throws DatabaseOperationException{
-		return obtainCanAccessJobInfoList(obtainCanAccessJobNoStringList(), isCompleted);
-	}
-	
 	public List<JobInfo> obtainCanAccessJobInfoList(List<String> jobNoStringList, Boolean isCompleted) throws DatabaseOperationException{
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
 		jobInfoSet.addAll(jobInfoHBDao.obtainJobInfoByJobNumberList(jobNoStringList, isCompleted));
