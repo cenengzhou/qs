@@ -3,12 +3,11 @@ mainApp.controller('ErpCommentFormCtrl',
         function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService, GlobalHelper, approvalSummaryService, addendumService, subcontractService, $timeout) {
 	
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
-	$scope.disableButtons = true;
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo =  $cookies.get('addendumNo');
 
-	$scope.disableButtons = true;
+	$scope.erpDisableButtons = true;
 	loadData();
 
 	$scope.update =  function(){
@@ -57,10 +56,10 @@ mainApp.controller('ErpCommentFormCtrl',
 				approvalSummaryService.obtainApprovalSummary($scope.nameObject, $scope.textKey)
 					.then(function(data) {
 						$scope.summary = data;
-						if(subcontract.scStatus =="330" || subcontract.scStatus =="500")
-							$scope.disableButtons = true;
+						if(subcontract.scStatus =="500")
+							$scope.erpDisableButtons = true;
 						else {
-							$scope.disableButtons = false;
+							$scope.erpDisableButtons = false;
 							redirectIfNotComplete();
 						}
 					});
@@ -76,12 +75,12 @@ mainApp.controller('ErpCommentFormCtrl',
 				approvalSummaryService.obtainApprovalSummary($scope.nameObject, $scope.textKey)
 					.then(function(data) {
 						$scope.summary = data;
-						if (addendum.status == "PENDING") {
-							$scope.disableButtons = false;
+						if (addendum.status == "PENDING" || addendum.status == "SUBMITTED") {
+							$scope.erpDisableButtons = false;
 							redirectIfNotComplete();
 						}
 						else
-							$scope.disableButtons = true;
+							$scope.erpDisableButtons = true;
 					});
 			});
 	}
@@ -99,8 +98,8 @@ mainApp.controller('ErpCommentFormCtrl',
 						.then(function(data) {
 							$scope.summary = data;
 
-							if(pay.paymentStatus == "PND") {
-								$scope.disableButtons = false;
+							if(pay.paymentStatus == "PND" || pay.paymentStatus == "SBM") {
+								$scope.erpDisableButtons = false;
 								redirectIfNotComplete();
 							}
 						})

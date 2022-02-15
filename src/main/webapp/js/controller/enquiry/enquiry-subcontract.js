@@ -24,6 +24,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 			             { field: 'jobInfo.company', width:'80', displayName: "Company", enableCellEdit: false },
 			             { field: 'jobInfo.division', width:'80', displayName: "Division", enableCellEdit: false },
 			             { field: 'jobInfo.jobNo', width:'60', displayName: "Job", enableCellEdit: false},
+			             { field: 'jobInfo.completionStatus', width:'60', displayName: "Completion Status", enableCellEdit: false},
 			             { field: 'jobInfo.soloJV', width:'80', displayName: "Solo/JV", enableCellEdit: false},
 			             { field: 'jobInfo.jvPercentage', width:'60', displayName: "JV%", enableCellEdit: false},
 			             { field: 'jobInfo.employer', width:'60', displayName: "Client No", enableCellEdit: false},
@@ -437,7 +438,9 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 								cellFilter : 'number:2',
 
         						enableCellEdit: false
-        					}
+        					},
+							{ field: 'internalJobNo', width:'120', displayName: "Internal Job No", enableCellEdit: false},
+							{ field: 'workscope', width:'120', displayName: "Workscope", enableCellEdit: false}
             			 ]
 	};
 	

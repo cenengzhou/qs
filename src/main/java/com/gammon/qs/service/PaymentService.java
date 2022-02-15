@@ -174,6 +174,9 @@ public class PaymentService{
 
 			wrapper.setBypassPaymentTerms(scPaymentCert.getBypassPaymentTerms());
 
+			wrapper.setOriginalDueDate(scPaymentCert.getOriginalDueDate());
+			wrapper.setVendorNo(scPaymentCert.getVendorNo());
+
 			/*Double certGSTPayable = scPaymentDetailDao.getCertGstPayable(scPaymentCert);
 			Double certGSTReceivable = scPaymentDetailDao.getCertGstReceivable(scPaymentCert);
 			wrapper.setGstPayable(certGSTPayable);

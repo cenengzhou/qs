@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -344,13 +345,43 @@ public class ADLService {
 		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
 		addressBookTypeList.add(AddressBook.TYPE_COMPANY);
 		//Map<String, Set<String>> subcontractorWorkscopeMap = masterListService.obtainSubcontractorWorkScopeMap(null, null);
-		
+
 		List<AddressBook> addressBookList = new ArrayList<AddressBook>();
 		if(!GenericValidator.isBlankOrNull(addressBookTypeCode)){
 			if (!GenericValidator.isBlankOrNull(addressBookParam)){
 				try {
-					Integer.parseInt(addressBookParam);
-					addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, new BigDecimal(addressBookParam), null);
+					if (addressBookTypeCode.startsWith("V")) {
+						String[] split = addressBookParam.split(",");
+						String subcontractorName = split[0].equals("null") ? "": split[0];
+						String workscope = split[1].equals("null") ? "": split[1];
+						if (subcontractorName.isEmpty() && workscope.isEmpty()) {
+							return addressBookList;
+						} else if (subcontractorName.isEmpty() && !workscope.isEmpty()) {
+							List<SubcontractorWorkscope> subcontractorWorkscopes = subcontractorWorkscopeDao.obtainWorkscopeByCode(workscope);
+							for (SubcontractorWorkscope s : subcontractorWorkscopes) {
+								if (s.getAddressBook() != null) {
+									Hibernate.initialize(s.getAddressBook().getSubcontractorWorkscopes());
+									addressBookList.add(s.getAddressBook());
+								}
+							}
+						} else if (!subcontractorName.isEmpty() && workscope.isEmpty()) {
+							if (StringUtils.isNumeric(subcontractorName)){
+								addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, new BigDecimal(subcontractorName), null);
+							} else {
+								addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, null, subcontractorName);
+							}
+						} else {
+							if (StringUtils.isNumeric(subcontractorName)) {
+								addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, new BigDecimal(subcontractorName), null);
+							} else {
+								addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, null, subcontractorName);
+							}
+							addressBookList = addressBookList.stream().filter(e -> e.getSubcontractorWorkscopes().stream().anyMatch(o -> o.getCodeWorkscope().trim().equals(workscope))).collect(Collectors.toList());
+						}
+					} else {
+						Integer.parseInt(addressBookParam);
+						addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, new BigDecimal(addressBookParam), null);
+					}
 				} catch (Exception e) {
 					addressBookList = addressBookDao.findByAddressBook(addressBookTypeCode, null, addressBookParam);
 				}

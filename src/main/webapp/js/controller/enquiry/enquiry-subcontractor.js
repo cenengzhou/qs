@@ -53,6 +53,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
 			             { field: 'addressBookNumber', displayName: "Subcontractor No", enableCellEdit: false },
+			             { field: 'concatedWorkscope', displayName: "Workscope", enableCellEdit: false },
 			             { field: 'addressBookName', displayName: "Subcontractor Name", enableCellEdit: false },
 			             { field: 'businessRegistrationNumber', displayName: "Business Registration No", enableCellEdit: false},
 			             { field: 'getValueById("subcontractorVenderType", "vendorTypeCode")', displayName: "Vendor Type", enableCellEdit: false,
@@ -107,6 +108,9 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 			if(angular.isArray(response.addressBookListOfSubcontractor)){
 				$scope.convertAbbr(response.addressBookListOfSubcontractor);
 				$scope.gridOptions.data = response.addressBookListOfSubcontractor;
+				$scope.gridOptions.data.forEach(x => {
+					x.concatedWorkscope = x.subcontractorWorkscopes.map(y => y.codeWorkscope.trim()).join(',');
+				});
 			}
 		});
 //		}

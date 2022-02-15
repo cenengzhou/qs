@@ -27,6 +27,9 @@ public class PaymentCertWithGSTWrapper implements Serializable {
 	private String packageNo;
 	
 	private String bypassPaymentTerms;
+
+	private Date originalDueDate;
+	private String vendorNo;
 	
 	public Double getGstPayable() {
 		return gstPayable;
@@ -129,5 +132,21 @@ public class PaymentCertWithGSTWrapper implements Serializable {
 	}
 	public void setBypassPaymentTerms(String bypassPaymentTerms) {
 		this.bypassPaymentTerms = bypassPaymentTerms;
+	}
+
+	public Date getOriginalDueDate() {
+		return originalDueDate;
+	}
+
+	public void setOriginalDueDate(Date originalDueDate) {
+		this.originalDueDate = originalDueDate;
+	}
+
+	public String getVendorNo() {
+		return vendorNo;
+	}
+
+	public void setVendorNo(String vendorNo) {
+		this.vendorNo = vendorNo;
 	}
 }

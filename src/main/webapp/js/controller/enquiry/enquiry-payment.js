@@ -60,7 +60,10 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'bl
 					            	 filterCellFiltered:true, enableCellEdit: false},
 			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
 						            	 filterCellFiltered:true,  enableCellEdit: false},
-		            	 { field: 'bypassPaymentTerms', displayName: 'Early Release of Payment',  filterCellFiltered:true,  enableCellEdit: false}	
+		            	 { field: 'bypassPaymentTerms', displayName: 'Early Release of Payment',  filterCellFiltered:true,  enableCellEdit: false},
+					 	 { field: 'originalDueDate', displayName: 'Original Due Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"',
+						 	filterCellFiltered:true,  enableCellEdit: false},
+				  		 { field: 'vendorNo', displayName: 'Actual Vendor Code', enableCellEdit: false}
 						           
             			 ]
 	};

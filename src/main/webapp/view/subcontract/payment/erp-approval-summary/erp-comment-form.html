@@ -9,7 +9,7 @@
                 <b>Summary</b>
             </div>
             <div class="col-md-8 form-group">
-            <textarea class="form-control" ng-disabled="tabDisableButtons || disableButtons"
+            <textarea class="form-control" ng-disabled="erpDisableButtons"
                       style="overflow: hidden; box-sizing: border-box;height:auto;"
                       ng-model="summary.summary" required></textarea>
             </div>
@@ -19,7 +19,7 @@
                 <b>EOJ Position</b>
             </div>
             <div class="col-md-8 form-group">
-            <textarea class="form-control" ng-disabled="tabDisableButtons || disableButtons"
+            <textarea class="form-control" ng-disabled="erpDisableButtons"
                       style="overflow: hidden; box-sizing: border-box;height:auto;"
                       ng-model="summary.eoj" required></textarea>
             </div>
@@ -30,7 +30,7 @@
                 <b>Contingencies</b>
             </div>
             <div class="col-md-8 form-group">
-            <textarea class="form-control" ng-disabled="tabDisableButtons || disableButtons"
+            <textarea class="form-control" ng-disabled="erpDisableButtons"
                       style="overflow: hidden; box-sizing: border-box;height:auto;"
                       ng-model="summary.contingencies" required></textarea>
             </div>
@@ -41,7 +41,7 @@
                 <b>Risk and Opps</b>
             </div>
             <div class="col-md-8 form-group">
-            <textarea class="form-control" ng-disabled="tabDisableButtons || disableButtons"
+            <textarea class="form-control" ng-disabled="erpDisableButtons"
                       style="overflow: hidden; box-sizing: border-box;height:auto;"
                       ng-model="summary.riskOpps" required></textarea>
             </div>
@@ -52,14 +52,14 @@
                 <b>Others</b>
             </div>
             <div class="col-md-8 form-group">
-            <textarea class="form-control" ng-disabled="tabDisableButtons || disableButtons"
+            <textarea class="form-control" ng-disabled="erpDisableButtons"
                       style="overflow: hidden; box-sizing: border-box;height:auto;"
                       ng-model="summary.others" required></textarea>
             </div>
         </div>
 
         <div class="row">
-            <a class="btn btn-primary btn-block" ng-click="update()" ng-hide="tabDisableButtons || disableButtons">Update
+            <a class="btn btn-primary btn-block" ng-click="update()" ng-hide="erpDisableButtons">Update
                 <i class="fa fa-floppy-o"></i>
             </a>
         </div>

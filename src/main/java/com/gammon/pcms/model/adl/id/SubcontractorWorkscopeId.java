@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.gammon.pcms.model.adl.AddressBook;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Embeddable
 public class SubcontractorWorkscopeId implements Serializable {
@@ -43,6 +45,7 @@ public class SubcontractorWorkscopeId implements Serializable {
 	//bi-directional many-to-one association to AddressBook
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name="ENTITY_SUBCONTRACTOR_KEY", referencedColumnName="ADDRESS_BOOK_NUMBER", nullable = true)
+	@NotFound(action = NotFoundAction.IGNORE)
 	public AddressBook getAddressBook() {
 		return this.addressBook;
 	}

@@ -311,7 +311,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	
 	function gettingAddressBookListOfSubcontractor(searchSubcontractor, searchWorkScopes){
 		var deferral = $q.defer();
-		gettingAddressBookListOfSubcontractorAndClient(searchSubcontractor, 'V  ')
+		var searchParam = searchSubcontractor + ',' + searchWorkScopes;
+		gettingAddressBookListOfSubcontractorAndClient(searchParam, 'V  ')
 		.then(function(response){
 			var addressBookListOfSubcontractor = response.addressBookListOfSubcontractorAndClient;
 			var filteredAddressBookListOfSubcontractor = addressBookListOfSubcontractor.filter(function(item){
