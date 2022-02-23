@@ -8,7 +8,9 @@ package com.gammon.pcms.web.controller;
 
 import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
@@ -355,6 +357,22 @@ public class AddendumController {
 			e.printStackTrace();
 			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
 			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+		}
+		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('AddendumController','enquireAddendumList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "enquireAddendumList", method = RequestMethod.POST)
+	public List<Addendum> enquireAddendumList(@RequestParam(required = false) String jobNo,
+											  @RequestParam(required = false) String subcontractNo,
+											  @RequestBody Map<String, String> commonKeyValue) throws DatabaseOperationException{
+		List<Addendum> result = new ArrayList<>();
+		try {
+			result = addendumService.enquireAddendumList(jobNo, commonKeyValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+				throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		}
 		return result;
 	}

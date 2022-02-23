@@ -1450,6 +1450,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/enquiry-main-cert.js?@PROJECT_VERSION@',
 							
 							'js/controller/enquiry/enquiry-subcontract.js?@PROJECT_VERSION@',
+							'js/controller/enquiry/enquiry-addendum.js?@PROJECT_VERSION@',
 							'js/controller/enquiry/enquiry-subcontractdetail.js?@PROJECT_VERSION@',
 							'js/controller/enquiry/enquiry-payment.js?@PROJECT_VERSION@',
 							'js/controller/enquiry/enquiry-provisionhistory.js?@PROJECT_VERSION@',
@@ -1468,10 +1469,12 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/modal/enquiry-jobcostdetails-adl.js?@PROJECT_VERSION@',
 							'js/controller/enquiry/modal/enquiry-customerledgerdetails.js?@PROJECT_VERSION@',
 							'js/controller/enquiry/modal/enquiry-supplierledgerdetails.js?@PROJECT_VERSION@',
+							'js/controller/enquiry/modal/enquiry-addendumdetails.js?@PROJECT_VERSION@',
 
                	         	'js/service/main-cert-service.js?@PROJECT_VERSION@',
                	         	'js/service/payment-service.js?@PROJECT_VERSION@',
                	         	'js/service/subcontract-service.js?@PROJECT_VERSION@',
+               	         	'js/service/addendum-service.js?@PROJECT_VERSION@',
                	         	'js/service/adl-service.js?@PROJECT_VERSION@',
                	         	'js/service/system-service.js?@PROJECT_VERSION@',
                	         	'js/service/subcontractor-service.js?@PROJECT_VERSION@',
@@ -1548,6 +1551,15 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 			'jobDescription' : null,
 		},
 		controller: 'EnquirySubcontractCtrl'
+		})
+	.state('enquiry.addendum', {
+		url: '/addendum',
+		templateUrl: 'view/enquiry/enquiry-addendum.html?@PROJECT_VERSION@',
+		params: {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryAddendumCtrl'
 		})
 	.state('enquiry.subcontractDetail', {
 		url: '/subcontractDetail',

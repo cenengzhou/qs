@@ -1,0 +1,67 @@
+<div>
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Addendum</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Addendum</div>
+				<div class="panel-body">
+					<form role="form" name="searchAddendumForm"
+						id="searchAddendumForm" ng-submit="loadGridData()"
+						class="form-input-flat">
+
+						<div>
+							<div class="col-md-1">
+								<label for="searchJobNo">Job No.</label> 
+								<input type="text"
+									class="form-control" id="searchJobNo" name="searchJobNo"
+									ng-model="commonKeyValue['jobNo']" pattern=".{5,5}"
+									title="Please enter 5 characters"
+									ng-model-options="{ updateOn: 'blur' }">
+								<p ng-show="searchAddendumForm.searchJobNo.$error.pattern"
+									class="red">Please enter 5 characters</p>
+							</div>
+							<div class="col-md-2">
+								<label for="searchSubcontractNo">Subcontract No.</label>
+								<input type="text"
+									   class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
+									   ng-model="commonKeyValue['subcontractNo']">
+							</div>
+							<div class="col-md-2">
+								<label for="searchAddendumNo">Addendum No.</label>
+								<input type="text"
+									class="form-control" id="searchAddendumNo" name="searchAddendumNo"
+									ng-model="commonKeyValue['addendumNo']">
+							</div>
+							<div class="col-md-1">
+								<label>&nbsp;</label>
+								<button type="submit" class="btn btn-block btn-primary">
+									<span class="fa fa-search"></span> Search
+								</button>
+							</div>
+						</div>
+
+					</form>
+					<div class="col-md-12">
+						<br>
+						<div id="" save-and-restore-grid-state="enquiry_addendum" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler"
+							ui-grid-resize-columns ui-grid-exporter ui-grid-selection
+							ui-grid-edit class="grid" ui-grid-move-columns>
+						</div>
+					</div>
+
+				</div>
+			</div>
+	
+		</div>
+	</section>
+
+</div>

@@ -24,8 +24,21 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         updateAddendumDetailListAdmin:		updateAddendumDetailListAdmin,
     	deleteAddendumDetail:				deleteAddendumDetail,
     	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails,
-    	submitAddendumApproval:				submitAddendumApproval
+    	submitAddendumApproval:				submitAddendumApproval,
+        enquireAddendumList:			enquireAddendumList
     });
+
+    function enquireAddendumList(jobNo, commonKeyValue) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/enquireAddendumList",
+            params: {
+                jobNo: jobNo
+            },
+            data: commonKeyValue
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
 	
     function getLatestAddendum(jobNo, subcontractNo) {
         var request = $http({

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.gammon.pcms.model.RecoverableSummary;
@@ -48,6 +49,7 @@ import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
+
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -90,7 +92,7 @@ public class AddendumService{
 	private MasterListService masterListService;
 	@Autowired
 	private SubcontractService subcontractService;
-	
+
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
 	public Addendum getLatestAddendum(String noJob, String noSubcontract) {
@@ -1278,6 +1280,12 @@ public class AddendumService{
 		}
 		return subcontract;
 	}
-	
-	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+
+    public List<Addendum> enquireAddendumList(String jobNo, Map<String, String> commonKeyValue) {
+		String subcontractNo = commonKeyValue.get("subcontractNo");
+		String addendumNo = commonKeyValue.get("addendumNo");
+		return addendumHBDao.getAddendumListByEnquiry(jobNo, subcontractNo, addendumNo);
+    }
+
+    /*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }
