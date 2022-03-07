@@ -450,14 +450,14 @@ public class PaymentService{
 
 			subcontractHBDao.updateSubcontract(scPackage);
 
-			if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
+			/*if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
 				logger.info("Call submitPaymentReview (To be reviewed By Finance) (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
 				String errorMessage = submitPaymentReview(jobNumber, Integer.parseInt(packageNo), scPaymentCert.getPaymentCertNo(), scPaymentCert.getCertAmount(), userName);
 				if (errorMessage != null && !errorMessage.trim().equals("")) {
 					logger.info("Error Message: " + errorMessage);
 					return Boolean.FALSE;
 				}
-			}
+			}*/
 		} else {
 			logger.info("Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + "Payment Status:" + scPaymentCert.getPaymentStatus() + "\n" +
 						"Invalid Payment Status to complete SCPayment.");
@@ -487,23 +487,18 @@ public class PaymentService{
 
 		//Approved
 		if("A".equals(approvalDecision.trim())){
-			logger.info("SCPayment Certificate Approval - APPROVED");
-			logger.info("Payment Term: "+scPackage.getPaymentTerms()+
-						" FinQS0Review: "+job.getFinQS0Review());
-						//"+ SystemConstant: "+systemConstant.getFinQS0Review());
-
+			
 			//SBM --> UFR / PCS
-			if(scPaymentCert.getPaymentStatus().equals("SBM")){
-				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") &&
-					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D))){// &&
-					//(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))
+			if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)){
+				/*if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") &&
+					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D))){
 
 					if(!job.getJobNumber().startsWith("14"))
 						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
 					else
 						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 				}
-				else
+				else*/
 					scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
