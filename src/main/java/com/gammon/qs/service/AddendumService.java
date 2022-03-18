@@ -13,9 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.FinalAccount;
 import com.gammon.pcms.model.RecoverableSummary;
+import com.gammon.pcms.service.FinalAccountService;
 import com.gammon.pcms.wrapper.AddendumDetailWrapper;
+import com.gammon.pcms.wrapper.AddendumFinalFormWrapper;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
+import com.gammon.qs.dao.MasterListWSDao;
+import com.gammon.qs.domain.MasterListVendor;
+import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -91,7 +97,15 @@ public class AddendumService{
 	@Autowired
 	private MasterListService masterListService;
 	@Autowired
+	private MasterListWSDao masterListWSDao;
+	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private FinalAccountService finalAccountService;
+	@Autowired
+	private PaymentCertHBDao paymentCertDao;
+	@Autowired
+	private PaymentService paymentService;
 
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
@@ -1287,5 +1301,69 @@ public class AddendumService{
 		return addendumHBDao.getAddendumListByEnquiry(jobNo, subcontractNo, addendumNo);
     }
 
-    /*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	public AddendumFinalFormWrapper getAddendumFinalForm(String jobNo, String subcontractNo, String addendumNo) {
+		AddendumFinalFormWrapper result = new AddendumFinalFormWrapper();
+
+		try {
+			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, Long.valueOf(addendumNo));
+			FinalAccount fa = finalAccountService.getFinalAccount(jobNo, addendumNo, addendum.getId().longValue());
+			if (fa == null)
+				fa = new FinalAccount();
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			PaymentCert lastCert = paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			PaymentCertViewWrapper paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastCert.getPaymentCertNo()));
+			PaymentCertViewWrapper lastPaymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastCert.getPaymentCertNo()-1));
+			String company = subcontract.getJobInfo().getCompany();
+			MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
+			String companyNameStr = companyName.getVendorName() != null ? companyName.getVendorName().trim() : companyName.getVendorName();
+			result.setCompanyName(companyNameStr);
+			result.setProjectNo(addendum.getNoJob());
+			result.setProjectName(subcontract.getJobInfo().getDescription());
+			String subcontractorDescription = masterListService.searchVendorAddressDetails(subcontract.getVendorNo()).getVendorName();
+			result.setDraftFinalAccountFor(subcontract.getVendorNo() + " - " + subcontractorDescription);
+			result.setSubcontractNo(subcontract.getPackageNo());
+			result.setOriginalSubcontractSum(subcontract.getOriginalSubcontractSum());
+			result.setTrade(subcontract.getDescription());
+
+			result.setaGrossValue(fa.getFinalAccountAppAmt());
+			result.setaContraCharge(fa.getFinalAccountAppCCAmt());
+			BigDecimal aGrossValue = result.getaGrossValue() == null ? BigDecimal.ZERO : result.getaGrossValue();
+			BigDecimal aContraCharge = result.getaContraCharge() == null ? BigDecimal.ZERO : result.getaContraCharge();
+			result.setaNetValue(aGrossValue.add(aContraCharge));
+
+			result.setbGrossValue(fa.getLatestBudgetAmt());
+			result.setbContraCharge(fa.getLatestBudgetAmtCC());
+			BigDecimal bGrossValue = result.getbGrossValue() == null ? BigDecimal.ZERO : result.getbGrossValue();
+			BigDecimal bContraCharge = result.getbContraCharge() == null ? BigDecimal.ZERO : result.getbContraCharge();
+			result.setbNetValue(bGrossValue.add(bContraCharge));
+
+			result.setcGrossValue(addendum.getAmtSubcontractRevisedTba());
+			result.setcContraCharge(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+			result.setcNetValue(result.getcGrossValue().add(result.getcContraCharge()));
+			result.setdGrossValue(BigDecimal.valueOf(lastPaymentCertSummary.getSubTotal4()));
+			result.setdContraCharge(BigDecimal.valueOf(-lastPaymentCertSummary.getLessContraChargesTotal()));
+			result.setdNetValue(result.getdGrossValue().add(result.getdContraCharge()));
+//			result.setdNetValue(BigDecimal.valueOf(lastPaymentCertSummary.getSubTotal5()));
+
+			if (result.getbGrossValue() != null && result.getcGrossValue() != null)
+				result.setSavingGrossValue(result.getbGrossValue().subtract(result.getcGrossValue()));
+			if (result.getbContraCharge() != null && result.getcContraCharge() != null)
+				result.setSavingContraCharge(result.getbContraCharge().subtract(result.getcContraCharge()));
+			if (result.getbNetValue() != null && result.getcNetValue() != null)
+				result.setSavingNetValue(result.getbNetValue().subtract(result.getcNetValue()));
+
+			result.setAmtToPayGrossValue(result.getcGrossValue().subtract(result.getdGrossValue()));
+			result.setAmtToPayContraCharge(result.getcContraCharge().subtract(result.getdContraCharge()));
+			result.setAmtToPayNetValue(result.getcNetValue().subtract(result.getdNetValue()));
+
+			result.setComments(fa.getComments());
+			result.setPreparedBy(fa.getPreparedUser());
+			result.setPreparedDate(fa.getPreparedDate());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

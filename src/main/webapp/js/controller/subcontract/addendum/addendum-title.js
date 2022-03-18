@@ -50,9 +50,11 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 		.then(
 				function( data ) {
 					$scope.addendum = data;
-					if($scope.addendum ==null || $scope.addendum.length==0 || $scope.addendum.status == "PENDING")
+					if($scope.addendum ==null || $scope.addendum.length==0 || $scope.addendum.status == "PENDING") {
 						$scope.disableButtons = false;
-					else
+						if ($scope.addendum.finalAccount == null)
+							$scope.addendum.finalAccount = 'N';
+					} else
 						$scope.disableButtons = true;
 				});
 	}

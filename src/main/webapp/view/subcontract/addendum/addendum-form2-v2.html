@@ -43,6 +43,7 @@
 }
 </style>
 <ng-include src="'view/subcontract/payment/certificate/erp-approval-summary.html?@PROJECT_VERSION@'"></ng-include>
+<ng-include src="'view/subcontract/addendum/addendum-final.html?@PROJECT_VERSION@'" ng-if="addendum.finalAccount == 'Y'"></ng-include>
 <div class="invoice addendum-form2-v2" ng-hide="false" id="addendum-form2-v2">
 	<div class="invoice-logo m-l-5 pull-right">
 		<div class="table-border">

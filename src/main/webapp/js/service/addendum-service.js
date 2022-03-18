@@ -9,7 +9,8 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	getAddendumDetailsByHeaderRef:		getAddendumDetailsByHeaderRef,
     	getAllAddendumDetails:				getAllAddendumDetails,
     	getForm2Summary:		            getForm2Summary,
-    	getAddendumDetailsWithoutHeaderRef:	getAddendumDetailsWithoutHeaderRef,
+        getAddendumFinalForm:				getAddendumFinalForm,
+        getAddendumDetailsWithoutHeaderRef:	getAddendumDetailsWithoutHeaderRef,
     	getDefaultValuesForAddendumDetails:	getDefaultValuesForAddendumDetails,
     	createAddendum:						createAddendum,
     	updateAddendum:						updateAddendum,
@@ -136,6 +137,20 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         var request = $http({
             method: "get",
             url: "service/addendum/getForm2Summary",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                addendumNo: addendumNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function getAddendumFinalForm(jobNo, subcontractNo, addendumNo) {
+        var request = $http({
+            method: "get",
+            url: "service/addendum/getAddendumFinalForm",
             dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo,

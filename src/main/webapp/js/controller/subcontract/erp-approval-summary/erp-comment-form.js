@@ -100,7 +100,7 @@ mainApp.controller('ErpCommentFormCtrl',
 
 							if(pay.paymentStatus == "PND" || pay.paymentStatus == "SBM") {
 								$scope.erpDisableButtons = false;
-								redirectIfNotComplete();
+								// redirectIfNotComplete();
 							}
 						})
 				});

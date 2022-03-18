@@ -1,0 +1,281 @@
+<style>
+    #final-invoice .signature-underline {
+        border-bottom: 1px solid black !important;
+        vertical-align: bottom;
+    }
+</style>
+
+<div class="invoice" id="final-invoice">
+    <div class="invoice-logo m-l-5 pull-right">
+        <div class="table-border">
+            <h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
+        </div>
+        <h5>PDS/08/Form 3a</h5>
+        <span class="pull-right hidden-print"> <a href="javascript:;"
+                                                  ng-click="customPrint('final-invoice', '.invoice')" id="printBtn"
+                                                  class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+				<i class="fa fa-print m-r-3"></i> Print
+		</a>
+		</span>
+    </div>
+
+    <div class="invoice-logo m-l-5">
+        <div>
+            <img src="image/gammon.bmp" class="logo" style="width: 128px" />
+            <h5>{{addendumFinalForm.companyName}}</h5>
+        </div>
+    </div>
+
+
+    <h5 class="invoice-title" align="center">APPROVAL FOR AGREEMENT OF SUB-CONTRACT FINAL ACCOUNT</h5>
+
+
+    <div class="invoice-header">
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td><b>Project No:</b></td>
+                <td colspan="3">{{addendumFinalForm.projectNo}}</td>
+            </tr>
+            <tr>
+                <td><b>Project Name:</b></td>
+                <td colspan="3">{{addendumFinalForm.projectName}}</td>
+            </tr>
+            <tr>
+                <td><b>Draft Final Account For:</b></td>
+                <td colspan="3">{{addendumFinalForm.draftFinalAccountFor}}</td>
+            </tr>
+            <tr>
+                <td><b>Sub-Contract No:</b></td>
+                <td>{{addendumFinalForm.subcontractNo}}</td>
+                <td><b>Original Sub-Contract Sum (HK$):</b></td>
+                <td class="text-right">{{addendumFinalForm.originalSubcontractSum | currency}}</td>
+            </tr>
+            <tr>
+                <td><b>Trade:</b></td>
+                <td colspan="3">{{addendumFinalForm.trade}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-body">
+        <div style="border: 1px solid black">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Gross Value</b>
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Contra Charges</b>
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <b>Net Value</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>A) Sub-Contract Final Account Application</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.aGrossValue != null">{{addendumFinalForm.aGrossValue | currency}}</span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.aContraCharge != null">{{addendumFinalForm.aContraCharge | currency}}</span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{addendumFinalForm.aNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>B) Latest budget (FCST)</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.bGrossValue != null">{{addendumFinalForm.bGrossValue | currency}}</span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.bContraCharge != null">{{addendumFinalForm.bContraCharge | currency}}</span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{addendumFinalForm.bNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>C) This Final Account</b>
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.cGrossValue | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.cContraCharge | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.cNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>B-C) Saving/ Increase * EoJ FC</b>
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.savingGrossValue != null">
+                            {{ addendumFinalForm.savingGrossValue | currency}}
+                        </span>
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        <span ng-if="addendumFinalForm.savingContraCharge != null">
+                            {{ addendumFinalForm.savingContraCharge | currency}}
+                        </span>
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.savingNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>D) Last Certificate</b>
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.dGrossValue | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.dContraCharge | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.dNetValue | currency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>C-D) Amount still to pay</b>
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.amtToPayGrossValue | currency}}
+                    </td>
+                    <td>
+                        +
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.amtToPayContraCharge | currency}}
+                    </td>
+                    <td>
+                        =
+                    </td>
+                    <td class="text-right">
+                        {{ addendumFinalForm.amtToPayNetValue | currency}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="border-left: 1px solid black; border-right: 1px solid black; padding: 0 20px">
+            <div><b>Comments (e.g. reason for increase):</b></div>
+            <div>{{addendumFinalForm.comments}}</div>
+
+        </div>
+        <div style="border: 1px solid black; padding: 0 20px">
+            <div>
+                <i>"Latest interim certificate and draft Form 3b (Statement of Final Account) to be attached"</i>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="invoice-footer">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td colspan="4" style="font-weight: bold; text-decoration: underline">Prepared by</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>AQS/ QS/ PQS/ SPQS</b></td>
+                <td class="signature-underline">{{addendumFinalForm.preparedBy}}</td>
+                <td style="width: 10%"><b>Date</b></td>
+                <td class="signature-underline">{{addendumFinalForm.preparedDate | date: 'MMM d, yyyy'}}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="font-weight: bold; text-decoration: underline">Approved by</td>
+            </tr>
+            <tr>
+                <td><b>Senior Quantity Surveyor</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Managing Quantity Surveyor/ Commercial Team Leader</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td><b>Project Leader</b></td>
+                <td class="signature-underline">&nbsp;</td>
+                <td><b>Date</b></td>
+                <td class="signature-underline">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4"><i>Other approvals via ERP Approval System as per Delegated Levels of Authority (DLOA)
+                    and Project Delivery System (PDS) **</i></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

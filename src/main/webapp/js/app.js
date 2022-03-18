@@ -778,7 +778,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract.addendum.erp-approval-summary', {
 		url: "/erp-approval-summary",
-		templateUrl: "view/subcontract/payment/erp-approval-summary/erp-comment-form.html?@PROJECT_VERSION@",
+		templateUrl: "view/subcontract/addendum/addendum-erp-tab.html?@PROJECT_VERSION@",
 		params: {
 			"nameObject": "ADDENDUM"
 		},
@@ -787,14 +787,17 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 				return $ocLazyLoad.load({
 					name: 'app',
 					files: [
+						'js/controller/subcontract/erp-approval-summary/addendum-erp-tab.js?@PROJECT_VERSION@',
 						'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/erp-approval-summary/subcontract-final-form.js?@PROJECT_VERSION@',
 						'js/service/html-service.js?@PROJECT_VERSION@',
-						'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+						'js/service/approval-summary-service.js?@PROJECT_VERSION@',
+						'js/service/final-account-service.js?@PROJECT_VERSION@'
 					]
 				});
 			}]
 		},
-		// controller: 'ErpCommentFormCtrl',
+		controller: 'AddendumTabCtrl',
 	})
 	.state('subcontract.addendum.form2', {
 		url: "/form2",
@@ -1712,6 +1715,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                		 	   'js/service/subcontract-service.js?@PROJECT_VERSION@',
                		 	   'js/service/tender-service.js?@PROJECT_VERSION@',
                		 	   'js/service/roc-service.js?@PROJECT_VERSION@',
+               		 	   'js/service/final-account-service.js?@PROJECT_VERSION@',
                	           'js/service/main-cert-service.js?@PROJECT_VERSION@',
                	           'js/service/payment-service.js?@PROJECT_VERSION@',
                	           'js/service/transit-service.js?@PROJECT_VERSION@',
@@ -1726,6 +1730,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-Revisions-Subcontract.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-SubcontractDetail.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-Payment.js?@PROJECT_VERSION@',
+                           'js/controller/admin/admin-Revisions-FinalAccount.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-Addendum.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-AddendumDetail.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-MainCert.js?@PROJECT_VERSION@',
@@ -1789,6 +1794,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/Payment',
 		templateUrl: 'view/admin/admin-Revisions-Payment.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsPaymentCtrl'
+	})
+	.state('admin.Revisions.FinalAccount',{
+		url: '/FinalAccount',
+		templateUrl: 'view/admin/admin-Revisions-FinalAccount.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsFinalAccountCtrl'
 	})
 	.state('admin.Revisions.Addendum',{
 		url: '/Addendum',

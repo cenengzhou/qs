@@ -52,6 +52,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		REJECTED
 	}
 
+	public static enum FINAL_ACCOUNT_VALUE { Y, N }
+
 
 	private BigDecimal id;
 	private Subcontract idSubcontract;
@@ -76,6 +78,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private String statusApproval = APPROVAL_STATUS.NA.toString();
 	private String usernamePreparedBy;
 	private String remarks;
+	private String finalAccount;
 	private BigDecimal noAddendumDetailNext = new BigDecimal(1);
 
 	public Addendum() {}
@@ -119,6 +122,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 					String statusApproval,
 					String usernamePreparedBy,
 					String remarks,
+					String finalAccount,
 					BigDecimal noAddendumDetailNext,
 					String usernameCreated,
 					Date dateCreated,
@@ -147,6 +151,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.statusApproval = statusApproval;
 		this.usernamePreparedBy = usernamePreparedBy;
 		this.remarks = remarks;
+		this.finalAccount = finalAccount;
 		this.noAddendumDetailNext = noAddendumDetailNext;
 		this.usernameCreated = usernameCreated;
 		this.dateCreated = dateCreated;
@@ -399,6 +404,16 @@ public class Addendum extends PcmsPersistedAuditObject {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	@Column(name = "FINAL_ACCOUNT",
+			length = 10)
+	public String getFinalAccount() {
+		return this.finalAccount;
+	}
+
+	public void setFinalAccount(String finalAccount) {
+		this.finalAccount = finalAccount;
 	}
 	
 	@Column(name = "NO_ADDENDUM_DETAIL_NEXT",
