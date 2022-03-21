@@ -988,7 +988,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 					files: [
 						'js/controller/subcontract/erp-approval-summary/payment-erp-tab.js?@PROJECT_VERSION@',
 						'js/controller/subcontract/erp-approval-summary/erp-comment-form.js?@PROJECT_VERSION@',
-						'js/controller/subcontract/erp-approval-summary/subcontract-final-form.js?@PROJECT_VERSION@',
 						'js/service/html-service.js?@PROJECT_VERSION@',
 						'js/service/approval-summary-service.js?@PROJECT_VERSION@'
 					]

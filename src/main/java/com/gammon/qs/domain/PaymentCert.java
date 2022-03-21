@@ -1,6 +1,5 @@
 package com.gammon.qs.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -130,12 +129,6 @@ public class PaymentCert extends BasePersistedObject {
 	
 	
 	private Date originalDueDate;
-	
-	private BigDecimal finalAccountAppAmt;
-	private BigDecimal finalAccountAppCCAmt;
-	private BigDecimal latestBudgetAmt;
-	private BigDecimal latestBudgetAmtCC;
-	private String commentsFinalAccount;
 
 	private String vendorNo;
 	private String explanation;
@@ -318,51 +311,6 @@ public class PaymentCert extends BasePersistedObject {
 
 	public void setOriginalDueDate(Date originalDueDate) {
 		this.originalDueDate = originalDueDate;
-	}
-
-	@Column(name = "AMT_FINAL_ACCOUNT_APP")
-	public BigDecimal getFinalAccountAppAmt() {
-		return finalAccountAppAmt;
-	}
-
-	public void setFinalAccountAppAmt(BigDecimal finalAccountAppAmt) {
-		this.finalAccountAppAmt = finalAccountAppAmt;
-	}
-
-	@Column(name = "AMT_FINAL_ACCOUNT_APP_CC")
-	public BigDecimal getFinalAccountAppCCAmt() {
-		return finalAccountAppCCAmt;
-	}
-
-	public void setFinalAccountAppCCAmt(BigDecimal finalAccountAppCCAmt) {
-		this.finalAccountAppCCAmt = finalAccountAppCCAmt;
-	}
-
-	@Column(name = "AMT_LATEST_BUDGET")
-	public BigDecimal getLatestBudgetAmt() {
-		return latestBudgetAmt;
-	}
-
-	public void setLatestBudgetAmt(BigDecimal latestBudgetAmt) {
-		this.latestBudgetAmt = latestBudgetAmt;
-	}
-
-	@Column(name = "AMT_LATEST_BUDGET_CC")
-	public BigDecimal getLatestBudgetAmtCC() {
-		return latestBudgetAmtCC;
-	}
-
-	public void setLatestBudgetAmtCC(BigDecimal latestBudgetAmtCC) {
-		this.latestBudgetAmtCC = latestBudgetAmtCC;
-	}
-	
-	@Column(name = "COMMENTS_FINAL_ACCOUNT")
-	public String getCommentsFinalAccount() {
-		return commentsFinalAccount;
-	}
-
-	public void setCommentsFinalAccount(String commentsFinalAccount) {
-		this.commentsFinalAccount = commentsFinalAccount;
 	}
 
 	@Column(name = "VENDORNO")
