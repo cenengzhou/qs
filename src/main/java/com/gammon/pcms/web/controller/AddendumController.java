@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.pcms.wrapper.AddendumFinalFormWrapper;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.pcms.wrapper.ResourceSummaryWrapper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -45,6 +46,14 @@ public class AddendumController {
 
 	@Autowired
 	private MailContentGenerator mailContentGenerator;
+
+	@PreAuthorize(value = "@GSFService.isRoleExisted('AddendumController','getAddendumFinalForm', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAddendumFinalForm", method = RequestMethod.GET)
+	public AddendumFinalFormWrapper getAddendumFinalForm(@RequestParam(required = true) String jobNo,
+														 @RequestParam(required = true) String subcontractNo,
+														 @RequestParam(required = true) String addendumNo){
+		return addendumService.getAddendumFinalForm(jobNo, subcontractNo, addendumNo);
+	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getLatestAddendum', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestAddendum", method = RequestMethod.GET)

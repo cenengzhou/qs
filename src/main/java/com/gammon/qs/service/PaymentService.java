@@ -1045,44 +1045,6 @@ public class PaymentService{
 		// Get the Basic Payment Cert information
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, scpaymentCert);
 
-		paymentCertViewWrapper.setPreviousCertGrossValue(Double.valueOf(0));
-		paymentCertViewWrapper.setPreviousCertContraCharge(Double.valueOf(0));
-		paymentCertViewWrapper.setPreviousCertNetValue(Double.valueOf(0));
-
-		if (scpaymentCert.getIntermFinalPayment().equals("F")
-					&& paymentCertNoInt > 1) {
-			PaymentCert prevScpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt-1);
-
-			PaymentCertViewWrapper prevPaymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, prevScpaymentCert);
-
-			// prepare gross value, contra charge and net value
-			Double bGrossValue = scpaymentCert.getLatestBudgetAmt() == null ? 0 : scpaymentCert.getLatestBudgetAmt().doubleValue();
-			Double bContraCharge = scpaymentCert.getLatestBudgetAmtCC() == null ? 0 : scpaymentCert.getLatestBudgetAmtCC().doubleValue();
-			Double bNetValue = bGrossValue + bContraCharge;
-			Double cGrossValue = paymentCertViewWrapper.getSubTotal4();
-			Double cContraCharge = -paymentCertViewWrapper.getLessContraChargesTotal();
-			Double cNetValue = paymentCertViewWrapper.getSubTotal5();
-			Double dGrossValue = prevPaymentCertViewWrapper.getSubTotal4();
-			Double dContraCharge = -prevPaymentCertViewWrapper.getLessContraChargesTotal();
-			Double dNetValue = prevPaymentCertViewWrapper.getSubTotal5();
-
-			// final payment summary
-			if (bGrossValue != null && cGrossValue != null)
-				paymentCertViewWrapper.setSavingGrossValue(bGrossValue - cGrossValue);
-			if (bContraCharge != null && cContraCharge != null)
-				paymentCertViewWrapper.setSavingContraCharge(bContraCharge - cContraCharge);
-			if (bNetValue != null && cNetValue != null)
-				paymentCertViewWrapper.setSavingNetValue(bNetValue - cNetValue);
-
-			paymentCertViewWrapper.setPreviousCertGrossValue(dGrossValue);
-			paymentCertViewWrapper.setPreviousCertContraCharge(dContraCharge);
-			paymentCertViewWrapper.setPreviousCertNetValue(dNetValue);
-
-			paymentCertViewWrapper.setAmtToPayGrossValue(cGrossValue-dGrossValue);
-			paymentCertViewWrapper.setAmtToPayContraCharge(cContraCharge-dContraCharge);
-			paymentCertViewWrapper.setAmtToPayNetValue(cNetValue-dNetValue);
-		}
-
 		Subcontract scPackage = scpaymentCert.getSubcontract();
 
 		MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
@@ -1861,12 +1823,6 @@ public class PaymentService{
 					scPaymentCert.setDueDate(paymentCert.getDueDate());
 				if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
 					scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
-
-				scPaymentCert.setFinalAccountAppAmt(paymentCert.getFinalAccountAppAmt());
-				scPaymentCert.setFinalAccountAppCCAmt(paymentCert.getFinalAccountAppCCAmt());
-				scPaymentCert.setLatestBudgetAmt(paymentCert.getLatestBudgetAmt());
-				scPaymentCert.setLatestBudgetAmtCC(paymentCert.getLatestBudgetAmtCC());
-				scPaymentCert.setCommentsFinalAccount(paymentCert.getCommentsFinalAccount());
 
 				//update bypassPaymentTerms
 				scPaymentCert.setBypassPaymentTerms(paymentCert.getBypassPaymentTerms());

@@ -121,6 +121,11 @@ mainApp.constant('GlobalParameter', {
         		{id:'PCS', value:'Waiting For Posting', color:'#E68550'},
         		{id:'APR', value:'Posted To Finance', color:'#707070'}
 	],
+	finalAccountStatus: [
+		{id:'PENDING', value:'PENDING'},
+		{id:'SUBMITTED', value:'SUBMITTED'},
+		{id:'APPROVED', value:'APPROVED'}
+	],
 	paymentStatusCode: [
 				{id:'#', value:'Check being Written'},
 				{id:'%', value:'Withholding Applies'},

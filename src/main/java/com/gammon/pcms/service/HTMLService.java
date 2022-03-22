@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import com.gammon.pcms.model.ApprovalSummary;
+import com.gammon.pcms.wrapper.AddendumFinalFormWrapper;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.ApprovalSummaryService;
@@ -370,6 +371,8 @@ public class HTMLService implements Serializable{
 		data.put("summary", summary != null ? summary : "");
 		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.AddendumNameObject, String.valueOf(addendum.getId()));
 		data.put("approvalSummary", approvalSummary);
+		AddendumFinalFormWrapper addendumFinalForm = addendumService.getAddendumFinalForm(noJob, noSubcontract, String.valueOf(noAddendum));
+		data.put("addendumFinalForm", addendumFinalForm);
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 

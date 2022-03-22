@@ -22,7 +22,7 @@
     <div class="invoice-logo m-l-5">
         <div>
             <img src="image/gammon.bmp" class="logo" style="width: 128px" />
-            <h5>{{paymentCertSummary.companyName}}</h5>
+            <h5>{{addendumFinalForm.companyName}}</h5>
         </div>
     </div>
 
@@ -36,25 +36,25 @@
             <tbody>
             <tr>
                 <td><b>Project No:</b></td>
-                <td colspan="3">{{paymentCertSummary.jobNumber}}</td>
+                <td colspan="3">{{addendumFinalForm.projectNo}}</td>
             </tr>
             <tr>
                 <td><b>Project Name:</b></td>
-                <td colspan="3">{{paymentCertSummary.jobDescription}}</td>
+                <td colspan="3">{{addendumFinalForm.projectName}}</td>
             </tr>
             <tr>
                 <td><b>Draft Final Account For:</b></td>
-                <td colspan="3">{{paymentCertSummary.subcontractorNo}} - {{paymentCertSummary.subcontractorDescription}}</td>
+                <td colspan="3">{{addendumFinalForm.draftFinalAccountFor}}</td>
             </tr>
             <tr>
                 <td><b>Sub-Contract No:</b></td>
-                <td>{{paymentCertSummary.subContractNo}}</td>
+                <td>{{addendumFinalForm.subcontractNo}}</td>
                 <td><b>Original Sub-Contract Sum (HK$):</b></td>
-                <td class="text-right">{{subcontract.originalSubcontractSum | currency}}</td>
+                <td class="text-right">{{addendumFinalForm.originalSubcontractSum | currency}}</td>
             </tr>
             <tr>
                 <td><b>Trade:</b></td>
-                <td colspan="3">{{paymentCertSummary.subContractDescription}}</td>
+                <td colspan="3">{{addendumFinalForm.trade}}</td>
             </tr>
             </tbody>
         </table>
@@ -89,19 +89,19 @@
                         <b>A) Sub-Contract Final Account Application</b>
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.finalAccountAppAmt != null">{{payment.finalAccountAppAmt | currency}}</span>
+                        <span ng-if="addendumFinalForm.aGrossValue != null">{{addendumFinalForm.aGrossValue | currency}}</span>
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.finalAccountAppCCAmt != null">{{payment.finalAccountAppCCAmt | currency}}</span>
+                        <span ng-if="addendumFinalForm.aContraCharge != null">{{addendumFinalForm.aContraCharge | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{(payment.finalAccountAppAmt == null ? 0 : payment.finalAccountAppAmt) + (payment.finalAccountAppCCAmt == null ? 0 : payment.finalAccountAppCCAmt) | currency}}
+                        {{addendumFinalForm.aNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -109,19 +109,19 @@
                         <b>B) Latest budget (FCST)</b>
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.latestBudgetAmt != null">{{payment.latestBudgetAmt | currency}}</span>
+                        <span ng-if="addendumFinalForm.bGrossValue != null">{{addendumFinalForm.bGrossValue | currency}}</span>
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="payment.latestBudgetAmtCC != null">{{payment.latestBudgetAmtCC | currency}}</span>
+                        <span ng-if="addendumFinalForm.bContraCharge != null">{{addendumFinalForm.bContraCharge | currency}}</span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{(payment.latestBudgetAmt == null ? 0 : payment.latestBudgetAmt) + (payment.latestBudgetAmtCC == null ? 0 : payment.latestBudgetAmtCC) | currency}}
+                        {{addendumFinalForm.bNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -129,19 +129,19 @@
                         <b>C) This Final Account</b>
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.subTotal4 | currency}}
+                        {{ addendumFinalForm.cGrossValue | currency}}
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        {{ -paymentCertSummary.lessContraChargesTotal | currency}}
+                        {{ addendumFinalForm.cContraCharge | currency}}
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.subTotal5 | currency}}
+                        {{ addendumFinalForm.cNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -149,23 +149,23 @@
                         <b>B-C) Saving/ Increase * EoJ FC</b>
                     </td>
                     <td class="text-right">
-                        <span ng-if="paymentCertSummary.savingGrossValue != null">
-                            {{ paymentCertSummary.savingGrossValue | currency}}
+                        <span ng-if="addendumFinalForm.savingGrossValue != null">
+                            {{ addendumFinalForm.savingGrossValue | currency}}
                         </span>
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        <span ng-if="paymentCertSummary.savingContraCharge != null">
-                            {{ paymentCertSummary.savingContraCharge | currency}}
+                        <span ng-if="addendumFinalForm.savingContraCharge != null">
+                            {{ addendumFinalForm.savingContraCharge | currency}}
                         </span>
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.savingNetValue | currency}}
+                        {{ addendumFinalForm.savingNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -173,19 +173,19 @@
                         <b>D) Last Certificate</b>
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.previousCertGrossValue | currency}}
+                        {{ addendumFinalForm.dGrossValue | currency}}
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.previousCertContraCharge | currency}}
+                        {{ addendumFinalForm.dContraCharge | currency}}
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.previousCertNetValue | currency}}
+                        {{ addendumFinalForm.dNetValue | currency}}
                     </td>
                 </tr>
                 <tr>
@@ -193,19 +193,19 @@
                         <b>C-D) Amount still to pay</b>
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.amtToPayGrossValue | currency}}
+                        {{ addendumFinalForm.amtToPayGrossValue | currency}}
                     </td>
                     <td>
                         +
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.amtToPayContraCharge | currency}}
+                        {{ addendumFinalForm.amtToPayContraCharge | currency}}
                     </td>
                     <td>
                         =
                     </td>
                     <td class="text-right">
-                        {{ paymentCertSummary.amtToPayNetValue | currency}}
+                        {{ addendumFinalForm.amtToPayNetValue | currency}}
                     </td>
                 </tr>
                 </tbody>
@@ -213,7 +213,7 @@
         </div>
         <div style="border-left: 1px solid black; border-right: 1px solid black; padding: 0 20px">
             <div><b>Comments (e.g. reason for increase):</b></div>
-            <div>{{payment.commentsFinalAccount}}</div>
+            <div>{{addendumFinalForm.comments}}</div>
 
         </div>
         <div style="border: 1px solid black; padding: 0 20px">
@@ -233,9 +233,9 @@
             </tr>
             <tr>
                 <td style="width: 25%"><b>AQS/ QS/ PQS/ SPQS</b></td>
-                <td class="signature-underline"></td>
+                <td class="signature-underline">{{addendumFinalForm.preparedBy}}</td>
                 <td style="width: 10%"><b>Date</b></td>
-                <td class="signature-underline">{{payment.lastModifiedDate | date: 'MMM d, yyyy'}}</td>
+                <td class="signature-underline">{{addendumFinalForm.preparedDate | date: 'MMM d, yyyy'}}</td>
             </tr>
             <tr>
                 <td>&nbsp;</td>

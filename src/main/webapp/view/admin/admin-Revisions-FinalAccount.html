@@ -1,0 +1,181 @@
+<div>
+	<div class="row well">
+		<form name="RevisionsFinalAccountSearch"
+			ng-submit="onSubmitFinalAccountSearch()" class="form">
+			<div class="col-md-3">
+				<input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}" ng-change="canAdminJob(FinalAccountSearch.jobNo)" 
+					id="FinalAccountSearch_jobNo" ng-model="FinalAccountSearch.jobNo">
+			</div>
+			<div class="col-md-3">
+				<input type="number" class="form-control"
+					placeholder="Subcontract Number:" id="FinalAccountSearch_subcontractNo"
+					ng-model="FinalAccountSearch.subcontractNo">
+			</div>
+			<div class="col-md-3">
+				<input type="number" class="form-control"
+					   placeholder="Addendum Number:" id="FinalAccountSearch_addendumNo"
+					   ng-model="FinalAccountSearch.addendumNo">
+			</div>
+			<div class="col-md-3">
+				<button type="submit" class="btn btn-block btn-primary"
+					id="FinalAccountSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
+			</div>
+		</form>
+	</div>
+
+	<form name="RevisionsFinalAccountRecord">
+		<div class="row" style="padding: 20px" ng-show="FinalAccountRecord.jobNo">
+			<div class="row" resize ng-style="resizeWithOffset(330)">
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_jobNo" class="control-label">Job Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="FinalAccountRecord_jobNo"
+									value="{{FinalAccountRecord.jobNo}}" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_addendumNo" class="control-label">Addendum Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="FinalAccountRecord_addendumNo"
+									value="{{FinalAccountRecord.addendumNo}}" readonly>
+							</div>
+						</div>
+					</div>
+
+<!--					<div class="col-md-4" style="padding: 5px">-->
+<!--						<div class="form-group">-->
+<!--							<label for="FinalAccountRecord_addendumId" class="control-label">Addendum Id</label>-->
+<!--							<div>-->
+<!--								<input type="text" class="form-control"-->
+<!--									   id="FinalAccountRecord_addendumId"-->
+<!--									   value="{{FinalAccountRecord.addendumId}}" readonly>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+
+				</fieldset>
+
+				<fieldset>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_finalAccountAppAmt"
+								   class="control-label">Final Account App Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="FinalAccountRecord_finalAccountAppAmt"
+									   ng-model="FinalAccountRecord.finalAccountAppAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_finalAccountAppCCAmt"
+								   class="control-label">Final Account App CC Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="FinalAccountRecord_finalAccountAppCCAmt"
+									   ng-model="FinalAccountRecord.finalAccountAppCCAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_latestBudgetAmt"
+								   class="control-label">Latest Budget Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="FinalAccountRecord_latestBudgetAmt"
+									   ng-model="FinalAccountRecord.latestBudgetAmt">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_latestBudgetAmtCC"
+								   class="control-label">Latest Budget CC Amount</label>
+							<div>
+								<input type="text" class="form-control"
+									   id="FinalAccountRecord_latestBudgetAmtCC"
+									   ng-model="FinalAccountRecord.latestBudgetAmtCC">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_commentsFinalAccount"
+								   class="control-label">Final Account Comments</label>
+							<div>
+								<textarea class="form-control" id="FinalAccountRecord_commentsFinalAccount"
+										  style="overflow: hidden; box-sizing: border-box;height:auto;"
+										  ng-model="FinalAccountRecord.comments"></textarea>
+							</div>
+						</div>
+					</div>
+
+
+<!--					<div class="col-md-4" style="padding: 5px">-->
+<!--						<div class="form-group">-->
+<!--							<label for="FinalAccountRecord_preparedDate"-->
+<!--								   class="control-label">Prepared Date</label>-->
+<!--							<div>-->
+<!--								<input type="text" class="form-control"-->
+<!--									   id="FinalAccountRecord_preparedDate"-->
+<!--									   ng-model="FinalAccountRecord.preparedDate">-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+
+
+<!--					<div class="col-md-4" style="padding: 5px">-->
+<!--						<div class="form-group">-->
+<!--							<label for="FinalAccountRecord_preparedUser"-->
+<!--								   class="control-label">Prepared User</label>-->
+<!--							<div>-->
+<!--								<input type="text" class="form-control"-->
+<!--									   id="FinalAccountRecord_preparedUser"-->
+<!--									   ng-model="FinalAccountRecord.preparedUser">-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="FinalAccountRecord_status"
+								class="control-label">Status</label>
+							<div>
+								<select class="form-control"
+									ng-options="v.id as v.value for v in GlobalParameter.finalAccountStatus"
+									id="FinalAccountRecord_status"
+									ng-model="FinalAccountRecord.status">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+			</div>
+
+			<div class="row"
+				ng-show="true || FinalAccountRecord.jobNo !== undefined">
+				<div ng-show="showQSAdmin" ng-class="{'col-md-6':FinalAccountRecord.status == 'PENDING', 'col-md-12':FinalAccountRecord.status != 'PENDING'}">
+					<button ng-click="onSubmitFinalAccountRecord()" type="button" class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Update</button>
+				</div>
+				<div class="col-md-6" ng-show="showQSAdmin && FinalAccountRecord.status == 'PENDING'" >
+					<button ng-click="onDeleteFinalAccount()" type="button" class="btn btn-block btn-danger" ng-disabled="!adminSearchBtn">Delete</button>
+				</div>
+			</div>
+
+		</div>
+	</form>
+</div>

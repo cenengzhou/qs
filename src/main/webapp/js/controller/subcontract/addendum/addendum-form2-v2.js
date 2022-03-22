@@ -61,6 +61,13 @@ mainApp.controller('AddendumForm2v2Ctrl', ['$scope', 'modalService', 'addendumSe
                             $scope.disableButtons = false;
                         else
                             $scope.disableButtons = true;
+
+                        if ($scope.addendum.finalAccount == 'Y') {
+                            addendumService.getAddendumFinalForm($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+                                .then(function(data) {
+                                    $scope.addendumFinalForm = data;
+                                });
+                        }
                     });
         }
 

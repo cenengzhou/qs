@@ -38,6 +38,12 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 			return resultList.get(0);
 		return null;
 	}
+
+	public Addendum getAddendumById(Long id) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("id", BigDecimal.valueOf(id)));
+		return (Addendum) criteria.uniqueResult();
+	}
 	
 	public Addendum getAddendum(String noJob, String noSubcontract, Long noAddendum) {
 

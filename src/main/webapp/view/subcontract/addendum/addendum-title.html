@@ -18,6 +18,17 @@
 								required/>
 						</div>
 					</div>
+					<div class="form-group" id="addendumFinalAccount">
+						<label>Final Account</label>
+						<div class="btn-group btn-group-justified">
+							<label class="btn" ng-disabled="disableButtons"
+								   ng-class="{'btn-primary' : addendum.finalAccount == 'N', 'btn-inverse' : addendum.finalAccount != 'N'}"
+								   ng-model="addendum.finalAccount" uib-btn-radio="'N'">No</label>
+							<label class="btn" ng-disabled="disableButtons"
+								   ng-class="{'btn-primary' : addendum.finalAccount == 'Y', 'btn-inverse' : addendum.finalAccount != 'Y'}"
+								   ng-model="addendum.finalAccount" uib-btn-radio="'Y'">YES</label>
+						</div>
+					</div>
 					<div class="form-group">
 						<label>Remarks</label>
 						<div class="controls">
