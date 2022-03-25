@@ -7,6 +7,7 @@
 package com.gammon.qs.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.approvalRequest.ApprovalServiceRequest;
+import com.gammon.pcms.dao.CEDApprovalRepository;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.pcms.model.CEDApproval;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
@@ -106,6 +109,8 @@ public class AddendumService{
 	private PaymentCertHBDao paymentCertDao;
 	@Autowired
 	private PaymentService paymentService;
+	@Autowired
+	private CEDApprovalRepository cedApprovalRepository;
 
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
@@ -219,6 +224,8 @@ public class AddendumService{
 			
 			addendum.setAmtAddendumTotalTba(subcontract.getApprovedVOAmount());
 			addendum.setAmtSubcontractRevisedTba(subcontract.getRemeasuredSubcontractSum().add(subcontract.getApprovedVOAmount()));
+			
+			addendum.setAmtCEDApproved(subcontract.getAmtCEDApproved() == null ? new BigDecimal(0): subcontract.getAmtCEDApproved());
 
 			addendumHBDao.insert(addendum);
 		} catch (Exception e) {
@@ -956,7 +963,7 @@ public class AddendumService{
 		String resultMsg  = null;
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
-			
+
 			Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract.toString());
 			resultMsg = ableToSubmitAddendum(noJob, noSubcontract);
 			if(resultMsg!= null && resultMsg.length()>0){
@@ -968,54 +975,75 @@ public class AddendumService{
 			if ("SGP".equals(currency))
 				exchangeRateToHKD = Subcontract.EXCHANGE_RATE_SGP;
 
-				String company = subcontract.getJobInfo().getCompany();
-				String vendorNo = subcontract.getVendorNo();
-				String vendorName = masterListService.searchVendorAddressDetails(subcontract.getVendorNo().trim()).getVendorName();
-				String approvalType="SM";
-				if (CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2).compareTo(new BigDecimal(250000.0)) > 0 
-						|| addendum.getAmtAddendum().compareTo(
-								CalculationUtil.roundToBigDecimal(subcontract.getSubcontractSum().multiply(new BigDecimal(0.25)), 2) 
-						) > 0)
-					approvalType = "SL";
-				String approvalSubType = subcontract.getApprovalRoute();
+			String company = subcontract.getJobInfo().getCompany();
+			String vendorNo = subcontract.getVendorNo();
+			String vendorName = masterListService.searchVendorAddressDetails(subcontract.getVendorNo().trim()).getVendorName();
 
-				// added by brian on 20110401 - start
-				// the currency pass to approval system should be the company base currency
-				// so change the currencyCode to company base currency here since it will not affect other part of code
-				String currencyCode = subcontractService.getCompanyBaseCurrency(noJob);
-				// added by brian on 20110401 - end
+			//Define Approval Type
+			String approvalType = Addendum.APPROVAL_TYPE_SM;
+			BigDecimal AmtCEDApproved = addendum.getAmtCEDApproved()==null? new BigDecimal(0):addendum.getAmtCEDApproved();
+			BigDecimal AmtCEDNotApproved = addendum.getAmtSubcontractRevised().subtract(AmtCEDApproved);
+			
+						
+			BigDecimal AmtCumCEDNotApproved = CalculationUtil.roundToBigDecimal(AmtCEDNotApproved.add(addendum.getAmtAddendum()).multiply(exchangeRateToHKD),2);
+			
+			BigDecimal approvalPercent =  new BigDecimal(0);
+			if (AmtCEDApproved.compareTo(new BigDecimal(0)) >0 )
+				approvalPercent  = AmtCumCEDNotApproved.divide(AmtCEDApproved, 2, RoundingMode.HALF_UP);
+			
+			
+			//Rule 1: >25% AND > $1M
+			if(approvalPercent.compareTo(new BigDecimal(0.25)) > 0 && AmtCumCEDNotApproved.compareTo(new BigDecimal(1000000)) > 0)
+				approvalType = Addendum.APPROVAL_TYPE_SL;
+			
+			//Rule 2: >$10M
+			else if (AmtCumCEDNotApproved.compareTo(new BigDecimal(10000000)) > 0)
+				approvalType = Addendum.APPROVAL_TYPE_SL;
+				
 
-				if(resultMsg == null || resultMsg.length()==0){
-					ApprovalServiceRequest approvalRequest = new ApprovalServiceRequest();
-					approvalRequest.setOrderNumber(noSubcontract.toString());
-					approvalRequest.setOrderType(approvalType);
-					approvalRequest.setJobNumber(noJob);
-					approvalRequest.setSupplierNumber(vendorNo);
-					approvalRequest.setSupplierName(vendorName);
-					approvalRequest.setOrderAmount(addendum.getAmtAddendum().toString());
-					approvalRequest.setOriginator(securityService.getCurrentUser().getUsername().toLowerCase());
-					approvalRequest.setApprovalSubType(approvalSubType);
-					approvalRequest.setOrderDate(new Date());
-					approvalRequest.setCompany(company);
-					approvalRequest.setPoCurrency(currencyCode);
-					approvalRequest.setOrderSuffix(noAddendum.toString());
-					resultMsg = apWebServiceConnectionDao.createApprovalRoute(approvalRequest, subcontract.getInternalJobNo());
-				}else{
-					logger.info(resultMsg);
-					return resultMsg;
-				}
-				logger.info("resultMsg"+resultMsg);
+			/*if (CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2).compareTo(new BigDecimal(250000.0)) > 0 
+					|| addendum.getAmtAddendum().compareTo(CalculationUtil.roundToBigDecimal(subcontract.getSubcontractSum().multiply(new BigDecimal(0.25)), 2)) > 0)
+				approvalType = "SL";*/
 
-				if(resultMsg == null || resultMsg.length()==0){
-					addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
-					addendum.setStatusApproval("NA");
-					addendum.setDateSubmission(new Date());
-					addendum.setUsernamePreparedBy(securityService.getCurrentUser().getUsername());
-					addendumHBDao.update(addendum);
-					
-					subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_SUBMITTED);
-					subcontractHBDao.updateSubcontract(subcontract);
-				}
+			String approvalSubType = subcontract.getApprovalRoute();
+
+			// added by brian on 20110401 - start
+			// the currency pass to approval system should be the company base currency
+			// so change the currencyCode to company base currency here since it will not affect other part of code
+			String currencyCode = subcontractService.getCompanyBaseCurrency(noJob);
+			// added by brian on 20110401 - end
+
+			if(resultMsg == null || resultMsg.length()==0){
+				ApprovalServiceRequest approvalRequest = new ApprovalServiceRequest();
+				approvalRequest.setOrderNumber(noSubcontract.toString());
+				approvalRequest.setOrderType(approvalType);
+				approvalRequest.setJobNumber(noJob);
+				approvalRequest.setSupplierNumber(vendorNo);
+				approvalRequest.setSupplierName(vendorName);
+				approvalRequest.setOrderAmount(addendum.getAmtAddendum().toString());
+				approvalRequest.setOriginator(securityService.getCurrentUser().getUsername().toLowerCase());
+				approvalRequest.setApprovalSubType(approvalSubType);
+				approvalRequest.setOrderDate(new Date());
+				approvalRequest.setCompany(company);
+				approvalRequest.setPoCurrency(currencyCode);
+				approvalRequest.setOrderSuffix(noAddendum.toString());
+				resultMsg = apWebServiceConnectionDao.createApprovalRoute(approvalRequest, subcontract.getInternalJobNo());
+			}else{
+				logger.info(resultMsg);
+				return resultMsg;
+			}
+			logger.info("resultMsg"+resultMsg);
+
+			if(resultMsg == null || resultMsg.length()==0){
+				addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
+				addendum.setStatusApproval("NA");
+				addendum.setDateSubmission(new Date());
+				addendum.setUsernamePreparedBy(securityService.getCurrentUser().getUsername());
+				addendumHBDao.update(addendum);
+
+				subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_SUBMITTED);
+				subcontractHBDao.updateSubcontract(subcontract);
+			}
 		} catch (Exception e) {
 			resultMsg = "Addendum Approval cannot be submitted.";
 			e.printStackTrace();
@@ -1062,8 +1090,28 @@ public class AddendumService{
 			addendum.setDateApproval(new Date());
 			addendumHBDao.update(addendum);
 			
+			// update CED Approval Amount to SC
+			try {
+				logger.info("Get CED Approval: "+jobNo+" Package: "+subcontractNo);
+				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(jobNo, Integer.parseInt(subcontractNo));
+				if (cedApproval != null)
+					subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
+			} catch (Exception e) {
+				logger.info("Failed to update CED Approval: "+jobNo+" Package: "+subcontractNo);
+				e.printStackTrace();
+			}
+			
 			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
 			subcontractHBDao.update(subcontract);
+			
+			
+			 
+			/*try {
+				subcontractHBDao.callStoredProcedureToUpdateCEDApproval(jobNo, subcontractNo);
+			} catch (Exception e) {
+				logger.info("Failed to update CED Approval: "+jobNo+" Package: "+subcontractNo);
+				e.printStackTrace();
+			}*/
 			
 		}else{
 			addendum.setStatus(Addendum.STATUS.PENDING.toString());
@@ -1310,9 +1358,11 @@ public class AddendumService{
 			if (fa == null)
 				fa = new FinalAccount();
 			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-			PaymentCert lastCert = paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
-			PaymentCertViewWrapper paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastCert.getPaymentCertNo()));
-			PaymentCertViewWrapper lastPaymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastCert.getPaymentCertNo()-1));
+			PaymentCert lastPostedCert = paymentCertDao.obtainPaymentLatestPostedCert(jobNo, subcontractNo);
+			PaymentCertViewWrapper paymentCertSummary = new PaymentCertViewWrapper();
+			if(lastPostedCert != null)
+				paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastPostedCert.getPaymentCertNo()));
+
 			String company = subcontract.getJobInfo().getCompany();
 			MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
 			String companyNameStr = companyName.getVendorName() != null ? companyName.getVendorName().trim() : companyName.getVendorName();
@@ -1340,8 +1390,8 @@ public class AddendumService{
 			result.setcGrossValue(addendum.getAmtSubcontractRevisedTba());
 			result.setcContraCharge(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
 			result.setcNetValue(result.getcGrossValue().add(result.getcContraCharge()));
-			result.setdGrossValue(BigDecimal.valueOf(lastPaymentCertSummary.getSubTotal4()));
-			result.setdContraCharge(BigDecimal.valueOf(-lastPaymentCertSummary.getLessContraChargesTotal()));
+			result.setdGrossValue(BigDecimal.valueOf(paymentCertSummary.getSubTotal4()));
+			result.setdContraCharge(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
 			result.setdNetValue(result.getdGrossValue().add(result.getdContraCharge()));
 //			result.setdNetValue(BigDecimal.valueOf(lastPaymentCertSummary.getSubTotal5()));
 

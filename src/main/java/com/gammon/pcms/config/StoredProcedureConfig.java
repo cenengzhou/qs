@@ -18,6 +18,9 @@ public class StoredProcedureConfig {
 	private String storedProcedureUpdateMainCert;
 	@Value("${stored.procedure.auditHousekeep}")
 	private String storedProcedureAuditHousekeep;
+	@Value("${stored.procedure.updateCEDApproval}")
+	private String storedProcedureUpdateCEDApproval;
+
 	
 	public String getStoredProcedureGeneratepackagesnapshot() {
 		return storedProcedureGeneratepackagesnapshot;
@@ -34,4 +37,9 @@ public class StoredProcedureConfig {
 	public String getStoredProcedureAuditHousekeep() {
 		return storedProcedureAuditHousekeep;
 	}
+	public String getStoredProcedureUpdateCEDApproval() {
+		return storedProcedureUpdateCEDApproval;
+	}
+
+	
 }

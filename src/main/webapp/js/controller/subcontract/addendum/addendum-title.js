@@ -18,6 +18,8 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 			getLatestAddendum();
 		else
 			getAddendum();
+		
+		
 	}
 	
 	
@@ -37,6 +39,7 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 					no: $scope.addendum.no,
 					title: $scope.addendum.title,
 					remarks: $scope.addendum.remarks,
+					finalAccount: $scope.addendum.finalAccount
 			}
 			createAddendum($scope.addendumToInsert);
 		}
@@ -65,9 +68,12 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 				function( data ) {
 					if(data.length ==0){
 						$scope.addendum.no = 1;
+						$scope.addendum.finalAccount = 'N';
 					}else{
 						if(data.status == 'APPROVED'){
 							$scope.addendum.no = data.no + 1;
+							$scope.addendum.finalAccount = 'N';
+							
 						}else{
 							$location.path('/subcontract/addendum-select');
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "A pending addendum already exists.");

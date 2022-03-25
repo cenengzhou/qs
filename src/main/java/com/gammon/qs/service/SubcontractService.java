@@ -32,13 +32,15 @@ import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.dao.CEDApprovalRepository;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.helper.FileHelper;
+import com.gammon.pcms.model.CEDApproval;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
-import com.gammon.pcms.service.CommentService;
+
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -166,13 +168,15 @@ public class SubcontractService {
 	@Autowired
 	private AttachmentService attachmentService;
 	@Autowired
-	private CommentService commentService;
+	private CEDApprovalRepository cedApprovalRepository;
 
 	// Approval System
 	@Autowired
 	private APWebServiceConnectionDao apWebServiceConnectionDao;
 
 	private List<UDC> cachedWorkScopeList = new ArrayList<UDC>();
+
+	
 	
 	static final int RECORDS_PER_PAGE = 100;
 	
@@ -326,6 +330,15 @@ public class SubcontractService {
 				e1.printStackTrace();
 			}
 			
+			// update CED Approval Amount to SC
+			try {
+				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(scPackage.getJobInfo().getJobNumber(), Integer.parseInt(scPackage.getPackageNo()));
+				if (cedApproval != null)
+					scPackage.setAmtCEDApproved(cedApproval.getApprovalAmount());
+			} catch (Exception e) {
+				logger.info("Failed to update CED Approval: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
+				e.printStackTrace();
+			}
 			
 			subcontractHBDao.updateSubcontract(scPackage);
 
@@ -1688,6 +1701,23 @@ public class SubcontractService {
 		
 	}
 
+	/**22 Mar 2022
+	 ** Call Stored Procedure P_UPDATE_CED_APPROVAL_TO_QS **/
+	public Boolean updateCEDApprovalManually (String jobNo, String packageNo) {
+		logger.info("-----------------------UpdateCEDApprovalManually(START)-------------------------");
+		boolean completed = false;
+		
+		try {
+			completed = subcontractHBDao.callStoredProcedureToUpdateCEDApproval(jobNo, packageNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.info("------------------------UpdateCEDApprovalManually(END)---------------------------");
+		return completed;
+		
+	}
+	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public SubcontractDetail getSubcontractDetailByID(Long id) {
 		return subcontractDetailHBDao.get(id);

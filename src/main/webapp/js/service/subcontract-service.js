@@ -34,6 +34,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	runProvisionPostingManually:						runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
     	updateF58001FromSCPackageManually: 					updateF58001FromSCPackageManually,
+    	updateCEDApprovalManually: 							updateCEDApprovalManually,
 
     	updateSubcontractAdmin:								updateSubcontractAdmin,
     	
@@ -482,7 +483,21 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	var request = $http.post("service/subcontract/updateF58001FromSCPackageManually");
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-
+    
+    function updateCEDApprovalManually(jobNo, packageNo){
+    	var request = $http({
+    		method: 'post',
+    		url: 'service/subcontract/updateCEDApprovalManually',
+    		dataType: "application/json;charset=UTF-8",
+    		params: {
+    			jobNo: jobNo,
+    			packageNo: packageNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+   
     function updateSubcontractAdmin(subcontract){
        	var request = $http.post('service/subcontract/updateSubcontractAdmin', subcontract);
        	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

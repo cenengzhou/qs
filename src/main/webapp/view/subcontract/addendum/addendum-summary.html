@@ -145,6 +145,58 @@
 					</div>
 				</div>
 
+
+
+
+				<div class="col-md-10 m-l-20">
+					<div class="box no-border">
+						<div class="box-body">
+							<div class="widget widget-stat bg-warning text-white">
+								
+								<div class="widget-stat-info">
+									<div class="widget-stat-title ">Executive Commercial Director Approval Details</div>
+								</div>
+							</div>
+							<ul class="list-group list-group-unbordered">
+								<li class="list-group-item">
+									<b class="col-md-2">A1</b> 
+									<b>Previously approved CED Revised Sub-Contract Sum</b> 
+									<b class="pull-right">{{addendum.amtCEDApproved | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b class="col-md-2">A2</b> 
+									<b>Previously approved Revised Sub-Contract Sum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRevised | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b class="col-md-2">A2-A1</b> 
+									<b>Previous CED unapproved Addendum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRevised - addendum.amtCEDApproved | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b class="col-md-2">B1</b> 
+									<b>Individual Unapproved Addendum</b> 
+									<b class="pull-right">{{addendum.amtAddendum | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b class="col-md-2">B2</b> 
+									<b>Cumulative CED Unapproved Addenda</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRevised - addendum.amtCEDApproved + addendum.amtAddendum | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b class="col-md-2">B2/A1</b> 
+									<b>% Increase</b> 
+									<b class="pull-right">{{(addendum.amtSubcontractRevised - addendum.amtCEDApproved + addendum.amtAddendum)/addendum.amtCEDApproved*100 | number:2}}%</b>
+								</li>
+								
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+
+
 			</div>
 		</div>
 

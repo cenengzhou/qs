@@ -428,6 +428,26 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return completed;
 	}
 	
+	/**22 Mar 2022
+	 ** Call Stored Procedure P_UPDATE_CED_APPROVAL_TO_QS **/
+	public Boolean callStoredProcedureToUpdateCEDApproval(String jobNo, String packageNo) throws Exception {
+		Boolean completed = false;
+
+		SessionFactoryImplementor sfi = (SessionFactoryImplementor) getSessionFactory();
+		Session session = sfi.openSession();
+		session.beginTransaction();
+
+		Query q = session.createSQLQuery(" { call "+sfi.getSettings().getDefaultSchemaName() +  "."+storedProcedureConfig.getStoredProcedureUpdateCEDApproval()+"("+jobNo +"," + packageNo+")}");
+		q.executeUpdate();
+		session.getTransaction().commit();
+		session.close();
+//		sfi.close(); //will cause Could not open Hibernate Session
+		
+        completed = true;
+		
+		return completed;
+	}
+	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public Subcontract obtainSubcontract(String jobNo, String packageNo) throws DatabaseOperationException{
 		Subcontract result = null;

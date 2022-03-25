@@ -63,6 +63,17 @@ mainApp.controller('AdminManualProceduresCtrl',
                     });
     };
     
+    
+    $scope.onSubmitCEDApproval = function(){
+		subcontractService.updateCEDApprovalManually($scope.CEDApprovalJobNo, $scope.CEDApprovalPackageNo)
+		.then(function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Update CED Approval completed.");;
+		},function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+		});
+	};
+	
+    
 	$scope.onSubmitGenerateSubcontractSnapshot = function(){
 //		$scope.blockProcedures.start({hideMessage:true, hideAnimate:true});
 		subcontractService.generateSCPackageSnapshotManually()

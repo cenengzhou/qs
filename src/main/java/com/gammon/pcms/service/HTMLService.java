@@ -35,7 +35,6 @@ import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.pcms.model.Addendum;
-import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.Personnel;
 import com.gammon.pcms.model.PersonnelMap;
 import com.gammon.pcms.model.TenderVariance;
@@ -43,7 +42,6 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.hr.HrUser;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
-import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
@@ -121,8 +119,6 @@ public class HTMLService implements Serializable{
 	private ResourceSummaryHBDao resourceSummaryHBDao;
 	@Autowired
 	private AddendumHBDao addendumHBDao;
-	@Autowired
-	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
 	private AccountCodeWSDao accountCodeDao;
 	@Autowired
@@ -348,16 +344,21 @@ public class HTMLService implements Serializable{
 			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
 
 		Addendum addendum = new Addendum();
-		List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
+		//List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
 
 		Form2SummaryWrapper summary = new Form2SummaryWrapper();
 
 		if(noAddendum !=null){
 			addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
-			addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
+			//addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
 
 			summary = addendumService.getForm2Summary(noJob, noSubcontract, noAddendum);
+		
+			if (addendum.getFinalAccount() == null)
+				addendum.setFinalAccount("N");
 		}
+		
+		
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("addendum");

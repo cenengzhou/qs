@@ -194,6 +194,7 @@ public class Subcontract extends BasePersistedObject {
 	private Date durationTo;
 	private String reasonQuotation;
 	private String reasonManner;
+	private BigDecimal amtCEDApproved = new BigDecimal(0.00);
 
 	@Transient
 	public boolean isAwarded() {
@@ -1051,6 +1052,17 @@ public class Subcontract extends BasePersistedObject {
 	public void setReasonManner(String reasonManner) {
 		this.reasonManner = reasonManner;
 	}
+	
+	
+	
+	@Column(name = "CED_APPROVED_AMT", precision = 19, scale = 2)
+	public BigDecimal getAmtCEDApproved() {
+		return amtCEDApproved;
+	}
+
+	public void setAmtCEDApproved(BigDecimal amtCEDApproved) {
+		this.amtCEDApproved = amtCEDApproved;
+	}
 
 	@Override
 	public String toString() {
@@ -1131,6 +1143,7 @@ public class Subcontract extends BasePersistedObject {
 			", durationTo='" + getDurationTo() + "'" +
 			", reasonQuotation='" + getReasonQuotation() + "'" +
 			", reasonManner='" + getReasonManner() + "'" +
+			", amtCEDApproved='" + getAmtCEDApproved() + "'" +
 			"}";
 	}
 

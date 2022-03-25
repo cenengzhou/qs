@@ -423,6 +423,18 @@ public class SubcontractController {
 		subcontractService.updateF58001FromSCPackageManually();
 		mailContentGenerator.sendAdminFnEmail("updateF58001FromSCPackageManually", "");
 	}
+	
+	@PreAuthorize(value = "@GSFService.isRoleExisted('SubcontractController','updateCEDApprovalManually', @securityConfig.getRolePcmsImsAdmin())")
+	@RequestMapping(value = "updateCEDApprovalManually", method = RequestMethod.POST)
+	public void updateCEDApprovalManually(@RequestParam(defaultValue = "") String jobNo, @RequestParam(defaultValue = "") String packageNo){
+		if(jobNo.trim().length()==0){
+			jobNo = null;
+			packageNo = null;
+		}
+		
+		subcontractService.updateCEDApprovalManually(jobNo, packageNo);
+		mailContentGenerator.sendAdminFnEmail("updateCEDApprovalManually", "");
+	}
 
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsQsAdmin())")

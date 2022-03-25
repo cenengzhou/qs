@@ -51,7 +51,10 @@ public class Addendum extends PcmsPersistedAuditObject {
 		APPROVED,
 		REJECTED
 	}
-
+	//Addendum approval
+	public static final String APPROVAL_TYPE_SM = "SM";
+	public static final String APPROVAL_TYPE_SL = "SL"; // Requires CED Approval
+		
 	public static enum FINAL_ACCOUNT_VALUE { Y, N }
 
 
@@ -80,6 +83,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private String remarks;
 	private String finalAccount;
 	private BigDecimal noAddendumDetailNext = new BigDecimal(1);
+	private BigDecimal amtCEDApproved  = new BigDecimal(0.00);
+	
 
 	public Addendum() {}
 
@@ -123,6 +128,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 					String usernamePreparedBy,
 					String remarks,
 					String finalAccount,
+					BigDecimal amtCEDApproved,
 					BigDecimal noAddendumDetailNext,
 					String usernameCreated,
 					Date dateCreated,
@@ -152,6 +158,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.usernamePreparedBy = usernamePreparedBy;
 		this.remarks = remarks;
 		this.finalAccount = finalAccount;
+		this.amtCEDApproved = amtCEDApproved;
 		this.noAddendumDetailNext = noAddendumDetailNext;
 		this.usernameCreated = usernameCreated;
 		this.dateCreated = dateCreated;
@@ -416,6 +423,16 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.finalAccount = finalAccount;
 	}
 	
+	
+	@Column(name = "AMT_CED_APPROVED", precision = 19, scale = 2)
+	public BigDecimal getAmtCEDApproved() {
+		return amtCEDApproved;
+	}
+
+	public void setAmtCEDApproved(BigDecimal amtCEDApproved) {
+		this.amtCEDApproved = amtCEDApproved;
+	}
+
 	@Column(name = "NO_ADDENDUM_DETAIL_NEXT",
 			precision = 10,
 			scale = 0)
@@ -460,6 +477,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((usernamePreparedBy == null) ? 0 : usernamePreparedBy.hashCode());
 		result = prime * result + ((noAddendumDetailNext == null) ? 0 : noAddendumDetailNext.hashCode());
+		result = prime * result + ((finalAccount == null) ? 0 : finalAccount.hashCode());
+		result = prime * result + ((amtCEDApproved == null) ? 0 : amtCEDApproved.hashCode());
+		
 		return result;
 	}
 
@@ -588,6 +608,16 @@ public class Addendum extends PcmsPersistedAuditObject {
 			if (other.noAddendumDetailNext != null)
 				return false;
 		} else if (!noAddendumDetailNext.equals(other.noAddendumDetailNext))
+			return false;
+		if (amtCEDApproved == null) {
+			if (other.amtCEDApproved != null)
+				return false;
+		} else if (!amtCEDApproved.equals(other.amtCEDApproved))
+			return false;
+		if (finalAccount == null) {
+			if (other.finalAccount != null)
+				return false;
+		} else if (!finalAccount.equals(other.finalAccount))
 			return false;
 		return true;
 	}

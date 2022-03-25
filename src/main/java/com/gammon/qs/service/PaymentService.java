@@ -1049,8 +1049,8 @@ public class PaymentService{
 
 		MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
 		MasterListVendor vendor = masterListWSDao.getVendorDetailsList(scPackage.getVendorNo()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList(scPackage.getVendorNo()).get(0);
-		logger.info("Company Name: " + companyName.getVendorName());
-		logger.info("Vendor Name: " + vendor.getVendorName());
+		//logger.info("Company Name: " + companyName.getVendorName());
+		//logger.info("Vendor Name: " + vendor.getVendorName());
 
 		Date asAtDate = scpaymentCert.getAsAtDate();
 		String currency = scpaymentCert.getSubcontract().getPaymentCurrency();
@@ -1059,7 +1059,7 @@ public class PaymentService{
 		paymentCertViewWrapper.setAsAtDate(DateHelper.formatDate(asAtDate, "dd/MM/yyyy").toString());
 
 		paymentCertViewWrapper.setCurrency(currency);
-		logger.info("Company: " + (new Integer(company)).toString());
+		//logger.info("Company: " + (new Integer(company)).toString());
 
 		if (companyName.getVendorName() != null)
 			paymentCertViewWrapper.setCompanyName(companyName.getVendorName().trim());
@@ -1106,13 +1106,13 @@ public class PaymentService{
 		// last modified: brian
 		// set company base currency code
 		String companyBaseCurrency = this.accountCodeDao.obtainCurrencyCode(jobNumber);
-		logger.info("Company Base Currency Code: " + companyBaseCurrency);
+		//logger.info("Company Base Currency Code: " + companyBaseCurrency);
 		paymentCertViewWrapper.setCompanyBaseCurrency(companyBaseCurrency);
 
 		// last modified: brian
 		// set the exchange rate
 		Double exchangeRate = scPackage.getExchangeRate();
-		logger.info("Exchange Rate: " + exchangeRate);
+		//logger.info("Exchange Rate: " + exchangeRate);
 		paymentCertViewWrapper.setExchangeRate(exchangeRate);
 		// END: Get the Payment Cert additional information
 
