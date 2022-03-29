@@ -32,12 +32,14 @@ import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
+import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
+import com.gammon.qs.dao.AddendumHBDao;
 import com.gammon.qs.dao.CreateGLWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
@@ -127,8 +129,7 @@ public class PaymentService{
 	private JasperConfig jasperConfig;
 	@Autowired
 	private MessageConfig messageConfig;
-	@Autowired
-	private PaymentCertHBDao scPaymentCertHBDao;
+
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
@@ -139,6 +140,8 @@ public class PaymentService{
 	private AdminService adminService;
 	@Autowired
 	private MasterListService masterListService;
+	@Autowired
+	private AddendumHBDao addendumHBDao;
 
 	static final int RECORDS_PER_PAGE = 100;
 
@@ -537,7 +540,7 @@ public class PaymentService{
 	 * @author tikywong
 	 * created on 12 June, 2012
 	 */
-	public String submitPaymentReview(String jobNumber, Integer packageNo, Integer paymentCertNo, Double certAmount, String userID) {
+	/*public String submitPaymentReview(String jobNumber, Integer packageNo, Integer paymentCertNo, Double certAmount, String userID) {
 		String errorMessage = null;
 		try {
 			if (jobNumber == null || packageNo == null || paymentCertNo == null || certAmount == null || userID == null) {
@@ -569,7 +572,7 @@ public class PaymentService{
 		}
 
 		return errorMessage;
-	}
+	}*/
 
 	// Do Generate Jasper Report by a list of wrapper and the path of the template
 	@SuppressWarnings("rawtypes")
@@ -1385,18 +1388,29 @@ public class PaymentService{
 				logger.info(error);
 				return error;
 			}
+			else if(!"PND".equals(paymentCert.getPaymentStatus())){
+				error = "Cannot update Job: " + jobNo + " - Subcontract: " + subcontractNo + " - Payment No. " + paymentCertNo + " with Payment Status: "+ paymentCert.getPaymentStatus();
+				return error;
+			}
 			else if (paymentType!=null && (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "F".equals(paymentType))) {
 				error = "Payment Requisition cannot be set as Final Payment.";
 				logger.info(error);
 				return error;
 			}
-			else if(!"PND".equals(paymentCert.getPaymentStatus())){
-				error = "Cannot update Job: " + jobNo + " - Subcontract: " + subcontractNo + " - Payment No. " + paymentCertNo + " with Payment Status: "+ paymentCert.getPaymentStatus();
-				return error;
-			}else if ("F".equals(paymentType) && PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString().equals(paymentCert.getBypassPaymentTerms())){
+			else if ("F".equals(paymentType) && PaymentCert.BYPASS_PAYMENT_TERMS.Y.toString().equals(paymentCert.getBypassPaymentTerms())){
 				error = "Request for Early Release of Payment is not applicable to Final Payment.";
 				return error;
 			}
+			
+			if ("F".equals(paymentType)){
+				List<Addendum> finalAddendumList = addendumHBDao.getFinalAddendumList(jobNo, subcontractNo);
+				
+				if(finalAddendumList == null || finalAddendumList.size() == 0) {
+					error = "Please submit Final Addendum/Final Account before releasing Final Payment.";
+					return error;
+				}
+			}
+			
 
 			if(paymentType!=null && paymentType.trim().length()==0){
 				paymentType = paymentCert.getIntermFinalPayment();
@@ -1925,8 +1939,8 @@ public class PaymentService{
 				if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
 					approvalType = PaymentCert.APPROVALTYPE_DIRECT_PAYMENT_NP;
 				}
-				else if ("F".equals(paymentCert.getIntermFinalPayment()))
-					approvalType = PaymentCert.APPROVALTYPE_FINAL_PAYMENT_SF;
+				/*else if ("F".equals(paymentCert.getIntermFinalPayment()))
+					approvalType = PaymentCert.APPROVALTYPE_FINAL_PAYMENT_SF;*/
 
 				
 				logger.info("Job: "+ jobNo + "SC: "+ subcontractNo.toString() + "PN: "+ paymentCertNo + "PaymentStatus: " + paymentCert.getPaymentStatus() + " ApprovalType: " + approvalType);

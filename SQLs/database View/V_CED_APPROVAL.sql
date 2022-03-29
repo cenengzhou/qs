@@ -7,7 +7,7 @@ from
 join QSADMIN.ap_approval_type_master type_master on type_master.id = approval_route.approval_type_id
 join QSADMIN.ap_approval approval on approval.approval_route_id = approval_route.id 
 where approval_route.approval_status = 'APPROVED' and type_master.Name in ('SL', 'SM', 'AW', 'ST', 'V5', 'V6')
-and approval.approver_id in (24592, 1035) and approval.approval_status = 'APPROVED') b
+and approval.approver_id in (24592, 1035, 16450) and approval.approval_status = 'APPROVED') b
 group by Job_No, Order_SC_no) c;
 
 
@@ -16,3 +16,4 @@ grant select on QSADMIN.ap_approval_type_master to PCMSDATAPROD with grant optio
 grant select on QSADMIN.ap_approval to PCMSDATAPROD with grant option;
 
 grant select on PCMSDATAPROD.V_CED_APPROVAL to PCMSUSER_ROLE;
+grant select on PCMSDATAPROD.V_CED_APPROVAL to IMS_SUPPORT_ROLE_QS;

@@ -31,7 +31,7 @@ BEGIN
         join QSADMIN.ap_approval approval on approval.approval_route_id = approval_route.id 
         join PCMSDATAPROD.job_info job_info on job_info.jobno = approval_route.job_no
         where approval_route.approval_status = ''APPROVED'' and type_master.Name in (''SL'', ''SM'', ''AW'', ''ST'', ''V5'', ''V6'')
-        and approval.approver_id in (24592, 1035) and approval.approval_status = ''APPROVED'') b
+        and approval.approver_id in (24592, 1035, 16450) and approval.approval_status = ''APPROVED'') b
         group by Job_No, Order_SC_no, job_id
       ';
   
@@ -46,7 +46,7 @@ BEGIN
         join QSADMIN.ap_approval approval on approval.approval_route_id = approval_route.id 
         join PCMSDATAPROD.job_info job_info on job_info.jobno = approval_route.job_no
         where approval_route.approval_status = ''APPROVED'' and type_master.Name in (''SL'', ''SM'', ''AW'', ''ST'', ''V5'', ''V6'')
-        and approval.approver_id in (24592, 1035) and approval.approval_status = ''APPROVED''
+        and approval.approver_id in (24592, 1035, 16450) and approval.approval_status = ''APPROVED''
         and job_info.jobno = :1 and Order_SC_no = :2) b
         group by Job_No, Order_SC_no, job_id
       ';

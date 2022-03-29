@@ -4,7 +4,12 @@ import com.gammon.pcms.dao.FinalAccountRepository;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.FinalAccount;
 import com.gammon.qs.dao.AddendumHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.security.SecurityService;
+import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +30,13 @@ public class FinalAccountService {
 
 	@Autowired
 	private AddendumHBDao addendumHBDao;
-
+	@Autowired
+	private PaymentCertHBDao paymentCertDao;
+	@Autowired
+	private PaymentService paymentService;
 	@Autowired
 	private SecurityService securityServiceImpl;
+
 
     public String createFinalAccount(String jobNo, String addendumNo, Long addendumId, FinalAccount finalAccount) {
 		String error = "";
@@ -72,7 +81,42 @@ public class FinalAccountService {
 		Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, Long.valueOf(addendumNo));
 		return finalAccountRepository.findByJobNoAndAddendumNoAndAddendumId(jobNo, addendumNo, addendum.getId());
 	}
+	
+	 public FinalAccount prepareFinalAcount(Addendum addendum, String jobNo, String subcontractNo, String addendumNo, Long addendumID) {
+	    	FinalAccount fa = this.getFinalAccount(jobNo, addendumNo, addendumID);
+			if (fa == null){
+				fa = new FinalAccount();
+				fa.setAddendum(addendum);
+				fa.setAddendumNo(addendumNo);
+				fa.setJobNo(jobNo);
+				fa.setPreparedDate(new Date());
+				fa.setPreparedUser(addendum.getUsernamePreparedBy());
+				fa.setStatus(FinalAccount.PENDING);
+			}
+			
+			if(addendum.getStatus().equals(Addendum.STATUS.PENDING.toString())){
+				PaymentCertViewWrapper paymentCertSummary = new PaymentCertViewWrapper();
 
+				try {
+					PaymentCert lastPostedCert = paymentCertDao.obtainPaymentLatestPostedCert(jobNo, subcontractNo);
+					if(lastPostedCert != null){
+						paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastPostedCert.getPaymentCertNo()));
+
+						fa.setFinalAccountThisAmt(addendum.getAmtSubcontractRevisedTba());
+						fa.setFinalAccountThisCCAmt(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+						fa.setFinalAccountPreAmt(BigDecimal.valueOf(paymentCertSummary.getSubTotal4()));
+						fa.setFinalAccountPreCCAmt(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			return fa;
+	    }
+
+	 
 	public String updateFinalAccountAdmin(String jobNo, String subcontractNo, String addendumNo, FinalAccount finalAccount) {
 		String error = "";
 		try {
@@ -85,8 +129,6 @@ public class FinalAccountService {
 				dbRecord.setLatestBudgetAmt(finalAccount.getLatestBudgetAmt());
 				dbRecord.setLatestBudgetAmtCC(finalAccount.getLatestBudgetAmtCC());
 				dbRecord.setComments(finalAccount.getComments());
-//				dbRecord.setPreparedDate(finalAccount.getStatus());
-//				dbRecord.setPreparedUser(finalAccount.getStatus());
 				dbRecord.setStatus(finalAccount.getStatus());
 			}
 		} catch (Exception e) {

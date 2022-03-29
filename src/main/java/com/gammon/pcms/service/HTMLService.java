@@ -347,17 +347,23 @@ public class HTMLService implements Serializable{
 		//List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
 
 		Form2SummaryWrapper summary = new Form2SummaryWrapper();
-
+		
+		//For final account form only
+		AddendumFinalFormWrapper addendumFinalForm = new AddendumFinalFormWrapper();
+		
+		
 		if(noAddendum !=null){
 			addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
 			//addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
 
 			summary = addendumService.getForm2Summary(noJob, noSubcontract, noAddendum);
 		
-			if (addendum.getFinalAccount() == null)
-				addendum.setFinalAccount("N");
+			if (GenericValidator.isBlankOrNull(addendum.getFinalAccount()))
+				addendum.setFinalAccount(Addendum.FINAL_ACCOUNT_VALUE.N.toString());
+			
+			else if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString()))
+				addendumFinalForm = addendumService.getAddendumFinalForm(noJob, noSubcontract, String.valueOf(noAddendum));
 		}
-		
 		
 		
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -372,8 +378,8 @@ public class HTMLService implements Serializable{
 		data.put("summary", summary != null ? summary : "");
 		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.AddendumNameObject, String.valueOf(addendum.getId()));
 		data.put("approvalSummary", approvalSummary);
-		AddendumFinalFormWrapper addendumFinalForm = addendumService.getAddendumFinalForm(noJob, noSubcontract, String.valueOf(noAddendum));
 		data.put("addendumFinalForm", addendumFinalForm);
+		
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 

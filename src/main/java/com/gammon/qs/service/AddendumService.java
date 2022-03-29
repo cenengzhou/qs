@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.approvalRequest.ApprovalServiceRequest;
 import com.gammon.pcms.dao.CEDApprovalRepository;
+import com.gammon.pcms.dao.FinalAccountRepository;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.CEDApproval;
@@ -106,9 +107,7 @@ public class AddendumService{
 	@Autowired
 	private FinalAccountService finalAccountService;
 	@Autowired
-	private PaymentCertHBDao paymentCertDao;
-	@Autowired
-	private PaymentService paymentService;
+	private FinalAccountRepository finalAccountRepository;
 	@Autowired
 	private CEDApprovalRepository cedApprovalRepository;
 
@@ -208,9 +207,35 @@ public class AddendumService{
 				error = "Job No. "+addendum.getNoJob()+" - Subcontract No."+addendum.getNoSubcontract()+" - Addendum No."+addendum.getNo()+ "already exsit.";
 				return error;
 			}
+			
+			if(addendum.getNo()!=1 && addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.N.toString())){
+				List<Addendum> finalAddendumList = addendumHBDao.getFinalAddendumList(addendum.getNoJob(), addendum.getNoSubcontract());
+				
+				if(finalAddendumList != null && finalAddendumList.size() > 0) {
+					error = "Final account has been approved. Pls select final account if amendment is needed.";
+					return error;
+				}
+			}
 
+			
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(addendum.getNoJob(), addendum.getNoSubcontract());
 
+			
+			// Get CED Approval Amount
+			try {
+				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(addendum.getNoJob(), Integer.parseInt(addendum.getNoSubcontract()));
+				logger.info("Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract() + " cedAmount: "+cedApproval.getApprovalAmount());
+				if (cedApproval != null){
+					subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
+					subcontractHBDao.update(subcontract);
+					
+				}
+			} catch (Exception e) {
+				logger.info("Failed to Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract());
+				e.printStackTrace();
+			}
+			
+			
 			addendum.setIdSubcontract(subcontract);
 			addendum.setDescriptionSubcontract(subcontract.getDescription());
 			addendum.setNoSubcontractor(subcontract.getVendorNo());
@@ -228,6 +253,11 @@ public class AddendumService{
 			addendum.setAmtCEDApproved(subcontract.getAmtCEDApproved() == null ? new BigDecimal(0): subcontract.getAmtCEDApproved());
 
 			addendumHBDao.insert(addendum);
+			
+			
+			
+			
+			
 		} catch (Exception e) {
 			error = "Addendum failed to be created.";
 			e.printStackTrace();
@@ -1035,6 +1065,15 @@ public class AddendumService{
 			logger.info("resultMsg"+resultMsg);
 
 			if(resultMsg == null || resultMsg.length()==0){
+				//Update Final account Status
+				if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString())){
+					FinalAccount fa = finalAccountService.prepareFinalAcount(addendum, noJob, noSubcontract, noAddendum.toString(), addendum.getId().longValue());
+					fa.setPreparedDate(new Date());
+					fa.setPreparedUser(securityService.getCurrentUser().getUsername());
+					fa.setStatus(FinalAccount.SUBMITTED);
+					finalAccountRepository.save(fa);
+				}
+				
 				addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
 				addendum.setStatusApproval("NA");
 				addendum.setDateSubmission(new Date());
@@ -1054,6 +1093,8 @@ public class AddendumService{
 	public Boolean toCompleteAddendumApproval(String jobNo, String subcontractNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNo+"/"+subcontractNo+"/"+approvalResult);
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
+		
+		
 		if ("A".equals(approvalResult)){
 
 			//Delete Pending Payment
@@ -1090,10 +1131,18 @@ public class AddendumService{
 			addendum.setDateApproval(new Date());
 			addendumHBDao.update(addendum);
 			
+			//Update FA
+			if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString())){
+				FinalAccount fa = finalAccountService.getFinalAccount(jobNo, String.valueOf(addendum.getNo()), addendum.getId().longValue());
+				if (fa !=null){
+					fa.setStatus(FinalAccount.APPROVED);
+					finalAccountRepository.save(fa);
+				}
+			}
 			// update CED Approval Amount to SC
 			try {
-				logger.info("Get CED Approval: "+jobNo+" Package: "+subcontractNo);
 				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(jobNo, Integer.parseInt(subcontractNo));
+				logger.info("Get CED Approval: "+jobNo+" Package: "+subcontractNo + " cedAmount: "+cedApproval.getApprovalAmount());
 				if (cedApproval != null)
 					subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
 			} catch (Exception e) {
@@ -1105,15 +1154,15 @@ public class AddendumService{
 			subcontractHBDao.update(subcontract);
 			
 			
-			 
-			/*try {
-				subcontractHBDao.callStoredProcedureToUpdateCEDApproval(jobNo, subcontractNo);
-			} catch (Exception e) {
-				logger.info("Failed to update CED Approval: "+jobNo+" Package: "+subcontractNo);
-				e.printStackTrace();
-			}*/
-			
 		}else{
+			if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString())){
+				FinalAccount fa = finalAccountService.getFinalAccount(jobNo, String.valueOf(addendum.getNo()), addendum.getId().longValue());
+				if (fa !=null){
+					fa.setStatus(FinalAccount.PENDING);
+					finalAccountRepository.save(fa);
+				}
+			}
+			
 			addendum.setStatus(Addendum.STATUS.PENDING.toString());
 			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.REJECTED.toString());
 			addendumHBDao.update(addendum);
@@ -1348,21 +1397,19 @@ public class AddendumService{
 		String addendumNo = commonKeyValue.get("addendumNo");
 		return addendumHBDao.getAddendumListByEnquiry(jobNo, subcontractNo, addendumNo);
     }
+    
+   
 
 	public AddendumFinalFormWrapper getAddendumFinalForm(String jobNo, String subcontractNo, String addendumNo) {
 		AddendumFinalFormWrapper result = new AddendumFinalFormWrapper();
 
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, Long.valueOf(addendumNo));
-			FinalAccount fa = finalAccountService.getFinalAccount(jobNo, addendumNo, addendum.getId().longValue());
-			if (fa == null)
-				fa = new FinalAccount();
+			
+			FinalAccount fa = finalAccountService.prepareFinalAcount(addendum, jobNo, subcontractNo, addendumNo, addendum.getId().longValue());
+			
+			
 			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-			PaymentCert lastPostedCert = paymentCertDao.obtainPaymentLatestPostedCert(jobNo, subcontractNo);
-			PaymentCertViewWrapper paymentCertSummary = new PaymentCertViewWrapper();
-			if(lastPostedCert != null)
-				paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastPostedCert.getPaymentCertNo()));
-
 			String company = subcontract.getJobInfo().getCompany();
 			MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
 			String companyNameStr = companyName.getVendorName() != null ? companyName.getVendorName().trim() : companyName.getVendorName();
@@ -1388,12 +1435,11 @@ public class AddendumService{
 			result.setbNetValue(bGrossValue.add(bContraCharge));
 
 			result.setcGrossValue(addendum.getAmtSubcontractRevisedTba());
-			result.setcContraCharge(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+			result.setcContraCharge(fa.getFinalAccountThisCCAmt());
 			result.setcNetValue(result.getcGrossValue().add(result.getcContraCharge()));
-			result.setdGrossValue(BigDecimal.valueOf(paymentCertSummary.getSubTotal4()));
-			result.setdContraCharge(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+			result.setdGrossValue(fa.getFinalAccountPreAmt());
+			result.setdContraCharge(fa.getFinalAccountPreCCAmt());
 			result.setdNetValue(result.getdGrossValue().add(result.getdContraCharge()));
-//			result.setdNetValue(BigDecimal.valueOf(lastPaymentCertSummary.getSubTotal5()));
 
 			if (result.getbGrossValue() != null && result.getcGrossValue() != null)
 				result.setSavingGrossValue(result.getbGrossValue().subtract(result.getcGrossValue()));

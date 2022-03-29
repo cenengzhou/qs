@@ -53,6 +53,17 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 		criteria.add(Restrictions.eq("no", noAddendum));
 		return (Addendum) criteria.uniqueResult();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Addendum> getFinalAddendumList(String noJob, String noSubcontract) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noJob", noJob));
+		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.eq("finalAccount", Addendum.FINAL_ACCOUNT_VALUE.Y.toString()));
+		criteria.add(Restrictions.eq("status", Addendum.STATUS.APPROVED.toString()));
+		criteria.addOrder(Order.desc("no"));
+		return criteria.list();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Addendum> getAddendumListByEnquiry(String noJob, String noSubcontract, String no) {

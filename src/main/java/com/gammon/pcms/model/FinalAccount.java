@@ -45,6 +45,8 @@ import java.util.Date;
 @NamedQuery(name = "FINAL_ACCOUNT.findAll", query = "SELECT v FROM FinalAccount v")
 public class FinalAccount extends BasePersistedObject {
 
+	
+	private static final long serialVersionUID = 6695684636185546692L;
 	public static final String PENDING = "PENDING";
 	public static final String SUBMITTED = "SUBMITTED";
 	public static final String APPROVED = "APPROVED";
@@ -54,10 +56,15 @@ public class FinalAccount extends BasePersistedObject {
 
 	private Addendum addendum;
 
-	private BigDecimal finalAccountAppAmt;
-	private BigDecimal finalAccountAppCCAmt;
-	private BigDecimal latestBudgetAmt;
-	private BigDecimal latestBudgetAmtCC;
+	private BigDecimal finalAccountAppAmt = new BigDecimal(0);
+	private BigDecimal finalAccountAppCCAmt = new BigDecimal(0);
+	private BigDecimal latestBudgetAmt = new BigDecimal(0);
+	private BigDecimal latestBudgetAmtCC = new BigDecimal(0);
+	private BigDecimal finalAccountThisAmt = new BigDecimal(0);
+	private BigDecimal finalAccountThisCCAmt = new BigDecimal(0);
+	private BigDecimal finalAccountPreAmt = new BigDecimal(0);
+	private BigDecimal finalAccountPreCCAmt = new BigDecimal(0);
+	
 	private String comments;
 	private Date preparedDate;
 	private String preparedUser;
@@ -187,6 +194,42 @@ public class FinalAccount extends BasePersistedObject {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	@Column(name = "AMT_FINAL_ACCOUNT_THIS")
+	public BigDecimal getFinalAccountThisAmt() {
+		return finalAccountThisAmt;
+	}
+
+	public void setFinalAccountThisAmt(BigDecimal finalAccountThisAmt) {
+		this.finalAccountThisAmt = finalAccountThisAmt;
+	}
+
+	@Column(name = "AMT_FINAL_ACCOUNT_THIS_CC")
+	public BigDecimal getFinalAccountThisCCAmt() {
+		return finalAccountThisCCAmt;
+	}
+
+	public void setFinalAccountThisCCAmt(BigDecimal finalAccountThisCCAmt) {
+		this.finalAccountThisCCAmt = finalAccountThisCCAmt;
+	}
+
+	@Column(name = "AMT_FINAL_ACCOUNT_PRE")
+	public BigDecimal getFinalAccountPreAmt() {
+		return finalAccountPreAmt;
+	}
+
+	public void setFinalAccountPreAmt(BigDecimal finalAccountPreAmt) {
+		this.finalAccountPreAmt = finalAccountPreAmt;
+	}
+
+	@Column(name = "AMT_FINAL_ACCOUNT_PRE_CC")
+	public BigDecimal getFinalAccountPreCCAmt() {
+		return finalAccountPreCCAmt;
+	}
+
+	public void setFinalAccountPreCCAmt(BigDecimal finalAccountPreCCAmt) {
+		this.finalAccountPreCCAmt = finalAccountPreCCAmt;
 	}
 
 

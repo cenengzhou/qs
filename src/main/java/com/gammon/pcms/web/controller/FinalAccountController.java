@@ -27,7 +27,7 @@ public class FinalAccountController {
 		return finalAccountService.getFinalAccount(jobNo, addendumNo, addendumId);
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('FinalAccountController','createFinalAccount', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('FinalAccountController','createFinalAccount', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createFinalAccount", method = RequestMethod.POST)
 	public String createFinalAccount(@RequestParam(required = true) String jobNo,
 									 @RequestParam(required = true) String addendumNo,
@@ -51,7 +51,7 @@ public class FinalAccountController {
 		return finalAccountService.getFinalAccountAdmin(jobNo, subcontractNo, addendumNo);
 	}
 
-	@PreAuthorize(value = "@GSFService.isRoleExisted('FinalAccountController','updateFinalAccountAdmin', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('FinalAccountController','updateFinalAccountAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateFinalAccountAdmin", method = RequestMethod.POST)
 	public String updateFinalAccountAdmin(@RequestParam(required = true) String jobNo,
 									 @RequestParam(required = true) String subcontractNo,
