@@ -183,25 +183,29 @@ public class PersonnelService {
 	public Long submitForApproval(String jobNo) throws Exception {
 		List<Personnel> pendingChangeList = personnelRepository.findByJobInfo_JobNumberAndStatusAndActionNot(jobNo, Personnel.STATUS.ACTIVE.name(), "NONE");
 		Long refNo = null;
-		if(pendingChangeList.size() > 0 ) {
-			
-			// call process start to get refNo
-			String formCode = webServiceConfig.getWsWfParam(EformService.PERSONNEL_CODE_KEY);
-			Map<String, String> requestObject = new HashMap<>();
-			requestObject.put(EformService.JOBNO_KEY, jobNo);
-			requestObject.put(EformService.REQUESTER_KEY, SecurityContextHolder.getContext().getAuthentication().getName());
-			refNo = eformService.processStart(formCode, requestObject);	
-			
-			// regenerate html / pdf base on pendingChangeList
-			generateHtmlPdf(formCode, jobNo, refNo);
-			
-			// change status to SUBMITTED/refNo
-			JobInfo jobInfo = pendingChangeList.get(0).getJobInfo();
-			jobInfo.setNoReference(refNo);
-			jobInfo.approvalSubmitted();
-			jobInfoService.saveOrUpdate(jobInfo);
-			
-			ApprovalStartTask.createApprovalStartTask(refNo, this, taskScheduler, 0, 0);
+		try{
+			if(pendingChangeList.size() > 0 ) {
+				
+				// call process start to get refNo
+				String formCode = webServiceConfig.getWsWfParam(EformService.PERSONNEL_CODE_KEY);
+				Map<String, String> requestObject = new HashMap<>();
+				requestObject.put(EformService.JOBNO_KEY, jobNo);
+				requestObject.put(EformService.REQUESTER_KEY, SecurityContextHolder.getContext().getAuthentication().getName());
+				refNo = eformService.processStart(formCode, requestObject);	
+				
+				// regenerate html / pdf base on pendingChangeList
+				generateHtmlPdf(formCode, jobNo, refNo);
+				
+				// change status to SUBMITTED/refNo
+				JobInfo jobInfo = pendingChangeList.get(0).getJobInfo();
+				jobInfo.setNoReference(refNo);
+				jobInfo.approvalSubmitted();
+				jobInfoService.saveOrUpdate(jobInfo);
+				
+				ApprovalStartTask.createApprovalStartTask(refNo, this, taskScheduler, 0, 0);
+			}
+		} catch (Exception e) {
+			logger.error("cannot submitForApproval:", e);
 		}
 		return refNo;
 	}
@@ -259,7 +263,8 @@ public class PersonnelService {
 				break;
 			}
 			response.setStatus(EFormResponseDTO.Status.SUCCESS.name());
-		} catch(Exception e) {
+		} catch (Exception e) {
+			logger.error("cannot completeApproval:", e);
 			response.setMessage(e.getMessage());
 			response.setStatus(EFormResponseDTO.Status.FAILURE.name());
 		}
