@@ -52,11 +52,12 @@ public class Addendum extends PcmsPersistedAuditObject {
 		REJECTED
 	}
 	//Addendum approval
+	public static final String APPROVAL_TYPE_SN = "SN";//Negative, <=1M  Final Addendum, require all Divisional Commercial Manager to approve
 	public static final String APPROVAL_TYPE_SM = "SM";
 	public static final String APPROVAL_TYPE_SL = "SL"; // Requires CED Approval
 		
 	public static enum FINAL_ACCOUNT_VALUE { Y, N }
-
+	public static enum CED_APPROVAL { Y, N }
 
 	private BigDecimal id;
 	private Subcontract idSubcontract;
@@ -84,6 +85,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private String finalAccount;
 	private BigDecimal noAddendumDetailNext = new BigDecimal(1);
 	private BigDecimal amtCEDApproved  = new BigDecimal(0.00);
+	private String cedApproval = "N";
+	
 	
 
 	public Addendum() {}
@@ -129,6 +132,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 					String remarks,
 					String finalAccount,
 					BigDecimal amtCEDApproved,
+					String cedApproval,
 					BigDecimal noAddendumDetailNext,
 					String usernameCreated,
 					Date dateCreated,
@@ -159,6 +163,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.remarks = remarks;
 		this.finalAccount = finalAccount;
 		this.amtCEDApproved = amtCEDApproved;
+		this.cedApproval = cedApproval;
 		this.noAddendumDetailNext = noAddendumDetailNext;
 		this.usernameCreated = usernameCreated;
 		this.dateCreated = dateCreated;
@@ -433,6 +438,17 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtCEDApproved = amtCEDApproved;
 	}
 
+	
+	@Column(name = "CED_APPROVAL",
+			length = 2)
+	public String getCedApproval() {
+		return cedApproval;
+	}
+
+	public void setCedApproval(String cedApproval) {
+		this.cedApproval = cedApproval;
+	}
+
 	@Column(name = "NO_ADDENDUM_DETAIL_NEXT",
 			precision = 10,
 			scale = 0)
@@ -479,6 +495,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		result = prime * result + ((noAddendumDetailNext == null) ? 0 : noAddendumDetailNext.hashCode());
 		result = prime * result + ((finalAccount == null) ? 0 : finalAccount.hashCode());
 		result = prime * result + ((amtCEDApproved == null) ? 0 : amtCEDApproved.hashCode());
+		result = prime * result + ((cedApproval == null) ? 0 : cedApproval.hashCode());
 		
 		return result;
 	}
@@ -613,6 +630,11 @@ public class Addendum extends PcmsPersistedAuditObject {
 			if (other.amtCEDApproved != null)
 				return false;
 		} else if (!amtCEDApproved.equals(other.amtCEDApproved))
+			return false;
+		if (cedApproval == null) {
+			if (other.cedApproval != null)
+				return false;
+		} else if (!cedApproval.equals(other.cedApproval))
 			return false;
 		if (finalAccount == null) {
 			if (other.finalAccount != null)

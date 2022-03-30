@@ -1011,25 +1011,39 @@ public class AddendumService{
 
 			//Define Approval Type
 			String approvalType = Addendum.APPROVAL_TYPE_SM;
-			BigDecimal AmtCEDApproved = addendum.getAmtCEDApproved()==null? new BigDecimal(0):addendum.getAmtCEDApproved();
-			BigDecimal AmtCEDNotApproved = addendum.getAmtSubcontractRevised().subtract(AmtCEDApproved);
+			
+			BigDecimal addendumAmtInHKD = CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2);
+			
+			//Negative, <=1M  Final Addendum
+			if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString())){
+				if (addendumAmtInHKD.compareTo(new BigDecimal(1000010)) < 0)
+					approvalType = Addendum.APPROVAL_TYPE_SN;
+				
+			}
+
+			
+			//Check if CED approval is required
+			BigDecimal amtCEDApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtCEDApproved()==null? new BigDecimal(0):addendum.getAmtCEDApproved()).multiply(exchangeRateToHKD),2);
+			BigDecimal amtCEDNotApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtSubcontractRevised().subtract(amtCEDApproved)).multiply(exchangeRateToHKD),2);
 			
 						
-			BigDecimal AmtCumCEDNotApproved = CalculationUtil.roundToBigDecimal(AmtCEDNotApproved.add(addendum.getAmtAddendum()).multiply(exchangeRateToHKD),2);
+			BigDecimal amtCumCEDNotApproved = CalculationUtil.roundToBigDecimal(amtCEDNotApproved.add(addendumAmtInHKD),2);
 			
 			BigDecimal approvalPercent =  new BigDecimal(0);
-			if (AmtCEDApproved.compareTo(new BigDecimal(0)) >0 )
-				approvalPercent  = AmtCumCEDNotApproved.divide(AmtCEDApproved, 2, RoundingMode.HALF_UP);
+			if (amtCEDApproved.compareTo(new BigDecimal(0)) >0 )
+				approvalPercent  = amtCumCEDNotApproved.divide(amtCEDApproved, 2, RoundingMode.HALF_UP);
 			
 			
 			//Rule 1: >25% AND > $1M
-			if(approvalPercent.compareTo(new BigDecimal(0.25)) > 0 && AmtCumCEDNotApproved.compareTo(new BigDecimal(1000000)) > 0)
+			if(approvalPercent.compareTo(new BigDecimal(0.25)) > 0 && amtCumCEDNotApproved.compareTo(new BigDecimal(1000000)) > 0){
 				approvalType = Addendum.APPROVAL_TYPE_SL;
-			
+				addendum.setCedApproval(Addendum.CED_APPROVAL.Y.toString());
+			}
 			//Rule 2: >$10M
-			else if (AmtCumCEDNotApproved.compareTo(new BigDecimal(10000000)) > 0)
+			else if (amtCumCEDNotApproved.compareTo(new BigDecimal(10000000)) > 0){
 				approvalType = Addendum.APPROVAL_TYPE_SL;
-				
+				addendum.setCedApproval(Addendum.CED_APPROVAL.Y.toString());				
+			}
 
 			/*if (CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2).compareTo(new BigDecimal(250000.0)) > 0 
 					|| addendum.getAmtAddendum().compareTo(CalculationUtil.roundToBigDecimal(subcontract.getSubcontractSum().multiply(new BigDecimal(0.25)), 2)) > 0)
