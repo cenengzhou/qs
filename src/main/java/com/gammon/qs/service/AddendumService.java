@@ -1023,7 +1023,11 @@ public class AddendumService{
 
 			
 			//Check if CED approval is required
-			BigDecimal amtCEDApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtCEDApproved()==null? new BigDecimal(0):addendum.getAmtCEDApproved()).multiply(exchangeRateToHKD),2);
+			if(addendum.getAmtCEDApproved()==null){
+				addendum.setAmtCEDApproved(subcontract.getAmtCEDApproved() == null ? new BigDecimal(0): subcontract.getAmtCEDApproved());
+			}
+			
+			BigDecimal amtCEDApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtCEDApproved()==null ? new BigDecimal(0) :addendum.getAmtCEDApproved()).multiply(exchangeRateToHKD),2);
 			BigDecimal amtCEDNotApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtSubcontractRevised().subtract(amtCEDApproved)).multiply(exchangeRateToHKD),2);
 			
 						
