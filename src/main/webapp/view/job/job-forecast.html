@@ -14,9 +14,9 @@
 						ng-model-options="{ updateOn: 'blur' }" >
 				</div>
 			</div>
-			<div class="col-md-3"></div>
+			<div class="col-md-3 text-red">** Cutoff Date: {{cutoffDate.cutoffDate}}, Period: {{cutoffDate.periodInFormat}}</div>
 			<div class="col-md-2" >
-				<button type="button" class="btn btn-success btn-block " ng-if = "!editable"
+				<button type="button" class="btn btn-success btn-block " ng-if = "!editable" ng-disabled="!rocEditable"
 					ng-click="edit()">
 					<i class="fa fa-pencil"></i> Edit
 				</button>
@@ -35,7 +35,7 @@
 			</div>
 			
 			<div class="col-md-3">
-				<button type="button" class="btn btn-danger btn-block "
+				<button type="button" class="btn btn-danger btn-block "  ng-disabled="!rocEditable"
 					ng-click="addCriticalProgram()">
 					<i class="fa fa-plus"></i> Add/Update  Critical Programme 
 				</button>

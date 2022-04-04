@@ -2,6 +2,8 @@ package com.gammon.pcms.scheduler.service;
 
 import com.gammon.pcms.dao.RocCutoffPeriodRepository;
 import com.gammon.pcms.model.RocCutoffPeriod;
+import com.gammon.pcms.service.ForecastService;
+import com.gammon.pcms.service.RocIntegrationService;
 import com.gammon.pcms.service.RocService;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import javax.annotation.PreDestroy;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Transactional(rollbackFor = Exception.class, value = "transactionManager", readOnly = true)
@@ -29,6 +32,12 @@ public class RocCutoffDateUpdateService {
 
     @Autowired
     private RocService rocService;
+
+    @Autowired
+    private ForecastService forecastService;
+
+    @Autowired
+    private RocIntegrationService rocIntegrationService;
 
     @PostConstruct
     public void init() {
@@ -67,14 +76,22 @@ public class RocCutoffDateUpdateService {
 
             StopWatch watch = new StopWatch("ROC Job Stopwatch - Period: " + byID.getPeriod());
 
-            watch.start("1. Clone ROC Detail");
-            // Clone ROC Detail
-            rocService.cloneRocDetailForCutoffScheduler();
-            watch.stop();
+            YearMonth current = YearMonth.parse(byID.getPeriod());
+            YearMonth next = current.plusMonths(1);
 
-            watch.start("2. Update cutoff date");
+            watch.start("1. Clone Monthly Movement");
+            forecastService.cloneMonthlyMovement(current, next);
+            watch.stop();
+            watch.start("2. Clone ROC Detail");
+            List<String> jobs = rocService.cloneRocDetailForCutoffScheduler(current, next);
+            watch.stop();
+            watch.start("3. Update ROC sum to Monthly Movement");
+            rocIntegrationService.calculateRocSummaryToMonthlyMovement(jobs, next);
+            watch.stop();
+            watch.start("4. Update cutoff date");
+
             // Next Period
-            YearMonth nextYearMonth = YearMonth.parse(byID.getPeriod()).plusMonths(1);
+            YearMonth nextYearMonth = current.plusMonths(1);
 
             // Next Cutoff Date
             Date cutoffDate = byID.getCutoffDate();
@@ -94,6 +111,7 @@ public class RocCutoffDateUpdateService {
             logger.info("Cutoff Date: " + beforeCutoffDate + " -> " + save.getCutoffDate().toString());
             logger.info("Period: " + beforePeriod + " -> " + save.getPeriod());
             logger.info("-- End updating period --");
+
             logger.info(watch.prettyPrint());
 
 		} catch (Exception e) {

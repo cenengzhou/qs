@@ -1,5 +1,6 @@
 package com.gammon.pcms.service;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -465,4 +466,58 @@ public class ForecastService {
 		logger.info("item deleted:" + itemDeleted);	
 	}
 
+    public void cloneMonthlyMovement(YearMonth from, YearMonth to) {
+		logger.info("-- Start cloning monthly movement --");
+		List<String> jobs = repository.findAllJobNumber();
+		List<String> filterJobList = new ArrayList<>();
+
+		// 1. filter job list
+		for (String job: jobs) {
+			List<Forecast> lastMonth = repository.getByJobYearMonth(job, from.getYear(), from.getMonthValue());
+			List<Forecast> currentMonth = repository.getByJobYearMonth(job, to.getYear(), to.getMonthValue());
+			if ((currentMonth == null || currentMonth.size() == 0)
+					&& (lastMonth != null && lastMonth.size() > 0)) {
+				filterJobList.add(job);
+			}
+		}
+
+		int seqNo = 1;
+		int totalNumberOfJobs = filterJobList.size();
+
+		// 2. create record if not exist
+		for (String job: filterJobList) {
+			List<Forecast> lastMonth = repository.getByJobYearMonth(job, from.getYear(), from.getMonthValue());
+			List<Forecast> currentMonth = repository.getByJobYearMonth(job, to.getYear(), to.getMonthValue());
+
+			if ((currentMonth == null || currentMonth.size() == 0)
+					&& (lastMonth != null && lastMonth.size() > 0)) {
+				// clone
+				for (Forecast f : lastMonth) {
+					try {
+						repository.save(
+								new Forecast(
+										f.getNoJob(),
+										f.getYear(),
+										to.getMonthValue(),
+										f.getForecastFlag(),
+										f.getForecastType(),
+										f.getForecastDesc(),
+										f.getAmount(),
+										f.getDate(),
+										f.getExplanation()
+								)
+						);
+					} catch (Exception e) {
+						e.printStackTrace();
+						logger.info("[FAIL] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + job + ", Forecast id = " + f.getId() + ", From = " + from + ", To = " + to + ", Exception message = " + e.getMessage());
+						throw e;
+					}
+				}
+				logger.info("[SUCCESS] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + job + ", From = " + from + ", To = " + to);
+				seqNo++;
+			}
+
+		}
+		logger.info("-- End cloning monthly movement --");
+    }
 }

@@ -197,6 +197,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                		 		'js/service/forecast-service.js?@PROJECT_VERSION@',
+					        'js/service/roc-service.js?@PROJECT_VERSION@',
                		 		'js/controller/job/job-forecast.js?@PROJECT_VERSION@',
                		 		'js/controller/job/modal/job-forecast-add-modal.js?@PROJECT_VERSION@',
                		 		'js/controller/job/modal/job-forecast-add-date-modal.js?@PROJECT_VERSION@'

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,24 @@ public class RocIntegrationService {
 
 	@Autowired
 	private ForecastService forecastService;
+
+	public String calculateRocSummaryToMonthlyMovement(List<String> jobs, YearMonth current) {
+		logger.info("-- Start update ROC sum to Monthly Movement --");
+		int seqNo = 1;
+		int totalNumberOfJobs = jobs.size();
+		for (String job: jobs) {
+			String cal = calculateRocSummaryToMonthlyMovement(job, current.getYear(), current.getMonthValue());
+			if (!cal.equals("")) {
+				logger.info("[FAIL] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + job + ", Period = " + current + ", Exception message = " + cal);
+				return cal;
+			} else {
+				logger.info("[SUCCESS] ("+seqNo+"/"+ totalNumberOfJobs +") Job no = " + job + ", Period = " + current);
+				seqNo++;
+			}
+		}
+		logger.info("-- End update ROC sum to Monthly Movement --");
+		return "";
+	}
 
 	public String calculateRocSummaryToMonthlyMovement(String jobNo, Integer year, Integer month) {
 		String error = "";
@@ -95,7 +114,7 @@ public class RocIntegrationService {
 		if (dbForecast.isPresent()) {
 			forecast = dbForecast.get();
 		} else {
-			forecast = new Forecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, BigDecimal.valueOf(0));
+			forecast = new Forecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, BigDecimal.valueOf(0), null, null);
 		}
 		return forecast;
 	}

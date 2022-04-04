@@ -43,6 +43,20 @@ public interface ForecastRepository extends JpaRepository<Forecast, Long>{
 			@Param("month") int month,
 			@Param("forecastFlag") String forecastFlag
 	);
+
+	@Query("select f from Forecast f where "
+			+"f.noJob = :noJob and "
+			+"function('to_number', f.year) = :year and "
+			+"function('to_number', f.month) = :month "
+	)
+	List<Forecast> getByJobYearMonth(
+			@Param("noJob") String noJob,
+			@Param("year") int year,
+			@Param("month") int month
+	);
+
+	@Query("select distinct a.noJob from Forecast a")
+	List<String> findAllJobNumber();
 	
 	@Query("select f from Forecast f where "
 			+"f.noJob = :noJob and "

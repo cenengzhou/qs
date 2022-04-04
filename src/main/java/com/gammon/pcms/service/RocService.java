@@ -806,12 +806,10 @@ public class RocService {
 		);
 	}
 
-	public void cloneRocDetailForCutoffScheduler() {
+	public List<String> cloneRocDetailForCutoffScheduler(YearMonth lastPeriod, YearMonth period) {
 		logger.info("-- Start cloning ROC --");
 		List<String> jobNumberList = rocRepository.findAllJobNumber();
 		List<String> filterJobNumberList = new ArrayList<>();
-		YearMonth period = YearMonth.parse(getCutoffPeriod().getPeriod());
-		YearMonth lastPeriod = period.plusMonths(-1);
 		int totalNumberOfRocDetails = 0;
 
 		int seqNo = 1;
@@ -868,6 +866,8 @@ public class RocService {
 		logger.info("Total number of roc details = " + totalNumberOfRocDetails);
 		logger.info("Total number of jobs = " + totalNumberOfJobs);
 		logger.info(" -- End cloning ROC --");
+
+		return filterJobNumberList;
 	}
 
 	public List<String> getJobList() {

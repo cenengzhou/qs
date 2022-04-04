@@ -1,16 +1,23 @@
-mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q',
-                                   function($scope, forecastService, $uibModal, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout, $q) {
+mainApp.controller('JobForecastCtrl', ['$scope','forecastService', 'rocService', '$uibModal', '$cookies', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', '$timeout', '$q',
+                                   function($scope, forecastService, rocService, $uibModal, $cookies, modalService, $sce,$state, GlobalParameter, rootscopeService, $timeout, $q) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.editable = false;
+	$scope.rocEditable = false;
+	$scope.excludeJobList = [];
 	
 	$scope.jobNo = $cookies.get("jobNo");
-	
-	var today = new Date();
-	$scope.month = today.getUTCMonth() + 1; //months from 1-12
-	$scope.year = today.getUTCFullYear();
-	$scope.monthYear = $scope.year+'-'+$scope.month;
 
-	getData($scope.year, $scope.month);
+	rocService.getCutoffPeriod().then(function(data) {
+		$scope.cutoffDate = data;
+		$scope.cutoffDate.periodInFormat = moment(data.period, 'YYYY-MM').format('MMM, YYYY');
+		$scope.monthYear = $scope.cutoffDate.period;
+
+		if(data.excludeJobList != null){
+			$scope.excludeJobList = data.excludeJobList.split(",").map(function(item) {
+				return item.trim();
+			});
+		}
+	});
 	
 	function getData(year, month) {
     	var turnover = forecastService.getByTypeDesc($scope.jobNo, year, month, GlobalParameter.forecast.EoJ, GlobalParameter.forecast.Turnover);
@@ -118,6 +125,13 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', '$uibModal', 
 			
 			$scope.period = moment().month($scope.month-1).format('MMM');
 			$scope.lastPeriod = moment().month($scope.month-2).format('MMM');
+
+			$scope.rocEditable = ($scope.monthYear == $scope.cutoffDate.period);
+
+			//exclude jobs from period cutoff control from specified list
+			if ($scope.excludeJobList.indexOf($scope.jobNo) > -1){
+				$scope.rocEditable = true;
+			}
 			
 			
 		}

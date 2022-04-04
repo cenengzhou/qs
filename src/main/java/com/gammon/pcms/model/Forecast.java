@@ -79,7 +79,7 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 	public Forecast() {
 	}
 
-	public Forecast(String noJob, Integer year, Integer month, String forecastFlag, String forecastType, String forecastDesc, BigDecimal amount) {
+	public Forecast(String noJob, Integer year, Integer month, String forecastFlag, String forecastType, String forecastDesc, BigDecimal amount, Date date, String explanation) {
 		this.noJob = noJob;
 		this.year = year;
 		this.month = month;
@@ -87,6 +87,8 @@ public class Forecast extends PcmsPersistedAuditObject implements Serializable {
 		this.forecastType = forecastType;
 		this.forecastDesc = forecastDesc;
 		this.amount = amount;
+		this.date = date;
+		this.explanation = explanation;
 	}
 
 	@Id
