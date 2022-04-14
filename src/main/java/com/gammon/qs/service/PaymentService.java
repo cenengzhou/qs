@@ -2296,4 +2296,7 @@ public class PaymentService{
 		paymentCertDao.delete(paymentCert);
 	}
 
+    public String generatePaymentPDFAdmin(String jobNo, String packageNo, int paymentNo) throws Exception {
+		return attachmentService.mergePaymentPdf(jobNo, packageNo, paymentNo);
+    }
 }

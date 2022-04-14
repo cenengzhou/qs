@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.dao.ScPaymentApprovalRepository;
 import com.gammon.pcms.model.ApprovalSummary;
+import com.gammon.pcms.model.ScPaymentApproval;
 import com.gammon.pcms.wrapper.AddendumFinalFormWrapper;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.qs.service.AddendumService;
@@ -147,6 +149,8 @@ public class HTMLService implements Serializable{
 	private MainCertService mainCertService;
 	@Autowired
 	private ApprovalSummaryService approvalSummaryService;
+	@Autowired
+	private ScPaymentApprovalRepository scPaymentApprovalRepository;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -268,7 +272,7 @@ public class HTMLService implements Serializable{
 		data.put("template", template);
 		data.put("paymentType", paymentCert.getIntermFinalPayment());
 		data.put("approvalSummary", approvalSummary);
-		data.put("logo", freemarkerConfig.getPaths("logo"));
+		data.put("htmlVersion", htmlVersion);
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCert", paymentCert != null ? paymentCert : new PaymentCert());
@@ -283,7 +287,13 @@ public class HTMLService implements Serializable{
 		data.put("strPaymentStatus", strPaymentStatus);
 		data.put("currentPaymentNo", currentPaymentNo);
 		data.put("maxRetentionAmount", maxRetentionAmount);
-		
+		if (paymentNo != null && paymentNo.length() > 0
+				&& !paymentCert.getPaymentStatus().equals("PND") && !paymentCert.getPaymentStatus().equals("SBM")) {
+			List<ScPaymentApproval> paymentApproval = scPaymentApprovalRepository.getPaymentApproval(jobNumber, new Integer(subcontractNumber), new Integer(paymentNo));
+			if (paymentApproval != null && paymentApproval.size() > 0)
+				data.put("paymentApproval", paymentApproval);
+		}
+
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
 
 		return strHTMLCodingContent;
