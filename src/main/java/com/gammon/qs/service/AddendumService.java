@@ -23,6 +23,8 @@ import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+
+import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -1014,11 +1016,13 @@ public class AddendumService{
 			
 			BigDecimal addendumAmtInHKD = CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2);
 			
+			if (GenericValidator.isBlankOrNull(addendum.getFinalAccount()))
+				addendum.setFinalAccount(Addendum.FINAL_ACCOUNT_VALUE.N.toString());	
+			
 			//Negative, <=1M  Final Addendum
 			if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString())){
 				if (addendumAmtInHKD.compareTo(new BigDecimal(1000010)) < 0)
 					approvalType = Addendum.APPROVAL_TYPE_SN;
-				
 			}
 
 			
@@ -1103,6 +1107,7 @@ public class AddendumService{
 			}
 		} catch (Exception e) {
 			resultMsg = "Addendum Approval cannot be submitted.";
+			logger.info("Addendum Approval cannot be submitted. - Job.  "+ noJob + "- SC " +noSubcontract+ "- AddendumNo. " +noAddendum);
 			e.printStackTrace();
 		}
 		return resultMsg;
@@ -1112,6 +1117,8 @@ public class AddendumService{
 		logger.info("Approval:"+jobNo+"/"+subcontractNo+"/"+approvalResult);
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
 		
+		if (GenericValidator.isBlankOrNull(addendum.getFinalAccount()))
+			addendum.setFinalAccount(Addendum.FINAL_ACCOUNT_VALUE.N.toString());
 		
 		if ("A".equals(approvalResult)){
 

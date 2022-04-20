@@ -39,7 +39,10 @@ mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'Glo
 		new Field('usernameCreated', 'Created User').setReadOnly(true).hide(),
 		new Field('usernameLastModified', 'Last Modified User').setReadOnly(true).hide(),
 		new Field('usernamePreparedBy', 'Prepared By'),
-		new Field('finalAccount', 'FinalAccount', 'select').setOptions([{id:'Y', value:'Yes'}, {id:'N', value:'No'}])
+		new Field('finalAccount', 'FinalAccount', 'select').setOptions([{id:'Y', value:'Yes'}, {id:'N', value:'No'}]),
+		new Field('amtCEDApproved', 'CED Approved Amount', 'number'),
+		new Field('cedApproval', 'CED Approval', 'select').setOptions([{id:'Y', value:'Yes'}, {id:'N', value:'No'}])
+		
 	];
 	
 	function onAddendumSearch(){
