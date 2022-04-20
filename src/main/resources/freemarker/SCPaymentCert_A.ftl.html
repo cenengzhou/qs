@@ -584,8 +584,8 @@ a:visited, span.MsoHyperlinkFollowed {
 
 		<o:p>&nbsp;</o:p>
 	</p>
-<#if paymentType=='I' && paymentCert.bypassPaymentTerms=='Y'>
-	<div style="font-size: 11.5pt; font-family: Arial, serif; color: #30373E;border: none">
+	<#if paymentType=='I' && paymentCert.bypassPaymentTerms=='Y' && htmlVersion != 'PDF'>
+	<div style="font-size: 11.5pt; font-family: Arial, serif; color: #30373E;border: none;margin-left:40px">
 		<div style="font-weight: bold; text-decoration: underline; margin-bottom: 15px">Early Release Summary</div>
 		<div>
 			<table>
@@ -601,13 +601,11 @@ a:visited, span.MsoHyperlinkFollowed {
 	<hr>
 </#if>
 
-<#if paymentType=='F'>
-<#include "ErpApprovalSummary.ftl.html">
-<hr>
+<style>
+	@page { margin: 0 }
+</style>
 
-</#if>
-
-<table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
+<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
 	   width=768
 	   style='width: 7.0in; background: white; border-collapse: collapse; border: none'>
 
@@ -626,10 +624,38 @@ a:visited, span.MsoHyperlinkFollowed {
 							style='width: 311.3pt; padding: 0in 5.4pt 0in 5.4pt;border: none'><p
 								class=MsoNormal style='line-height: 27.0pt'>
 												<span
-														style='font-size: 15.0pt; font-family: Arial; color: #30373E;border: none'><img
-														width=153 height=41 id="Picture_x0020_2"
-														src="${logo!""}"
-													></span><span
+														style='font-size: 15.0pt; font-family: Arial; color: #30373E;border: none'><img class="GammonLogo" src="
+  data:image/png;base64,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"></span><span
 								style='font-size: 15.0pt; font-family: Arial; color: #30373E;border: none'><o:p></o:p></span>
 						</p>
 							<p class=MsoNormal>
@@ -640,53 +666,13 @@ ${companyName!""}
 									style='font-size: 10.0pt; font-family: Arial; color: #30373E;border: none'><o:p></o:p></span>
 							</p></td>
 						<td width=315 valign=top
-							style='width: 311.35pt; padding: 0in 5.4pt 0in 5.4pt;border: none'><p
+							style='width: 750pt; padding: 0in 5.4pt 0in 5.4pt;border: none'><p
 								class=MsoNormal align=right style='text-align: right'>
 												<span
 														style='font-size: 10.0pt; font-family: Arial; color: #30373E;border: none'>
 
 							<div align=right style="border:none">
-								<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-									   style='margin-left: 45.45pt; border-collapse: collapse; border: none'>
-									<tr style='height: 36.75pt;border: none'>
-										<td width=134 valign=top style='width: 100.15pt; padding: 0in 5.4pt 0in 5.4pt; height: 36.75pt;border: none'>
-											<!-- div class="hideFromOutlook" style="mso-hide: all">
-												<p class=MsoNormal style='margin-bottom: 15.0pt; line-height: 22.5pt'>
-													<span class="pull-right hidden-print"> <a href="javascript:;"
-														onclick="window.print()"
-														class="btn btn-sm width-100 btn-rounded btn-danger pull-right hidden-print" style="
-background: #F04B46;
-    -webkit-box-shadow: 0 1px #902d2a;
-    box-shadow: 0 1px #902d2a;
-	    border-radius: 60px;
-		    border: none;
-    font-weight: 300;width:100px !important;
-	padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-	color: #fff;
-	display: inline-block;
-	    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-	    cursor: pointer;">
-															<i class="fa fa-print m-r-3"></i> Print
-													</a>
-													</span>
-												</p>
-											</div -->
-										</td>
-									</tr>
-									<tr style='height: 36.75pt;border: none'>
-										<td width=134 valign=top
-											style='width: 100.15pt; padding: 0in 5.4pt 0in 5.4pt; height: 36.75pt;border: none'><p
-												class="MsoNormal pull-right" style='background: white;border: none'>
-											<b><span
-													style='font-size: 10.0pt; font-family: Arial; color: #30373E;border: none'> </span></b><span
-												style='font-size: 10.0pt; font-family: Arial; color: #30373E;border: none'><o:p></o:p></span>
-										</p></td>
-									</tr>
-								</table>
+							<div style="width: 150px;border: 1px solid black;text-align: center;height: 25px;padding-top: 5px;float: right; font-size: 11.5pt; font-family: "Arial", "serif"; color: #30373E;">CONFIDENTIAL</div>
 							</div>
 
 
@@ -1781,9 +1767,6 @@ ${((paymentCertViewWrapper.amountDueMovement/paymentCertViewWrapper.exchangeRate
 </p></td>
 </tr>
 </table>
-<p class=MsoNormal>
-	<o:p>&nbsp;</o:p>
-</p>
 <!-- PCMS start
 <div class="col-md-12">
     <button class="m-t-5 btn btn-primary btn-block"
@@ -1795,444 +1778,47 @@ ${((paymentCertViewWrapper.amountDueMovement/paymentCertViewWrapper.exchangeRate
  PCMS end -->
 
 <!-- AP start --><!-- AP end -->
-
-<table align="center" class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>
-	<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:36.9pt'>
-		<td width=605 valign=top style='width:454.1pt;padding:0in 0in 0in 0in;height:36.9pt'>
-			<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 align=left width=580 style='width:435.0pt;border-collapse:collapse;mso-yfti-tbllook:1184;mso-table-lspace:9.0pt;mso-table-rspace:9.0pt;margin-right:6.75pt;mso-table-anchor-vertical:paragraph;mso-table-anchor-horizontal:column;mso-table-left:left;mso-padding-alt:0in 0in 0in 0in'>
-				<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:9.5pt'>
-					<td width=580 valign=top style='width:435.0pt;padding:.1in .1in .1in .1in;height:9.5pt'>
-						<p class=MsoNormal style='mso-line-height-alt:9.85pt'>
-							<span style='font-size:14.0pt;font-family:"Arial","sans-serif";color:black'>Payment Certificate No. ${paymentCert.paymentCertNo!""} </span>
-							<#if (scPackage.paymentTerms == "QS1" || scPackage.paymentTerms == "QS2" || scPackage.paymentTerms == "QS8") && paymentCert.bypassPaymentTerms=='Y'>
-						<p class=MsoNormal style='font-size: 11.0pt; font-family: "Arial", "serif"; color: #DD4B39'> (Early Release of Payment: Subject to receipt by Gammon for Pay-When-Paid payment terms	**For Internal Use Only)</p>
-					</#if>
-					<span style='font-size:14.0pt;font-family:"Arial","sans-serif"'>
-<o:p>
-</o:p>
-</span>
-					</p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes;height:9.5pt'>
-					<td width=580 valign=top style='width:435.0pt;padding:0in 0in 0in 0in;height:9.5pt'>
-					</td>
-				</tr>
-			</table>
+<#if paymentApproval??>
+<table style="border-collapse:collapse;border:none;margin-left:40px;">
+	<tbody>
+	<tr>
+		<td colspan="4" style="width: 467.5pt;border: 1pt solid windowtext;background: yellow;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'>Approval process executed in Gammon Approval System according to DLOA</p>
 		</td>
 	</tr>
-	<tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes;height:146.1pt'>
-		<td width=605 valign=top style='width:454.1pt;padding:0in 0in 0in 0in;height:146.1pt'>
-			<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>
-				<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes;height:144.55pt'>
-					<td width=229 valign=top style='width:171.8pt;padding:0in 5.4pt 0in 5.4pt;height:144.55pt'>
-						<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 style='width:250pt;border-collapse:collapse;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>
-							<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:14.1pt'>
-								<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>Payment Type</p>
-								</td>
-								<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal align=center style='text-align:center'>:</p>
-								</td>
-								<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>${paymentCertViewWrapper.paymentType!""}</p>
-								</td>
-							</tr>
-							<tr style='mso-yfti-irow:2;height:14.1pt'>
-								<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>Due Date</p>
-								</td>
-								<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal align=center style='text-align:center'>:</p>
-								</td>
-								<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>${paymentCertViewWrapper.dueDate!""}</p>
-								</td>
-							</tr>
-							<tr style='mso-yfti-irow:3;height:14.1pt'>
-								<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>As At Date</p>
-								</td>
-								<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal align=center style='text-align:center'>:</p>
-								</td>
-								<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-									<p class=MsoNormal>${paymentCertViewWrapper.asAtDate!""}</p>
-								</td>
-							</tr>
-
-
-							<#if paymentCert.bypassPaymentTerms=='Y'>
-							<tr style='mso-yfti-irow:1;height:28.2pt'>
-								<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-									<p class=MsoNormal>Original Due Date</p>
-								</td>
-								<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-									<p class=MsoNormal align=center style='text-align:center'>:</p>
-								</td>
-								<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-									<p class=MsoNormal><#if paymentCert.originalDueDate??>${paymentCert.originalDueDate?date?string("dd/MM/yyyy")}</#if></p>
-								</td>
-							</tr>
-						</#if>
-
-						<#if scPackage.paymentTerms == "QS1" || scPackage.paymentTerms == "QS2" || scPackage.paymentTerms == "QS8">
-
-				<tr style='mso-yfti-irow:1;height:28.2pt'>
-					<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-						<p class=MsoNormal>Main Certificate No.</p>
-					</td>
-					<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-						<p class=MsoNormal align=center style='text-align:center'>:</p>
-					</td>
-					<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-						<p class=MsoNormal>${mainCertNumber!""}</p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:1;height:28.2pt'>
-					<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal>Main Certificate Due Date</p>
-					</td>
-					<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal align=center style='text-align:center'>:</p>
-					</td>
-					<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal>${strMainCertDueDate!""}</p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:1;height:28.2pt'>
-					<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal>Client Certificate (IPC) Amount</p>
-					</td>
-					<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal align=center style='text-align:center'>:</p>
-					</td>
-					<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-						<p class=MsoNormal>${(clientCertAmount?string["#,##0.00"])!0}</p>
-					</td>
-				</tr>
-			</#if>
-	<tr style='mso-yfti-irow:3;height:14.1pt'>
-		<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal>Max. Retention Amount</p>
+	<tr>
+		<td style="width: 116.85pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:  normal;font-size:15px;font-family:"Calibri",sans-serif;'>&nbsp;</p>
 		</td>
-		<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal align=center style='text-align:center'>:</p>
+		<td style="width: 116.85pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'>Name</p>
 		</td>
-		<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal>${(maxRetentionAmount?string["#,##0.00"])!0}</p>
+		<td style="width: 116.9pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'>Position</p>
+		</td>
+		<td style="width: 116.9pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'>Date</p>
 		</td>
 	</tr>
-	<tr style='mso-yfti-irow:3;height:14.1pt'>
-		<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal>Posted IV Amount</p>
+	<#list paymentApproval as approvalRecord>
+	<tr>
+		<td style="width: 116.85pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-image: initial;border-top: none;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:  normal;font-size:15px;font-family:"Calibri",sans-serif;'>${approvalRecord.approvalStatus!""}</p>
 		</td>
-		<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal align=center style='text-align:center'>:</p>
+		<td style="width: 116.85pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:  normal;font-size:15px;font-family:"Calibri",sans-serif;'>${approvalRecord.fullname!""}</p>
 		</td>
-		<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-			<p class=MsoNormal>${(postedIVAmt?string["#,##0.00"])!0}</p>
+		<td style="width: 116.9pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:  normal;font-size:15px;font-family:"Calibri",sans-serif;'>${approvalRecord.position!""}</p>
 		</td>
-	</tr>
-	<#if scPackage.paymentTerms == "QS3" || scPackage.paymentTerms == "QS4" || scPackage.paymentTerms == "QS5" || scPackage.paymentTerms == "QS6" || scPackage.paymentTerms == "QS7">
-	<tr style='mso-yfti-irow:4;height:28.2pt'>
-		<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-			<p class=MsoNormal><#if scPackage.paymentTerms == "QS3">IPA Received Date<#else>Invoice Received Date</#if></p>
-		</td>
-		<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-			<p class=MsoNormal align=center style='text-align:center'>:</p>
-		</td>
-		<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:28.2pt'>
-			<p class=MsoNormal><#if paymentCert.ipaOrInvoiceReceivedDate??>${paymentCert.ipaOrInvoiceReceivedDate?date?string("dd/MM/yyyy")}</#if></p>
+		<td style="width: 116.9pt;border-top: none;border-left: none;border-bottom: 1pt solid windowtext;border-right: 1pt solid windowtext;padding: 0in 5.4pt;vertical-align: top;">
+			<p style='margin-top:0in;margin-right:0in;margin-bottom:.0001pt;margin-left:0in;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'>${approvalRecord.approvalDate!""}</p>
 		</td>
 	</tr>
+	</#list>
+	</tbody>
+</table>
 </#if>
-<#if (scPackage.jobInfo.jobNumber?index_of("14")>=0)>
-<tr style='mso-yfti-irow:5;height:14.1pt'>
-	<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal>GST Payable</p>
-	</td>
-	<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal align=center style='text-align:center'>:</p>
-	</td>
-	<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal>${(paymentCertViewWrapper.gstPayableMovement?string["#,##0.00"])!0}</p>
-	</td>
-</tr>
-<tr style='mso-yfti-irow:6;mso-yfti-lastrow:yes;height:14.1pt'>
-	<td width=152 valign=top style='width:114.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal>GST Receivable</p>
-	</td>
-	<td width=18 valign=top style='width:13.8pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal align=center style='text-align:center'>:</p>
-	</td>
-	<td width=128 valign=top style='width:96.15pt;padding:0in 5.4pt 0in 5.4pt;height:14.1pt'>
-		<p class=MsoNormal>${(paymentCertViewWrapper.lessGSTReceivableMovement?string["#,##0.00"])!0}</p>
-	</td>
-</tr>
-</#if>
-</table>
-</td>
-<td width=296 valign=top style='width:222.3pt;padding:0in 5.4pt 0in 5.4pt;height:144.55pt'>
-	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=283 style='width:212.0pt;border-collapse:collapse;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>
-		<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:68.45pt'>
-			<td width=283 valign=top style='width:212.0pt;padding:0in 0in 0in 0in;height:68.45pt'>
-				<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 align=left width=317 style='margin-left: 0px; margin-right: 0px;width:237.75pt;background:#548DD4;border-collapse:collapse;mso-yfti-tbllook:1184;mso-table-lspace:9.0pt;mso-table-rspace:9.0pt;mso-table-anchor-vertical:paragraph;mso-table-anchor-horizontal:column;mso-table-left:left;mso-padding-alt:0in 0in 0in 0in'>
-					<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes;height:.5in'>
-						<td width=317 valign=top style='width:237.75pt;padding:.2in .2in .2in .2in;height:.5in'>
-							<p class=MsoNormal>
-								<span style='font-size:8.5pt;font-family:"Arial","sans-serif";color:white'>Certificate Amount</span>
-								<span style='font-size:12.0pt;font-family:"Arial","sans-serif"'>
-<o:p>
-</o:p>
-</span>
-							</p>
-							<p class=MsoNormal>
-								<span style='font-size:15.0pt;font-family:"Arial","sans-serif";color:white'>$${paymentCert.certAmount!0 + paymentCertViewWrapper.gstPayableMovement!0 - paymentCertViewWrapper.lessGSTReceivableMovement!0}</span>
-								<span style='font-size:12.0pt;font-family:"Arial","sans-serif"'>
-<o:p>
-</o:p>
-</span>
-							</p>
-							</span>
-							</p>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes;height:73.8pt'>
-			<td width=283 valign=top style='width:212.0pt;padding:0in 0in 0in 0in;height:73.8pt'>
-
-				<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=323 style='width:237.75pt;border-collapse:collapse;mso-yfti-tbllook:1184;mso-padding-alt:0in 0in 0in 0in'>
-					<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:13.85pt'>
-						<td width=136 valign=top style='width:101.9pt;border-top:solid windowtext 1.0pt;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal>Payment Terms</p>
-						</td>
-						<td width=187 valign=top style='width:140.0pt;border-top:solid windowtext 1.0pt;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal align=right style='text-align:right'>
-								<#switch scPackage.paymentTerms!"">
-								<#case "QS0">
-								QS0 - Manual Input Due Date
-								<#break>
-								<#case "QS1">
-								QS1 - Pay when Paid + 7 days
-								<#break>
-								<#case "QS2">
-								QS2 - Pay when Paid + 14 days
-								<#break>
-								<#case "QS3">
-								QS3 - Pay when IPA Received + 56 days
-								<#break>
-								<#case "QS4">
-								QS4 - Pay when Invoice Received + 28 days
-								<#break>
-								<#case "QS5">
-								QS5 - Pay when Invoice Received + 30 days
-								<#break>
-								<#case "QS6">
-								QS6 - Pay when Invoice Received + 45 days
-								<#break>
-								<#case "QS7">
-								QS7 - Pay when Invoice Received + 60 days
-								<#break>
-								<#case "QS8">
-								QS8 - Pay when Paid + 0 day
-								<#break>
-								<#default>
-							</#switch>
-							</p>
-						</td>
-					</tr>
-					<tr style='mso-yfti-irow:1;height:13.85pt'>
-						<td width=136 valign=top style='width:101.9pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal>Payment Requisition</p>
-						</td>
-						<td width=187 valign=top style='width:140.0pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal align=right style='text-align:right'><#if (paymentCert.directPayment == "N")>No<#else>Yes</#if></p>
-						</td>
-					</tr>
-					<tr style='mso-yfti-irow:2;height:13.85pt'>
-						<td width=136 valign=top style='width:101.9pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal>Payment Status</p>
-						</td>
-						<td width=187 valign=top style='width:140.0pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal align=right style='text-align:right'>
-								<#switch paymentCert.paymentStatus!"">
-								<#case "PND">Pending
-								<#break>
-								<#case "SBM">Submitted
-								<#break>
-								<#case "UFR">Under Finance Review
-								<#break>
-								<#case "PCS">Waiting For Posting
-								<#break>
-								<#case "APR">Posted To Finance
-								<#break>
-								<#default>
-							</#switch>
-							</p>
-						</td>
-					</tr>
-					<tr style='mso-yfti-irow:3;mso-yfti-lastrow:yes;height:13.85pt'>
-						<td width=136 valign=top style='width:101.9pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal>Certificate Issue Date</p>
-						</td>
-						<td width=187 valign=top style='width:140.0pt;border:none;border-bottom:solid windowtext 1.0pt;padding:.03in 0in .03in 0in;height:10.85pt'>
-							<p class=MsoNormal align=right style='text-align:right'><#if paymentCert.certIssueDate??>${paymentCert.certIssueDate?date?string("dd/MM/yyyy")}</#if></p>
-						</td>
-					</tr>
-				</table>
-				<p class=MsoNormal>
-					<o:p>
-					</o:p>
-				</p>
-			</td>
-		</tr>
-	</table>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
-
-<table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;mso-yfti-tbllook:1184;mso-padding-alt:.2in .2in .2in .2in;mso-border-insideh:none;mso-border-insidev:none'>
-	<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'>
-		<td width=590 valign=top style='width:6.15in;padding:.2in .2in .2in .2in'>
-			<table align="center" class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;mso-yfti-tbllook:1184;mso-padding-alt:0in 5.4pt 0in 5.4pt;mso-border-insideh:none;mso-border-insidev:none'>
-				<tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
-					<td width=304 valign=top style='width:227.8pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal>
-							<b style='mso-bidi-font-weight:normal'>
-								<span style='font-size:14.0pt;font-family:"Arial","sans-serif";color:#444444;background:white'>Contractual Date</span>
-							</b>
-							<b style='mso-bidi-font-weight:normal'>
-<span style='font-size:14.0pt'>
-<o:p>
-</o:p>
-</span>
-							</b>
-						</p>
-					</td>
-					<td width=247 valign=top style='width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal>
-							<o:p>&nbsp;</o:p>
-						</p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:1'>
-					<td width=304 valign=top style='width:227.8pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal>
-							<o:p>&nbsp;</o:p>
-						</p>
-					</td>
-					<td width=247 valign=top style='width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal>
-							<o:p>&nbsp;</o:p>
-						</p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:2'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-							<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Requisition Approved Date</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.requisitionApprovedDate??>${scPackage.requisitionApprovedDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:3'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-							<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Tender Analysis Approved Date</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.tenderAnalysisApprovedDate??>${scPackage.tenderAnalysisApprovedDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:4'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>Pre-Award Finalization Meeting Date<span class=apple-converted-space>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>&nbsp;</span>
-</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.preAwardMeetingDate??>${scPackage.preAwardMeetingDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:5'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-							<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Letter of Acceptance Signed by Subcontractor Date</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.loaSignedDate??>${scPackage.loaSignedDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:6'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Document Executed by Subcontractor Date<o:p>
-</o:p>
-</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.scDocScrDate??>${scPackage.scDocScrDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:7'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontract Document Executed by Legal Date<o:p>
-</o:p>
-</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.scDocLegalDate??>${scPackage.scDocLegalDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:8'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Works Commencement Date<o:p>
-</o:p>
-</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.workCommenceDate??>${scPackage.workCommenceDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-				<tr style='mso-yfti-irow:9;mso-yfti-lastrow:yes'>
-					<td width=350 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:260.8pt;padding:0.1in 5.4pt 0.1in 5.4pt'>
-						<p class=MsoNormal>
-<span style='font-size:10.0pt;font-family:"Arial","sans-serif";color:#30373E;background:white'>Subcontractor Start on-site Date<o:p>
-</o:p>
-</span>
-						</p>
-					</td>
-					<td width=247 valign=top style='border-top:solid #dddddd 1.0pt;border-left:none;border-bottom:solid #dddddd 1.0pt;border-right:none;padding:.1in 0in .1in 0in;width:185.4pt;padding:0in 5.4pt 0in 5.4pt'>
-						<p class=MsoNormal align=right style='text-align:right'><#if scPackage.onSiteStartDate??>${scPackage.onSiteStartDate?date?string("dd/MM/yyyy")}</#if></p>
-					</td>
-				</tr>
-			</table>
-			<p class=MsoNormal>
-				<o:p>
-				</o:p>
-			</p>
-		</td>
-	</tr>
-</table>
-
-
-
 </div>
 </body>
 </html>

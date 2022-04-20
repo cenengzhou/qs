@@ -72,6 +72,18 @@ mainApp.controller('AdminManualProceduresCtrl',
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
 	};
+
+	$scope.onGeneratePaymentCertPdf = function(){
+		paymentService.generatePaymentPDFAdmin($scope.ScPaymentApprovalJobNo, $scope.ScPaymentApprovalPackageNo, $scope.ScPaymentApprovalPaymentNo)
+			.then(function(data){
+				if (data == "")
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Generate Payment Cert PDF completed.");
+				else
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+			},function(data){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+			});
+	};
 	
     
 	$scope.onSubmitGenerateSubcontractSnapshot = function(){
