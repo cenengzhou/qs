@@ -234,8 +234,32 @@
 			</div>
 			</form>
 		</div>
-		
-		
+
+		<div class="col-md-4 col-sm-12">
+			<form id="generatePaymentCertPdf"
+				  ng-submit="onGeneratePaymentCertPdf()">
+				<div class="panel panel-primary panel" vertilize >
+					<div class="panel-heading">
+						<h3 class="panel-title">Generate Payment Cert PDF</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group col-md-6">
+							<label for="gpcp_jobNumber">Job Number:</label> <input type="text" ng-required="true"
+																			  class="form-control" id="gpcp_jobNumber" ng-model="ScPaymentApprovalJobNo">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="gpcp_packageNo">Package Number:</label> <input type="text" ng-required="true"
+																				  class="form-control" id="gpcp_packageNo" ng-model="ScPaymentApprovalPackageNo">
+						</div>
+						<div class="form-group col-md-12">
+							<label for="gpcp_paymentNo">Payment Cert No:</label> <input type="text" ng-required="true"
+																				  class="form-control" id="gpcp_paymentNo" ng-model="ScPaymentApprovalPaymentNo">
+						</div>
+						<button ng-show="showIMSAdmin" type="submit" class="btn btn-block btn-primary">Generate</button>
+					</div>
+				</div>
+			</form>
+		</div>
 		
 		
 	</div>

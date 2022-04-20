@@ -24,6 +24,12 @@ public class AttachmentConfig {
 	private String personnelDirectory;
 	@Value("#{${attachment.server}}")
 	private Map<String, Object> attachmentServer;
+	@Value("${scpayment.merge.joblist}")
+	private String[] scpaymentMergeJoblist;
+
+	public String[] getScpaymentMergeJoblist() {
+		return scpaymentMergeJoblist;
+	}
 	
 	@Autowired
 	private ApplicationConfig applicationConfig;

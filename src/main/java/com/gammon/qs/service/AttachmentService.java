@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,7 +17,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.service.HTMLService;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -79,6 +88,8 @@ public class AttachmentService {
 	private TransitService transitService;
 	@Autowired
 	private JobInfoService jobInfoService;
+	@Autowired
+	private HTMLService htmlService;
 	
 
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
@@ -504,7 +515,69 @@ public class AttachmentService {
 		List<Attachment> attachmentList = obtainAttachmentList(Attachment.RocSubdetailNameObject, textKey);
 		deleteAttachmentList(attachmentList);
 	}
-	
-	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
+
+    public String mergePaymentPdf(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception {
+		String tmpFileName = "tmp_" + jobNo + "-" + subcontractNo + "-" + String.format("%04d", paymentCertNo) + ".pdf";
+		String fileName = jobNo + "-" + subcontractNo + "-" + String.format("%04d", paymentCertNo) + ".pdf";
+		String serverPath = serviceConfig.getAttachmentServer("PATH") + serviceConfig.getJobAttachmentsDirectory();
+		File jobDir = new File(serverPath, jobNo);
+		File subcontractDir = new File(jobDir, "Subcontract");
+		File subcontractNoDir = new File(subcontractDir, subcontractNo);
+
+		String[] scpaymentMergeJoblist = serviceConfig.getScpaymentMergeJoblist();
+		if (!Arrays.stream(scpaymentMergeJoblist).anyMatch(jobNo::equals)) {
+			return "Job number is not in the white list";
+		}
+
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, jobNo +"|"+ subcontractNo +"|"+ paymentCertNo);
+		if (attachmentList.size() != 1) {
+			return "No. of Attachment is not equal to 1";
+		}
+
+		String attachmentFileType = FilenameUtils.getExtension(attachmentList.get(0).getPathFile()).toUpperCase();
+		if (!attachmentFileType.equals("PDF"))
+			return "Attachment file type is not PDF";
+
+		if (!jobDir.exists()) {
+			logger.info("Job Directory does not exist. Job Directory will be created.");
+			jobDir.mkdir();
+		}
+		if (!subcontractDir.exists()) {
+			logger.info("Subcontract Directory does not exist. Subcontract Directory will be created.");
+			subcontractDir.mkdir();
+		}
+		if (!subcontractNoDir.exists()) {
+			logger.info(subcontractNo + " Directory does not exist. "+ subcontractNo +" Directory will be created.");
+			subcontractNoDir.mkdir();
+		}
+
+		// prepare payment pdf
+		File paymentFile = new File(subcontractNoDir, tmpFileName);
+		String HTML = htmlService.makeHTMLStringForSCPaymentCert(jobNo, subcontractNo, String.valueOf(paymentCertNo), "PDF");
+		PdfDocument pdf = new PdfDocument(new PdfWriter(new FileOutputStream(paymentFile)));
+		pdf.setDefaultPageSize(new PageSize(612.0F, 1190.0F));
+		HtmlConverter.convertToPdf(HTML, pdf, new ConverterProperties());
+		pdf.close();
+
+		// prepare attachment pdf
+		File attachmentFile = new File(serverPath, attachmentList.get(0).getPathFile());
+
+		// merge payment pdf and attachment pdf
+		File mergedFile = new File(subcontractNoDir, fileName);
+		PDFMergerUtility PDFmerger = new PDFMergerUtility();
+		PDFmerger.setDestinationFileName(mergedFile.getAbsolutePath());
+		PDFmerger.addSource(paymentFile);
+		PDFmerger.addSource(attachmentFile);
+		PDFmerger.mergeDocuments();
+
+		// clean up temp file
+		if (paymentFile.exists()) {
+			paymentFile.delete();
+		}
+
+		return "";
+	}
+
+    /***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 
 }

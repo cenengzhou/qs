@@ -204,13 +204,26 @@ public class PaymentController {
 		return result;
 	}
 
+	@PreAuthorize(value = "@GSFService.isRoleExisted('PaymentController','generatePaymentPDFAdmin', @securityConfig.getRolePcmsImsAdmin())")
+	@RequestMapping(value = "generatePaymentPDFAdmin", method = RequestMethod.POST)
+	public String generatePaymentPDFAdmin(@RequestParam(required = true) String jobNo,
+										  @RequestParam(required = true) String packageNo,
+										  @RequestParam(required = true) int paymentNo){
+		try {
+			return paymentService.generatePaymentPDFAdmin(jobNo, packageNo, paymentNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Cannot generate payment pdf";
+		}
+	}
+
 	@PreAuthorize(value = "@GSFService.isRoleExisted('PaymentController','runPaymentPosting', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();
 		mailContentGenerator.sendAdminFnEmail("runPaymentPosting", "");
 	}
-	
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','obtainPaymentCertificateList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainPaymentCertificateList", method = RequestMethod.POST)
 	public List<PaymentCertWrapper> obtainPaymentCertificateList(@RequestBody PaymentCertWrapper paymentCertWrapper, @RequestParam String dueDateType) throws DatabaseOperationException{
