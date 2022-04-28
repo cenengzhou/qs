@@ -31,7 +31,6 @@ import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.g
 import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.getValidateAAICompletely.ValidateAAICompletelyResponseObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
-import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.Subcontract;
@@ -46,8 +45,6 @@ import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 @Repository
 public class PaymentPostingWSDao {
-	@Autowired
-	private MasterListWSDao masterListWSDao;
 	@Autowired
 	private MasterListService masterListRepositoryImpl;
 	@Autowired
@@ -205,14 +202,20 @@ public class PaymentPostingWSDao {
 				accNumRequestObj.setSubsidiary(accountMovement.getSubsidiaryCode());
 				accNumResponseObj = (ValidateAccNumResponseObj)validateAccNumWebServiceTemplate.marshalSendAndReceive(accNumRequestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 				if (accNumResponseObj.getAccountID()==null || accNumResponseObj.getAccountID().trim().length()<1){
-					if (accNumRequestObj.getSubsidiary()==null|| accNumRequestObj.getSubsidiary().trim().length()<1|| accNumRequestObj.getObjectAccount()==null || accNumRequestObj.getObjectAccount().trim().length()<1 )
-						throw new DatabaseOperationException("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" is not exist.");
+					if (accNumRequestObj.getSubsidiary()==null|| accNumRequestObj.getSubsidiary().trim().length()<1|| accNumRequestObj.getObjectAccount()==null || accNumRequestObj.getObjectAccount().trim().length()<1 ){
+						logger.info("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" is not exist.");
+						return Boolean.FALSE;
+					}
 					String errMsg = masterListRepositoryImpl.validateAndCreateAccountCode(accNumRequestObj.getBusinessUnit().trim(), accNumRequestObj.getObjectAccount(), accNumRequestObj.getSubsidiary());
-					if (errMsg!=null && errMsg.trim().length()>0)
-						throw new DatabaseOperationException(errMsg);
+					if (errMsg!=null && errMsg.trim().length()>0){
+						logger.info(errMsg);
+						return Boolean.FALSE;
+					}
 					accNumResponseObj = (ValidateAccNumResponseObj)validateAccNumWebServiceTemplate.marshalSendAndReceive(accNumRequestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-					if (accNumResponseObj.getAccountID()==null || accNumResponseObj.getAccountID().trim().length()<1)
-						throw new DatabaseOperationException("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" cannot be created.");
+					if (accNumResponseObj.getAccountID()==null || accNumResponseObj.getAccountID().trim().length()<1){
+						logger.info("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" cannot be created.");
+						return Boolean.FALSE;
+					}
 				}
 				journalEntry = createBaseJournalEntry();
 				journalEntry.setAcctNoInputMode(accNumResponseObj.getAccountNumberInputModeUnknown());
@@ -235,9 +238,10 @@ public class PaymentPostingWSDao {
 			accNumRequestObj.setObjectAccount(objectCode);
 			accNumRequestObj.setSubsidiary(cpfSubsid);
 			accNumResponseObj = (ValidateAccNumResponseObj)validateAccNumWebServiceTemplate.marshalSendAndReceive(accNumRequestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(),wsConfig.getPassword()));
-			if (accNumResponseObj.getAccountID()==null || accNumResponseObj.getAccountID().trim().length()<1)
-				throw new DatabaseOperationException("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" have not created.");
-						
+			if (accNumResponseObj.getAccountID()==null || accNumResponseObj.getAccountID().trim().length()<1){
+				logger.info("Account "+accNumRequestObj.getBusinessUnit()+"."+accNumRequestObj.getObjectAccount()+"."+accNumRequestObj.getSubsidiary()+" have not created.");
+				return Boolean.FALSE;
+			}
 			journalEntry = createBaseJournalEntry();
 			journalEntry.setAcctNoInputMode(accNumResponseObj.getAccountNumberInputModeUnknown());
 			journalEntry.setAccountId(accNumResponseObj.getAccountID());
@@ -256,9 +260,10 @@ public class PaymentPostingWSDao {
 			journalEntry = createBaseJournalEntry();
 			journalEntry.setAcctNoInputMode(aaiResponseObj.getAccountNumberInputModeUnknown());
 			journalEntry.setAccountId(aaiResponseObj.getAccountID());
-			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1)
-				throw new DatabaseOperationException("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
-
+			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1){
+				logger.info("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
+				return Boolean.FALSE;
+			}
 			journalEntry.setCostCenter(aaiResponseObj.getBusinessUnit());
 			journalEntry.setObjectAccount(aaiResponseObj.getObjectAccount());
 			journalEntry.setSubsidiary(aaiResponseObj.getSubsidiary());
@@ -271,9 +276,10 @@ public class PaymentPostingWSDao {
 		if(gstPayable != null && !gstPayable.equals(Double.valueOf(0))){
 			aaiRequestObj.setItemNumber(gstPayableItem);
 			aaiResponseObj = (ValidateAAICompletelyResponseObj)validateAAICompletelyWebServiceTemplate.marshalSendAndReceive(aaiRequestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1)
-				throw new DatabaseOperationException("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
-			
+			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1){
+				logger.info("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
+				return Boolean.FALSE;
+			}
 			journalEntry = createBaseJournalEntry();
 			journalEntry.setAcctNoInputMode(aaiResponseObj.getAccountNumberInputModeUnknown());
 			journalEntry.setAccountId(aaiResponseObj.getAccountID());
@@ -289,9 +295,10 @@ public class PaymentPostingWSDao {
 		if(gstReceivable != null && !gstReceivable.equals(Double.valueOf(0))){
 			aaiRequestObj.setItemNumber(gstReceivableItem);
 			aaiResponseObj = (ValidateAAICompletelyResponseObj)validateAAICompletelyWebServiceTemplate.marshalSendAndReceive(aaiRequestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1)
-				throw new DatabaseOperationException("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
-			
+			if (aaiResponseObj.getAccountID()==null || aaiResponseObj.getAccountID().trim().length()<1){
+				logger.info("Account "+aaiResponseObj.getBusinessUnit()+"."+aaiResponseObj.getObjectAccount()+"."+aaiResponseObj.getSubsidiary()+" have not created.");
+				return Boolean.FALSE;
+			}
 			journalEntry = createBaseJournalEntry();
 			journalEntry.setAcctNoInputMode(aaiResponseObj.getAccountNumberInputModeUnknown());
 			journalEntry.setAccountId(aaiResponseObj.getAccountID());

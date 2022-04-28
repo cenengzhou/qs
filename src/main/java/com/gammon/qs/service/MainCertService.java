@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.MainCertReceiveDateQueryManager.getMainCertReceiveDate.GetMainCertReceiveDateResponseObj;
+import com.gammon.pcms.aspect.CanAccessJobChecking;
+import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
@@ -31,6 +33,7 @@ import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.MainCertContraChargeHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
+import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.ARRecord;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
@@ -77,6 +80,8 @@ public class MainCertService {
 	private MainCertContraChargeHBDao mainCertContraChargeHBDao;
 	@Autowired
 	private AttachmentService attachmentService;
+	@Autowired
+	private SubcontractHBDao packageHBDao;
 
 	/*****************************************
 	 * Web Services
@@ -377,10 +382,10 @@ public class MainCertService {
 		List<String> parentJobList = new ArrayList<String>();
 		String parentJobNo = jobNo;
 		String mainCertNo;
-		parentJobList = jobInfoService.obtainParentJobList(jobNo);
+		parentJobList = this.obtainParentJobList(jobNo);
 		while(parentJobList.size()==1){//loop until it gets the actual parent job
 			parentJobNo = parentJobList.get(0);
-			parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
+			parentJobList = this.obtainParentJobList(parentJobNo);
 		}
 		
 		logger.info("Job: "+jobNo+" - Parent Job: "+parentJobNo);
@@ -407,16 +412,40 @@ public class MainCertService {
 	public List<Integer> getMainCertNoList(String jobNo) throws DatabaseOperationException {
 		List<String> parentJobList = new ArrayList<String>();
 		String parentJobNo = jobNo;
-		parentJobList = jobInfoService.obtainParentJobList(jobNo);
+		parentJobList = this.obtainParentJobList(jobNo);
 		while(parentJobList.size()==1){//loop until it gets the actual parent job
 			parentJobNo = parentJobList.get(0);
-			parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
+			parentJobList = this.obtainParentJobList(parentJobNo);
 		}
 		
 		logger.info("Job: "+jobNo+" - Parent Job: "+parentJobNo);
 		
 		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(parentJobNo, "300");
 		return mainCertNoList;
+	}
+	
+	
+	/**
+	 * 
+	 * @author tikywong
+	 * created on Aug 9, 2013 3:08:08 PM
+	 */
+	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
+	public List<String> obtainParentJobList(String jobNo) throws DatabaseOperationException {
+		List<String> parentJobList = packageHBDao.obtainParentJobList(jobNo);
+		
+		if(parentJobList==null || parentJobList.size()==0){
+			parentJobList = new ArrayList<String>();
+			return parentJobList;
+		}
+		
+		//log
+		String message = "Job: "+jobNo+" is a child job of the followings - Parent Job(s): ";
+		for(String parentJob:parentJobList)
+			message += parentJob+" ";
+		logger.info(message);
+		
+		return parentJobList;
 	}
 	
 	/**

@@ -85,7 +85,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 //SpringSession workaround: change "session" to "request"
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PaymentService{
 
@@ -505,6 +505,7 @@ public class PaymentService{
 					scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
+
 			}
 			//UFR --> PCS
 			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)){

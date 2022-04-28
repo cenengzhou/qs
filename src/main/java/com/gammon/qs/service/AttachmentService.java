@@ -55,7 +55,7 @@ import com.gammon.qs.service.transit.TransitService;
  */
 @Service
 // SpringSession workaround: change "session" to "request"
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class AttachmentService {
 	@Autowired
@@ -516,28 +516,34 @@ public class AttachmentService {
 		deleteAttachmentList(attachmentList);
 	}
 
-    public String mergePaymentPdf(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception {
+    @SuppressWarnings("deprecation")
+	public String mergePaymentPdf(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception {
+    	String errorMsg = "";
+    	
+    	String[] scpaymentMergeJoblist = serviceConfig.getScpaymentMergeJoblist();
+
+		if (!Arrays.stream(scpaymentMergeJoblist).anyMatch(jobNo::equals)) {
+			errorMsg = "Job "+jobNo+" is not in the white list";
+			return errorMsg;
+		}
+		
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, jobNo +"|"+ subcontractNo +"|"+ paymentCertNo);
+		/*if (attachmentList.size() != 1) {
+			errorMsg = "No. of Attachment is not equal to 1";
+			return errorMsg;
+		}*/
+
+		
+		logger.info("Merge PDF for Job: "+ jobNo +"- SC "+ subcontractNo +"- Payment Cert "+ paymentCertNo);
+		
 		String tmpFileName = "tmp_" + jobNo + "-" + subcontractNo + "-" + String.format("%04d", paymentCertNo) + ".pdf";
 		String fileName = jobNo + "-" + subcontractNo + "-" + String.format("%04d", paymentCertNo) + ".pdf";
 		String serverPath = serviceConfig.getAttachmentServer("PATH") + serviceConfig.getJobAttachmentsDirectory();
 		File jobDir = new File(serverPath, jobNo);
 		File subcontractDir = new File(jobDir, "Subcontract");
 		File subcontractNoDir = new File(subcontractDir, subcontractNo);
-
-		String[] scpaymentMergeJoblist = serviceConfig.getScpaymentMergeJoblist();
-		if (!Arrays.stream(scpaymentMergeJoblist).anyMatch(jobNo::equals)) {
-			return "Job number is not in the white list";
-		}
-
-		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, jobNo +"|"+ subcontractNo +"|"+ paymentCertNo);
-		if (attachmentList.size() != 1) {
-			return "No. of Attachment is not equal to 1";
-		}
-
-		String attachmentFileType = FilenameUtils.getExtension(attachmentList.get(0).getPathFile()).toUpperCase();
-		if (!attachmentFileType.equals("PDF"))
-			return "Attachment file type is not PDF";
-
+		
+		
 		if (!jobDir.exists()) {
 			logger.info("Job Directory does not exist. Job Directory will be created.");
 			jobDir.mkdir();
@@ -559,15 +565,24 @@ public class AttachmentService {
 		HtmlConverter.convertToPdf(HTML, pdf, new ConverterProperties());
 		pdf.close();
 
-		// prepare attachment pdf
-		File attachmentFile = new File(serverPath, attachmentList.get(0).getPathFile());
-
+		
+		
 		// merge payment pdf and attachment pdf
 		File mergedFile = new File(subcontractNoDir, fileName);
 		PDFMergerUtility PDFmerger = new PDFMergerUtility();
 		PDFmerger.setDestinationFileName(mergedFile.getAbsolutePath());
 		PDFmerger.addSource(paymentFile);
-		PDFmerger.addSource(attachmentFile);
+		
+		// prepare attachment pdf
+		for (Attachment att: attachmentList){
+			String attachmentFileType = FilenameUtils.getExtension(att.getPathFile()).toUpperCase();
+			if (attachmentFileType.equals("PDF")){
+				File attachmentFile = new File(serverPath, att.getPathFile());
+				PDFmerger.addSource(attachmentFile);
+			}
+		}
+				
+		
 		PDFmerger.mergeDocuments();
 
 		// clean up temp file
@@ -575,7 +590,7 @@ public class AttachmentService {
 			paymentFile.delete();
 		}
 
-		return "";
+		return errorMsg;
 	}
 
     /***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/

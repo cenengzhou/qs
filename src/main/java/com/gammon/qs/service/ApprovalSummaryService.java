@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 @Service
 //SpringSession workaround: change "session" to "request"
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class ApprovalSummaryService {
 

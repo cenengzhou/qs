@@ -187,28 +187,7 @@ public class JobInfoService {
 		return job;
 	}
 	
-	/**
-	 * 
-	 * @author tikywong
-	 * created on Aug 9, 2013 3:08:08 PM
-	 */
-	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
-	public List<String> obtainParentJobList(String jobNo) throws DatabaseOperationException {
-		List<String> parentJobList = packageHBDao.obtainParentJobList(jobNo);
-		
-		if(parentJobList==null || parentJobList.size()==0){
-			parentJobList = new ArrayList<String>();
-			return parentJobList;
-		}
-		
-		//log
-		String message = "Job: "+jobNo+" is a child job of the followings - Parent Job(s): ";
-		for(String parentJob:parentJobList)
-			message += parentJob+" ";
-		logger.info(message);
-		
-		return parentJobList;
-	}
+	
 	
 	/*Create by irischau on 15 Apr 2014*/
 	public List<String> obtainAllJobDivision() throws DatabaseOperationException{

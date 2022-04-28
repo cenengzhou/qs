@@ -89,7 +89,7 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.LineSeparator;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class HTMLService implements Serializable{
 
@@ -190,7 +190,6 @@ public class HTMLService implements Serializable{
 				currentPaymentNo = maxPaymentCertNumber;
 			}else{
 				currentPaymentNo = Integer.valueOf(paymentNo);
-				logger.info("PaymentNo: "+paymentNo);
 			}
 			paymentCert = paymentService.obtainPaymentCertificate(jobNumber, subcontractNumber, new Integer(currentPaymentNo));
 			logger.info("Job No.: "+jobNumber+"- Package No.: "+subcontractNumber+"- Payment No.: "+currentPaymentNo);
@@ -212,11 +211,11 @@ public class HTMLService implements Serializable{
 				
 				
 				//Get Parent Job Main Cert Due Date
-				List<String> parentJobList = jobInfoService.obtainParentJobList(jobNumber);
+				List<String> parentJobList = mainCertService.obtainParentJobList(jobNumber);
 				String parentJobNo = jobNumber;
 				while(parentJobList.size()==1){//loop until it gets the actual parent job
 					parentJobNo = parentJobList.get(0);
-					parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
+					parentJobList = mainCertService.obtainParentJobList(parentJobNo);
 				}
 				
 				
@@ -265,15 +264,14 @@ public class HTMLService implements Serializable{
 			approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.PaymentCertNameObject, String.valueOf(paymentCert.getId()));
 
 		}
-
-		
+	
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("payment");
 		data.put("template", template);
 		data.put("paymentType", paymentCert.getIntermFinalPayment());
 		data.put("approvalSummary", approvalSummary);
 		data.put("htmlVersion", htmlVersion);
-		data.put("baseUrl", servletConfig.getBaseUrl());
+		//data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCert", paymentCert != null ? paymentCert : new PaymentCert());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
@@ -288,7 +286,7 @@ public class HTMLService implements Serializable{
 		data.put("currentPaymentNo", currentPaymentNo);
 		data.put("maxRetentionAmount", maxRetentionAmount);
 		if (paymentNo != null && paymentNo.length() > 0
-				&& !paymentCert.getPaymentStatus().equals("PND") && !paymentCert.getPaymentStatus().equals("SBM")) {
+				&& !paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING) && !paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)) {
 			List<ScPaymentApproval> paymentApproval = scPaymentApprovalRepository.getPaymentApproval(jobNumber, new Integer(subcontractNumber), new Integer(paymentNo));
 			if (paymentApproval != null && paymentApproval.size() > 0)
 				data.put("paymentApproval", paymentApproval);

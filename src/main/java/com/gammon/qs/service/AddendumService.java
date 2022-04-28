@@ -340,6 +340,16 @@ public class AddendumService{
 		String error = "";
 		boolean validateToAddCF = true;
 		try {
+			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
+			if (addendum ==null){
+				error = "Job: "+ noJob + " - SC "+ noSubcontract + " - Addendum No."+addendumNo +"does not exist.";
+				return error;
+			}
+			if(!addendum.getStatus().equals(Addendum.STATUS.PENDING.toString())){
+				error = "Job: "+ noJob + " - SC "+ noSubcontract + " - Addendum No."+addendumNo +" is "+ addendum.getStatus();
+				return error;
+			}
+			
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetail.getIdHeaderRef());
 			if(addendumDetailHeader!= null && addendumDetailHeader.getId()!=null){
 				addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
@@ -395,7 +405,7 @@ public class AddendumService{
 				addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.ADD.toString());
 
 			
-			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
+			
 			addendumDetail.setNoJob(noJob);
 			addendumDetail.setNoSubcontract(noSubcontract);
 			addendumDetail.setNo(addendumNo);

@@ -33,12 +33,12 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.service.SupplierMasterService;
+import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
-import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
+
 @Component
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PaymentPostingService {
@@ -67,6 +67,8 @@ public class PaymentPostingService {
 	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
 	private SupplierMasterWSDao supplierMasterWSDao;
+	@Autowired
+	private AttachmentService attachmentService;
 	/**
 	 * To run payment posting
 	 *
@@ -168,9 +170,18 @@ public class PaymentPostingService {
 					}
 					
 					if (posted) {
+						//Customization for 13880 - Auto Download PDF
+						try{
+							String msg = attachmentService.mergePaymentPdf(paymentCert.getJobNo(), paymentCert.getPackageNo(), paymentCert.getPaymentCertNo());
+							if (msg!=null && msg.length() >0)
+								logger.info("Result Merge PDF: "+ msg);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
 						// Update 1.Payment Certificate, 2.Package, 3a.Details (normal Payment), 3b. Payment Details (Direct Payment)
 						//1. Update Payment Certificate
-						logger.info("Payment Posted!");
+						logger.info("Payment Posted! Job "+paymentCert.getJobNo()+ "- SC "+paymentCert.getPackageNo()+ "- PaymentNo."+paymentCert.getPaymentCertNo()+ " - VendorNo" +addressNumber);
 						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE);
 						paymentCert.setCertIssueDate(new Date());
 						paymentCert.populate(usernameJDESOA3);
