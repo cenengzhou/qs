@@ -97,7 +97,8 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 					else 
 						$scope.disableButton = false;
 					
-					if(data.scStatus < '500' || data.splitTerminateStatus ==4){
+					//if(data.scStatus < '500' || data.splitTerminateStatus ==4){
+					if(data.splitTerminateStatus ==4){
 						$scope.lineType = "RR";
 						$scope.disableSelect = true;
 					}
