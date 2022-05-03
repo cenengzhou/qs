@@ -510,17 +510,18 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     }
 
 		function canAdminJob(jobNo, param){
-			if(jobNo && jobNo.length == 5 && (!param || param == 'jobNumber')){
-				jobService.canAdminJob(jobNo)
-				.then(function(data){
-					if(data){
-						$rootScope.adminSearchBtn = false;
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
-					} else {
-						$rootScope.adminSearchBtn = true;
-					}
-				});
-			}
+			// if(jobNo && jobNo.length == 5 && (!param || param == 'jobNumber')){
+			// 	jobService.canAdminJob(jobNo)
+			// 	.then(function(data){
+			// 		if(data){
+			// 			$rootScope.adminSearchBtn = false;
+			// 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+			// 		} else {
+			// 			$rootScope.adminSearchBtn = true;
+			// 		}
+			// 	});
+			// }
+			return true;
 		}
 
 }]);

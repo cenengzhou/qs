@@ -282,47 +282,49 @@ public class JobInfoService {
 		return jobHBDao.getByRefNo(refNo);
 	}
 
-	public String canAdminJob(String jobNo) throws Exception{
+	public String canAdminJob(String jobNo) throws Exception {
 		return this.canAdminJob(jobNo, "");
 	}
+	
 	public String canAdminJob(String jobNo, String adminJobNo) throws Exception{
-		User currentUser = (User) securityService.getCurrentUser();
-		logger.info(currentUser.getUsername() + " revision job:" + jobNo);
-		String message = "";
-		JobInfo adminJob;
-		if(StringUtils.isNotEmpty(adminJobNo) && webServiceConfig.isAllowAsJob()){
-			// adminJobNo for UI
-		} else {
-			DirContextOperations ctx = userSearchBean.searchForUser(currentUser.getUsername());
-			Attributes atts = ctx.getAttributes();
-			Attribute office = atts.get("physicaldeliveryofficename");
-			String adminOffice = (String) office.get(0);
-			adminJobNo = adminOffice.substring(0, 5);
-		}
+		// User currentUser = (User) securityService.getCurrentUser();
+		// logger.info(currentUser.getUsername() + " revision job:" + jobNo);
+		// String message = "";
+		// JobInfo adminJob;
+		// if(StringUtils.isNotEmpty(adminJobNo) && webServiceConfig.isAllowAsJob()){
+		// 	// adminJobNo for UI
+		// } else {
+		// 	DirContextOperations ctx = userSearchBean.searchForUser(currentUser.getUsername());
+		// 	Attributes atts = ctx.getAttributes();
+		// 	Attribute office = atts.get("physicaldeliveryofficename");
+		// 	String adminOffice = (String) office.get(0);
+		// 	adminJobNo = adminOffice.substring(0, 5);
+		// }
 		
-		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
-		adminJob = jobHBDao.obtainJobInfo(adminJobNo);
+		// JobInfo job = jobHBDao.obtainJobInfo(jobNo);
+		// adminJob = jobHBDao.obtainJobInfo(adminJobNo);
 
-		List<String> adminDivisionGroupOne = securityConfig.getAdminDivisionGroupOne();
+		// List<String> adminDivisionGroupOne = securityConfig.getAdminDivisionGroupOne();
 
-		boolean isAdminInGroupOne = this.isJobInDivision(adminJob, adminDivisionGroupOne);
-		boolean isJobInGroupOne = this.isJobInDivision(job, adminDivisionGroupOne);
+		// boolean isAdminInGroupOne = this.isJobInDivision(adminJob, adminDivisionGroupOne);
+		// boolean isJobInGroupOne = this.isJobInDivision(job, adminDivisionGroupOne);
 
-		if(job == null) {
-			message = jobNo + " not found";
-			logger.info(message);
-			return message;
-		}
-		logger.info("Job Division:" + job.getDivision() + " " + 
-		currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionGroupOne) + " :" + isAdminInGroupOne);
-		return (isAdminInGroupOne != isJobInGroupOne)
-					 || "90023".equals(adminJobNo)
-				? ""
-				: messageConfig.getRevisioSodMessage().replace("{division}", job.getDivision());
+		// if(job == null) {
+		// 	message = jobNo + " not found";
+		// 	logger.info(message);
+		// 	return message;
+		// }
+		// logger.info("Job Division:" + job.getDivision() + " " + 
+		// currentUser.getUsername() + " " + adminJobNo + " in " + String.join(",", adminDivisionGroupOne) + " :" + isAdminInGroupOne);
+		// return (isAdminInGroupOne != isJobInGroupOne)
+		// 			 || "90023".equals(adminJobNo)
+		// 		? ""
+		// 		: messageConfig.getRevisioSodMessage().replace("{division}", job.getDivision());
+		return ""; // bypass, always no error
 	}
 
-	private Boolean isJobInDivision(JobInfo job, List<String> divsions){
-		return job != null ? divsions.contains(job.getDivision()) : false;
-	}
+	// private Boolean isJobInDivision(JobInfo job, List<String> divsions){
+	// 	return job != null ? divsions.contains(job.getDivision()) : false;
+	// }
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }
