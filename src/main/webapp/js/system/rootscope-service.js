@@ -521,6 +521,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 			// 		}
 			// 	});
 			// }
+			$rootScope.adminSearchBtn = true;
 			return true;
 		}
 
