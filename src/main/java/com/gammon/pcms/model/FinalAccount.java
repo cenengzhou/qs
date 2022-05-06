@@ -70,7 +70,7 @@ public class FinalAccount extends BasePersistedObject {
 	private String preparedUser;
 	private String status;
 
-	public FinalAccount(String jobNo, String addendumNo, Addendum addendum, BigDecimal finalAccountAppAmt, BigDecimal finalAccountAppCCAmt, BigDecimal latestBudgetAmt, BigDecimal latestBudgetAmtCC, String comments, Date preparedDate, String preparedUser, String status) {
+	public FinalAccount(String jobNo, String addendumNo, Addendum addendum, BigDecimal finalAccountAppAmt, BigDecimal finalAccountAppCCAmt, BigDecimal latestBudgetAmt, BigDecimal latestBudgetAmtCC, BigDecimal finalAccountThisCCAmt,  String comments, Date preparedDate, String preparedUser, String status) {
 		this.jobNo = jobNo;
 		this.addendumNo = addendumNo;
 		this.addendum = addendum;
@@ -78,6 +78,7 @@ public class FinalAccount extends BasePersistedObject {
 		this.finalAccountAppCCAmt = finalAccountAppCCAmt;
 		this.latestBudgetAmt = latestBudgetAmt;
 		this.latestBudgetAmtCC = latestBudgetAmtCC;
+		this.finalAccountThisCCAmt = finalAccountThisCCAmt;
 		this.comments = comments;
 		this.preparedDate = preparedDate;
 		this.preparedUser = preparedUser;

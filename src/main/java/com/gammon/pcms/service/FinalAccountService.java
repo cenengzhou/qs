@@ -52,6 +52,7 @@ public class FinalAccountService {
 						finalAccount.getFinalAccountAppCCAmt(),
 						finalAccount.getLatestBudgetAmt(),
 						finalAccount.getLatestBudgetAmtCC(),
+						finalAccount.getFinalAccountThisCCAmt(),
 						finalAccount.getComments(),
 						new Date(),
 						securityServiceImpl.getCurrentUser().getUsername(),
@@ -63,6 +64,7 @@ public class FinalAccountService {
 				dbRecord.setFinalAccountAppCCAmt(finalAccount.getFinalAccountAppCCAmt());
 				dbRecord.setLatestBudgetAmt(finalAccount.getLatestBudgetAmt());
 				dbRecord.setLatestBudgetAmtCC(finalAccount.getLatestBudgetAmtCC());
+				dbRecord.setFinalAccountThisCCAmt(finalAccount.getFinalAccountThisCCAmt());
 				dbRecord.setComments(finalAccount.getComments());
 			}
 
@@ -103,7 +105,7 @@ public class FinalAccountService {
 						paymentCertSummary = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, String.valueOf(lastPostedCert.getPaymentCertNo()));
 
 						fa.setFinalAccountThisAmt(addendum.getAmtSubcontractRevisedTba());
-						fa.setFinalAccountThisCCAmt(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
+						//fa.setFinalAccountThisCCAmt(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
 						fa.setFinalAccountPreAmt(BigDecimal.valueOf(paymentCertSummary.getSubTotal4()));
 						fa.setFinalAccountPreCCAmt(BigDecimal.valueOf(-paymentCertSummary.getLessContraChargesTotal()));
 					}
@@ -128,6 +130,7 @@ public class FinalAccountService {
 				dbRecord.setFinalAccountAppCCAmt(finalAccount.getFinalAccountAppCCAmt());
 				dbRecord.setLatestBudgetAmt(finalAccount.getLatestBudgetAmt());
 				dbRecord.setLatestBudgetAmtCC(finalAccount.getLatestBudgetAmtCC());
+				dbRecord.setFinalAccountThisCCAmt(finalAccount.getFinalAccountThisCCAmt());
 				dbRecord.setComments(finalAccount.getComments());
 				dbRecord.setStatus(finalAccount.getStatus());
 			}
