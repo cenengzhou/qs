@@ -62,7 +62,6 @@ mainApp.controller('JobForecastCtrl', ['$scope','forecastService', 'rocService',
 		.then(
 				function( data ) {
 					$scope.data.criticalProgrammeList = data.criticalProgrammeList;
-					//console.log($scope.data);
 				});
     	
     }

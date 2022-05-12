@@ -462,7 +462,11 @@ mainApp.constant('GlobalParameter', {
 		UnsecuredTurnover: 'Unsecured Turnover',
 		UnsecuredCost: 'Unsecured Cost',
 		CriticalProgramme: 'Critical Programme'
-	}
+	},
+	 ForecastStatus:[
+	    	{value: 'F1', display: '1st Forecast'},
+	    	{value: 'F2', display: '2nd Forecast'}
+	    ]
 });
 
 mainApp.constant('GlobalMessage', {

@@ -134,7 +134,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast {{data.turnover.jdeForecast.latestForecastLedger}}</th>
+									<th class="width-150 text-center">Latest Forecast {{data.turnover.firstForecast.forecastPeriod}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -154,10 +154,10 @@
 										currency:undefined:0}}</td>
 									<td class="text-center">{{data.turnover.forecast.amount -
 										data.turnover.preForecast.amount | currency:undefined:0}}</td>
-									<td class="text-center">{{data.turnover.jdeForecast.amount |
+									<td class="text-center">{{data.turnover.firstForecast.amount |
 										currency:undefined:0}}</td>
 									<td class="text-center">{{data.turnover.forecast.amount -
-										data.turnover.jdeForecast.amount | currency:undefined:0}}</td>
+										data.turnover.firstForecast.amount | currency:undefined:0}}</td>
 									<td>
 									<textarea maxlength="200"
 										class="form-control" ng-model="data.turnover.forecast.explanation"
@@ -176,10 +176,10 @@
 										currency:undefined:0}}</td>
 									<td class="text-center">{{data.cost.forecast.amount -
 										data.cost.preForecast.amount | currency:undefined:0}}</td>
-									<td class="text-center">{{data.cost.jdeForecast.amount |
+									<td class="text-center">{{data.cost.firstForecast.amount |
 										currency:undefined:0}}</td>
 									<td class="text-center">{{data.cost.forecast.amount -
-										data.cost.jdeForecast.amount | currency:undefined:0}}</td>
+										data.cost.firstForecast.amount | currency:undefined:0}}</td>
 									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.cost.forecast.explanation"
 										ng-if="editable"/>
@@ -195,11 +195,11 @@
 									<td class="text-center"><b>{{(data.turnover.forecast.amount
 											- data.turnover.preForecast.amount) - (data.cost.forecast.amount -
 											data.cost.preForecast.amount) | currency:undefined:0}}</b></td>
-									<td class="text-center"><b>{{(data.turnover.jdeForecast.amount
-											- data.cost.jdeForecast.amount) | currency:undefined:0}}</b></td>
+									<td class="text-center"><b>{{(data.turnover.firstForecast.amount
+											- data.cost.firstForecast.amount) | currency:undefined:0}}</b></td>
 									<td class="text-center"><b>{{(data.turnover.forecast.amount
-											- data.turnover.jdeForecast.amount) - (data.cost.forecast.amount -
-											data.cost.jdeForecast.amount) | currency:undefined:0}}</b></td>
+											- data.turnover.firstForecast.amount) - (data.cost.forecast.amount -
+											data.cost.firstForecast.amount) | currency:undefined:0}}</b></td>
 									<td><textarea maxlength="200"
 										class="form-control" ng-model="data.siteProfit.forecast.explanation"
 										ng-if="editable"/>
@@ -226,7 +226,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast {{data.turnover.jdeForecast.latestForecastLedger}}</th>
+									<th class="width-150 text-center">Latest Forecast {{data.turnover.firstForecast.forecastPeriod}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -340,7 +340,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast {{data.turnover.jdeForecast.latestForecastLedger}}</th>
+									<th class="width-150 text-center">Latest Forecast {{data.turnover.firstForecast.forecastPeriod}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -420,7 +420,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast {{data.turnover.jdeForecast.latestForecastLedger}}</th>
+									<th class="width-150 text-center">Latest Forecast {{data.turnover.firstForecast.forecastPeriod}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 
@@ -504,7 +504,7 @@
 									<th class="width-150 text-center">Previous Rolling
 										Forecast ({{lastPeriod}})</th>
 									<th class="width-150 text-center">Monthly Movement</th>
-									<th class="width-150 text-center">Latest Forecast  {{data.turnover.jdeForecast.latestForecastLedger}}</th>
+									<th class="width-150 text-center">Latest Forecast  {{data.turnover.firstForecast.forecastPeriod}}</th>
 									<th class="width-150 text-center">Movement from Latest Forecast</th>
 									<th class="text-center">Explanation of Monthly Movement</th>
 

@@ -1,5 +1,6 @@
 package com.gammon.pcms.service;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,10 +88,31 @@ public class ForecastService {
 				Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, type, desc);
 				wrapper.setPreForecast(preForecast);
 				
-				JDEForecastEOJ jdeForecast =  jdeForecastEOJRepository.getLatestForecastEOJ(jobNo, desc);
 				
-				if (jdeForecast !=null)
-					wrapper.setJdeForecast(jdeForecast);
+				Forecast firstForecast = repository.findTopByNoJobAndForecastFlagAndForecastTypeAndForecastDescOrderByYearDescMonthDesc(jobNo, Forecast.FORECAST, type, desc);
+				
+				if(firstForecast != null){
+					wrapper.setFirstForecast(firstForecast);					
+				}
+				else{
+					JDEForecastEOJ jdeForecast =  jdeForecastEOJRepository.getLatestForecastEOJ(jobNo, desc);
+					
+					if (jdeForecast !=null){
+						wrapper.setJdeForecast(jdeForecast);
+						
+						firstForecast= new Forecast();
+						firstForecast.setNoJob(jobNo);
+						firstForecast.setAmount(new BigDecimal(jdeForecast.getAmount()));
+						firstForecast.setForecastFlag(Forecast.FORECAST);
+						firstForecast.setForecastType(type);
+						firstForecast.setForecastDesc(desc);
+						firstForecast.setYear(year);
+						firstForecast.setMonth(month);
+						firstForecast.setForecastPeriod(jdeForecast.getLatestForecastLedger());
+						wrapper.setFirstForecast(firstForecast);
+						
+					}
+				}
 				
 			}else{
 				Forecast preForecast = repository.getByTypeDesc(jobNo, preYear, preMonth, Forecast.ROLLING_FORECAST, type, desc);
@@ -132,7 +154,14 @@ public class ForecastService {
 			
 			if(forecastList != null && forecastList.size() >0 ){
 				for (Forecast forecast: forecastList){
-					if(Forecast.CONTINGENCY.equals(forecast.getForecastType())){
+					if(Forecast.EOJ.equals(forecast.getForecastType())){
+						if(Forecast.TURNOVER.equals(forecast.getForecastDesc())){
+							wrapper.setTurnover(forecast);
+						}else if(Forecast.COST.equals(forecast.getForecastDesc())){
+							wrapper.setCost(forecast);
+						}
+					}
+					else if(Forecast.CONTINGENCY.equals(forecast.getForecastType())){
 						if(Forecast.TENDER_RISKS.equals(forecast.getForecastDesc())){
 							wrapper.setTenderRisk(forecast);
 						}else if(Forecast.TENDER_OPPS.equals(forecast.getForecastDesc())){
@@ -214,14 +243,17 @@ public class ForecastService {
 			}
 			
 			List<ForecastWrapper> programmeWrapperList = new ArrayList<ForecastWrapper>();
-			
+				
+			//get selected month RF
 			List<Forecast> programList = repository.getCriticalProgramList(jobNo, year, month, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
+
+			//get latest month RF
 			Forecast latestProgram = repository.findTopByNoJobAndForecastFlagAndForecastTypeOrderByYearDescMonthDesc(jobNo, Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
-			
 			List<Forecast> latestProgramList = new ArrayList<Forecast>();
 			if(latestProgram != null)
 				latestProgramList = repository.getCriticalProgramList(jobNo, latestProgram.getYear(), latestProgram.getMonth(), Forecast.ROLLING_FORECAST, Forecast.CRITICAL_PROGRAMME);
 			
+			//1. Selected month CP = 0, copy from latest month CP
 			if(programList == null || programList.size() == 0){
 				for(Forecast program: latestProgramList){
 					ForecastWrapper programWrapper = new ForecastWrapper();
@@ -244,7 +276,7 @@ public class ForecastService {
 				}
 			}
 			else{
-				
+				//2. Selected month CP > 0
 				List<String> programNames = new ArrayList<String>();
 				
 				for(Forecast currentProgram: programList){
@@ -408,7 +440,8 @@ public class ForecastService {
 		
 		try {
 			update = true;
-			
+			repository.save(wrapper.getTurnover());
+			repository.save(wrapper.getCost());
 			repository.save(wrapper.getTenderRisk());
 			repository.save(wrapper.getTenderOpps());
 			repository.save(wrapper.getOthers());
@@ -473,8 +506,8 @@ public class ForecastService {
 
 		// 1. filter job list
 		for (String job: jobs) {
-			List<Forecast> lastMonth = repository.getByJobYearMonth(job, from.getYear(), from.getMonthValue());
-			List<Forecast> currentMonth = repository.getByJobYearMonth(job, to.getYear(), to.getMonthValue());
+			List<Forecast> lastMonth = repository.getByPeriod(job, from.getYear(), from.getMonthValue(), Forecast.ROLLING_FORECAST);
+			List<Forecast> currentMonth = repository.getByPeriod(job, to.getYear(), to.getMonthValue(), Forecast.ROLLING_FORECAST);
 			if ((currentMonth == null || currentMonth.size() == 0)
 					&& (lastMonth != null && lastMonth.size() > 0)) {
 				filterJobList.add(job);
@@ -486,8 +519,8 @@ public class ForecastService {
 
 		// 2. create record if not exist
 		for (String job: filterJobList) {
-			List<Forecast> lastMonth = repository.getByJobYearMonth(job, from.getYear(), from.getMonthValue());
-			List<Forecast> currentMonth = repository.getByJobYearMonth(job, to.getYear(), to.getMonthValue());
+			List<Forecast> lastMonth = repository.getByPeriod(job, from.getYear(), from.getMonthValue(), Forecast.ROLLING_FORECAST);
+			List<Forecast> currentMonth = repository.getByPeriod(job, to.getYear(), to.getMonthValue(), Forecast.ROLLING_FORECAST);
 
 			if ((currentMonth == null || currentMonth.size() == 0)
 					&& (lastMonth != null && lastMonth.size() > 0)) {
@@ -504,7 +537,8 @@ public class ForecastService {
 										f.getForecastDesc(),
 										f.getAmount(),
 										f.getDate(),
-										f.getExplanation()
+										f.getExplanation(),
+										f.getForecastPeriod()
 								)
 						);
 					} catch (Exception e) {

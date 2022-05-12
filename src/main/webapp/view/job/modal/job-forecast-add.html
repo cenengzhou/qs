@@ -14,37 +14,86 @@
 <div class="modal-body bg-gray-light">
 <form name="form-validate" id="form-validate" class="ng-pristine ng-valid">
     <!-- begin row -->
-	<div class="row">
-			<div class="col-md-4 ">
+		<div class="row">
+			<div class="col-md-3">
 				<div class="input-group" moment-picker="monthYear" format="YYYY-MM"
 					start-view="year" today="true">
 					<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 					<input class="form-control" ng-model="monthYear"
 						ng-model-options="{ updateOn: 'blur' }" required>
-						
+
 				</div>
 			</div>
-			<div class="col-md-4" >
-				<button type="button" class="btn btn-danger btn-block " ng-if = "data.tenderRisk.id"
-					ng-click="delete(jobNo, year, month)">
+			<div class="col-md-3">
+				<select class="form-control"
+					ng-options="v.value as v.display for v in GlobalParameter.ForecastStatus" required
+					id="forecastPeriod" ng-model="forecastPeriod">
+					<option></option>
+				</select>
+			</div>
+
+			<div class="col-md-3">
+				<button type="button" class="btn btn-danger btn-block "
+					ng-if="data.tenderRisk.id" ng-click="delete(jobNo, year, month)">
 					<i class="fa fa-trash"></i> Delete
 				</button>
 			</div>
-			<div class="col-md-4" >
-				<button type="button" class="btn btn-success btn-block " ng-if = "!editable"
-					ng-click="edit()">
+			<div class="col-md-3">
+				<button type="button" class="btn btn-success btn-block "
+					ng-if="!editable" ng-click="edit()">
 					<i class="fa fa-pencil"></i> Edit
 				</button>
-				<button type="button" class="btn btn-primary btn-block " ng-if = "editable"
-					ng-click="update()">
+				<button type="button" class="btn btn-primary btn-block "
+					ng-if="editable" ng-click="update()">
 					<i class="fa fa-save"></i> Save
 				</button>
 			</div>
-			
+
 		</div>
-	<div class="row m-t-15">
+		<div class="row m-t-15">
 			<!-- begin col-10 -->
 			<div class="col-md-12">
+				<!-- begin panel -->
+				<div class="panel panel-primary">
+
+					<div class="table-responsive">
+						<table
+							class="table table-bordered table-hover table-striped table-td-valign-middle">
+							<thead>
+								<tr class="primary">
+									<th class="width-200 text-center">EOJ</th>
+									<th class="width-150 text-center">Forecast</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><div ng-hide="true">{{data.turnover.noJob = jobNo}} {{data.turnover.forecastFlag = 'F'}} {{data.turnover.forecastType = GlobalParameter.forecast.EoJ}} {{data.turnover.year = year}} {{data.turnover.month = month}}{{data.turnover.forecastPeriod = forecastPeriod}}</div>
+									{{data.turnover.forecastDesc = GlobalParameter.forecast.Turnover}}</td>
+									<td class="text-center"><input type="text"
+										class="form-control" ng-model="data.turnover.amount"
+										ng-if="editable" ng-currency />
+										<div ng-if="!editable">{{data.turnover.amount |
+											currency}}</div></td>
+								</tr>
+								<tr>
+									<td><div ng-hide="true">{{data.cost.noJob = jobNo}} {{data.cost.forecastFlag = 'F'}}  {{data.cost.forecastType = GlobalParameter.forecast.EoJ}} {{data.cost.year = year}} {{data.cost.month = month}}{{data.cost.forecastPeriod = forecastPeriod}}</div>
+									{{data.cost.forecastDesc = GlobalParameter.forecast.Cost}}</td>
+									<td class="text-center"><input type="text"
+										class="form-control" ng-model="data.cost.amount"
+										ng-if="editable" ng-currency />
+										<div ng-if="!editable">{{data.cost.amount |
+											currency}}</div></td>
+								</tr>
+								<tr>
+									<td><b>RGP<b></td>
+									<td class="text-center"><b>{{data.turnover.amount - data.cost.amount | currency}}</b></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- end panel -->
+				
 				
 				<!-- begin panel -->
 				<div class="panel panel-primary">
@@ -61,7 +110,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td><div ng-hide="true">{{data.tenderRisk.noJob = jobNo}} {{data.tenderRisk.forecastFlag = 'F'}} {{data.tenderRisk.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderRisk.year = year}} {{data.tenderRisk.month = month}}</div>
+									<td><div ng-hide="true">{{data.tenderRisk.noJob = jobNo}} {{data.tenderRisk.forecastFlag = 'F'}} {{data.tenderRisk.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderRisk.year = year}} {{data.tenderRisk.month = month}}{{data.tenderRisk.forecastPeriod = forecastPeriod}}</div>
 									{{data.tenderRisk.forecastDesc = GlobalParameter.forecast.TenderRisks}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.tenderRisk.amount"
@@ -70,7 +119,7 @@
 											currency}}</div></td>
 								</tr>
 								<tr>
-									<td><div ng-hide="true">{{data.tenderOpps.noJob = jobNo}} {{data.tenderOpps.forecastFlag = 'F'}} {{data.tenderOpps.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderOpps.year = year}} {{data.tenderOpps.month = month}}</div>
+									<td><div ng-hide="true">{{data.tenderOpps.noJob = jobNo}} {{data.tenderOpps.forecastFlag = 'F'}} {{data.tenderOpps.forecastType = GlobalParameter.forecast.Contingency}} {{data.tenderOpps.year = year}} {{data.tenderOpps.month = month}}{{data.tenderOpps.forecastPeriod = forecastPeriod}}</div>
 									{{data.tenderOpps.forecastDesc = GlobalParameter.forecast.TenderOpps}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.tenderOpps.amount"
@@ -79,7 +128,7 @@
 											currency}}</div></td>
 								</tr>
 								<tr>
-									<td><div ng-hide="true">{{data.others.noJob = jobNo}} {{data.others.forecastFlag = 'F'}}  {{data.others.forecastType = GlobalParameter.forecast.Contingency}} {{data.others.year = year}} {{data.others.month = month}}</div>
+									<td><div ng-hide="true">{{data.others.noJob = jobNo}} {{data.others.forecastFlag = 'F'}}  {{data.others.forecastType = GlobalParameter.forecast.Contingency}} {{data.others.year = year}} {{data.others.month = month}}{{data.others.forecastPeriod = forecastPeriod}}</div>
 									{{data.others.forecastDesc = GlobalParameter.forecast.Others}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.others.amount"
@@ -114,7 +163,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td><div ng-hide="true">{{data.risk.noJob = jobNo}} {{data.risk.forecastFlag = 'F'}}   {{data.risk.forecastType = GlobalParameter.forecast.Risks}} {{data.risk.year = year}} {{data.risk.month = month}}</div>
+									<td><div ng-hide="true">{{data.risk.noJob = jobNo}} {{data.risk.forecastFlag = 'F'}}   {{data.risk.forecastType = GlobalParameter.forecast.Risks}} {{data.risk.year = year}} {{data.risk.month = month}}{{data.risk.forecastPeriod = forecastPeriod}}</div>
 									{{data.risk.forecastDesc = GlobalParameter.forecast.Risks}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.risk.amount"
@@ -123,7 +172,7 @@
 											currency}}</div></td>
 								</tr>
 								<tr>
-									<td><div ng-hide="true">{{data.opps.noJob = jobNo}}  {{data.opps.forecastFlag = 'F'}} {{data.opps.forecastType = GlobalParameter.forecast.Risks}} {{data.opps.year = year}} {{data.opps.month = month}}</div>
+									<td><div ng-hide="true">{{data.opps.noJob = jobNo}}  {{data.opps.forecastFlag = 'F'}} {{data.opps.forecastType = GlobalParameter.forecast.Risks}} {{data.opps.year = year}} {{data.opps.month = month}}{{data.opps.forecastPeriod = forecastPeriod}}</div>
 									{{data.opps.forecastDesc = GlobalParameter.forecast.Opps}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.opps.amount"
@@ -157,7 +206,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td><div ng-hide="true">{{data.unTurnover.noJob = jobNo}}  {{data.unTurnover.forecastFlag = 'F'}} {{data.unTurnover.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unTurnover.year = year}} {{data.unTurnover.month = month}}</div>
+									<td><div ng-hide="true">{{data.unTurnover.noJob = jobNo}}  {{data.unTurnover.forecastFlag = 'F'}} {{data.unTurnover.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unTurnover.year = year}} {{data.unTurnover.month = month}}{{data.unTurnover.forecastPeriod = forecastPeriod}}</div>
 									{{data.unTurnover.forecastDesc = GlobalParameter.forecast.UnsecuredTurnover}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.unTurnover.amount"
@@ -166,7 +215,7 @@
 											currency}}</div></td>
 								</tr>
 								<tr>
-									<td><div ng-hide="true">{{data.unCost.noJob = jobNo}}   {{data.unCost.forecastFlag = 'F'}} {{data.unCost.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unCost.year = year}} {{data.unCost.month = month}}</div>
+									<td><div ng-hide="true">{{data.unCost.noJob = jobNo}}   {{data.unCost.forecastFlag = 'F'}} {{data.unCost.forecastType = GlobalParameter.forecast.UnsecuredEoJ}} {{data.unCost.year = year}} {{data.unCost.month = month}}{{data.unCost.forecastPeriod = forecastPeriod}}</div>
 									{{data.unCost.forecastDesc = GlobalParameter.forecast.UnsecuredCost}}</td>
 									<td class="text-center"><input type="text"
 										class="form-control" ng-model="data.unCost.amount"
@@ -199,6 +248,7 @@
 							<tbody>
 							<tr ng-repeat="cp in data.criticalPrograms">
 								<td>{{cp.forecastDesc}}</td>
+								<td ng-hide = "true">{{cp.forecastPeriod = forecastPeriod}}</td>
 								<td class="text-center">
 									<div class="input-group" moment-picker="cp.date" start-view="day"
 									format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }" ng-if="editable">

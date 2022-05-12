@@ -11,10 +11,17 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 		forecastService.getForecastByJobNo ($scope.jobNo, 0, 0)
 		.then(
 				function( data ) {
-					//console.log(data);
 					if(data != null && data.tenderRisk != null){
 						$scope.data = data;
-						$scope.monthYear = $scope.data.tenderRisk.year+'-'+$scope.data.tenderRisk.month;
+						$scope.monthYear = $scope.data.tenderRisk.year+'-'+$scope.data.tenderRisk.month.toString().padStart(2, '0');
+						//console.log('$scope.monthYear: '+$scope.monthYear);
+						
+						
+						if($scope.data.tenderRisk.forecastPeriod != null)
+							$scope.forecastPeriod =  $scope.data.tenderRisk.forecastPeriod;
+						else
+							$scope.forecastPeriod =  GlobalParameter.ForecastStatus[0].value;
+
 					}
 				});
 		
@@ -55,7 +62,6 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
         }
 		
 		$scope.editable = false;
-		//console.log($scope.data);
 		forecastService.saveForecastByJobNo ($scope.jobNo, $scope.data)
 		.then(
 			function( data ) {
@@ -70,7 +76,8 @@ mainApp.controller('JobForecastAddCtrl', ['$scope','forecastService', '$uibModal
 	}
 	
 	$scope.$watch('monthYear', function(newValue, oldValue) {
-		if(oldValue != newValue){
+		if( oldValue != newValue){
+			
 			var period = $scope.monthYear.split("-");
 			$scope.year = period[0];
 			$scope.month = period[1];

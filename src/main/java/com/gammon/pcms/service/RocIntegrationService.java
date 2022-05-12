@@ -114,7 +114,7 @@ public class RocIntegrationService {
 		if (dbForecast.isPresent()) {
 			forecast = dbForecast.get();
 		} else {
-			forecast = new Forecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, BigDecimal.valueOf(0), null, null);
+			forecast = new Forecast(jobNo, year, month, forecastFlag, forecastType, forecastDesc, BigDecimal.valueOf(0), null, null, null);
 		}
 		return forecast;
 	}
