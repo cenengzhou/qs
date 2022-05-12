@@ -10,11 +10,15 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.StandardJarScanner;
 import org.springframework.context.annotation.Configuration;
 
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
+
 @Configuration
 public class Application {
     public static void main(String[] args) throws Exception {
         String webAppDirLocation = "target/ROOT";
         Tomcat tomcat = new Tomcat();
+        
+        SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
 
         //Set Port #
         tomcat.setPort(7207);
