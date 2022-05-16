@@ -101,7 +101,6 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 			break;
 		case GlobalParameter['AbstractAttachment'].ConsultancyNameObject:
 			checkConsultancyAgreementStatus();
-			loadAttachment($scope.nameObject, $scope.textKey);
 			break;
 		default:
 			checkSubcontractUpdatable();
@@ -286,13 +285,21 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 		 consultancyAgreementService.getMemo($scope.jobNo, $scope.subcontractNo)
 			 .then(function( data ) {
 				 if(angular.isObject(data)){
+					 // success
 					 $scope.memo = data;
+
 					 subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo).then(function (subcontract) {
 						 if(subcontract.scStatus != '330' && subcontract.scStatus != '500' && $scope.memo.statusApproval !="SUBMITTED" && $scope.memo.statusApproval !="APPROVED") {
 							 $scope.isUpdatable = true;
 						 }
 					 });
+				 } else {
+					 // fail
+					 $scope.textKey += '-1';
+					 $scope.error_msg = 'Please fill in the form first.';
+					 $scope.hideButton = true;
 				 }
+				 loadAttachment($scope.nameObject, $scope.textKey);
 			 })
 	 }
     
