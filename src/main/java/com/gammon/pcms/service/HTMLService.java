@@ -14,11 +14,14 @@ import java.util.logging.Logger;
 
 import com.gammon.pcms.dao.ScPaymentApprovalRepository;
 import com.gammon.pcms.model.ApprovalSummary;
+import com.gammon.pcms.model.ConsultancyAgreement;
 import com.gammon.pcms.model.ScPaymentApproval;
 import com.gammon.pcms.wrapper.AddendumFinalFormWrapper;
+import com.gammon.pcms.wrapper.ConsultancyAgreementFormWrapper;
 import com.gammon.pcms.wrapper.Form2SummaryWrapper;
 import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.ApprovalSummaryService;
+import com.gammon.qs.service.ConsultancyAgreementService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +154,8 @@ public class HTMLService implements Serializable{
 	private ApprovalSummaryService approvalSummaryService;
 	@Autowired
 	private ScPaymentApprovalRepository scPaymentApprovalRepository;
+	@Autowired
+	private ConsultancyAgreementService consultancyAgreementService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -296,8 +301,29 @@ public class HTMLService implements Serializable{
 
 		return strHTMLCodingContent;
 	}
+
+	public String makeHTMLStringForConsultancyAgreement(String jobNumber, String subcontractNumber, String htmlVersion) {
+		try {
+			ConsultancyAgreementFormWrapper formSummary = consultancyAgreementService.getFormSummary(jobNumber, subcontractNumber);
+			Map<String, Object> data = new HashMap<>();
+			String template = freemarkerConfig.getTemplates().get("consultancyAgreement");
+			data.put("template", template);
+			data.put("logo", freemarkerConfig.getPaths("logo"));
+			data.put("baseUrl", servletConfig.getBaseUrl());
+			data.put("htmlVersion", htmlVersion);
+			data.put("ca", formSummary);
+			return FreeMarkerHelper.returnHtmlString(template, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "fail to get html for consultancy agreement";
+		}
+	}
 	
 	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
+		ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);
+		if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) {
+			return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract, htmlVersion);
+		}
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		MasterListVendor masterList = new MasterListVendor();
 		if(job != null)

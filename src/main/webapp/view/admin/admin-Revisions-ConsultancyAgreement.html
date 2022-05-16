@@ -1,0 +1,246 @@
+<div>
+    <div class="row well">
+        <form name="RevisionsConsultancyAgreementSearch"
+              ng-submit="onSubmitConsultancyAgreementSearch()" class="form">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Job Number:" pattern="[0-9]{5,5}"
+                       ng-change="canAdminJob(ConsultancyAgreementSearch.jobNo)"
+                       id="ConsultancyAgreementSearch_jobNo" ng-model="ConsultancyAgreementSearch.jobNo">
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control"
+                       placeholder="Subcontract Number:" id="ConsultancyAgreementSearch_subcontractNo"
+                       ng-model="ConsultancyAgreementSearch.subcontractNo">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-block btn-primary"
+                        id="ConsultancyAgreementSearch_submit" ng-disabled="!adminSearchBtn">Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <form name="RevisionsConsultancyAgreementRecord">
+        <div class="row" style="padding: 20px" ng-show="ConsultancyAgreementRecord.id">
+            <div class="row" resize ng-style="resizeWithOffset(330)">
+                <fieldset>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_ref"
+                                   class="control-label">Ref</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="ConsultancyAgreementRecord_ref"
+                                       ng-model="ConsultancyAgreementRecord.ref">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_fromList"
+                                   class="control-label">From List</label>
+                            <div>
+                                <md-contact-chips
+                                        id="ConsultancyAgreementRecord_fromList"
+                                        class="ca-form-contact-input"
+                                        md-input-class="test-input"
+                                        md-name="fromField"
+                                        ng-model="ctrl.fromList"
+                                        md-contacts="ctrl.querySearch($query)"
+                                        md-contact-name="name"
+                                        md-contact-email="email"
+                                        md-require-match="false"
+                                        md-highlight-flags="i"
+                                        min-min-length="3"
+                                        filter-selected="true"
+                                        md-separator-keys="ctrl.customKeys"
+                                        placeholder="From"
+                                        secondary-placeholder="From">
+                                </md-contact-chips>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_toList"
+                                   class="control-label">To List</label>
+                            <div>
+                                <md-contact-chips
+                                        id="ConsultancyAgreementRecord_toList"
+                                        class="ca-form-contact-input"
+                                        md-input-class="test-input"
+                                        md-name="toField"
+                                        ng-model="ctrl.toList"
+                                        md-contacts="ctrl.querySearch($query)"
+                                        md-contact-name="name"
+                                        md-contact-email="email"
+                                        md-require-match="false"
+                                        md-highlight-flags="i"
+                                        min-min-length="3"
+                                        filter-selected="true"
+                                        md-separator-keys="ctrl.customKeys"
+                                        placeholder="To"
+                                        secondary-placeholder="To">
+                                </md-contact-chips>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_ccList"
+                                   class="control-label">CC List</label>
+                            <div>
+                                <md-contact-chips
+                                        id="ConsultancyAgreementRecord_ccList"
+                                        class="ca-form-contact-input"
+                                        md-input-class="test-input"
+                                        md-name="ccField"
+                                        ng-model="ctrl.ccList"
+                                        md-contacts="ctrl.querySearch($query)"
+                                        md-contact-name="name"
+                                        md-contact-email="email"
+                                        md-require-match="false"
+                                        md-highlight-flags="i"
+                                        min-min-length="3"
+                                        filter-selected="true"
+                                        md-separator-keys="ctrl.customKeys"
+                                        placeholder="CC"
+                                        secondary-placeholder="CC">
+                                </md-contact-chips>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_subject"
+                                   class="control-label">Subject</label>
+                            <div>
+								<textarea rows="3" class="form-control" id="ConsultancyAgreementRecord_subject"
+                                          style="overflow: hidden; box-sizing: border-box;height:auto;"
+                                          ng-model="ConsultancyAgreementRecord.subject"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_consultantName"
+                                   class="control-label">Name of Consultant</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="ConsultancyAgreementRecord_consultantName"
+                                       ng-model="ConsultancyAgreementRecord.consultantName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_description"
+                                   class="control-label">Description of Service</label>
+                            <div>
+								<textarea rows="3" class="form-control" id="ConsultancyAgreementRecord_description"
+                                          style="overflow: hidden; box-sizing: border-box;height:auto;"
+                                          ng-model="ConsultancyAgreementRecord.description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_period"
+                                   class="control-label">Period of Appointment</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="ConsultancyAgreementRecord_period"
+                                       ng-model="ConsultancyAgreementRecord.period">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_feeEstimate"
+                                   class="control-label">Estimate of Fee</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="ConsultancyAgreementRecord_feeEstimate"
+                                       ng-model="ConsultancyAgreementRecord.feeEstimate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_budgetAmount"
+                                   class="control-label">Budget</label>
+                            <div>
+                                <input type="text" class="form-control"
+                                       id="ConsultancyAgreementRecord_budgetAmount"
+                                       ng-model="ConsultancyAgreementRecord.budgetAmount">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_explanation"
+                                   class="control-label">Explanations</label>
+                            <div>
+								<textarea rows="3" class="form-control" id="ConsultancyAgreementRecord_explanation"
+                                          style="overflow: hidden; box-sizing: border-box;height:auto;"
+                                          ng-model="ConsultancyAgreementRecord.explanation"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_statusApproval"
+                                   class="control-label">Approval Status</label>
+                            <div>
+                                <select class="form-control"
+                                        ng-options="v.id as v.value for v in GlobalParameter.finalAccountStatus"
+                                        id="ConsultancyAgreementRecord_statusApproval"
+                                        ng-model="ConsultancyAgreementRecord.statusApproval">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_dateApproval"
+                                   class="control-label">Approval Date</label>
+                            <div class="input-group">
+                                <span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                <input class="form-control" type="text" name="dateApproval.singleDate" ng-model="ConsultancyAgreementRecord.dateApproval" id="ConsultancyAgreementRecord_dateApproval"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="padding: 5px">
+                        <div class="form-group">
+                            <label for="ConsultancyAgreementRecord_dateSubmission"
+                                   class="control-label">Submission Date</label>
+                            <div class="input-group">
+                                <span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                <input class="form-control" type="text" name="dateSubmission.singleDate" ng-model="ConsultancyAgreementRecord.dateSubmission" id="ConsultancyAgreementRecord_dateSubmission"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+            </div>
+
+            <div class="row"
+                 ng-show="true || ConsultancyAgreementRecord.id !== undefined">
+                <div ng-show="showQSAdmin" class="col-md-12">
+                    <button ng-click="onSubmitConsultancyAgreementRecord()" type="button"
+                            class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Update
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>

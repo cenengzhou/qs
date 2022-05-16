@@ -315,6 +315,83 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'SubcontractSelectCtrl'
 	})
+
+	.state('subcontract-consultancy-approval', {
+		url: "/subcontract-consultancy-approval/tab",
+		parent: "navigation",
+		templateUrl: "view/subcontract/consultancy-agreement/consultancy-agreement-tab.html?@PROJECT_VERSION@",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/service/subcontract-date-service.js?@PROJECT_VERSION@',
+						'js/service/subcontract-service.js?@PROJECT_VERSION@',
+						'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
+						'js/service/payment-service.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
+						'js/service/addendum-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		},
+		controller: 'SubcontractMenuCtrl'
+	})
+	.state('subcontract-consultancy-approval.form', {
+		url: "/form",
+		templateUrl: "view/subcontract/consultancy-agreement/consultancy-agreement-form.html?@PROJECT_VERSION@",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/subcontract/subcontract-create.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement.js?@PROJECT_VERSION@',
+						'js/service/job-service.js?@PROJECT_VERSION@'
+					]
+				});
+			}]
+		},
+		controller: 'ConsultancyAgreementCtrl as ctrl'
+	})
+	.state('subcontract-consultancy-approval.attachment', {
+		url: "/attachment",
+		templateUrl: "view/attachment/attachment-main.html?@PROJECT_VERSION@",
+		controller: 'AttachmentMainCtrl',
+		params:{
+			'nameObject': GlobalParameter['AbstractAttachment'].ConsultancyNameObject,
+			'offsetTop':450
+		},
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/attachment/modal/attachment-subcontract-select-modal.js?@PROJECT_VERSION@',
+						'js/controller/attachment/attachment-main.js?@PROJECT_VERSION@',
+						'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
+						'js/service/attachment-service.js?@PROJECT_VERSION@',
+						'js/service/main-cert-service.js?@PROJECT_VERSION@',
+					]
+				});
+			}]
+		}
+	})
+	.state('subcontract-consultancy-approval.submission', {
+		url: "/submission",
+		templateUrl: "view/subcontract/consultancy-agreement/consultancy-agreement-submission.html?@PROJECT_VERSION@",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement-submission.js?@PROJECT_VERSION@',
+					]
+				});
+			}]
+		},
+		controller: 'ConsultancyAgreementSubmissionCtrl'
+	})
 	
 	.state('subcontract-award', {
 		url: "/subcontract-award/tab",
@@ -1716,6 +1793,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                		 	   'js/service/tender-service.js?@PROJECT_VERSION@',
                		 	   'js/service/roc-service.js?@PROJECT_VERSION@',
                		 	   'js/service/final-account-service.js?@PROJECT_VERSION@',
+               		 	   'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
                	           'js/service/main-cert-service.js?@PROJECT_VERSION@',
                	           'js/service/payment-service.js?@PROJECT_VERSION@',
                	           'js/service/transit-service.js?@PROJECT_VERSION@',
@@ -1731,6 +1809,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-Revisions-SubcontractDetail.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-Payment.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-FinalAccount.js?@PROJECT_VERSION@',
+                           'js/controller/admin/admin-Revisions-ConsultancyAgreement.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-Addendum.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-AddendumDetail.js?@PROJECT_VERSION@',
                            'js/controller/admin/admin-Revisions-MainCert.js?@PROJECT_VERSION@',
@@ -1799,6 +1878,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/FinalAccount',
 		templateUrl: 'view/admin/admin-Revisions-FinalAccount.html?@PROJECT_VERSION@',
 		controller: 'AdminRevisionsFinalAccountCtrl'
+	})
+	.state('admin.Revisions.ConsultancyAgreement',{
+		url: '/ConsultancyAgreement',
+		templateUrl: 'view/admin/admin-Revisions-ConsultancyAgreement.html?@PROJECT_VERSION@',
+		controller: 'AdminRevisionsConsultancyAgreementCtrl as ctrl'
 	})
 	.state('admin.Revisions.Addendum',{
 		url: '/Addendum',

@@ -364,7 +364,8 @@ mainApp.constant('GlobalParameter', {
         'TerminateNameObject' : 'TERMINATE',
         'RepackagingNameObject': 'REPACKAGING',
         'TransitNameObject' : 'TRANSIT',
-        'JobInfoNameObject' : 'JOBINFO'
+        'JobInfoNameObject' : 'JOBINFO',
+        'ConsultancyNameObject' : 'CONSULTANCY_AGREEMENT'
 	},
     nameObjectTable:[
     	{value: 'GT58011', display: 'ADDENDUM'},

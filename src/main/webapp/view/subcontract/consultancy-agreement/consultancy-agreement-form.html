@@ -1,0 +1,230 @@
+<style>
+  .ca-form-contact-input .md-chips .md-chip-input-container {
+    width: 100%;
+  }
+  .ca-form-contact-input .md-chips .md-chip-input-container input {
+    text-align: left;
+  }
+
+</style>
+
+<form name="formValidate" id="formValidate" class="ng-valid">
+  <fieldset>
+    <div class="row">
+      <div class="col-md-9 col-md-offset-2">
+        <div
+                class="form-group"
+                resize
+                ng-style="resizeWithOffset(310)"
+                id="subcontractStep1OuterBox"
+        >
+          <div class="box box-solid">
+            <div class="box-body">
+              <div class="col-md-12">
+                <div class="box box-primary" id="subcontractStep1Box1">
+                  <div class="box-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label style="text-decoration: underline">Memorandum</label>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Ref</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <input
+                                  type="text"
+                                  class="form-control"
+                                  ng-model="memo.ref"
+                                  ng-disabled="disableButtons"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>From</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                          <md-contact-chips
+                                  readonly="true"
+                                  class="ca-form-contact-input"
+                                  md-input-class="test-input"
+                                  md-name="fromField"
+                                  ng-model="ctrl.fromList"
+                                  md-contacts="ctrl.querySearch($query)"
+                                  md-contact-name="name"
+                                  md-contact-email="email"
+                                  md-require-match="false"
+                                  md-highlight-flags="i"
+                                  min-min-length="3"
+                                  filter-selected="true"
+                                  md-separator-keys="ctrl.customKeys"
+                                  placeholder="From"
+                                  secondary-placeholder="From">
+                          </md-contact-chips>
+                      </div>
+                      <div class="col-md-3">
+                        <label>To</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <md-contact-chips
+                                  class="ca-form-contact-input"
+                                  md-name="toField"
+                                  ng-model="ctrl.toList"
+                                  md-contacts="ctrl.querySearch($query)"
+                                  md-contact-name="name"
+                                  md-contact-email="email"
+                                  md-require-match="false"
+                                  md-highlight-flags="i"
+                                  min-min-length="3"
+                                  filter-selected="true"
+                                  md-separator-keys="ctrl.customKeys"
+                                  placeholder="To"
+                                  secondary-placeholder="To">
+                          </md-contact-chips>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>CC</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <md-contact-chips
+                                  class="ca-form-contact-input"
+                                  md-name="ccField"
+                                  ng-model="ctrl.ccList"
+                                  md-contacts="ctrl.querySearch($query)"
+                                  md-contact-name="name"
+                                  md-contact-email="email"
+                                  md-require-match="false"
+                                  md-highlight-flags="i"
+                                  min-min-length="3"
+                                  filter-selected="true"
+                                  md-separator-keys="ctrl.customKeys"
+                                  placeholder="CC"
+                                  secondary-placeholder="CC">
+                          </md-contact-chips>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Subject</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <textarea
+                                  class="form-control"
+                                  rows="3"
+                                  ng-model="memo.subject"
+                                  ng-disabled="disableButtons"
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <label style="text-decoration: underline">Employment of Consultant</label>
+                      </div>
+                      <div class="col-md-12">
+                        <label>We request your approval for the employment of the following consultant :</label>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Name of Consultant</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <input
+                                  type="text"
+                                  class="form-control"
+                                  ng-model="memo.consultantName"
+                                  ng-disabled="disableButtons"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Description of Service</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <textarea
+                                  class="form-control"
+                                  rows="3"
+                                  ng-model="memo.description"
+                                  ng-disabled="disableButtons"
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Period of Appointment</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" ng-model="memo.period" ng-disabled="disableButtons"/>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Estimate of Fee</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <span class="input-group-addon">$</span>
+                          <input
+                                  type="number"
+                                  class="form-control"
+                                  ng-disabled="disableButtons"
+                                  ng-model="memo.feeEstimate"
+                                  ng-required="true"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label>Budget</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <span class="input-group-addon">$</span>
+                          <input
+                                  type="number"
+                                  class="form-control"
+                                  ng-disabled="disableButtons"
+                                  ng-model="memo.budgetAmount"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-3">
+                        <label>Explanations</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+                          <textarea
+                                  class="form-control"
+                                  rows="3"
+                                  ng-model="memo.explanation"
+                                  ng-disabled="disableButtons"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <button
+                class="m-t-5 btn btn-primary btn-block"
+                ng-click="formValidate.$valid && save()"
+                id="ca-form-save-btn"
+                ng-hide="disableButtons"
+                ng-disabled="disableButtons"
+        >
+          Save <span class="fa fa-save"></span>
+        </button>
+      </div>
+    </div>
+  </fieldset>
+</form>

@@ -1,0 +1,147 @@
+<style>
+    #final-invoice .signature-underline {
+        border-bottom: 1px solid black !important;
+        vertical-align: bottom;
+    }
+
+    .employment-of-consultant td {
+        line-height: 2 !important;
+    }
+</style>
+
+<div class="invoice" id="final-invoice">
+    <div class="invoice-logo m-l-5 pull-right">
+        <div class="table-border">
+            <h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
+        </div>
+        <h5>PCS/01 Form 120</h5>
+        <span class="pull-right hidden-print">
+			<a href="javascript:;"
+               ng-click="customPrint('final-invoice', '.invoice')"
+               id="printBtn"
+               class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+				<i class="fa fa-print m-r-3"></i> Print
+		</a>
+		</span>
+    </div>
+
+    <div class="invoice-logo m-l-5">
+        <div>
+            <img src="image/gammon.bmp" class="logo" style="width: 128px"/>
+            <h5>{{form.companyName}}</h5>
+        </div>
+    </div>
+
+
+    <h5 class="invoice-title" align="center">Memorandum</h5>
+
+
+    <div class="invoice-header">
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <td style="width: 25%"><b>Ref:</b></td>
+                <td>{{form.ref}}</td>
+            </tr>
+            <tr>
+                <td><b>Date:</b></td>
+                <td>{{form.date}}</td>
+            </tr>
+            <tr>
+                <td><b>From:</b></td>
+                <td>{{form.from}}</td>
+            </tr>
+            <tr>
+                <td><b>To:</b></td>
+                <td>{{form.to}}</td>
+            </tr>
+            <tr>
+                <td><b>CC:</b></td>
+                <td>{{form.cc}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Subject:</b></td>
+                <td style="white-space: pre-wrap;">{{form.subject}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-body">
+        <table class="table employment-of-consultant">
+            <tbody>
+            <tr>
+                <td colspan="2" style="font-weight: bold; text-decoration: underline">Employment of Consultant</td>
+            </tr>
+            <tr>
+                <td colspan="2">We request your approval for the employment of the following consultant:</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Name of Consultant: </b></td>
+                <td style="width: 75%" class="signature-underline">{{form.consultantName}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Description of Service: </b></td>
+                <td style="width: 75%; white-space: pre-wrap;" class="signature-underline">{{form.serviceDescription}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"></td>
+                <td style="width: 75%"></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Period of Appointment: </b></td>
+                <td style="width: 75%" class="signature-underline">{{form.periodOfAppointment}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Estimate of Fee: </b></td>
+                <td style="width: 75%" class="signature-underline">{{form.feeEstimate | currency}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Budget: </b></td>
+                <td style="width: 75%" class="signature-underline">{{form.budget | currency}}</td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><b>Explanation: </b></td>
+                <td style="width: 75%; white-space: pre-wrap;" class="signature-underline">{{form.explanation}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <table class="table">
+            <tbody>
+            <tr class="row1">
+                <td class="column1">
+                    <div style="height: 80px;border-bottom: solid 1px black;width: 25%;"></div>
+                    <div>Signature</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <hr style="border-top: solid 1px black;margin-left: 20px;">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>To: Finance Dept</td>
+            </tr>
+            <tr>
+                <td>I approve the employment of the above consultant.</td>
+            </tr>
+            <tr class="row1">
+                <td class="column1">
+                    <div style="height: 80px;border-bottom: solid 1px black;width: 25%;"></div>
+                    <div>Chief Executive</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-primary btn-block hidden-print m-t-30" ng-click="submit()" id="submitBtn"
+            ng-hide="disableButtons" ng-disabled="disableButtons"><span class="fa fa-save"></span> <b>Submit</b>
+    </button>
+
+</div>
+
+<!--<div compile="formHtml"></div>-->
