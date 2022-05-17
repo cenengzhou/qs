@@ -13,6 +13,8 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.security.SecurityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -24,7 +26,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Service
 //SpringSession workaround: change "session" to "request"
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class ConsultancyAgreementService {
 
-    private Logger logger = Logger.getLogger(ConsultancyAgreementService.class.getName());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ConsultancyAgreementRepository consultancyAgreementRepository;
@@ -85,7 +86,7 @@ public class ConsultancyAgreementService {
             consultancyAgreementRepository.save(ca);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error in saveMemo", e);
             return "Memo cannot be saved";
         }
         return "";
@@ -148,7 +149,7 @@ public class ConsultancyAgreementService {
             wrapper.setExplanation(memo.getExplanation());
             wrapper.setStatusApproval(memo.getStatusApproval());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error in getFormSummary", e);
         }
 
         return wrapper;
@@ -156,11 +157,14 @@ public class ConsultancyAgreementService {
 
     public String checkIfSubcontractSubmittedOrAwarded(String jobNo, String subcontractNo) throws DatabaseOperationException {
         Subcontract subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
-        String subcontractStatus = subcontract.getSubcontractStatus().toString();
-        if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
-            return "Subcontract is submitted";
-        } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
-            return "Subcontract is awarded";
+        Integer status = subcontract.getSubcontractStatus();
+        if (status != null) {
+            String subcontractStatus = status.toString();
+            if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
+                return "Subcontract is submitted";
+            } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
+                return "Subcontract is awarded";
+            }
         }
         return "";
     }
@@ -190,7 +194,7 @@ public class ConsultancyAgreementService {
                 ca.setStatusApproval(ConsultancyAgreement.SUBMITTED);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error in submitCAApproval", e);
             result = "fail to submit consultancy agreement approval";
         }
         return result;
@@ -204,7 +208,7 @@ public class ConsultancyAgreementService {
             consultancyAgreementRepository.save(ca);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error in updateConsultancyAgreementAdmin", e);
             return "Memo cannot be saved";
         }
         return "";
