@@ -21,11 +21,6 @@ mainApp.controller('AdminRevisionsTenderCtrl',
                 ]
             };
 
-            rootscopeService.gettingWorkScopes()
-                .then(function (response) {
-                    $scope.allWorkScopes = response.workScopes;
-                });
-
             $scope.onSubmitTenderSearch = function () {
                 var jobNo = $scope.TenderSearch.jobNo;
                 var packageNo = $scope.TenderSearch.packageNo;

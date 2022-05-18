@@ -95,11 +95,6 @@ mainApp.controller('AdminRevisionsRocCtrl',
                     self.repos = data;
                 });
 
-            rootscopeService.gettingWorkScopes()
-                .then(function (response) {
-                    $scope.allWorkScopes = response.workScopes;
-                });
-
             $scope.onSubmitRocSearch = function () {
                 var jobNo = $scope.RocSearch.jobNo;
                 var itemNo = $scope.RocSearch.itemNo;
