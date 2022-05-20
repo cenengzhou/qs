@@ -16,6 +16,9 @@ public class LinkConfig {
 	
 	@Value("#{${pcms.link}}")
 	private Map<String, Object> pcmsLink;
+
+	@Value("${pcms.link.UCC_LIST}")
+	private String uccList;
 	
 	/**
 	 * @return the pcmsLink
@@ -28,5 +31,8 @@ public class LinkConfig {
 	public String getPcmsLink(String key){
 		return getPcmsLink().get(key);
 	}
-	
+
+	public String getUccList() {
+		return uccList;
+	}
 }
