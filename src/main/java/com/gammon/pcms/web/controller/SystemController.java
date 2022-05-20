@@ -223,6 +223,7 @@ public class SystemController {
 		propertiesMap.put("JDE_HOME",			linkConfig.getPcmsLink("JDE_HOME"));
 		propertiesMap.put("BMS_HOME",			linkConfig.getPcmsLink("BMS_HOME"));
 		propertiesMap.put("OTHER_HOME",			linkConfig.getPcmsLink("OTHER_HOME"));
+		propertiesMap.put("UCC_LIST",			linkConfig.getPcmsLink("UCC_LIST"));
 		return propertiesMap;
 	}
 	

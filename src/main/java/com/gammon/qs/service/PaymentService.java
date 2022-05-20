@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.wrapper.GeneratePaymentPDFWrapper;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,8 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.util.StopWatch;
+
 @Service
 //SpringSession workaround: change "session" to "request"
 //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -2297,7 +2300,64 @@ public class PaymentService{
 		paymentCertDao.delete(paymentCert);
 	}
 
-    public String generatePaymentPDFAdmin(String jobNo, String packageNo, int paymentNo) throws Exception {
-		return attachmentService.mergePaymentPdf(jobNo, packageNo, paymentNo);
+    public String generatePaymentPDFAdmin(String jobNo, String packageNo, Integer paymentNo) throws Exception {
+		List<GeneratePaymentPDFWrapper> processList = new ArrayList<>();
+		if (!jobNo.isEmpty() && (packageNo == null || packageNo.isEmpty()) && paymentNo == null) {
+			// Method 1: By Job Number
+			List<Subcontract> subcontracts = subcontractHBDao.obtainPackageList(jobNo);
+			for(Subcontract subcontract : subcontracts) {
+				String pkgNo = subcontract.getPackageNo();
+				if (pkgNo != null) {
+					processList.addAll(prepareGeneratePaymentPDFListByJobNoAndPackageNo(jobNo, pkgNo));
+				}
+			}
+		} else if (!jobNo.isEmpty() && !packageNo.isEmpty() && paymentNo == null) {
+			// Method 2: By Job Number + Subcontract No
+			processList.addAll(prepareGeneratePaymentPDFListByJobNoAndPackageNo(jobNo, packageNo));
+		} else {
+			// Method 3: By Job Number + Subcontract No + Payment Cert No
+			processList.add(new GeneratePaymentPDFWrapper(jobNo, packageNo, paymentNo));
+		}
+
+		StopWatch watch = new StopWatch("Starting generatePaymentPDFAdmin");
+		watch.start("Start generate PDF");
+
+		// process generate payment pdf
+		int errorCount = 0;
+		for (GeneratePaymentPDFWrapper process : processList) {
+			String jobNumber = process.getJobNo();
+			String packageNumber = process.getPackageNo();
+			Integer paymentNumber = process.getPaymentNo();
+
+			String result = attachmentService.mergePaymentPdf(jobNumber, packageNumber, paymentNumber);
+			if (result != "") {
+				logger.info("[FAIL] Job No: " + jobNumber + " Subcontract No: " + packageNumber + " Payment Cert No: " + paymentNumber + " Error: " + result);
+				errorCount++;
+			}
+		}
+		watch.stop();
+
+		// log the result
+		logger.info("Total operation: " + processList.size());
+		logger.info("Total error: " + errorCount);
+		logger.info("Total time: " + watch.getTotalTimeSeconds() + " seconds");
+		logger.info("Average time: " + watch.getTotalTimeSeconds() / processList.size() + " seconds");
+
+		// return error message if any
+		if (errorCount > 0) {
+			return errorCount + " payment PDF(s) failed to generate. Please check the log file.";
+		}
+		return "";
     }
+
+	private List<GeneratePaymentPDFWrapper> prepareGeneratePaymentPDFListByJobNoAndPackageNo(String jobNo, String pkgNo) throws DatabaseOperationException {
+		List<GeneratePaymentPDFWrapper> result = new ArrayList<>();
+		List<PaymentCert> paymentCerts = paymentCertDao.obtainSCPaymentCertListByPackageNo(jobNo, pkgNo);
+		for (PaymentCert paymentCert : paymentCerts) {
+			if (!paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING) && !paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)) {
+				result.add(new GeneratePaymentPDFWrapper(jobNo, pkgNo, paymentCert.getPaymentCertNo()));
+			}
+		}
+		return result;
+	}
 }

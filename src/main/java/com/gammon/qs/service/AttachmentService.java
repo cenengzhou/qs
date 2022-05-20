@@ -542,8 +542,14 @@ public class AttachmentService {
 		File jobDir = new File(serverPath, jobNo);
 		File subcontractDir = new File(jobDir, "Subcontract");
 		File subcontractNoDir = new File(subcontractDir, subcontractNo);
-		
-		
+		File mergedFile = new File(subcontractNoDir, fileName);
+
+		if (mergedFile.exists()) {
+			logger.info("Merged file already exists. Skip.");
+			return "";
+		}
+
+
 		if (!jobDir.exists()) {
 			logger.info("Job Directory does not exist. Job Directory will be created.");
 			jobDir.mkdir();
@@ -565,10 +571,7 @@ public class AttachmentService {
 		HtmlConverter.convertToPdf(HTML, pdf, new ConverterProperties());
 		pdf.close();
 
-		
-		
 		// merge payment pdf and attachment pdf
-		File mergedFile = new File(subcontractNoDir, fileName);
 		PDFMergerUtility PDFmerger = new PDFMergerUtility();
 		PDFmerger.setDestinationFileName(mergedFile.getAbsolutePath());
 		PDFmerger.addSource(paymentFile);
@@ -578,11 +581,14 @@ public class AttachmentService {
 			String attachmentFileType = FilenameUtils.getExtension(att.getPathFile()).toUpperCase();
 			if (attachmentFileType.equals("PDF")){
 				File attachmentFile = new File(serverPath, att.getPathFile());
-				PDFmerger.addSource(attachmentFile);
+				if (attachmentFile.exists()){
+					PDFmerger.addSource(attachmentFile);
+				} else {
+					logger.warning("Attachment File does not exist. "+ attachmentFile.getAbsolutePath());
+				}
 			}
 		}
-				
-		
+
 		PDFmerger.mergeDocuments();
 
 		// clean up temp file

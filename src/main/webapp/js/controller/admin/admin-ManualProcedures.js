@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'systemService', 'GlobalParameter', 'rocService',
-		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, systemService, GlobalParameter, rocService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'systemService', 'GlobalParameter', 'rocService', 'confirmService',
+		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, systemService, GlobalParameter, rocService, confirmService) {
 	$scope.provisionGlDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.auditTables = [];
 	$scope.auditTableName = '';
@@ -74,6 +74,19 @@ mainApp.controller('AdminManualProceduresCtrl',
 	};
 
 	$scope.onGeneratePaymentCertPdf = function(){
+		if (!$scope.ScPaymentApprovalPaymentNo) {
+			confirmService.show({}, {bodyText: 'It may take a while to generate a number of files, are you sure to proceed?'})
+				.then(function (response) {
+					if (response === 'Yes') {
+						generatePaymentPDF();
+					}
+				});
+		} else {
+			generatePaymentPDF();
+		}
+	};
+
+	function generatePaymentPDF() {
 		paymentService.generatePaymentPDFAdmin($scope.ScPaymentApprovalJobNo, $scope.ScPaymentApprovalPackageNo, $scope.ScPaymentApprovalPaymentNo)
 			.then(function(data){
 				if (data == "")
@@ -83,7 +96,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 			},function(data){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 			});
-	};
+	}
 	
     
 	$scope.onSubmitGenerateSubcontractSnapshot = function(){

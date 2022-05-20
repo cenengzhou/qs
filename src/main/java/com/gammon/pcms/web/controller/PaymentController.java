@@ -207,8 +207,8 @@ public class PaymentController {
 	@PreAuthorize(value = "@GSFService.isRoleExisted('PaymentController','generatePaymentPDFAdmin', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "generatePaymentPDFAdmin", method = RequestMethod.POST)
 	public String generatePaymentPDFAdmin(@RequestParam(required = true) String jobNo,
-										  @RequestParam(required = true) String packageNo,
-										  @RequestParam(required = true) int paymentNo){
+										  @RequestParam(required = false) String packageNo,
+										  @RequestParam(required = false) Integer paymentNo){
 		try {
 			return paymentService.generatePaymentPDFAdmin(jobNo, packageNo, paymentNo);
 		} catch (Exception e) {
