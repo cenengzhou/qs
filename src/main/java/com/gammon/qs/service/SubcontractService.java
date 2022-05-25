@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gammon.pcms.model.ConsultancyAgreement;
 import com.gammon.qs.shared.GlobalParameter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -174,6 +175,9 @@ public class SubcontractService {
 	@Autowired
 	private APWebServiceConnectionDao apWebServiceConnectionDao;
 
+	@Autowired
+	private ConsultancyAgreementService consultancyAgreementService;
+
 	private List<UDC> cachedWorkScopeList = new ArrayList<UDC>();
 
 	
@@ -208,10 +212,17 @@ public class SubcontractService {
 	 * SC Detail under Payment Requisition will be updated
 	 * **/
 	public Boolean toCompleteSCAwardApproval(String jobNumber, String packageNo, String approvedOrRejected) throws Exception {
-		logger.info("toCompleteSCAwardApproval - START");
-		Tender budgetTA = null;
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		if(scPackage == null) throw new IllegalArgumentException("Job " + jobNumber + " subcontract " + packageNo + " not found");
+
+		// check if consultancy agreement exists and the status is submitted
+		ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNumber, packageNo);
+		if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) {
+			return toCompleteConsultancyAgreementApproval(ca, approvedOrRejected);
+		}
+
+		logger.info("toCompleteSCAwardApproval - START");
+		Tender budgetTA = null;
 		if("A".equals(approvedOrRejected)){
 			scPackage.setSubcontractStatus(500);
 			
@@ -378,6 +389,23 @@ public class SubcontractService {
 			scPackage.setSubcontractStatus(340);
 			//Update Package
 			subcontractHBDao.updateSubcontract(scPackage);
+		}
+		return true;
+	}
+
+	private Boolean toCompleteConsultancyAgreementApproval(ConsultancyAgreement ca, String approvedOrRejected) {
+		logger.info("toCompleteConsultancyAgreementApproval - START");
+		try {
+			if("A".equals(approvedOrRejected)){
+				// Approved
+				ca.setStatusApproval(ConsultancyAgreement.APPROVED);
+			}else{
+				// Rejected
+				ca.setStatusApproval(ConsultancyAgreement.REJECTED);
+			}
+		} catch (Exception e) {
+			logger.info("toCompleteConsultancyAgreementApproval - ERROR: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return true;
 	}

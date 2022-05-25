@@ -8,9 +8,18 @@
 	<!-- end breadcrumb -->
 
 	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
-		{{subcontractNo}}<small> {{subcontractDescription}}</small>
-		 <small class="text-red m-l-30"> <b>{{requisitionStatus}}</b></small>
+		<div class="row">
+			<div class="col-md-9">
+				{{jobNo}}<small {{jobDescription}}></small> - Subcontract
+				{{subcontractNo}}<small> {{subcontractDescription}}</small>
+				<small class="text-red m-l-30"> <b>{{requisitionStatus}}</b></small>
+			</div>
+			<div class="col-md-3">
+				<a class="btn btn-danger btn-block" ui-sref="subcontract-consultancy-approval.form">
+					Request Approval for Consultancy Agreement
+				</a>
+			</div>
+		</div>
 	</h1>
 
 	<div id="wizard" class="bwizard clearfix ">

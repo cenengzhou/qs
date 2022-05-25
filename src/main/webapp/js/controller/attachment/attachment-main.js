@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$location','attachmentService', '$uibModal', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
-                                         function($rootScope, $scope, $q, $location, attachmentService, $uibModal, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
+mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$location','attachmentService', '$uibModal', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService', 'consultancyAgreementService',
+                                         function($rootScope, $scope, $q, $location, attachmentService, $uibModal, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService, consultancyAgreementService) {
 	/*
 	 * attachment within ADDRESS BOOK modal is not control by this controller
 	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
@@ -98,6 +98,9 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 		case GlobalParameter['AbstractAttachment'].TransitNameObject:
 			checkTransitStatus();
 			loadAttachment($scope.nameObject, $scope.textKey);
+			break;
+		case GlobalParameter['AbstractAttachment'].ConsultancyNameObject:
+			checkConsultancyAgreementStatus();
 			break;
 		default:
 			checkSubcontractUpdatable();
@@ -277,6 +280,28 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 			}
 		})
     }
+
+	 function checkConsultancyAgreementStatus(){
+		 consultancyAgreementService.getMemo($scope.jobNo, $scope.subcontractNo)
+			 .then(function( data ) {
+				 if(angular.isObject(data)){
+					 // success
+					 $scope.memo = data;
+
+					 subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo).then(function (subcontract) {
+						 if(subcontract.scStatus != '330' && subcontract.scStatus != '500' && $scope.memo.statusApproval !="SUBMITTED" && $scope.memo.statusApproval !="APPROVED") {
+							 $scope.isUpdatable = true;
+						 }
+					 });
+				 } else {
+					 // fail
+					 $scope.textKey += '-1';
+					 $scope.error_msg = 'Please fill in the form first.';
+					 $scope.hideButton = true;
+				 }
+				 loadAttachment($scope.nameObject, $scope.textKey);
+			 })
+	 }
     
    function checkPaymentCertUpdatable(){
     	paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)

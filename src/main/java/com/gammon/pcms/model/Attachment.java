@@ -43,6 +43,7 @@ public class Attachment extends PcmsPersistedAuditObject {
 	public static final String RepackagingNameObject = "REPACKAGING";
 	public static final String TransitNameObject = "TRANSIT";
 	public static final String RocSubdetailNameObject = "ROC_SUBDETAIL";
+	public static final String ConsultancyNameObject = "CONSULTANCY_AGREEMENT";
 	public static final String JobInfoNameObject = "JOBINFO";
 	public static final String ADDENDUM_TABLE = "ADDENDUM";
 	public static final String PAYMENT_TABLE = "PAYMENT";
@@ -54,6 +55,7 @@ public class Attachment extends PcmsPersistedAuditObject {
 	public static final String REPACKAGING_TABLE = "REPACKAGING";
 	public static final String TRANSIT_TABLE = "TRANSIT";
 	public static final String ROC_SUBDETAIL_TABLE = "ROC_SUBDETAIL";
+	public static final String CONSULTANCY_TABLE = "CONSULTANCY_AGREEMENT";
 	public static final String JOBINFO_TABLE = "JOBINFO";
 	public static final String NAME_TABLE = "NAME_TABLE";
 	public static final String ID_TABLE = "ID_TABLE";

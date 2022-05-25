@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.model.ConsultancyAgreement;
 import com.gammon.pcms.model.ROC_SUBDETAIL;
 import com.gammon.pcms.service.HTMLService;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -89,6 +90,8 @@ public class AttachmentService {
 	@Autowired
 	private JobInfoService jobInfoService;
 	@Autowired
+	private ConsultancyAgreementService consultancyAgreementService;
+	@Autowired
 	private HTMLService htmlService;
 	
 
@@ -130,6 +133,9 @@ public class AttachmentService {
 		case Attachment.RocSubdetailNameObject:
 			nameTable = Attachment.ROC_SUBDETAIL_TABLE;
 			break;
+		case Attachment.ConsultancyNameObject:
+			nameTable = Attachment.CONSULTANCY_TABLE;
+			break;
 		default:
 			throw new IllegalArgumentException("nameObject not defined:" + nameObject);
 		}
@@ -149,6 +155,10 @@ public class AttachmentService {
 		resultMap.put(Attachment.NAME_TABLE, nameTable);
 		try {
 			switch (nameObject) {
+			case Attachment.ConsultancyNameObject:
+				ConsultancyAgreement consultancyAgreement = consultancyAgreementService.getMemo(noJob, noSubcontract);
+				resultMap.put(Attachment.ID_TABLE, consultancyAgreement.getId().toString());
+				break;
 			case Attachment.RocSubdetailNameObject:
 				resultMap.put(Attachment.ID_TABLE, altParam);
 				break;
