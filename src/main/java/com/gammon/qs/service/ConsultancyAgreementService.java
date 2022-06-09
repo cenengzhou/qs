@@ -69,15 +69,20 @@ public class ConsultancyAgreementService {
 
     public String saveMemo(String jobNo, String subcontractNo, ConsultancyAgreement ca) {
         try {
-            String subcontractStatusCheck = checkIfSubcontractSubmittedOrAwarded(jobNo, subcontractNo);
-            if (subcontractStatusCheck != "") {
-                return subcontractStatusCheck;
+        	Subcontract subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
+            Integer status = subcontract.getSubcontractStatus();
+            if (status != null) {
+                String subcontractStatus = status.toString();
+                if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
+                	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Submitted";
+                } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
+                	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Awarded";
+                }
             }
 
             // check if ca exists
             ConsultancyAgreement existingCA = getMemo(jobNo, subcontractNo);
             if (existingCA == null) {
-                Subcontract subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
                 ca.setIdSubcontract(subcontract);
                 ca.setDateSubmission(new Date());
                 ca.setDateApproval(new Date());
@@ -155,19 +160,7 @@ public class ConsultancyAgreementService {
         return wrapper;
     }
 
-    public String checkIfSubcontractSubmittedOrAwarded(String jobNo, String subcontractNo) throws DatabaseOperationException {
-        Subcontract subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
-        Integer status = subcontract.getSubcontractStatus();
-        if (status != null) {
-            String subcontractStatus = status.toString();
-            if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
-            	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Submitted";
-            } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
-            	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Awarded";
-            }
-        }
-        return "";
-    }
+   
 
     public String submitCAApproval(String jobNo, String subcontractNo) {
         String result = "";
@@ -180,15 +173,25 @@ public class ConsultancyAgreementService {
             if (ca.getFeeEstimate() == null) {
                 return "Fee Estimate is not set";
             }
-            String subcontractStatusCheck = checkIfSubcontractSubmittedOrAwarded(jobNo, subcontractNo);
-            if (subcontractStatusCheck != "") {
-                return subcontractStatusCheck;
+            
+           
+            Subcontract subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
+            Integer status = subcontract.getSubcontractStatus();
+            if (status != null) {
+                String subcontractStatus = status.toString();
+                if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
+                	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Submitted";
+                } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
+                	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Awarded";
+                }
             }
+          
 
             JobInfo job = jobInfoService.obtainJob(jobNo);
             String currency = accountCodeWSDao.obtainCurrencyCode(jobNo);
             String approvalType = ConsultancyAgreement.CA;
-            result = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNo, subcontractNo, "0", "", approvalType, "", ca.getFeeEstimate().doubleValue(), currency, securityService.getCurrentUser().getUsername(), null);
+            String approvalSubType = subcontract.getApprovalRoute();
+            result = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNo, subcontractNo, "0", "", approvalType, approvalSubType, ca.getFeeEstimate().doubleValue(), currency, securityService.getCurrentUser().getUsername(), null);
             if (result == null || "".equals(result.trim())) {
                 logger.info("Create Approval Route Message: " + result);
                 ca.setStatusApproval(ConsultancyAgreement.SUBMITTED);
