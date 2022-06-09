@@ -255,7 +255,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/main-cert-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/service/addendum-service.js?@PROJECT_VERSION@',
-                           'js/service/subcontract-service.js?@PROJECT_VERSION@'
+                           'js/service/subcontract-service.js?@PROJECT_VERSION@',
+                           'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@'
+                           
                     ] 
                 });
             }]
@@ -1218,6 +1220,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/subcontract-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/service/addendum-service.js?@PROJECT_VERSION@',
+                           'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]
@@ -1320,7 +1323,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                         'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
                         'js/service/subcontract-service.js?@PROJECT_VERSION@',
                         'js/service/payment-service.js?@PROJECT_VERSION@',
-                        'js/service/addendum-service.js?@PROJECT_VERSION@'
+                        'js/service/addendum-service.js?@PROJECT_VERSION@',
+                        'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@'
 					]
 				})
 			}]
@@ -1437,6 +1441,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                     'js/service/addendum-service.js?@PROJECT_VERSION@',
                     'js/service/payment-service.js?@PROJECT_VERSION@',
                     'js/service/main-cert-service.js?@PROJECT_VERSION@',
+                    'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@'
                ] 
                 });
             }]
