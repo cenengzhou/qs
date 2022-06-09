@@ -212,7 +212,7 @@ public class HTMLService implements Serializable{
 			scPackage = subcontractHBDao.obtainSCPackage(paymentCertViewWrapper.getJobNumber(), paymentCertViewWrapper.getSubContractNo().toString());
 			maxRetentionAmount = CalculationUtil.round(scPackage.getRetentionAmount().doubleValue(), 2);
 			if(mainCertNumber != 0){
-				clientCertAmount = mainCertWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNumber).getAmount();
+				//clientCertAmount = mainCertWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNumber).getAmount();
 				
 				
 				//Get Parent Job Main Cert Due Date
@@ -225,9 +225,10 @@ public class HTMLService implements Serializable{
 				
 				
 				MainCert parentMainCert = mainCertService.getCertificate(jobNumber, mainCertNumber);
-				if(parentMainCert != null)
+				if(parentMainCert != null){
 					strMainCertDueDate = DateHelper.formatDate( parentMainCert.getCertDueDate(), GlobalParameter.DATE_FORMAT);
-					
+					clientCertAmount = parentMainCert.getTotalReceiptAmount();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -302,7 +303,7 @@ public class HTMLService implements Serializable{
 		return strHTMLCodingContent;
 	}
 
-	public String makeHTMLStringForConsultancyAgreement(String jobNumber, String subcontractNumber, String htmlVersion) {
+	public String makeHTMLStringForConsultancyAgreement(String jobNumber, String subcontractNumber) {
 		try {
 			ConsultancyAgreementFormWrapper formSummary = consultancyAgreementService.getFormSummary(jobNumber, subcontractNumber);
 			Map<String, Object> data = new HashMap<>();
@@ -310,7 +311,6 @@ public class HTMLService implements Serializable{
 			data.put("template", template);
 			data.put("logo", freemarkerConfig.getPaths("logo"));
 			data.put("baseUrl", servletConfig.getBaseUrl());
-			data.put("htmlVersion", htmlVersion);
 			data.put("ca", formSummary);
 			return FreeMarkerHelper.returnHtmlString(template, data);
 		} catch (Exception e) {
@@ -321,8 +321,9 @@ public class HTMLService implements Serializable{
 	
 	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
 		ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);
-		if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) {
-			return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract, htmlVersion);
+		
+		if (htmlVersion.equals("CA") &&  ca != null) {
+			return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract);
 		}
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		MasterListVendor masterList = new MasterListVendor();

@@ -710,6 +710,23 @@
 						</div>
 					</div>
 
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_amountPackageStretchTarget"
+								class="control-label">Package Stretch Target Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_amountPackageStretchTarget.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_amountPackageStretchTarget"
+									name="SubcontractRecord_amountPackageStretchTarget"
+									ng-model="SubcontractRecord.amountPackageStretchTarget"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+					
 				</fieldset>
 
 				<fieldset>

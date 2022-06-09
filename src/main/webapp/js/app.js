@@ -325,17 +325,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 				return $ocLazyLoad.load({
 					name: 'app',
 					files: [
-						'js/service/subcontract-date-service.js?@PROJECT_VERSION@',
-						'js/service/subcontract-service.js?@PROJECT_VERSION@',
 						'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
-						'js/service/payment-service.js?@PROJECT_VERSION@',
-						'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
-						'js/service/addendum-service.js?@PROJECT_VERSION@'
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement-menu.js?@PROJECT_VERSION@',
+						'js/service/subcontract-service.js?@PROJECT_VERSION@'
 					]
 				});
 			}]
 		},
-		controller: 'SubcontractMenuCtrl'
+		controller: 'CaMenuCtrl'
 	})
 	.state('subcontract-consultancy-approval.form', {
 		url: "/form",
@@ -345,9 +342,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 				return $ocLazyLoad.load({
 					name: 'app',
 					files: [
-						'js/controller/subcontract/subcontract-create.js?@PROJECT_VERSION@',
-						'js/controller/subcontract/consultancy-agreement/consultancy-agreement.js?@PROJECT_VERSION@',
-						'js/service/job-service.js?@PROJECT_VERSION@'
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement.js?@PROJECT_VERSION@'
 					]
 				});
 			}]
@@ -372,6 +367,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 						'js/controller/attachment/attachment-text-editor.js?@PROJECT_VERSION@',
 						'js/service/attachment-service.js?@PROJECT_VERSION@',
 						'js/service/main-cert-service.js?@PROJECT_VERSION@',
+						'js/service/payment-service.js?@PROJECT_VERSION@',
+						'js/service/addendum-service.js?@PROJECT_VERSION@'
+						
 					]
 				});
 			}]
@@ -385,7 +383,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 				return $ocLazyLoad.load({
 					name: 'app',
 					files: [
-						'js/controller/subcontract/consultancy-agreement/consultancy-agreement-submission.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement-submission.js?@PROJECT_VERSION@'
 					]
 				});
 			}]
@@ -406,7 +404,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/subcontract-service.js?@PROJECT_VERSION@',
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
-                           'js/service/addendum-service.js?@PROJECT_VERSION@'
+                           'js/service/addendum-service.js?@PROJECT_VERSION@',
+                           'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
                     ] 
                 });
             }]
@@ -602,7 +601,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/payment-service.js?@PROJECT_VERSION@',
                            'js/service/comment-service.js?@PROJECT_VERSION@',
                            'js/controller/subcontract/subcontract-menu.js?@PROJECT_VERSION@',
-                           'js/service/addendum-service.js?@PROJECT_VERSION@'
+                           'js/service/addendum-service.js?@PROJECT_VERSION@',
+                           'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
                     ] 
                 });
             }]

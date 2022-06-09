@@ -161,9 +161,9 @@ public class ConsultancyAgreementService {
         if (status != null) {
             String subcontractStatus = status.toString();
             if (subcontractStatus.equals(Subcontract.SCSTATUS_330_AWARD_SUBMITTED)) {
-                return "Subcontract is submitted";
+            	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Submitted";
             } else if (subcontractStatus.equals(Subcontract.SCSTATUS_500_AWARDED)) {
-                return "Subcontract is awarded";
+            	 return "Job "+jobNo +" - Subcontract " +subcontractNo +" is Awarded";
             }
         }
         return "";

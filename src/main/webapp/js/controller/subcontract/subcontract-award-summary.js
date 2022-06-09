@@ -44,7 +44,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 's
     	getCompanyName();
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
-			htmlService.makeHTMLStringForTenderAnalysis({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, htmlVersion:'A'})
+			htmlService.makeHTMLStringForTenderAnalysis({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, htmlVersion:'award'})
 			.then(function(data){
 				$scope.awardHtml = GlobalHelper.formTemplate(data);
 			});

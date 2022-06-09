@@ -144,14 +144,14 @@
 										<td class="nowrap">Domestic Sub-Contractor</td>
 										<td class="typebox">[#if subcontract.subcontractorNature == "DSC"]&#9745;[#else]&#9744;[/#if]</td>
 										<td class="nowrap">Internal Business</td>
-										<td class="typebox">[#if subcontract.subcontractorNature == "IB"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Internal Trading"]&#9745;[#else]&#9744;[/#if]</td>
 										<td>&nbsp;</td>
 									</tr>
 									<tr>
 										<td class="nowrap">Nominated Sub-Contractor</td>
 										<td class="typebox">[#if subcontract.subcontractorNature == "NSC"]&#9745;[#else]&#9744;[/#if]</td>
 										<td class="nowrap">Consultant</td>
-										<td class="typebox">[#if subcontract.subcontractorNature == "C"]&#9745;[#else]&#9744;[/#if]</td>
+										<td class="typebox">[#if subcontract.formOfSubcontract == "Consultancy Agreement"]&#9745;[#else]&#9744;[/#if]</td>
 										<td>&nbsp;</td>
 									</tr>
 									<tr>

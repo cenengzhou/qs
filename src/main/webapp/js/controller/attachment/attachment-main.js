@@ -275,7 +275,7 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 		.then(function( data ) {
 			if(angular.isObject(data)){
 				$scope.subcontract = data;
-				if($scope.subcontract.scStatus !="330" && $scope.subcontract.scStatus !="500")
+				if($scope.subcontract.scStatus !="500")
 					$scope.isUpdatable = true;
 			}
 		})
@@ -289,7 +289,7 @@ mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$q', '$locati
 					 $scope.memo = data;
 
 					 subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo).then(function (subcontract) {
-						 if(subcontract.scStatus != '330' && subcontract.scStatus != '500' && $scope.memo.statusApproval !="SUBMITTED" && $scope.memo.statusApproval !="APPROVED") {
+						 if(subcontract.scStatus != '500' && $scope.memo.statusApproval !="APPROVED") {
 							 $scope.isUpdatable = true;
 						 }
 					 });

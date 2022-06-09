@@ -1,5 +1,5 @@
-mainApp.controller("ConsultancyAgreementCtrl", ['$scope', 'consultancyAgreementService', '$mdConstant', 'jobService', 'subcontractService', '$cookies', '$timeout', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
-    function ($scope, consultancyAgreementService, $mdConstant, jobService, subcontractService, $cookies, $timeout, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
+mainApp.controller("ConsultancyAgreementCtrl", ['$scope', 'consultancyAgreementService', '$mdConstant', 'subcontractService', '$cookies',  'modalService', '$state', 'GlobalParameter',  'rootscopeService',
+    function ($scope, consultancyAgreementService, $mdConstant,  subcontractService, $cookies,  modalService, $state, GlobalParameter,  rootscopeService) {
         $scope.GlobalParameter = GlobalParameter;
         $scope.disableButtons = false
 
@@ -41,7 +41,7 @@ mainApp.controller("ConsultancyAgreementCtrl", ['$scope', 'consultancyAgreementS
         function loadData() {
             // load subcontract
             subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo).then(function (subcontract) {
-                if (subcontract.scStatus == '330' || subcontract.scStatus == '500') {
+                if (subcontract.scStatus == '500') {
                     $scope.disableButtons = true;
                 }
             });

@@ -53,7 +53,6 @@ public class ConsultancyAgreement extends BasePersistedObject {
 	public static final String PENDING = "PENDING";
 	public static final String SUBMITTED = "SUBMITTED";
 	public static final String APPROVED = "APPROVED";
-	public static final String REJECTED = "REJECTED";
 
 	private Long id;
 	private Subcontract idSubcontract;

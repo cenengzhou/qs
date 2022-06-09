@@ -401,7 +401,7 @@ public class SubcontractService {
 				ca.setStatusApproval(ConsultancyAgreement.APPROVED);
 			}else{
 				// Rejected
-				ca.setStatusApproval(ConsultancyAgreement.REJECTED);
+				ca.setStatusApproval(ConsultancyAgreement.PENDING);
 			}
 		} catch (Exception e) {
 			logger.info("toCompleteConsultancyAgreementApproval - ERROR: " + e.getMessage());
@@ -692,8 +692,26 @@ public class SubcontractService {
 			if (subcontract == null){
 				return "Subcontract does not exist";
 			}
-			//Check if subcontractor is in the Tender Analysis.
 			
+			//Check if CA is submitted
+			ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNumber, subcontractNumber);
+			
+			if (ca != null){
+				if (ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) 
+					return "Request for Consultancy Agreement Approval is submitted.";
+				
+				
+				if(ca.getStatusApproval().equals(ConsultancyAgreement.APPROVED) && !subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT))
+					return "Form of Subcontract should be Consultancy Agreement while approval for Consultancy Agreement has been obtained.";
+					
+			}
+			
+			if (subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT) && (ca == null || !ca.getStatusApproval().equals(ConsultancyAgreement.APPROVED))){
+				return "Pls submit Consultancy Agreement Approval before awarding this subcontract.";
+			}
+			
+			
+			//Check if subcontractor is in the Tender Analysis.
 			Tender rcmTender = tenderHBDao.obtainRecommendedTender(jobNumber, subcontractNumber);
 			
 			

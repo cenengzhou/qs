@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 'subcontractService', 'modalService', 'paymentService', 'GlobalParameter', '$state',
-	function($scope, $location, $cookies, subcontractService, modalService, paymentService, GlobalParameter, $state) {
+mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 'subcontractService', 'modalService', 'paymentService', 'GlobalParameter', '$state', 'consultancyAgreementService',
+	function($scope, $location, $cookies, subcontractService, modalService, paymentService, GlobalParameter, $state, consultancyAgreementService) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -8,8 +8,12 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 	$scope.subcontractDescription = $cookies.get("subcontractDescription");
 	$scope.paymentStatus = $cookies.get("paymentStatus");
 
+	
+	$scope.showMemoButton = true;
+	
 	getSubcontract();
-
+	
+	
 	$scope.paymentRequisition = function (){
 		if($scope.subcontract.scStatus !="500"){
 			if($scope.subcontract.scStatus >="160"){
@@ -68,9 +72,19 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 								});
 
 					}
+					
+					getMemo();
 				});
 	}
 
+	function getMemo(){
+        consultancyAgreementService.getMemo($scope.jobNo, $scope.subcontractNo).then(function (data) {
+            $scope.memo = data;
+            if($scope.memo.length == 0 && ($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500"))
+            	$scope.showMemoButton = false;
+        });
+	}
+	
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
