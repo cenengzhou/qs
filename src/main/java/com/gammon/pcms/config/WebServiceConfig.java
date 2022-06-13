@@ -8,13 +8,6 @@ import java.util.Properties;
 
 import javax.security.auth.callback.CallbackHandler;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.gammon.qs.webservice.WSConfig;
-
 import org.apache.ws.security.WSConstants;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +24,13 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gammon.qs.webservice.WSConfig;
 //@EnableWs
 @Configuration
 @ComponentScan(basePackages = {"com.gammon.qs.webservice"})
@@ -49,7 +49,8 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	private Map<String, Object> wsGsf;
 	@Value("#{${pcms.api}}")
 	private Map<String, Object> pcmsApi;
-
+	@Value("#{${ws.azure}}")
+	private Map<String, Object> wsAzure;
 	@Value("${qs.keystore}")
 	private String qsKeystore;
 
@@ -131,6 +132,7 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		bean.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		bean.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		bean.findAndRegisterModules();
 		return bean;
 	}
 
@@ -258,10 +260,38 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		return (Map<String, String>) pcmsApi.get(applicationConfig.getDeployEnvironment());
 	}
 
-	public String getPcmsApi(String key){
+	public String getPcmsApi(String key) {
 		return getPcmsApi().get(key);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getWsAzure() {
+		return (Map<String, String>) wsAzure.get(applicationConfig.getDeployEnvironment());
+	}
+
+	public String getWsAzure(String key) {
+		return getWsAzure().get(key);
+	}
+
+	public String getWsAzureClientId() {
+		return getWsAzure("clientId");
+	}
+
+	public String getWsAzureClientSecret() {
+		return getWsAzure("clientSecret");
+	}
+
+	public String getWsAzureTenantId() {
+		return getWsAzure("tenantId");
+	}
+
+	public String getWsAzureTenantDomainPrefix() {
+		return getWsAzure("tenantDomainPrefix");
+	}
+
+	public String getWsAzureAlertSender() {
+		return getWsAzure("alertSender");
+	}
 	/**
 	 * @return the qsKeystore
 	 */

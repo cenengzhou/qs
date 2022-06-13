@@ -46,7 +46,7 @@ public class ServletConfig extends WebMvcConfigurerAdapter implements Initializi
 
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.ignoreAcceptHeader(true).defaultContentType(MediaType.APPLICATION_JSON_UTF8)
+		configurer.ignoreAcceptHeader(false).defaultContentType(MediaType.APPLICATION_JSON_UTF8)
 				.ignoreUnknownPathExtensions(true).mediaType("json", MediaType.APPLICATION_JSON_UTF8)
 				.mediaType("xml", MediaType.APPLICATION_XML);
 	}

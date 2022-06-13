@@ -16,15 +16,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import com.gammon.pcms.wrapper.GeneratePaymentPDFWrapper;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriodYearByCompany.GetPeriodYearResponseObj;
 import com.gammon.pcms.aspect.CanAccessJobChecking;
@@ -35,6 +33,8 @@ import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
+import com.gammon.pcms.service.Unc2SharePointService;
+import com.gammon.pcms.wrapper.GeneratePaymentPDFWrapper;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -84,7 +84,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.springframework.util.StopWatch;
 
 @Service
 //SpringSession workaround: change "session" to "request"
@@ -145,6 +144,8 @@ public class PaymentService{
 	private MasterListService masterListService;
 	@Autowired
 	private AddendumHBDao addendumHBDao;
+	@Autowired
+	private Unc2SharePointService unc2SharePointService;
 
 	static final int RECORDS_PER_PAGE = 100;
 
@@ -2331,10 +2332,12 @@ public class PaymentService{
 
 			String result = attachmentService.mergePaymentPdf(jobNumber, packageNumber, paymentNumber);
 			if (result != "") {
-				logger.info("[FAIL] Job No: " + jobNumber + " Subcontract No: " + packageNumber + " Payment Cert No: " + paymentNumber + " Error: " + result);
+				logger.info("[FAIL] Job No: " + jobNumber + " Subcontract No: " + packageNumber + " Payment Cert No: "
+						+ paymentNumber + " Error: " + result);
 				errorCount++;
 			}
 		}
+		unc2SharePointService.CheckAndCopyToSharePoint(jobNo, packageNo, paymentNo, false);
 		watch.stop();
 
 		// log the result

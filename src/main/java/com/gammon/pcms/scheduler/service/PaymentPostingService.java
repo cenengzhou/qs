@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetSupplierMasterManager_Refactor.getSupplierMaster.SupplierMasterResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.service.Unc2SharePointService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -69,6 +70,8 @@ public class PaymentPostingService {
 	private SupplierMasterWSDao supplierMasterWSDao;
 	@Autowired
 	private AttachmentService attachmentService;
+	@Autowired
+	private Unc2SharePointService unc2SharePointService;
 	/**
 	 * To run payment posting
 	 *
@@ -173,8 +176,11 @@ public class PaymentPostingService {
 						//Customization for 13880 - Auto Download PDF
 						try{
 							String msg = attachmentService.mergePaymentPdf(paymentCert.getJobNo(), paymentCert.getPackageNo(), paymentCert.getPaymentCertNo());
-							if (msg!=null && msg.length() >0)
-								logger.info("Result Merge PDF: "+ msg);
+							if (msg != null && msg.length() > 0) {
+								logger.info("Result Merge PDF: " + msg);
+							} else {
+								unc2SharePointService.CheckAndCopyToSharePoint(paymentCert.getJobNo(), paymentCert.getPackageNo(), paymentCert.getPaymentCertNo(), false);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

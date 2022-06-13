@@ -13,6 +13,8 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.gammon.pcms.scheduler.job.RocCutoffDateUpdateJob;
+import com.gammon.pcms.scheduler.job.Unc2SharePointJob;
+
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,6 +117,29 @@ public class QuartzConfig {
 	//8. ROC
 	@Value("${pcms.scheduler.job.description.rocCutoffTable}")
 	private String jobDescriptionRocCutoffTable;
+	@Value("${pcms.scheduler.job.cronExpression.rocCutoffTable}")
+	private String jobCronExpressionRocCutoffTable;
+	//9. Unc2SharePoint
+	@Value("${pcms.scheduler.job.description.Unc2SharePoint}")
+	private String jobDescriptionUnc2SharePoint;
+	@Value("${pcms.scheduler.job.cronExpression.Unc2SharePoint}")
+	private String jobCronExpressionUnc2SharePoint;
+
+	public String getJobCronExpressionUnc2SharePoint() {
+		return jobCronExpressionUnc2SharePoint;
+	}
+
+	public void setJobCronExpressionUnc2SharePoint(String jobCronExpressionUnc2SharePoint) {
+		this.jobCronExpressionUnc2SharePoint = jobCronExpressionUnc2SharePoint;
+	}
+
+	public String getJobDescriptionUnc2SharePoint() {
+		return jobDescriptionUnc2SharePoint;
+	}
+
+	public void setJobDescriptionUnc2SharePoint(String jobDescriptionUnc2SharePoint) {
+		this.jobDescriptionUnc2SharePoint = jobDescriptionUnc2SharePoint;
+	}
 
 	public String getJobDescriptionRocCutoffTable() {
 		return jobDescriptionRocCutoffTable;
@@ -131,9 +156,6 @@ public class QuartzConfig {
 	public void setJobCronExpressionRocCutoffTable(String jobCronExpressionRocCutoffTable) {
 		this.jobCronExpressionRocCutoffTable = jobCronExpressionRocCutoffTable;
 	}
-
-	@Value("${pcms.scheduler.job.cronExpression.rocCutoffTable}")
-	private String jobCronExpressionRocCutoffTable;
 
 	
 	@Value("#{${quartz.setting}}")
@@ -381,6 +403,17 @@ public class QuartzConfig {
 		return bean;
 	}
 
+	@Bean
+	public CronTriggerFactoryBean cronTriggerUnc2SharePoint() {
+		CronTriggerFactoryBean bean = new CronTriggerFactoryBean();
+		bean.setStartDelay(10000);
+		bean.setTimeZone(TimeZone.getTimeZone(pcmsQuartzTimezone));
+		bean.setJobDetail(jobDetailUnc2SharePoint().getObject());
+		bean.setCronExpression(jobCronExpressionUnc2SharePoint);
+		bean.setDescription(jobDescriptionUnc2SharePoint);
+		return bean;
+	}
+
 	/**
 	 * 7b. Housekeep Audit table Quartz Job Detail
 	 */
@@ -400,6 +433,15 @@ public class QuartzConfig {
 		return bean;
 	}
 	
+	
+	@Bean
+	public JobDetailFactoryBean jobDetailUnc2SharePoint() {
+		JobDetailFactoryBean bean = new JobDetailFactoryBean();
+		bean.setJobClass(Unc2SharePointJob.class);
+		bean.setDurability(true);
+		return bean;
+	}
+
 	/**
 	 * create a bean to create a scheduler
 	 *
@@ -437,7 +479,9 @@ public class QuartzConfig {
 		                        jobDetailJDEF58011Synchronization().getObject(), 
 		                        jobDetailMainCertificateSynchronization().getObject(),
 		                        jobDetailAuditHousekeep().getObject(),
-								jobDetailRocCutoff().getObject());
+														jobDetailRocCutoff().getObject(),
+														jobDetailUnc2SharePoint().getObject()
+		);
 		// setup triggers
 		scheduler.setTriggers(	cronTriggerPackageSnapshotGeneration().getObject(),
 								cronTriggerPaymentPosting().getObject(),
@@ -446,7 +490,9 @@ public class QuartzConfig {
 								cronTriggerJDEF58011Synchronization().getObject(),
 								cronTriggerMainCertificateSynchronization().getObject(),
 								cronTriggerAuditHousekeep().getObject(),
-								cronTriggerRocCutoff().getObject());
+								cronTriggerRocCutoff().getObject(),
+								cronTriggerUnc2SharePoint().getObject()
+		);
 		return scheduler;
 	}
 

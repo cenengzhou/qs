@@ -24,11 +24,15 @@ public class AttachmentConfig {
 	private String personnelDirectory;
 	@Value("#{${attachment.server}}")
 	private Map<String, Object> attachmentServer;
-	@Value("${scpayment.merge.joblist}")
-	private String[] scpaymentMergeJoblist;
+	@Value("#{${scpayment.merge.jobMap}}")
+	private Map<String, Map<String, Map<String,String>>> scpaymentMergeJobMap;
+	@Value("#{${scpayment.merge.alert}}")
+	private Map<String,Map<String, String>> scpaymentMergeAlertMap;
+	@Value("#{${scpayment.merge.alert.admin}}")
+	private Map<String, String> scpaymentMergeAlertAdminMap;
 
-	public String[] getScpaymentMergeJoblist() {
-		return scpaymentMergeJoblist;
+	public Map<String, Map<String,String>> getScpaymentMergeJobMap() {
+		return scpaymentMergeJobMap.get(applicationConfig.getDeployEnvironment());
 	}
 	
 	@Autowired
@@ -52,6 +56,14 @@ public class AttachmentConfig {
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getAttachmentServer() {
 		return (Map<String, String>) attachmentServer.get(applicationConfig.getDeployEnvironment());
+	}
+
+	public Map<String, String> getScpaymentMergeAlertMap() {
+		return scpaymentMergeAlertMap.get(applicationConfig.getDeployEnvironment());
+	}
+
+	public String getScpaymentMergeAlertAdmin() {
+		return scpaymentMergeAlertAdminMap.get(applicationConfig.getDeployEnvironment());
 	}
 
 	public String getAttachmentServer(String key){

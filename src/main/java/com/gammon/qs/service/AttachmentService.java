@@ -7,29 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.gammon.pcms.model.ConsultancyAgreement;
-import com.gammon.pcms.model.ROC_SUBDETAIL;
-import com.gammon.pcms.service.HTMLService;
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +27,10 @@ import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.dao.AttachmentHBDao;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.Attachment;
+import com.gammon.pcms.model.ConsultancyAgreement;
+import com.gammon.pcms.model.ROC_SUBDETAIL;
+import com.gammon.pcms.service.HTMLService;
+import com.gammon.pcms.service.Unc2SharePointService;
 import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
@@ -50,6 +44,11 @@ import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.transit.TransitService;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
 
 /**
  * koeyyeung Refactored on Mar 21, 201410:45:32 AM
@@ -93,7 +92,8 @@ public class AttachmentService {
 	private ConsultancyAgreementService consultancyAgreementService;
 	@Autowired
 	private HTMLService htmlService;
-	
+	@Autowired
+	private Unc2SharePointService unc2SharePointService;
 
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
 
@@ -526,13 +526,21 @@ public class AttachmentService {
 		deleteAttachmentList(attachmentList);
 	}
 
+	public String CheckAndCopyToSharePoint(String jobNo, String subcontractNo, String paymentCertNo, boolean sendAlertEmail) {
+		return unc2SharePointService.CheckAndCopyToSharePoint(jobNo, subcontractNo, paymentCertNo, sendAlertEmail);
+	}
+
+	public String CheckAndCopyToSharePoint(Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
+		return unc2SharePointService.CheckAndCopyToSharePoint(jobsFilterMap, sendAlertEmail);
+	}
+
     @SuppressWarnings("deprecation")
 	public String mergePaymentPdf(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception {
-    	String errorMsg = "";
-    	
-    	String[] scpaymentMergeJoblist = serviceConfig.getScpaymentMergeJoblist();
+		String errorMsg = "";
+		
+		Set<String> scpaymentMergeJobSet = serviceConfig.getScpaymentMergeJobMap().keySet();
 
-		if (!Arrays.stream(scpaymentMergeJoblist).anyMatch(jobNo::equals)) {
+		if (!scpaymentMergeJobSet.stream().anyMatch(jobNo::equals)) {
 			errorMsg = "Job "+jobNo+" is not in the white list";
 			return errorMsg;
 		}
