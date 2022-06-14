@@ -39,9 +39,10 @@ import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
+import com.microsoft.graph.http.GraphServiceException;
 
 @Component
-@Transactional(rollbackFor = Exception.class, value = "transactionManager")
+@Transactional(rollbackFor = Exception.class, noRollbackFor = GraphServiceException.class, value = "transactionManager")
 public class PaymentPostingService {
 	
 	private Logger logger = Logger.getLogger(getClass().getName());
