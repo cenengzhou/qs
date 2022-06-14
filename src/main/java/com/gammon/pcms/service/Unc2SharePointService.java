@@ -24,6 +24,8 @@ import com.azure.identity.ClientSecretCredential;
 import com.azure.identity.ClientSecretCredentialBuilder;
 import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.qs.service.admin.MailService;
+import com.gammon.qs.wrapper.EmailMessage;
 import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
 import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.models.BodyType;
@@ -52,12 +54,15 @@ public class Unc2SharePointService {
   @Autowired
   private WebServiceConfig webServiceConfig;
 
+  @Autowired
+  private MailService mailService;
+
   public String CheckAndCopyToSharePoint(boolean sendAlertEmail) {
     return CheckAndCopyToSharePoint(null, sendAlertEmail);
   }
 
   public String CheckAndCopyToSharePoint(Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
-    return Unc2SharePoint.newInstance(attachmentConfig, webServiceConfig, jobsFilterMap, sendAlertEmail);
+    return Unc2SharePoint.newInstance(mailService, attachmentConfig, webServiceConfig, jobsFilterMap, sendAlertEmail);
   }
 
   public String CheckAndCopyToSharePoint(Object jobNo, Object subcontractNo, Object paymentCertNo, boolean sendAlertEmail) {
@@ -95,11 +100,12 @@ public class Unc2SharePointService {
         }
       };
     }
-    return Unc2SharePoint.newInstance(attachmentConfig, webServiceConfig, jobsFilterMap, sendAlertEmail);
+    return Unc2SharePoint.newInstance(mailService, attachmentConfig, webServiceConfig, jobsFilterMap, sendAlertEmail);
   }
 
   public static class Unc2SharePoint {
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private MailService mailService;
     private GraphServiceClient graphServiceClient;
     private StringBuilder statusStringBuilder = new StringBuilder();
 
@@ -121,11 +127,11 @@ public class Unc2SharePointService {
     private Unc2SharePoint() {
     }
 
-    public static String newInstance(AttachmentConfig attachmentConfig, WebServiceConfig webServiceConfig, boolean sendAlertEmail) {
-      return newInstance(attachmentConfig, webServiceConfig, null, sendAlertEmail);
+    public static String newInstance(MailService mailService, AttachmentConfig attachmentConfig, WebServiceConfig webServiceConfig, boolean sendAlertEmail) {
+      return newInstance(mailService, attachmentConfig, webServiceConfig, null, sendAlertEmail);
     }
 
-    public static String newInstance(AttachmentConfig attachmentConfig, WebServiceConfig webServiceConfig,
+    public static String newInstance(MailService mailService, AttachmentConfig attachmentConfig, WebServiceConfig webServiceConfig,
         Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
       String uncServerPath = attachmentConfig.getAttachmentServer("PATH")
           + attachmentConfig.getJobAttachmentsDirectory();
@@ -155,6 +161,7 @@ public class Unc2SharePointService {
               .setNotifyCcList(notifyCcList)
               .setSender(sender)
               .setSendAlertEmail(sendAlertEmail)
+              .setMailService(mailService)
               ;
           output.append(unc2SharePoint.CheckAndCopy());
         } else {
@@ -180,7 +187,7 @@ public class Unc2SharePointService {
         List<String> notifyCcList = getNotifyCcList();
         if (notifyList != null && notifyList.size() > 0) {
           String subject = "Payment Certificate merge status (" + getUncRootPath().split("\\\\")[0] + ")";
-          mergeAlert(notifyList, notifyCcList, subject, output.toString());
+          mergeAlertBySmtp(notifyList, notifyCcList, subject, output.toString());
         }
       }
       logger.info(output.toString());
@@ -398,7 +405,18 @@ public class Unc2SharePointService {
       return graphClient;
     }
     
-    private void mergeAlert(List<String> emailList, List<String> emailCcList, String subject, String bodyContent) {
+    private void mergeAlertBySmtp(List<String> emailList, List<String> emailCcList, String subject,
+        String bodyContent) {
+      EmailMessage emailMessage = new EmailMessage();
+      emailMessage.setRecipients(emailList);
+      emailMessage.setCcRecipients(emailCcList);
+      emailMessage.setSubject(subject);
+      emailMessage.setContent(bodyContent);
+      mailService.sendEmail(emailMessage);
+    }
+    
+    @SuppressWarnings("unused")
+    private void mergeAlertByMsGraph(List<String> emailList, List<String> emailCcList, String subject, String bodyContent) {
       Message message = new Message();
       message.subject = subject;
       ItemBody body = new ItemBody();
@@ -568,6 +586,15 @@ public class Unc2SharePointService {
 
     public Unc2SharePoint setGraphServiceClient(GraphServiceClient graphServiceClient) {
       this.graphServiceClient = graphServiceClient;
+      return this;
+    }
+    
+    public MailService getMailService() {
+      return mailService;
+    }
+
+    public Unc2SharePoint setMailService(MailService mailService) {
+      this.mailService = mailService;
       return this;
     }
 
