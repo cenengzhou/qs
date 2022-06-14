@@ -346,7 +346,7 @@ public class Unc2SharePointService {
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
         logger.info("\nfile uploaded: " + uploadedItem.responseBody.webUrl);
-      } catch (IOException e) {
+      } catch (ClientException | IOException e) {
         e.printStackTrace();
         statusStringBuilder.append("\ncannot upload " + unc2SharePointFile.uncPath);
       }
