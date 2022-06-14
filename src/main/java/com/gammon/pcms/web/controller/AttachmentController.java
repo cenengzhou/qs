@@ -184,30 +184,30 @@ public class AttachmentController {
 	@RequestMapping(value = "CheckAndCopyToSharePoint/{jobNo}", method = { RequestMethod.GET }, produces = {
 			MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, Boolean sendAlertEmail) {
-		return CheckAndCopyToSharePoint(jobNo, null, sendAlertEmail);
+	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, boolean sendAlertEmail) {
+		return attachmentService.CheckAndCopyToSharePoint(jobNo, null, null, sendAlertEmail);
 	}
 
 	@RequestMapping(value = "CheckAndCopyToSharePoint/{jobNo}/{subcontractNo}", method = {
 			RequestMethod.GET }, produces = {
 			MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, @PathVariable("subcontractNo") String subcontractNo, Boolean sendAlertEmail) {
-		return CheckAndCopyToSharePoint(jobNo, subcontractNo, null, sendAlertEmail);
+	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, @PathVariable("subcontractNo") String subcontractNo, boolean sendAlertEmail) {
+		return attachmentService.CheckAndCopyToSharePoint(jobNo, subcontractNo, null, sendAlertEmail);
 	}
 
 	@RequestMapping(value = "CheckAndCopyToSharePoint/{jobNo}/{subcontractNo}/{paymentCertNo}", method = {
 			RequestMethod.GET }, produces = {
 			MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, @PathVariable("subcontractNo") String subcontractNo, @PathVariable("paymentCertNo") String paymentCertNo, Boolean sendAlertEmail) {
+	public String CheckAndCopyToSharePoint(@PathVariable("jobNo") String jobNo, @PathVariable("subcontractNo") String subcontractNo, @PathVariable("paymentCertNo") String paymentCertNo, boolean sendAlertEmail) {
 		return attachmentService.CheckAndCopyToSharePoint(jobNo, subcontractNo, paymentCertNo, sendAlertEmail);
 	}
 
 	@RequestMapping(value = "CheckAndCopyToSharePoint", method = { RequestMethod.POST }, produces = {
 			MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public String CheckAndCopyToSharePoint(@RequestBody Map<String, Map<String, String[]>> jobsFilterMap, Boolean sendAlertEmail) {
+	public String CheckAndCopyToSharePoint(@RequestBody Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
 		return attachmentService.CheckAndCopyToSharePoint(jobsFilterMap, sendAlertEmail);
 	}
 }

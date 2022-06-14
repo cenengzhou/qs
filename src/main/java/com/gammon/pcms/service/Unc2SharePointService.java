@@ -104,7 +104,7 @@ public class Unc2SharePointService {
   }
 
   public static class Unc2SharePoint {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(Unc2SharePoint.class);
     private MailService mailService;
     private GraphServiceClient graphServiceClient;
     private StringBuilder statusStringBuilder = new StringBuilder();
@@ -136,6 +136,7 @@ public class Unc2SharePointService {
       String uncServerPath = attachmentConfig.getAttachmentServer("PATH")
           + attachmentConfig.getJobAttachmentsDirectory();
       Map<String, Map<String, String>> scpaymentMergeJobMap = attachmentConfig.getScpaymentMergeJobMap();
+      logger.info("jobsFilterMap: " + jobsFilterMap.toString());
       Set<String> jobs = jobsFilterMap != null ? jobsFilterMap.keySet() : scpaymentMergeJobMap.keySet();
       StringBuilder output = new StringBuilder();
       jobs.stream().forEach(job -> {
@@ -200,6 +201,7 @@ public class Unc2SharePointService {
       }
       File rootUncFolder = new File(getUncFullPath());
       String[] folderPaths = getFilteredFolderPath(rootUncFolder.list(getFileTypeFilter("folder")));
+      logger.info("filteredPaths: " + String.join(",", folderPaths));
       LoadUncSubPath(rootUncFolder, folderPaths);
       return this;
     }
@@ -210,6 +212,7 @@ public class Unc2SharePointService {
         Unc2SharePointFolder folder = new Unc2SharePointFolder();
         folder.setUncPath(folderPath);
         String[] filePaths = getFilteredFilePath(folderPath, uncFolder.list(getFileTypeFilter("file")));
+        logger.info("filteredFilePaths: " + String.join(",", filePaths));
         LoadUncFile(folder, filePaths);
       });
       return this;
@@ -236,7 +239,7 @@ public class Unc2SharePointService {
           .buildRequest().get();
       List<DriveItem> sharePointSubFolderList = getFilteredFolderList(
           getDriveFolderList(getDrive().id, sharePointRootFolder.id));
-
+      logger.info("filteredSharePointFolders: " + String.join(",", sharePointSubFolderList.stream().map(f -> f.name).collect(Collectors.toList())));
       LoadSharePointSubFolder(sharePointSubFolderList);
       return this;
     }
@@ -252,6 +255,8 @@ public class Unc2SharePointService {
           unc2SharePointFolder.setSharePointFolder(sharePointFolder);
           LoadSharePointCertFolder(unc2SharePointFolder);
         } else {
+          logger.warn("not match: " + sharePointFolder.name);
+          logger.warn(String.join(",", String.join(",", this.getFolderList().stream().map(f -> f.uncPath).collect(Collectors.toList()))));
           logger
               .warn("\n[::sharePointFolder !@ unc::] " + getSharePointSitePath() + "/" + getSharePointRootPath() + "/"
                   + sharePointFolder.name + "\n");
