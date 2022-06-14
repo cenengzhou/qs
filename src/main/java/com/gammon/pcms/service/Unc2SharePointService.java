@@ -244,7 +244,7 @@ public class Unc2SharePointService {
     private Unc2SharePoint LoadSharePointSubFolder(List<DriveItem> sharePointSubFolderList) {
       sharePointSubFolderList.stream().forEach(sharePointFolder -> {
         Unc2SharePointFolder unc2SharePointFolder = this.getFolderList().stream()
-            .filter(folder -> sharePointFolder.name.contains(folder.uncPath))
+            .filter(folder -> sharePointFolder.name.indexOf(folder.uncPath) > -1)
             .findFirst()
             .orElse(null);
 
@@ -327,8 +327,9 @@ public class Unc2SharePointService {
           if (StringUtils.isNotBlank(itemId)) {
             UploadUnc2SharePointFile(unc2SharePointFolder, unc2SharePointFile);
           } else {
+            DriveItem sharePointFolder = unc2SharePointFolder.getSharePointFolder();
             statusStringBuilder.append(
-                "\n" + getSharePointSitePath() + "/" + getSharePointRootPath() + "/" + unc2SharePointFolder.getUncPath()
+                "\n" + getSharePointSitePath() + "/" + getSharePointRootPath() + "/" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
                     + (getSharePointCertPath() != null ? "/*" + getSharePointCertPath() + "*" : "") + " not found for "
                     + unc2SharePointFile.getUncPath());
           }
@@ -466,7 +467,7 @@ public class Unc2SharePointService {
     }
 
     private DriveItem getDriveFolder(String driveId, String itemId, String name) {
-      return getDriveFolderList(driveId, itemId).stream().filter(p -> p.folder != null && p.name.contains(name))
+      return getDriveFolderList(driveId, itemId).stream().filter(p -> p.folder != null && p.name.indexOf(name) > -1)
           .findFirst().orElse(null);
     }
 
@@ -501,24 +502,24 @@ public class Unc2SharePointService {
       };
     }
 
-    private String[] getFilteredFolderPath(String[] folderPaths) {
+    private String[] getFilteredFolderPath(String[] uncFolderPaths) {
       if (getFilterMap() != null) {
-        Set<String> folders = getFilterMap().keySet();
-        if (folders != null && folders.size() > 0) {
-          folderPaths = Arrays.asList(folderPaths).stream().filter(f -> folders.contains(f)).toArray(String[]::new);
+        Set<String> filterFolders = getFilterMap().keySet();
+        if (filterFolders != null && filterFolders.size() > 0) {
+          uncFolderPaths = Arrays.asList(uncFolderPaths).stream().filter(f -> filterFolders.contains(f)).toArray(String[]::new);
         }
       }
-      return folderPaths;
+      return uncFolderPaths;
     }
 
-    private List<DriveItem> getFilteredFolderList(List<DriveItem> folderList) {
+    private List<DriveItem> getFilteredFolderList(List<DriveItem> sharePointFolderList) {
       if (getFilterMap() != null) {
-        Set<String> folders = getFilterMap().keySet();
-        if (folders != null && folders.size() > 0) {
-          folderList = folderList.stream().filter(f -> folders.contains(f.name)).collect(Collectors.toList());
+        Set<String> filterFolders = getFilterMap().keySet();
+        if (filterFolders != null && filterFolders.size() > 0) {
+          sharePointFolderList = sharePointFolderList.stream().filter(f -> filterFolders.stream().anyMatch(ff -> f.name.indexOf(ff) > -1)).collect(Collectors.toList());
         }
       }
-      return folderList;
+      return sharePointFolderList;
     }
 
     private List<DriveItem> getFilteredFileList(String folder, List<DriveItem> fileList) {
