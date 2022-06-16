@@ -127,7 +127,7 @@ public class ConsultancyAgreementService {
                     String fullname = userHashMap.get(fromList[i]);
                     fromList[i] = fullname;
                 }
-                wrapper.setFrom(String.join(";", fromList));
+                wrapper.setFrom(String.join(";	", fromList));
             }
             if (memo.getToList() != null) {
                 String[] toList = memo.getToList().split(";");
@@ -135,7 +135,7 @@ public class ConsultancyAgreementService {
                     String fullname = userHashMap.get(toList[i]);
                     toList[i] = fullname;
                 }
-                wrapper.setTo(String.join(";", toList));
+                wrapper.setTo(String.join(";	", toList));
             }
             if (memo.getCcList() != null) {
                 String[] ccList = memo.getCcList().split(";");
@@ -143,7 +143,7 @@ public class ConsultancyAgreementService {
                     String fullname = userHashMap.get(ccList[i]);
                     ccList[i] = fullname;
                 }
-                wrapper.setCc(String.join(";", ccList));
+                wrapper.setCc(String.join(";	", ccList));
             }
             wrapper.setSubject(memo.getSubject());
             wrapper.setConsultantName(memo.getConsultantName());
