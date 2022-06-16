@@ -136,8 +136,10 @@ public class Unc2SharePointService {
       String uncServerPath = attachmentConfig.getAttachmentServer("PATH")
           + attachmentConfig.getJobAttachmentsDirectory();
       Map<String, Map<String, String>> scpaymentMergeJobMap = attachmentConfig.getScpaymentMergeJobMap();
-      logger.info("jobsFilterMap: " + jobsFilterMap.toString());
-      Set<String> jobs = jobsFilterMap != null ? jobsFilterMap.keySet() : scpaymentMergeJobMap.keySet();
+      if (jobsFilterMap != null) {
+        logger.info("jobsFilterMap: " + jobsFilterMap.toString());
+      }
+      Set<String> jobs = jobsFilterMap != null && jobsFilterMap.keySet().size() > 0? jobsFilterMap.keySet() : scpaymentMergeJobMap.keySet();
       StringBuilder output = new StringBuilder();
       jobs.stream().forEach(job -> {
         Map<String, String> config = scpaymentMergeJobMap.get(job);
@@ -186,10 +188,15 @@ public class Unc2SharePointService {
       if (statusStringBuilder.length() > 0 && isSendAlertEmail()) {
         List<String> notifyList = getNotifyList();
         List<String> notifyCcList = getNotifyCcList();
+        String jobNo = getUncRootPath().split("\\\\")[0];
         if (notifyList != null && notifyList.size() > 0) {
-          String subject = "Payment Certificate merge status (" + getUncRootPath().split("\\\\")[0] + ")";
+          String subject = "Payment Certificate merge status (" + jobNo + ")";
           mergeAlertBySmtp(notifyList, notifyCcList, subject, output.toString());
+        } else {
+          logger.info("no notify email in config for " + jobNo);
         }
+      } else {
+        logger.info("statusStringBuilder:" + statusStringBuilder.length() + " isSendAlertEmail:" + isSendAlertEmail());
       }
       logger.info(output.toString());
       return output.toString();
@@ -201,30 +208,38 @@ public class Unc2SharePointService {
       }
       File rootUncFolder = new File(getUncFullPath());
       String[] folderPaths = getFilteredFolderPath(rootUncFolder.list(getFileTypeFilter("folder")));
-      logger.info("filteredPaths: " + String.join(",", folderPaths));
+      if (folderPaths != null && folderPaths.length > 0) {
+        logger.info("filteredPaths: " + String.join(",", folderPaths));
+      }
       LoadUncSubPath(rootUncFolder, folderPaths);
       return this;
     }
 
     private Unc2SharePoint LoadUncSubPath(File rootUncFolder, String[] folderPaths) {
-      Arrays.asList(folderPaths).forEach(folderPath -> {
-        File uncFolder = new File(rootUncFolder, folderPath);
-        Unc2SharePointFolder folder = new Unc2SharePointFolder();
-        folder.setUncPath(folderPath);
-        String[] filePaths = getFilteredFilePath(folderPath, uncFolder.list(getFileTypeFilter("file")));
-        logger.info("filteredFilePaths: " + String.join(",", filePaths));
-        LoadUncFile(folder, filePaths);
-      });
+      if (folderPaths != null && folderPaths.length > 0) {
+        Arrays.asList(folderPaths).forEach(folderPath -> {
+          File uncFolder = new File(rootUncFolder, folderPath);
+          Unc2SharePointFolder folder = new Unc2SharePointFolder();
+          folder.setUncPath(folderPath);
+          String[] filePaths = getFilteredFilePath(folderPath, uncFolder.list(getFileTypeFilter("file")));
+          if (filePaths != null && filePaths.length > 0) {
+            logger.info("filteredFilePaths: " + String.join(",", filePaths));
+          }
+          LoadUncFile(folder, filePaths);
+        });
+      }
       return this;
     }
 
     private Unc2SharePoint LoadUncFile(Unc2SharePointFolder folder, String[] filePaths) {
-      Arrays.asList(filePaths).forEach(filePath -> {
-        Unc2SharePointFile file = new Unc2SharePointFile();
-        file.setUncPath(filePath);
-        folder.getFileList().add(file);
-      });
-      this.getFolderList().add(folder);
+      if (filePaths != null && filePaths.length > 0) {
+        Arrays.asList(filePaths).forEach(filePath -> {
+          Unc2SharePointFile file = new Unc2SharePointFile();
+          file.setUncPath(filePath);
+          folder.getFileList().add(file);
+        });
+        this.getFolderList().add(folder);
+      }
       return this;
     }
 
@@ -358,7 +373,7 @@ public class Unc2SharePointService {
 
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
-        logger.info("\nfile uploaded: " + uploadedItem.responseBody.webUrl);
+        statusStringBuilder.append("\nfile uploaded: " + uploadedItem.responseBody.webUrl);
       } catch (ClientException | IOException e) {
         e.printStackTrace();
         statusStringBuilder.append("\ncannot upload " + unc2SharePointFile.uncPath);

@@ -207,7 +207,7 @@ public class AttachmentController {
 	@RequestMapping(value = "CheckAndCopyToSharePoint", method = { RequestMethod.POST }, produces = {
 			MediaType.TEXT_PLAIN_VALUE })
 	@ResponseBody
-	public String CheckAndCopyToSharePoint(@RequestBody Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
+	public String CheckAndCopyToSharePoint(@RequestBody(required = false) Map<String, Map<String, String[]>> jobsFilterMap, boolean sendAlertEmail) {
 		return attachmentService.CheckAndCopyToSharePoint(jobsFilterMap, sendAlertEmail);
 	}
 }
