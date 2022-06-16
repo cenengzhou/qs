@@ -168,7 +168,7 @@ public class Unc2SharePointService {
               ;
           output.append(unc2SharePoint.CheckAndCopy());
         } else {
-          output.append("\n" + job + " config not defined");
+          output.append("\r\n" + job + " config not defined");
         }
       });
       return output.toString();
@@ -177,14 +177,14 @@ public class Unc2SharePointService {
     private String CheckAndCopy() {
       String result = this.LoadUnc().LoadSharePoint().UploadUnc2SharePoint().toString();
       StringBuffer output = new StringBuffer();
-      output.append("\n\n" + StringUtils.repeat("::", 80));
+      output.append("\r\n\r\n" + StringUtils.repeat("::", 80));
       if (statusStringBuilder.length() > 0) {
-        output.append("\n\n");
-        output.append("\n" + statusStringBuilder.toString() + "\n");
-        output.append("\n\n");
+        output.append("\r\n\r\n");
+        output.append("\r\n" + statusStringBuilder.toString() + "\r\n");
+        output.append("\r\n\r\n");
       }
       output.append(result);
-      output.append("\n" + StringUtils.repeat("::", 80) + "\n\n");
+      output.append("\r\n" + StringUtils.repeat("::", 80) + "\r\n\r\n");
       if (statusStringBuilder.length() > 0 && isSendAlertEmail()) {
         List<String> notifyList = getNotifyList();
         List<String> notifyCcList = getNotifyCcList();
@@ -273,8 +273,8 @@ public class Unc2SharePointService {
           logger.warn("not match: " + sharePointFolder.name);
           logger.warn(String.join(",", String.join(",", this.getFolderList().stream().map(f -> f.uncPath).collect(Collectors.toList()))));
           logger
-              .warn("\n[::sharePointFolder !@ unc::] " + getSharePointSitePath() + "/" + getSharePointRootPath() + "/"
-                  + sharePointFolder.name + "\n");
+              .warn("\r\n[::sharePointFolder !@ unc::] " + getSharePointSitePath() + "/" + getSharePointRootPath() + "/"
+                  + sharePointFolder.name + "\r\n");
         }
       });
       return this;
@@ -294,7 +294,7 @@ public class Unc2SharePointService {
         unc2SharePointFolder.setSharePointCertFolder(sharePointCertFolder);
       } else {
         if (haveCertConfig) {
-          statusStringBuilder.append("\n[::sharePointCertFolder !@ SharePoint::] " + getSharePointSitePath() + "/"
+          statusStringBuilder.append("\r\n[::sharePointCertFolder !@ SharePoint::] " + getSharePointSitePath() + "/"
               + getSharePointRootPath() + "/"
               + sharePointFolder.name + "/*" + getSharePointCertPath() + "*");
         }
@@ -321,8 +321,8 @@ public class Unc2SharePointService {
           unc2SharePointFile.setSharePointFile(sharePointFile);
         } else {
           logger
-              .warn("\n[::sharePointFile !@ unc::] " + getSharePointSitePath() + "/" + getSharePointRootPath() + "/"
-                  + sharePointPath + "/" + sharePointFile.name + "\n");
+              .warn("\r\n[::sharePointFile !@ unc::] " + getSharePointSitePath() + "/" + getSharePointRootPath() + "/"
+                  + sharePointPath + "/" + sharePointFile.name + "\r\n");
         }
       });
       return this;
@@ -349,7 +349,7 @@ public class Unc2SharePointService {
           } else {
             DriveItem sharePointFolder = unc2SharePointFolder.getSharePointFolder();
             statusStringBuilder.append(
-                "\n" + getSharePointSitePath() + "/" + getSharePointRootPath() + "/" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
+                "\r\n" + getSharePointSitePath() + "/" + getSharePointRootPath() + "/" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
                     + (getSharePointCertPath() != null ? "/*" + getSharePointCertPath() + "*" : "") + " not found for "
                     + unc2SharePointFile.getUncPath());
           }
@@ -373,10 +373,10 @@ public class Unc2SharePointService {
 
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
-        statusStringBuilder.append("\nfile uploaded: " + uploadedItem.responseBody.webUrl);
+        statusStringBuilder.append("\r\nfile uploaded: " + uploadedItem.responseBody.webUrl);
       } catch (ClientException | IOException e) {
         e.printStackTrace();
-        statusStringBuilder.append("\ncannot upload " + unc2SharePointFile.uncPath);
+        statusStringBuilder.append("\r\ncannot upload " + unc2SharePointFile.uncPath);
       }
     }
 
@@ -702,10 +702,10 @@ public class Unc2SharePointService {
 
 
     public String toString() {
-      return "\n{ uncRootPath:" + uncRootPath + ", sharePointSitePath:" + sharePointSitePath
+      return "\r\n{ uncRootPath:" + uncRootPath + ", sharePointSitePath:" + sharePointSitePath
           + ", sharePointRootPath:" + sharePointRootPath
-          + (sharePointCertPath != null ? ", sharePointCertPath: *" + sharePointCertPath + "*" : "") + " }\n"
-          + "\t" + folderList.stream().map(Unc2SharePointFolder::toString).collect(Collectors.toList()) + "\n";
+          + (sharePointCertPath != null ? ", sharePointCertPath: *" + sharePointCertPath + "*" : "") + " }\r\n"
+          + "\t" + folderList.stream().map(Unc2SharePointFolder::toString).collect(Collectors.toList()) + "\r\n";
     }
 
     public class Unc2SharePointFile {
@@ -741,7 +741,7 @@ public class Unc2SharePointService {
 
       @Override
       public String toString() {
-        return "\n\t\t{ uncFile:" + uncPath + ", sharePointFile:"
+        return "\r\n\t\t{ uncFile:" + uncPath + ", sharePointFile:"
             + (sharePointFile != null ? sharePointFile.name + " (" + sharePointFile.id + ")" : "not found")
             + (sharePointFile != null && newUpload ? "*" : "")
             + " }";
@@ -792,15 +792,15 @@ public class Unc2SharePointService {
 
       @Override
       public String toString() {
-        return "\n\n\t{ uncFolder:" + uncPath
+        return "\r\n\r\n\t{ uncFolder:" + uncPath
             + ", sharePointFolder:"
             + (sharePointFolder != null ? sharePointFolder.name + " (" + sharePointFolder.id + ")" : null)
             + (StringUtils.isNotBlank(getSharePointCertPath()) ? ", sharePointCertFolder:"
                 + (sharePointCertFolder != null ? sharePointCertFolder.name + " (" + sharePointCertFolder.id + ")"
                     : null)
                 : "")
-            + " }\n"
-            + "\t\t" + fileList.stream().map(Unc2SharePointFile::toString).collect(Collectors.toList()) + "\n";
+            + " }\r\n"
+            + "\t\t" + fileList.stream().map(Unc2SharePointFile::toString).collect(Collectors.toList()) + "\r\n";
       }
 
     }
