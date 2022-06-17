@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,6 +195,7 @@ public class Unc2SharePointService {
         if (notifyList != null && notifyList.size() > 0) {
           String subject = "Payment Certificate merge status (" + jobNo + ")";
           mergeAlertBySmtp(notifyList, notifyCcList, subject, statusStringBuilder.toString());
+          // mergeAlertByMsGraph(notifyList, notifyCcList, subject, statusStringBuilder.toString());
         } else {
           logger.info("no notify email in config for " + jobNo);
         }
@@ -369,7 +371,7 @@ public class Unc2SharePointService {
 
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
-        statusStringBuilder.append("\r\nfile uploaded: " + URLDecoder.decode(uploadedItem.responseBody.webUrl, StandardCharsets.UTF_8.name()));
+        statusStringBuilder.append("\r\nfile uploaded: " + uploadedItem.responseBody.webUrl);
       } catch (ClientException | IOException e) {
         e.printStackTrace();
         statusStringBuilder.append("\r\ncannot upload " + unc2SharePointFile.uncPath);
@@ -422,6 +424,7 @@ public class Unc2SharePointService {
       return graphClient;
     }
     
+    @SuppressWarnings("unused")
     private void mergeAlertBySmtp(List<String> emailList, List<String> emailCcList, String subject,
         String bodyContent) {
       EmailMessage emailMessage = new EmailMessage();
@@ -577,8 +580,13 @@ public class Unc2SharePointService {
 
     private String getSharePointUrl(Unc2SharePointFolder unc2SharePointFolder) {
       DriveItem sharePointFolder = unc2SharePointFolder.getSharePointCertFolder();
-      return "https://" + getSharePointSitePath().replace(":", "") + "/Shared Documents/" + getSharePointRootPath() + "/" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
-          + (getSharePointCertPath() != null ? "/*" + getSharePointCertPath() + "*" : "");
+      String url = getSharePointSitePath().replace(":", "") + "/Shared Documents/" + getSharePointRootPath() + "/*" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
+            + (getSharePointCertPath() != null ? "*/*" + getSharePointCertPath() + "*" : "");
+      try {
+        return "https://" + URLEncoder.encode(url, StandardCharsets.UTF_8.name()).replace("%2F", "/").replace("+", "%20");
+      } catch (UnsupportedEncodingException e) {
+        return "https://" + url;
+      }
     }
 
     public String getUncServerPath() {
