@@ -431,7 +431,7 @@ public class Unc2SharePointService {
       emailMessage.setRecipients(emailList);
       emailMessage.setCcRecipients(emailCcList);
       emailMessage.setSubject(subject);
-      emailMessage.setContent(bodyContent);
+      emailMessage.setContent("<pre>" + bodyContent + "</pre>");
       mailService.sendEmail(emailMessage);
     }
     
