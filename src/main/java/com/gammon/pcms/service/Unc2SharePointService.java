@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -193,7 +194,7 @@ public class Unc2SharePointService {
         List<String> notifyCcList = getNotifyCcList();
         String jobNo = getUncRootPath().split("\\\\")[0];
         if (notifyList != null && notifyList.size() > 0) {
-          String subject = "Payment Certificate merge status (" + jobNo + ")";
+          String subject = "Copy Payment Certificate To SharePoint Report (" + jobNo + ")";
           mergeAlertBySmtp(notifyList, notifyCcList, subject, statusStringBuilder.toString());
           // mergeAlertByMsGraph(notifyList, notifyCcList, subject, statusStringBuilder.toString());
         } else {
@@ -371,7 +372,7 @@ public class Unc2SharePointService {
 
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
-        statusStringBuilder.append("\r\nfile uploaded: " + uploadedItem.responseBody.webUrl);
+        statusStringBuilder.append("\r\nfile uploaded: " + urlEncode(uploadedItem.responseBody.webUrl));
       } catch (ClientException | IOException e) {
         e.printStackTrace();
         statusStringBuilder.append("\r\ncannot upload " + unc2SharePointFile.uncPath);
@@ -580,12 +581,19 @@ public class Unc2SharePointService {
 
     private String getSharePointUrl(Unc2SharePointFolder unc2SharePointFolder) {
       DriveItem sharePointFolder = unc2SharePointFolder.getSharePointCertFolder();
-      String url = getSharePointSitePath().replace(":", "") + "/Shared Documents/" + getSharePointRootPath() + "/*" + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
-            + (getSharePointCertPath() != null ? "*/*" + getSharePointCertPath() + "*" : "");
+      String url = getSharePointSitePath().replace(":", "") + "/Shared Documents/" + getSharePointRootPath() + "/*"
+          + (sharePointFolder != null ? sharePointFolder.name : unc2SharePointFolder.getUncPath())
+          + (getSharePointCertPath() != null ? "*/*" + getSharePointCertPath() + "*" : "");
+        return "https://" + urlEncode(url);
+
+    }
+    
+    private String urlEncode(String url) {
       try {
-        return "https://" + URLEncoder.encode(url, StandardCharsets.UTF_8.name()).replace("%2F", "/").replace("+", "%20");
+        return URLEncoder.encode(URLDecoder.decode(url, StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8.name())
+        .replace("%2F", "/").replace("+", "%20").replace("%3A", ":");
       } catch (UnsupportedEncodingException e) {
-        return "https://" + url;
+        return url;
       }
     }
 
