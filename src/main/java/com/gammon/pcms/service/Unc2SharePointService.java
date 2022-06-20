@@ -372,7 +372,7 @@ public class Unc2SharePointService {
 
         unc2SharePointFile.setSharePointFile(uploadedItem.responseBody);
         unc2SharePointFile.setNewUpload(true);
-        statusStringBuilder.append("\r\nfile uploaded: " + urlEncode(uploadedItem.responseBody.webUrl));
+        statusStringBuilder.append("\r\nfile uploaded: " + addLink(null, urlEncode(uploadedItem.responseBody.webUrl)));
       } catch (ClientException | IOException e) {
         e.printStackTrace();
         statusStringBuilder.append("\r\ncannot upload " + unc2SharePointFile.uncPath);
@@ -591,12 +591,16 @@ public class Unc2SharePointService {
     private String urlEncode(String url) {
       try {
         return URLEncoder.encode(URLDecoder.decode(url, StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8.name())
-        .replace("%2F", "/").replace("+", "%20").replace("%3A", ":");
+            .replace("%2F", "/").replace("+", "%20").replace("%3A", ":");
       } catch (UnsupportedEncodingException e) {
         return url;
       }
     }
 
+    private String addLink(String name, String url) {
+      return "<a href=\"" + url + "\">" + (StringUtils.isNotBlank(name) ? name : url )+ "</a>";
+    }
+    
     public String getUncServerPath() {
       return uncServerPath;
     }
