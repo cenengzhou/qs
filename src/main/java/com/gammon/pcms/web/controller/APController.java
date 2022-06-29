@@ -603,7 +603,7 @@ public class APController {
 	 * @return
 	 */
 	@RequestMapping(path = "/ws/makeHTMLStrForPayment/{jobNumber}/{packageNo}/{htmlVersion}", method = RequestMethod.GET)
-	public MakeHTMLStrForPaymentServiceRequest makeHTMLStrForPayment(	HttpServletRequest request,
+	public MakeHTMLStrForPaymentServiceResponse makeHTMLStrForPayment(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String packageNo,
 																		@PathVariable String htmlVersion) {
@@ -612,7 +612,7 @@ public class APController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		MakeHTMLStrForPaymentServiceRequest responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForPayment", requestObj, MakeHTMLStrForPaymentServiceRequest.class);
+		MakeHTMLStrForPaymentServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForPayment", requestObj, MakeHTMLStrForPaymentServiceResponse.class);
 		return responseObj;
 	}
 
