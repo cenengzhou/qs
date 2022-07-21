@@ -210,7 +210,6 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 						angular.forEach(data, function(value, key){
 							value.newQuantity = value.cumWorkDoneQuantity;
 							var oldAmountSubcontractNew = value.amountSubcontractNew;
-							value.amountSubcontractNew = roundUtil.round(value.amountSubcontractNew / value.scRate * value.costRate, 2);
 							if(value.lineType == 'BQ'){
 								$scope.remeasuredSubcontractSumAfterSplit += value.amountSubcontractNew;
 							}else{
