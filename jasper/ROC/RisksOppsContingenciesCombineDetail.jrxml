@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ROC Report" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" uuid="dd3e4ebb-1d82-4611-a3e4-7c21e8710b1e">
 	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="rocBeanCombineDetail"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="createCombineDetailBeanCollection.xml"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
@@ -38,7 +38,7 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="rocId" class="java.lang.String">
+		<field name="rocId" class="java.lang.Integer">
 			<fieldDescription><![CDATA[rocId]]></fieldDescription>
 		</field>
 		<field name="projectRef" class="java.lang.String">
@@ -80,7 +80,7 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="rocId" class="java.lang.String">
+		<field name="rocId" class="java.lang.Integer">
 			<fieldDescription><![CDATA[rocId]]></fieldDescription>
 		</field>
 		<field name="projectRef" class="java.lang.String">

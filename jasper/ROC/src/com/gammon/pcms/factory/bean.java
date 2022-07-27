@@ -81,7 +81,7 @@ public class bean {
 	}
 	
 	static List<IRocDetailJasperWrapper> generateRocDetailWrapperList(String desc){
-		return generateRocDetailWrapperList(desc, getRandomNumber(3, 10));
+		return generateRocDetailWrapperList(desc, getRandomNumber(3, 100));
 	}
 	
 	static List<IRocDetailJasperWrapper> generateRocDetailWrapperList(String desc, int size) {

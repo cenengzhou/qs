@@ -22,7 +22,7 @@ public class RocJasperWrapper {
 	
 	private List<IRocDetailJasperWrapper> detailsContingencies = new ArrayList<>();
 	private List<IRocDetailJasperWrapper> detailsRisksOpps = new ArrayList<>();
-	
+
 	public RocJasperWrapper() {
 		super();
 	}

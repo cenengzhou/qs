@@ -1,0 +1,1022 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ROC Report" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="800" leftMargin="21" rightMargin="21" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="dd3e4ebb-1d82-4611-a3e4-7c21e8710b1e">
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="createCombineDetailBeanCollection.xml"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#CCCCCC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#DDDDDD">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="asAtDate" class="java.lang.String">
+		<fieldDescription><![CDATA[asAtDate]]></fieldDescription>
+	</field>
+	<field name="projectName" class="java.lang.String">
+		<fieldDescription><![CDATA[projectName]]></fieldDescription>
+	</field>
+	<field name="projectNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[projectNumber]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderRisks" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderRisks]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderOpps" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderOpps]]></fieldDescription>
+	</field>
+	<field name="sumCaseTenderOther" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseTenderOther]]></fieldDescription>
+	</field>
+	<field name="sumCaseRisks" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseRisks]]></fieldDescription>
+	</field>
+	<field name="sumCaseOpps" class="com.gammon.pcms.dto.RocCaseWrapper">
+		<fieldDescription><![CDATA[sumCaseOpps]]></fieldDescription>
+	</field>
+	<variable name="returnSumTenderRisks" class="java.lang.Double"/>
+	<variable name="returnSumTenderOpps" class="java.lang.Double"/>
+	<variable name="returnSumTenderOther" class="java.lang.Double"/>
+	<variable name="returnSumRisksBest" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealistic" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorst" class="java.lang.Double"/>
+	<variable name="returnSumOppsBest" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealistic" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorst" class="java.lang.Double"/>
+	<variable name="returnSumTenderRisksMovement" class="java.lang.Double"/>
+	<variable name="returnSumTenderOppsMovement" class="java.lang.Double"/>
+	<variable name="returnSumTenderOtherMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksBestMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealisticMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorstMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsBestMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealisticMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorstMovement" class="java.lang.Double"/>
+	<variable name="returnSumContingenciesTurnover" class="java.lang.Double"/>
+	<variable name="returnSumContingenciesCost" class="java.lang.Double"/>
+	<variable name="returnSumContingenciesTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumContingenciesCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksBestTurnover" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealisticTurnover" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorstTurnover" class="java.lang.Double"/>
+	<variable name="returnSumRisksBestTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealisticTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorstTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksBestCost" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealisticCost" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorstCost" class="java.lang.Double"/>
+	<variable name="returnSumRisksBestCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksRealisticCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumRisksWorstCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsBestTurnover" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealisticTurnover" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorstTurnover" class="java.lang.Double"/>
+	<variable name="returnSumOppsBestTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealisticTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorstTurnoverMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsBestCost" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealisticCost" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorstCost" class="java.lang.Double"/>
+	<variable name="returnSumOppsBestCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsRealisticCostMovement" class="java.lang.Double"/>
+	<variable name="returnSumOppsWorstCostMovement" class="java.lang.Double"/>
+	<detail>
+		<band height="80">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="20" uuid="d80041d6-c116-45d9-9104-d681bd409a64">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<text><![CDATA[Project Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="130" height="20" uuid="0039e77c-bdce-41eb-84e4-9b1b3e7c4d00"/>
+				<text><![CDATA[Project Number]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="0" width="440" height="20" uuid="e13e8551-cad6-4b67-a68f-6491670401d1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{projectName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="40" width="440" height="20" uuid="034d4e3a-f5ec-42ef-a065-7e18a1c34f83"/>
+				<textFieldExpression><![CDATA[$F{projectNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="590" y="0" width="210" height="20" uuid="2e466010-2399-4d03-a1f6-08a2ca9bd60b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["As At: " + $F{asAtDate}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="220" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement style="Table_CH" x="0" y="0" width="800" height="220" backcolor="rgba(255, 255, 255, 0.0)" uuid="7f7ce9aa-3e4c-4a97-9273-787117ff56e3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="130" height="40" backcolor="#D9D9D9" uuid="1a8d0347-3f83-4858-a5fa-c80a0d86a1ed">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Above the Line]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="130" y="0" width="210" height="20" backcolor="#D9D9D9" uuid="5b4a6b84-84d6-43fd-8c52-096d671159c5">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Current Month]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="130" y="20" width="210" height="20" backcolor="#D9D9D9" uuid="9984ce67-4408-4320-82c2-ccab14b5dc89"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="40" width="130" height="20" uuid="e527a662-f67b-4c6a-b4c7-555803d8361a"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Tender Risks]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="60" width="130" height="20" uuid="792477ad-6fc2-4bd8-bed7-b5d68d3bd246"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Tender Opps]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="100" width="130" height="20" backcolor="#D9D9D9" uuid="55fe7b78-b076-4733-a99c-644139895ed5"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Contingencies]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="360" y="0" width="210" height="20" backcolor="#D9D9D9" uuid="a643a988-b292-4b8f-bae6-d4d7bf29b815">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Previous Month]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="360" y="20" width="210" height="20" backcolor="#D9D9D9" uuid="978c65a5-fdd3-4e1e-ace1-b9f9b8f0cf37">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="130" y="40" width="210" height="20" uuid="555c0056-4cfa-4ae2-8cca-c7e0bcf08cfb"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="130" y="60" width="210" height="20" uuid="648b8d5a-76c4-4f66-a582-33d2fb0e575d"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getCurrent() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement mode="Opaque" x="130" y="100" width="210" height="20" backcolor="#D9D9D9" uuid="ce5dc3fa-4d27-4839-9bca-11ba807514fb"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getCurrent() + ($F{sumCaseTenderOpps}.getRealistic().getCurrent() * -1) + $F{sumCaseTenderOther}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement mode="Opaque" x="360" y="100" width="210" height="20" backcolor="#D9D9D9" uuid="2797e1af-0c06-47f4-bafa-785aa0569a61">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getPrevious() + ($F{sumCaseTenderOpps}.getRealistic().getPrevious() * -1)+ $F{sumCaseTenderOther}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="360" y="60" width="210" height="20" uuid="1cf37417-16f4-4623-84ef-5acbf1618c33">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getPrevious() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="360" y="40" width="210" height="20" uuid="292e6320-719b-410e-b3a1-713fe741cdb3">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="140" width="130" height="20" backcolor="#D9D9D9" uuid="fea126d4-6c3d-46ca-b3da-ee4c297331da"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Below the Line]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="130" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="7d974593-b128-417e-913a-c1dbe2e6892d">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="160" width="130" height="20" uuid="e82af502-9303-4ee8-9b16-23c2d06df7ac"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Risks]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="180" width="130" height="20" uuid="ecab6090-28ff-47c5-b33c-71e443053f19"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Opps]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="200" width="130" height="20" backcolor="#D9D9D9" uuid="28b28085-d6db-42cc-a275-2d445b91cbb4"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Risk & Opps]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="130" y="160" width="70" height="20" uuid="c8e6ebab-635e-4215-a1a1-98c1bb3b6cb1"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getCurrent() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="130" y="180" width="70" height="20" uuid="02019a33-3b4a-4c2f-9e79-adbff2004137"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="130" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="1b7e082e-b964-41b4-b51b-505033d3acef"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getBest().getCurrent() * -1)+ $F{sumCaseOpps}.getBest().getCurrent()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="200" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="a9ae9fc7-51ac-4da0-8336-be202da39ee2">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="270" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="7d539c1c-b627-4fb8-8abd-8df82f53f57f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="200" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="96d5b4d2-6d5d-4737-91ff-ceb8271d25e8"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getRealistic().getCurrent() * -1) + $F{sumCaseOpps}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="200" y="180" width="70" height="20" uuid="d7f9b066-eaac-4a53-b386-a35c47664b4c"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="200" y="160" width="70" height="20" uuid="2ad73298-ee08-42a5-8e69-017e164c8328"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getCurrent() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="270" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="41b6e122-6bfd-4514-bf66-682fdfa09555">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getWorst().getCurrent() * -1) + $F{sumCaseOpps}.getWorst().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="270" y="180" width="70" height="20" uuid="1670bbb1-f31d-469c-a616-68988d8c78b4">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="270" y="160" width="70" height="20" uuid="9d668b67-370e-4295-a44d-a923af0fdeb3">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getCurrent() * -1]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="590" y="0" width="210" height="20" backcolor="#D9D9D9" uuid="ed3dc5bb-ade8-493d-abe1-8ec082c81de0">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Movement]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="590" y="20" width="210" height="20" backcolor="#D9D9D9" uuid="f8750185-e2f4-4a85-b70b-c7f4eebb7107">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="590" y="40" width="210" height="20" uuid="587c2029-0ae3-4678-925e-fabf68c8071a">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="590" y="60" width="210" height="20" uuid="be88e7af-2d29-4e40-b583-5f7fab4c60c8">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOpps}.getRealistic().getMovement() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement mode="Opaque" x="590" y="100" width="210" height="20" backcolor="#D9D9D9" uuid="25abdbbf-1e4d-4e18-a303-7a2b730b820c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderRisks}.getRealistic().getMovement() + ($F{sumCaseTenderOpps}.getRealistic().getMovement() * -1)+ $F{sumCaseTenderOther}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="360" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="8d629c47-2392-4e8f-9093-ea3f3e7f5b2f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="360" y="160" width="70" height="20" uuid="f5beee0f-e4ad-414b-8c4e-4d37233935d3">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getPrevious() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="360" y="180" width="70" height="20" uuid="b3304f8e-d915-4b48-8145-36ea7a9ea307">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="360" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="96bd6f87-c7f0-4c2c-b9e8-9f8501a91390">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getBest().getPrevious() * -1) + $F{sumCaseOpps}.getBest().getPrevious()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="430" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="f2443083-e74f-42cf-a0df-2d19762cb0f9">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="500" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="64ad0607-dc21-4041-b1ba-a09e29cd1093">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="430" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="494e3dba-d452-453f-992f-4a1fac6e3405">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getRealistic().getPrevious() * -1) + $F{sumCaseOpps}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="430" y="180" width="70" height="20" uuid="420eb410-b6a2-485a-ba57-c66e8ce5e2e3">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="430" y="160" width="70" height="20" uuid="42e55a68-4598-497a-8ed1-dfa538e01702">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getPrevious() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="500" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="9a16bc1e-b760-4fa0-971a-8a46357cff17">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getWorst().getPrevious() * -1) + $F{sumCaseOpps}.getWorst().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="500" y="180" width="70" height="20" uuid="fd90fbf1-5da6-4e99-a1ae-2b226e37476a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="500" y="160" width="70" height="20" uuid="e65c8d2c-8ee8-41eb-88a2-20d1328aafa6">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getPrevious() * -1]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="590" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="505e159c-e70e-42f4-9471-c1181181bf96">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Best]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="590" y="160" width="70" height="20" uuid="66f8f11a-d9e5-4ec6-94be-6f6a6e5b0932">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getBest().getMovement() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="590" y="180" width="70" height="20" uuid="19d2ce19-dd0c-4ca5-af6d-23997b3adbbb">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getBest().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="590" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="16dba7cf-08a2-4d2e-98e3-47437868d29f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getBest().getMovement() * -1) + $F{sumCaseOpps}.getBest().getMovement()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="660" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="886d06e0-bc19-4204-9ae3-463f6d62ce34">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Realistic]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="730" y="140" width="70" height="20" backcolor="#D9D9D9" uuid="44c249cb-69b0-417e-829b-a5fd67fd2db1">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Worst]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="660" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="66ed38bf-56f9-42a3-8b54-73d9b890483e">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getRealistic().getMovement() * -1) + $F{sumCaseOpps}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="660" y="180" width="70" height="20" uuid="5fb94615-be03-452d-bb59-1381594adbad">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="660" y="160" width="70" height="20" uuid="d3fde5cd-e6ed-4c7e-93a8-dc959ad1417f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getRealistic().getMovement() * -1]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="730" y="200" width="70" height="20" backcolor="#D9D9D9" uuid="b78bf33a-e837-4d0a-9f87-a3d2ad8bc9bc">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{sumCaseRisks}.getWorst().getMovement() * -1) + $F{sumCaseOpps}.getWorst().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="730" y="180" width="70" height="20" uuid="9d6c6ad7-a7d0-49ef-ab87-e8acfa0868bf">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseOpps}.getWorst().getMovement()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###" isBlankWhenNull="true">
+					<reportElement x="730" y="160" width="70" height="20" uuid="ed3a9236-a0cb-4019-92f6-dce2c5dc84b7">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseRisks}.getWorst().getMovement() * -1]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="80" width="130" height="20" uuid="5d2284c6-b13e-46c5-9327-8d8d83a5fd54"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Other]]></text>
+				</staticText>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="130" y="80" width="210" height="20" uuid="1b25958a-4d3e-494f-958d-8b5b2aed5b1d"/>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getCurrent()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="360" y="80" width="210" height="20" uuid="378adf88-1077-448b-87b0-77658ef4a007">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getPrevious()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###0;-#,###">
+					<reportElement x="590" y="80" width="210" height="20" uuid="1d9c4e29-23a7-4b6c-bf00-7daeffb8a38e">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box padding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{sumCaseTenderOther}.getRealistic().getMovement()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>
