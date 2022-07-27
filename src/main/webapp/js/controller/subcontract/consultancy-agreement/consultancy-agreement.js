@@ -41,7 +41,7 @@ mainApp.controller("ConsultancyAgreementCtrl", ['$scope', 'consultancyAgreementS
         function loadData() {
             // load subcontract
             subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo).then(function (subcontract) {
-                if (subcontract.scStatus == '500') {
+                if (subcontract.scStatus == '500' || subcontract.scStatus == '330') {
                     $scope.disableButtons = true;
                 }
             });

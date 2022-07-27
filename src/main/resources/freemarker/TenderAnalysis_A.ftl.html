@@ -66,10 +66,19 @@
 
     </style>
     
-		<div id="form4-container">
-			<div class="form4-erp-summary hidden-print">[#include "ErpApprovalSummary.ftl.html"]
-				<hr>
-			</div>
+    
+    <div class="form4-erp-summary hidden-print">[#include "ErpApprovalSummary.ftl.html"]
+		<hr>
+	</div>
+	
+ 	<div class="final-invoice">[#if subcontract.formOfSubcontract == "Consultancy Agreement"][#include "ConsultancyAgreement.ftl.html"][/#if]
+		<hr>
+	</div>
+			
+			
+	<div id="form4-container" class="form4-container">
+		
+		
 			<table id="tableHead">
 				<tbody>
 					<tr>
@@ -108,8 +117,9 @@
   jHsza5j74P/gNbfsKHnURBMgAAAABJRU5ErkJggg==">
 						</td>
 						<td class="headertitle">TENDER ANALYSIS</td>
-						<td> PDS/07/Form 4  <!-- PCMS start <br><span class="pull-right hidden-print"><a class="btn btn-sm width-100 btn-rounded btn-danger hidden-print" href="javascript:;" id="printBtn" onclick="window.print()"><i class="fa fa-print m-r-3"></i> Print </a></span> PCMS end -->
-</td>
+
+						<td> PDS/07/Form 4  <!-- PCMS start <br><span class="pull-right hidden-print"><a href="javascript:;" id="printBtn"  class="btn btn-sm width-100 btn-rounded btn-danger hidden-print"  ng-click="customPrint('form4-container', '.final-invoice')"><i class="fa fa-print m-r-3"></i> Print </a></span> PCMS end -->
+						</td>
 					</tr>
 				</tbody>
 			</table>

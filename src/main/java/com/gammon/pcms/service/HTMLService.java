@@ -23,6 +23,7 @@ import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.ApprovalSummaryService;
 import com.gammon.qs.service.ConsultancyAgreementService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.util.ContinuedFraction;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -320,16 +321,30 @@ public class HTMLService implements Serializable{
 	}
 	
 	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
-		ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);
+		ConsultancyAgreementFormWrapper formSummary = new ConsultancyAgreementFormWrapper();
+		Subcontract subcontract = subcontractHBDao.obtainSubcontract(noJob, noSubcontract);
 		
-		if (htmlVersion.equals("CA") &&  ca != null) {
-			return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract);
+		if(subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)){
+			ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);
+			
+			if (ca != null) {
+				if(htmlVersion.equals("CA")){
+					if(subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_100_PACKAGE_CREATED) || 
+							subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY)){
+						return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract);
+					}
+				}
+				formSummary = consultancyAgreementService.getFormSummary(noJob, noSubcontract);
+			}
+			
 		}
+		
+		
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		MasterListVendor masterList = new MasterListVendor();
 		if(job != null)
 			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
-		Subcontract subcontract = subcontractHBDao.obtainSubcontract(noJob, noSubcontract);
+		
 		Tender budgetTender = tenderHBDao.obtainTender(noJob, noSubcontract, 0);
 		List<Tender> tenderList = tenderHBDao.obtainTenderList(noJob, noSubcontract);
 		Tender rcmTenderer = tenderHBDao.obtainRecommendedTender(noJob, noSubcontract);
@@ -362,6 +377,7 @@ public class HTMLService implements Serializable{
 		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode: "");
 		data.put("workScopeDescription", workScopeDescription);
 		data.put("paymentTerms", paymentTerms);
+		data.put("ca", formSummary);
 		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.SubcontractNameObject, String.valueOf(subcontract.getId()));
 		data.put("approvalSummary", approvalSummary);
 		

@@ -1,10 +1,10 @@
 mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'GlobalParameter',
                                             function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, GlobalParameter) {
+	 $scope.customPrint = GlobalHelper.customPrint;
 	loadData();
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
-    		//if($scope.subcontract.preAwardMeetingDate!=null || $scope.subcontract.formOfSubcontract == 'Consultancy Agreement'){
     		jdeService.getSubcontractor($scope.rcmTenderer.vendorNo)
 		    	.then(
 		    			function( data ) {

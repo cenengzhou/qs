@@ -34,6 +34,7 @@ import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.CEDApprovalRepository;
+import com.gammon.pcms.dao.ConsultancyAgreementRepository;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
@@ -180,6 +181,9 @@ public class SubcontractService {
 
 	private List<UDC> cachedWorkScopeList = new ArrayList<UDC>();
 
+	@Autowired
+	private ConsultancyAgreementRepository consultancyAgreementRepository;
+
 	
 	
 	static final int RECORDS_PER_PAGE = 100;
@@ -215,10 +219,12 @@ public class SubcontractService {
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		if(scPackage == null) throw new IllegalArgumentException("Job " + jobNumber + " subcontract " + packageNo + " not found");
 
-		// check if consultancy agreement exists and the status is submitted
 		ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNumber, packageNo);
-		if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) {
-			return toCompleteConsultancyAgreementApproval(ca, approvedOrRejected);
+		// check if consultancy agreement exists and the status is submitted
+		if (scPackage.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)){
+			if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) {
+				return toCompleteConsultancyAgreementApproval(ca, approvedOrRejected);
+			}
 		}
 
 		logger.info("toCompleteSCAwardApproval - START");
@@ -349,6 +355,14 @@ public class SubcontractService {
 			} catch (Exception e) {
 				logger.info("Failed to update CED Approval: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
 				e.printStackTrace();
+			}
+			
+			//Update Consultancy Agreement
+			if (scPackage.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT) && ca != null && !ca.getStatusApproval().equals(ConsultancyAgreement.APPROVED)){
+				ca.setStatusApproval(ConsultancyAgreement.APPROVED);
+				ca.setDateApproval(new Date());
+
+				consultancyAgreementRepository.save(ca);
 			}
 			
 			subcontractHBDao.updateSubcontract(scPackage);
@@ -693,10 +707,10 @@ public class SubcontractService {
 				return "Subcontract does not exist";
 			}
 			
-			//Check if CA is submitted
+			//Check if CA exists
 			ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNumber, subcontractNumber);
 			
-			if (ca != null){
+			/*if (ca != null){
 				if (ca.getStatusApproval().equals(ConsultancyAgreement.SUBMITTED)) 
 					return "Request for Consultancy Agreement Approval is submitted.";
 				
@@ -704,10 +718,10 @@ public class SubcontractService {
 				if(ca.getStatusApproval().equals(ConsultancyAgreement.APPROVED) && !subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT))
 					return "Form of Subcontract should be Consultancy Agreement while approval for Consultancy Agreement has been obtained.";
 					
-			}
+			}*/
 			
-			if (subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT) && (ca == null || !ca.getStatusApproval().equals(ConsultancyAgreement.APPROVED))){
-				return "Pls submit Consultancy Agreement Approval before awarding this subcontract.";
+			if (subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT) && (ca == null)){
+				return "Pls fill in Consultancy Memo for this subcontract.";
 			}
 			
 			
@@ -849,6 +863,16 @@ public class SubcontractService {
 	public String assignApprovalType(String jobNo, String company, Subcontract subcontract, Tender rcmTender, BigDecimal originalBudget, BigDecimal tenderBudget) throws Exception{
 		String  approvalType = "";
 		
+		
+		if (subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)){
+			
+			ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNo, subcontract.getPackageNo());
+			if (ca != null && ca.getStatusApproval().equals(ConsultancyAgreement.PENDING)){
+				approvalType = ConsultancyAgreement.CA;
+				return approvalType;				
+				
+			}
+		}
 
 		AppSubcontractStandardTerms scStandardTerms = getSCStandardTerms(subcontract.getFormOfSubcontract(), company);
 		if(scStandardTerms == null){
@@ -2115,6 +2139,13 @@ public class SubcontractService {
 			}
 		}
 
+		if(!subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)){
+			ConsultancyAgreement ca = consultancyAgreementService.getMemo(jobNo, subcontract.getPackageNo());
+			if(ca !=null){
+				ca.inactivate();
+				consultancyAgreementRepository.save(ca);	
+			}
+		}
 		
 		if(subcontract.getId() == null){
 			Subcontract packageInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());

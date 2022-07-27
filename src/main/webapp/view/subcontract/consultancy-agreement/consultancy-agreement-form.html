@@ -67,7 +67,8 @@
                       </div>
                       <div class="form-group col-md-9">
                         <div class="input-group col-md-12">
-                          <md-contact-chips
+                          <label>Kevin O'Brien via Steve Griffin, Ashley Howlett and others in the Approval system</label>
+                         <!--  <md-contact-chips
                                   class="ca-form-contact-input"
                                   md-name="toField"
                                   ng-model="ctrl.toList"
@@ -81,7 +82,7 @@
                                   md-separator-keys="ctrl.customKeys"
                                   placeholder="To"
                                   secondary-placeholder="To">
-                          </md-contact-chips>
+                          </md-contact-chips> -->
                         </div>
                       </div>
                       <!-- <div class="col-md-3">
@@ -198,6 +199,18 @@
                     </div>
 
 
+ 					<div class="row">
+                      <div class="col-md-3">
+                        <label>Status</label>
+                      </div>
+                      <div class="form-group col-md-9">
+                        <div class="input-group col-md-12">
+	                        {{memo.statusApproval}}
+                        </div>
+                      </div>
+                    </div>
+                    
+
                   </div>
                 </div>
               </div>
@@ -211,8 +224,7 @@
                 ng-click="formValidate.$valid && save()"
                 id="ca-form-save-btn"
                 ng-hide="disableButtons"
-                ng-disabled="disableButtons"
-        >
+                ng-disabled="disableButtons">
           Save <span class="fa fa-save"></span>
         </button>
       </div>

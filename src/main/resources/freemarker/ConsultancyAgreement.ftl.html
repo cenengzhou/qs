@@ -1,48 +1,5 @@
-<html>
-<head>
-    <meta http-equiv=Content-Type content="text/html; charset=us-ascii">
-    <title>Consultancy Agreement</title>
-</head>
-<style>
-    table tbody td {
-        border: none;
-        vertical-align: top;
-    }
-    tr {
-        line-height: 1.5em;
-    }
-    .container {
-        width: 750px;
-        padding-left: 30px;
-        padding-top: 30px;
-    }
-    .underline-td {
-        border-bottom: 1px solid black;
-    }
-    hr {
-        border-top: solid 1px black;
-    }
-    p,div {
-        font-family: "Arial", "sans-serif";
-    }
-    .header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-    .title {
-        font-size: 16px;
-        font-weight: bold;
-        text-decoration: underline;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-</style>
-<body>
-
-<div class="container">
-    <div class="header">
+<div class="container" style = " width: 750px; padding-left: 30px; padding-top: 30px;" id = "final-invoice">
+    <div class="header" style = "width: 100%;  display: flex;   justify-content: space-between;  margin-bottom: 20px;">
         <div class="left">
             <img class="GammonLogo" src="
   data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALkAAAAvCAYAAAC/kmsCAAAACXBIWX
@@ -83,56 +40,59 @@
     </div>
     <div class="header">
         <div class="left">${ca.companyName!""}</div>
-        <div class="right">PCS/01 Form 120</div>
+        <div class="right">PCS/01 Form 120 
+        <!-- PCMS start <br><span class="pull-right hidden-print"><a href="javascript:;" id="printBtn"  class="btn btn-sm width-100 btn-rounded btn-danger hidden-print"  ng-click="customPrint('final-invoice', '.form4-container')"><i class="fa fa-print m-r-3"></i> Print </a></span> PCMS end -->
+        </div>
     </div>
-    <div class="title">Memorandum</div>
+    <div class="title" style = "font-size: 16px; font-weight: bold; text-decoration: underline; text-align: center; margin-bottom: 30px">Memorandum</div>
     <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Ref: </strong></p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>${ca.ref!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Date:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>${ca.date!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>From:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>${ca.from!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>To:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%">
-                <p>${ca.to!""}</p>
+            <td width="70%">
+	            <p>Kevin O'Brien via Steve Griffin, Ashley Howlett and others in the Approval system</p>
+                <!-- <p>${ca.to!""}</p> -->
             </td>
         </tr>
-        <tr>
-            <td width="28.282828282828284%">
+        <!-- <tr>
+            <td width="30%">
                 <p><strong>CC:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>${ca.cc!""}</p>
             </td>
-        </tr>
+        </tr> -->
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Subject:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p style="white-space: pre-wrap;">${ca.subject!""}</p>
             </td>
         </tr>
@@ -144,50 +104,50 @@
     <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Name of Consultant:</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black">
                 <p>${ca.consultantName!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Description of Service:</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black">
                 <p style="white-space: pre-wrap;">${ca.serviceDescription!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Period of Appointment:</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black">
                 <p>${ca.periodOfAppointment!""}</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Estimate of Fee:</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black">
                 <p><#if ca.feeEstimate??>${ca.feeEstimate?string["#,##0.00"]!0}</#if></p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Budget:&nbsp;</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black">
                 <p><#if ca.budget??>${ca.budget?string["#,##0.00"]!0}</#if></p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p><strong>Explanation:</strong></p>
             </td>
-            <td width="71.71717171717172%" class="underline-td">
+            <td width="70%" style="border-bottom: 1px solid black"  >
                 <p style="white-space: pre-wrap;">${ca.explanation!""}</p>
             </td>
         </tr>
@@ -197,18 +157,18 @@
     <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
         <tr>
-            <td width="28.282828282828284%" class="underline-td">
+            <td width="30%" style="border-bottom: 1px solid black">
                 <p>&nbsp;</p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>&nbsp;</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p>Signature</p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>&nbsp;</p>
             </td>
         </tr>
@@ -222,18 +182,18 @@
     <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
         <tr>
-            <td width="28.282828282828284%" class="underline-td">
+            <td width="30%" style="border-bottom: 1px solid black">
                 <p>&nbsp;</p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>&nbsp;</p>
             </td>
         </tr>
         <tr>
-            <td width="28.282828282828284%">
+            <td width="30%">
                 <p>Chief Executive</p>
             </td>
-            <td width="71.71717171717172%">
+            <td width="70%">
                 <p>&nbsp;</p>
             </td>
         </tr>
@@ -242,5 +202,3 @@
     <p>&nbsp;</p>
 </div>
 
-</body>
-</html>

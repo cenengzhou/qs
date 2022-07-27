@@ -542,6 +542,22 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		},
 		// controller: 'ErpCommentFormCtrl',
 	})
+	.state('subcontract-award.ca', {
+		url: "/form",
+		templateUrl: "view/subcontract/consultancy-agreement/consultancy-agreement-form.html?@PROJECT_VERSION@",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+						'js/service/consultancy-agreement-service.js?@PROJECT_VERSION@',
+						'js/controller/subcontract/consultancy-agreement/consultancy-agreement.js?@PROJECT_VERSION@',
+					]
+				});
+			}]
+		},
+		controller: 'ConsultancyAgreementCtrl as ctrl'
+	})
 	.state('subcontract-award.summary', {
 		url: "/summary",
 		templateUrl: "view/subcontract/subcontract-award-summary.html?@PROJECT_VERSION@",
@@ -559,7 +575,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/service/tender-service.js?@PROJECT_VERSION@',
                	         'js/service/jde-service.js?@PROJECT_VERSION@',
                	         'js/service/html-service.js?@PROJECT_VERSION@',
-					     'js/service/approval-summary-service.js?@PROJECT_VERSION@'
+					     'js/service/approval-summary-service.js?@PROJECT_VERSION@',
+					     'js/controller/subcontract/consultancy-agreement/consultancy-agreement-submission.js?@PROJECT_VERSION@'
                     ] 
                 });
             }]

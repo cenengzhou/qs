@@ -55,8 +55,14 @@
 				<li ui-sref-active="active"><a ui-sref="subcontract-award.erp-approval-summary" id="subcontractTab9"> <span class="label">9</span>
 					ERP Approval Summary <small></small>
 				</a></li>
-				<li ui-sref-active="active"><a ui-sref="subcontract-award.summary" id="subcontractTab10"> <span class="label">10</span>
-						Award Subcontract <small></small>
+				<li ng-if = "subcontract.formOfSubcontract == 'Consultancy Agreement'"  ui-sref-active="active"><a ui-sref="subcontract-award.ca" id="subcontractTab10">
+					 <span class="label" >10</span>
+					Consultancy Memo <small></small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.summary" id="subcontractTab11">
+					 <span class="label" ng-if = "subcontract.formOfSubcontract == 'Consultancy Agreement'" >11</span>
+					 <span class="label" ng-if = "subcontract.formOfSubcontract != 'Consultancy Agreement'" >10</span>
+					Award Subcontract <small></small>
 				</a></li>
 				
 			</ul>

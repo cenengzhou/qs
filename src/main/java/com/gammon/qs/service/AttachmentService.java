@@ -156,8 +156,17 @@ public class AttachmentService {
 		try {
 			switch (nameObject) {
 			case Attachment.ConsultancyNameObject:
-				ConsultancyAgreement consultancyAgreement = consultancyAgreementService.getMemo(noJob, noSubcontract);
-				resultMap.put(Attachment.ID_TABLE, consultancyAgreement.getId().toString());
+				Subcontract subcontractForCA = packageHBDao.obtainSubcontract(noJob, noSubcontract);
+				ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);		
+				
+				if(subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_100_PACKAGE_CREATED) || 
+						subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY)){
+					
+					resultMap.put(Attachment.ID_TABLE, ca.getId().toString());
+				}else
+				{
+					resultMap.put(Attachment.ID_TABLE, subcontractForCA.getId().toString());
+				}
 				break;
 			case Attachment.RocSubdetailNameObject:
 				resultMap.put(Attachment.ID_TABLE, altParam);
