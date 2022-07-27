@@ -100,7 +100,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 		$scope.lineChartParameters = {
 				labels : chartLabels,
-				series : ['IPA', 'IPC', 'Contract Receivable'],
+				series : ['Net IPA', 'Net IPC', 'Contract Receivable (JDE)'],
 				data: [ipaData, ipcData, crData],
 				options : {
 					showScale : true,
