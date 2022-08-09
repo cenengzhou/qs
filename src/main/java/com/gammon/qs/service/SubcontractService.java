@@ -403,6 +403,16 @@ public class SubcontractService {
 			scPackage.setSubcontractStatus(340);
 			//Update Package
 			subcontractHBDao.updateSubcontract(scPackage);
+			
+			if (ca != null){
+				ca.setStatusApproval(ConsultancyAgreement.PENDING);
+				ca.setDateSubmission(null);
+				try{
+					consultancyAgreementRepository.save(ca);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 		return true;
 	}
@@ -844,6 +854,16 @@ public class SubcontractService {
 							subcontractHBDao.update(subcontract);
 						}catch(Exception e){
 							e.printStackTrace();
+						}
+						
+						if (ca != null){
+							//ca.setStatusApproval(ConsultancyAgreement.SUBMITTED);
+							ca.setDateSubmission(new Date());
+							try{
+								consultancyAgreementRepository.save(ca);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
 						}
 					}
 					return msg;

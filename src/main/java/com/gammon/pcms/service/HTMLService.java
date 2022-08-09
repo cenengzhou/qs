@@ -93,9 +93,9 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.LineSeparator;
 
 @Service
-//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+// @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
-public class HTMLService implements Serializable{
+public class HTMLService implements Serializable {
 
 	private static final long serialVersionUID = -6313629009064651927L;
 
@@ -114,7 +114,7 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private PaymentCertHBDao paymentCertHBDao;
 	@Autowired
-	private	TenderHBDao tenderHBDao;
+	private TenderHBDao tenderHBDao;
 	@Autowired
 	private TenderVarianceHBDao tenderVarianceHBDao;
 	@Autowired
@@ -142,7 +142,7 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private PersonnelService personnelService;
 	@Autowired
-	private WebServiceConfig webServiceConfig;	
+	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private HrUserRepository hrUserRepository;
 	@Autowired
@@ -157,7 +157,7 @@ public class HTMLService implements Serializable{
 	private ScPaymentApprovalRepository scPaymentApprovalRepository;
 	@Autowired
 	private ConsultancyAgreementService consultancyAgreementService;
-	
+
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
 		JobInfo job = new JobInfo();
@@ -170,7 +170,7 @@ public class HTMLService implements Serializable{
 		String strMainCertDueDate = null;
 		Double postedIVAmt = new Double(0);
 		Double maxRetentionAmount = new Double(0);
-		
+
 		int mainCertNumber = 0;
 		int currentPaymentNo = 0;
 		PaymentCert paymentCert = null;
@@ -178,9 +178,9 @@ public class HTMLService implements Serializable{
 		try {
 			job = jobInfoHBDao.obtainJobInfo(jobNumber);
 
-			if(job != null)
+			if (job != null)
 				masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
-			
+
 			if(paymentNo==null || "".equals(paymentNo.trim()) || paymentNo.trim().length()==0){// check the paymentNo
 				logger.info("Payment number is null --> Max. Payment No. will be used.");
 				scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, subcontractNumber);
@@ -188,45 +188,44 @@ public class HTMLService implements Serializable{
 				int maxPaymentCertNumber = 0;
 				if (scPaymentCertList.size() > 0) {
 					maxPaymentCertNumber = scPaymentCertList.get(0).getPaymentCertNo();
-					for (int i=0; i<scPaymentCertList.size(); i++) {
-						if (scPaymentCertList.get(i).getPaymentCertNo() >= maxPaymentCertNumber) 
+					for (int i = 0; i < scPaymentCertList.size(); i++) {
+						if (scPaymentCertList.get(i).getPaymentCertNo() >= maxPaymentCertNumber)
 							maxPaymentCertNumber = scPaymentCertList.get(i).getPaymentCertNo();   // new maximum payment cert. number
 					}
 				}
 				currentPaymentNo = maxPaymentCertNumber;
-			}else{
+			} else {
 				currentPaymentNo = Integer.valueOf(paymentNo);
 			}
 			paymentCert = paymentService.obtainPaymentCertificate(jobNumber, subcontractNumber, new Integer(currentPaymentNo));
 			logger.info("Job No.: "+jobNumber+"- Package No.: "+subcontractNumber+"- Payment No.: "+currentPaymentNo);
 			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNumber, subcontractNumber, String.valueOf(currentPaymentNo));
-			
-			mainCertNumber 		= paymentCertViewWrapper.getMainCertNo();
+
+			mainCertNumber = paymentCertViewWrapper.getMainCertNo();
 			//strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
 			//strCertIssueDate = DateHelper.formatDate(paymentCert.getOriginalDueDate(), GlobalParameter.DATE_FORMAT);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			scPackage = subcontractHBDao.obtainSCPackage(paymentCertViewWrapper.getJobNumber(), paymentCertViewWrapper.getSubContractNo().toString());
 			maxRetentionAmount = CalculationUtil.round(scPackage.getRetentionAmount().doubleValue(), 2);
-			if(mainCertNumber != 0){
+			if (mainCertNumber != 0) {
 				//clientCertAmount = mainCertWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNumber).getAmount();
 				
-				
-				//Get Parent Job Main Cert Due Date
+
+				// Get Parent Job Main Cert Due Date
 				List<String> parentJobList = mainCertService.obtainParentJobList(jobNumber);
 				String parentJobNo = jobNumber;
 				while(parentJobList.size()==1){//loop until it gets the actual parent job
 					parentJobNo = parentJobList.get(0);
 					parentJobList = mainCertService.obtainParentJobList(parentJobNo);
 				}
-				
-				
+
 				MainCert parentMainCert = mainCertService.getCertificate(jobNumber, mainCertNumber);
-				if(parentMainCert != null){
+				if (parentMainCert != null) {
 					strMainCertDueDate = DateHelper.formatDate( parentMainCert.getCertDueDate(), GlobalParameter.DATE_FORMAT);
 					clientCertAmount = parentMainCert.getTotalReceiptAmount();
 				}
@@ -234,22 +233,22 @@ public class HTMLService implements Serializable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			List<ResourceSummary> resourceList = new ArrayList<ResourceSummary>();
 			resourceList = resourceSummaryHBDao.getResourceSummariesSearch(job, subcontractNumber, "14*", null);
-			
-			for (int i=0; i<resourceList.size(); i++) {
-					postedIVAmt += resourceList.get(i).getPostedIVAmount();
+
+			for (int i = 0; i < resourceList.size(); i++) {
+				postedIVAmt += resourceList.get(i).getPostedIVAmount();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		String strPaymentStatus = "";
-		if(paymentCert == null || paymentCert.getPaymentStatus() == null){
+		if (paymentCert == null || paymentCert.getPaymentStatus() == null) {
 			throw new NullPointerException("paymentCert " + paymentCert.getId() + " payment status is null");
 		}
-		switch(paymentCert.getPaymentStatus()){
+		switch (paymentCert.getPaymentStatus()) {
 		case "PND":
 			strPaymentStatus = "Pending";
 			break;
@@ -271,14 +270,14 @@ public class HTMLService implements Serializable{
 			approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.PaymentCertNameObject, String.valueOf(paymentCert.getId()));
 
 		}
-	
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("payment");
 		data.put("template", template);
 		data.put("paymentType", paymentCert.getIntermFinalPayment());
 		data.put("approvalSummary", approvalSummary);
 		data.put("htmlVersion", htmlVersion);
-		//data.put("baseUrl", servletConfig.getBaseUrl());
+		// data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCert", paymentCert != null ? paymentCert : new PaymentCert());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
@@ -319,49 +318,54 @@ public class HTMLService implements Serializable{
 			return "fail to get html for consultancy agreement";
 		}
 	}
-	
-	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
+
+	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion)throws Exception {
+		logger.info("Job: "+noJob +" - SC: "+noSubcontract + " - htmlVersion: "+htmlVersion);
+		
 		ConsultancyAgreementFormWrapper formSummary = new ConsultancyAgreementFormWrapper();
 		Subcontract subcontract = subcontractHBDao.obtainSubcontract(noJob, noSubcontract);
-		
-		if(subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)){
+
+		if (subcontract.getFormOfSubcontract().equals(Subcontract.CONSULTANCY_AGREEMENT)) {
 			ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);
-			
+
 			if (ca != null) {
-				if(htmlVersion.equals("CA")){
-					if(subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_100_PACKAGE_CREATED) || 
-							subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY)){
+				if (htmlVersion.equals("CA")) {
+					logger.info("Job: "+noJob +" - SC: "+noSubcontract+" - subcontract.getSubcontractStatus(): "+subcontract.getSubcontractStatus());
+
+					if (subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_100_PACKAGE_CREATED)
+							|| subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY)
+							|| subcontract.getSubcontractStatus().equals(Subcontract.SCSTATUS_340_AWARD_REJECTED)) {
+						logger.info("Return CA HTML" );
 						return makeHTMLStringForConsultancyAgreement(noJob, noSubcontract);
 					}
 				}
 				formSummary = consultancyAgreementService.getFormSummary(noJob, noSubcontract);
 			}
-			
+			logger.info("Return SC HTML" );
 		}
-		
-		
+
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		MasterListVendor masterList = new MasterListVendor();
-		if(job != null)
+		if (job != null)
 			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
-		
+
 		Tender budgetTender = tenderHBDao.obtainTender(noJob, noSubcontract, 0);
 		List<Tender> tenderList = tenderHBDao.obtainTenderList(noJob, noSubcontract);
 		Tender rcmTenderer = tenderHBDao.obtainRecommendedTender(noJob, noSubcontract);
 		List<TenderVariance> tenderVarianceList = null;
-		if(rcmTenderer != null){
+		if (rcmTenderer != null) {
 			tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(noJob, noSubcontract, String.valueOf(rcmTenderer.getVendorNo()));
 		}
 		String companyCurrencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
-		
+
 		String workScopeDescription = "";
-		if(subcontract !=null && subcontract.getWorkscope() !=null){
+		if (subcontract != null && subcontract.getWorkscope() != null) {
 			UDC workScope = unitDao.obtainWorkScope(subcontract.getWorkscope().toString());
 			workScopeDescription = workScope.getCode().concat(" - ").concat(workScope.getDescription());
 		}
-		
+
 		String paymentTerms = PaymentCert.PAYMENT_TERMS_DESCRIPTION.get(subcontract.getPaymentTerms());
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("award");
 		data.put("template", template);
@@ -374,49 +378,45 @@ public class HTMLService implements Serializable{
 		data.put("tenderList", tenderList != null ? tenderList : new ArrayList<>());
 		data.put("rcmTenderer", rcmTenderer != null ? rcmTenderer : new Tender());
 		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
-		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode: "");
+		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode : "");
 		data.put("workScopeDescription", workScopeDescription);
 		data.put("paymentTerms", paymentTerms);
 		data.put("ca", formSummary);
 		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.SubcontractNameObject, String.valueOf(subcontract.getId()));
 		data.put("approvalSummary", approvalSummary);
-		
-		
-		
+
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 
-	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws Exception{
+	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum,String htmlVersion) throws Exception {
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract);
-		
+
 		MasterListVendor masterList = new MasterListVendor();
-		if(job != null)
-			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
+		if (job != null)
+			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null? new MasterListVendor(): masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
 
 		Addendum addendum = new Addendum();
 		//List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
 
 		Form2SummaryWrapper summary = new Form2SummaryWrapper();
-		
-		//For final account form only
+
+		// For final account form only
 		AddendumFinalFormWrapper addendumFinalForm = new AddendumFinalFormWrapper();
-		
-		
-		if(noAddendum !=null){
+
+		if (noAddendum != null) {
 			addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
 			//addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
 
 			summary = addendumService.getForm2Summary(noJob, noSubcontract, noAddendum);
-		
+
 			if (GenericValidator.isBlankOrNull(addendum.getFinalAccount()))
 				addendum.setFinalAccount(Addendum.FINAL_ACCOUNT_VALUE.N.toString());
-			
+
 			else if (addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.Y.toString()))
-				addendumFinalForm = addendumService.getAddendumFinalForm(noJob, noSubcontract, String.valueOf(noAddendum));
+				addendumFinalForm = addendumService.getAddendumFinalForm(noJob, noSubcontract,String.valueOf(noAddendum));
 		}
-		
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("addendum");
 		data.put("template", template);
@@ -430,29 +430,25 @@ public class HTMLService implements Serializable{
 		ApprovalSummary approvalSummary = approvalSummaryService.obtainApprovalSummary(ApprovalSummary.AddendumNameObject, String.valueOf(addendum.getId()));
 		data.put("approvalSummary", approvalSummary);
 		data.put("addendumFinalForm", addendumFinalForm);
-		
+
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 
-	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){
+	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion) {
 		JobInfo jobHeaderInfo = new JobInfo();
 		double newSCSum = 0.00;
 		String strHTMLCodingContent = "";
 		try {
 			Subcontract scPackage;
 			scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
-			for (SubcontractDetail scDetail: subcontractDetailHBDao.getSCDetails(scPackage)){
-//				if (scDetail instanceof SCDetailsBQ && !(scDetail instanceof SCDetailsVO)){
-				if (scDetail instanceof SubcontractDetailBQ && SubcontractDetail.APPROVED.equals(scDetail.getApproved()) && scDetail.getSystemStatus().equals(SubcontractDetail.ACTIVE)){
-					Double costRate = ((SubcontractDetailBQ)scDetail).getCostRate();
+			for (SubcontractDetail scDetail : subcontractDetailHBDao.getSCDetails(scPackage)) {
+				// if (scDetail instanceof SCDetailsBQ && !(scDetail instanceof SCDetailsVO)){
+				if (scDetail instanceof SubcontractDetailBQ && SubcontractDetail.APPROVED.equals(scDetail.getApproved())&& scDetail.getSystemStatus().equals(SubcontractDetail.ACTIVE)) {
+					Double costRate = ((SubcontractDetailBQ) scDetail).getCostRate();
 					if ((!(scDetail instanceof SubcontractDetailVO)) || (costRate != null && costRate > 0)) {
-						newSCSum += scDetail.getAmountSubcontractNew()!=null 
-											? scDetail.getAmountSubcontractNew().doubleValue()
-											: 0;
+						newSCSum += scDetail.getAmountSubcontractNew()!=null? scDetail.getAmountSubcontractNew().doubleValue(): 0;
 					} else {
-						newSCSum += scDetail.getAmountSubcontract()!=null
-											? scDetail.getAmountSubcontract().doubleValue()
-											: 0;
+						newSCSum += scDetail.getAmountSubcontract()!=null? scDetail.getAmountSubcontract().doubleValue(): 0;
 					}
 				}
 			}
@@ -465,27 +461,27 @@ public class HTMLService implements Serializable{
 			newSCSum = 0;
 		}
 		String vendorName = "";
-		
+
 		Subcontract scPackage = new Subcontract();
-		
+
 		try {
 			jobHeaderInfo = jobInfoHBDao.obtainJobInfo(jobNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			vendorName = receiveVendorName(scPackage.getVendorNo());
 		} catch (Exception e3) {
 			e3.printStackTrace();
 		}
-		
+
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("jobNumber", jobNumber);
 		data.put("jobHeaderInfo", jobHeaderInfo);
@@ -493,17 +489,17 @@ public class HTMLService implements Serializable{
 		data.put("scPackage", scPackage);
 		data.put("newSCSum", newSCSum);
 		data.put("vendorName", vendorName);
-		
+
 		if (htmlVersion.equals("W")) {
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("splitTermW"), data);
 		}
-	
+
 		if (htmlVersion.equals("B")) {
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("splitTermB"), data);
 		}
 		return strHTMLCodingContent;
 	}
-	
+
 	/**
 	 * @author koeyyeung
 	 * created on 25 Mar, 2015
@@ -512,18 +508,18 @@ public class HTMLService implements Serializable{
 	public String makeHTMLStringForMainCert(String jobNumber, String mainCertNo, String htmlVersion) {
 		String strHTMLCodingContent = "";
 		logger.info("makeHTMLStringForSCMainCert --> Input parameter: jobNo["+jobNumber+"] - Main Cert No["+mainCertNo+"]");
-		if(!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)){
+		if (!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)) {
 			try {
 				JobInfo job = jobInfoHBDao.obtainJobInfo(jobNumber);
 				String currency = accountCodeDao.obtainCurrencyCode(jobNumber);
 				AddressBook clientAddressBook = adlService.getAddressBook(new BigDecimal(job.getEmployer()));
-				
+
 				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo));
-				MainCert previousCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo)-1);
-				if(previousCert==null)
+				MainCert previousCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber,Integer.valueOf(mainCertNo) - 1);
+				if (previousCert == null)
 					previousCert = new MainCert();
-				
-				if(mainCert!=null){
+
+				if (mainCert != null) {
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("job", job);
 					data.put("currency", currency);
@@ -531,10 +527,10 @@ public class HTMLService implements Serializable{
 					data.put("mainCert", mainCert);
 					data.put("previousCert", previousCert);
 
-					if (htmlVersion.equals("W")){						
+					if (htmlVersion.equals("W")) {
 						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("mainCertW"), data);
-					}
-					else if (htmlVersion.equals("B")){
+					} 
+					else if (htmlVersion.equals("B")) {
 						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("mainCertB"), data);
 					}
 				} else {
@@ -547,15 +543,15 @@ public class HTMLService implements Serializable{
 			}
 		}
 		return strHTMLCodingContent;
-	}	
-	
+	}
+
 	public HTMLService() {
 	}
-	
+
 	public String receiveVendorName(String addressNumber) throws Exception {
 		return masterListService.searchVendorAddressDetails(addressNumber).getVendorName();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public String eformEmailTemplate(String formCode, String jobNo, Map paramMap) throws Exception {
 		MasterListVendor masterList = null;
@@ -574,61 +570,60 @@ public class HTMLService implements Serializable{
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("paramMap", paramMap);
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
-			
+
 		return strHTMLCodingContent;
 	}
-	
+
 	public String getEformBasePath() {
-		return attachmentConfig.getAttachmentServer("PATH") + 
-				attachmentConfig.getPersonnelDirectory();
+		return attachmentConfig.getAttachmentServer("PATH") + attachmentConfig.getPersonnelDirectory();
 	}
-	
+
 	public String getEformAttachmentPath(String formCode, Long refNo) {
 		return getEformBasePath() + "\\Attachment\\" + formCode + "\\" + refNo;
 	}
-	
+
 	public String getEformEmailPath(String formCode, Long refNo) {
 		return getEformBasePath() + "\\Email\\" + formCode + "\\" + refNo + ".html";
 	}
-	
+
 	public String getEformPdfPath(String formCode, Long refNo, String jobNo) {
-		return getEformAttachmentPath(formCode, refNo) + "\\" + jobNo + " " + webServiceConfig.getWsWfFileName().get(formCode) + " (" + refNo + ").pdf";
+		return getEformAttachmentPath(formCode, refNo) + "\\" + jobNo + " "+ webServiceConfig.getWsWfFileName().get(formCode) + " (" + refNo + ").pdf";
 	}
-	
+
 	public void generateHtmlPdf(String formCode, String jobNo, Long refNo) throws Exception {
 		String emailContext = getEmailContext(formCode, jobNo, refNo);
 		String emailPathString = getEformEmailPath(formCode, refNo);
 		String attachemntDirString = getEformAttachmentPath(formCode, refNo);
 		String pdfDest = getEformPdfPath(formCode, refNo, jobNo);
-		
+
 		FileHelper.writeStringToFile(emailPathString, emailContext);
 		File attachemntDir = new File(attachemntDirString);
 		attachemntDir.mkdirs();
-		
-    	ConverterProperties properties = new ConverterProperties();
-    	PdfWriter writer = new PdfWriter(pdfDest);
-    	PdfDocument pdf = new PdfDocument(writer);
-    	pdf.setDefaultPageSize(new PageSize(400, 14400));
-    	Document document = HtmlConverter.convertToDocument(new FileInputStream(emailPathString), pdf, properties);
 
-    	String logoUrl = freemarkerConfig.getPaths("template") +  "img_logo.gif";
-        Image image = new Image(ImageDataFactory.create(logoUrl));
-        image.scaleAbsolute(154, 41);
-        image.setFixedPosition(30, 14345);
-        document.add(image);
-        
-        EndPosition endPosition = new EndPosition();
-    	LineSeparator separator = new LineSeparator(endPosition);
-    	document.add(separator);
-    	document.getRenderer().close();
-    	PdfPage page = pdf.getPage(1);
-    	float y = endPosition.getY() - 36;
-    	page.setMediaBox(new Rectangle(0, y, 595, 14400 - y));
+		ConverterProperties properties = new ConverterProperties();
+		PdfWriter writer = new PdfWriter(pdfDest);
+		PdfDocument pdf = new PdfDocument(writer);
+		pdf.setDefaultPageSize(new PageSize(400, 14400));
+		Document document = HtmlConverter.convertToDocument(new FileInputStream(emailPathString), pdf, properties);
 
-    	document.close();
-    	writer.close();
+		String logoUrl = freemarkerConfig.getPaths("template") + "img_logo.gif";
+		Image image = new Image(ImageDataFactory.create(logoUrl));
+		image.scaleAbsolute(154, 41);
+		image.setFixedPosition(30, 14345);
+		document.add(image);
+
+		EndPosition endPosition = new EndPosition();
+		LineSeparator separator = new LineSeparator(endPosition);
+		document.add(separator);
+		document.getRenderer().close();
+		PdfPage page = pdf.getPage(1);
+		float y = endPosition.getY() - 36;
+		page.setMediaBox(new Rectangle(0, y, 595, 14400 - y));
+
+		document.close();
+		writer.close();
 	}
-	
+
 	public String getEmailContext(String formCode, String jobNo, Long refNo) throws Exception {
 		JobInfo jobInfo = jobNo != null ? jobInfoService.obtainJob(jobNo) : jobInfoService.getByRefNo(refNo);
 		List<Personnel> personnelListByJob = personnelService.getActivePersonnel(jobInfo.getJobNumber());
@@ -637,7 +632,8 @@ public class HTMLService implements Serializable{
 		Map<String, String> userFullnameMap = new HashMap<>();
 		personnelListByJob.forEach(personnel -> {
 			List<Personnel> list = map.get(personnel.getPersonnelMap().getUserSequence());
-			if(list == null) list = new ArrayList<>();
+			if (list == null)
+				list = new ArrayList<>();
 			list.add(personnel);
 			map.put(personnel.getPersonnelMap().getUserSequence(), list);
 			userAdToFullnameMap(personnel.getUserAd(), userFullnameMap);
@@ -645,10 +641,10 @@ public class HTMLService implements Serializable{
 			userAdToFullnameMap(personnel.getUserAdToBeApproved(), userFullnameMap);
 		});
 		allPersonnelMap.forEach(personnelMap -> {
-			if(map.get(personnelMap.getUserSequence()) == null) {
+			if (map.get(personnelMap.getUserSequence()) == null) {
 				Personnel personnel = new Personnel();
 				personnel.setPersonnelMap(personnelMap);
-				map.put(personnelMap.getUserSequence(), Arrays.asList(new Personnel[] {personnel}));
+				map.put(personnelMap.getUserSequence(), Arrays.asList(new Personnel[] { personnel }));
 			}
 		});
 		List<Personnel> listForReport = new ArrayList<>();
@@ -661,32 +657,33 @@ public class HTMLService implements Serializable{
 		String emailContext = eformEmailTemplate(formCode, jobInfo.getJobNumber(), param);
 		return emailContext;
 	}
-	
+
 	private void userAdToFullnameMap(String userAd, Map<String, String> map) {
-		if(StringUtils.isNotBlank(userAd) && map.get(userAd) == null) {
+		if (StringUtils.isNotBlank(userAd) && map.get(userAd) == null) {
 			HrUser user = hrUserRepository.findByUsername(userAd);
-			if(user != null && StringUtils.isNotBlank(user.getFullName())) map.put(userAd, user.getFullName());
+			if (user != null && StringUtils.isNotBlank(user.getFullName()))
+				map.put(userAd, user.getFullName());
 		}
 	}
-	
-    /**
+
+	/**
      * Implementation of the ILineDrawer interface that won't draw a line,
      * but that will allow us to get the Y-position at the end of the file.
-     */
-    class EndPosition implements ILineDrawer {
+	 */
+	class EndPosition implements ILineDrawer {
 
-    	/** A Y-position. */
-	    protected float y;
-    	
-    	/**
-	     * Gets the Y-position.
-	     *
-	     * @return the Y-position
-	     */
-	    public float getY() {
-    		return y;
-    	}
-    	
+		/** A Y-position. */
+		protected float y;
+
+		/**
+		 * Gets the Y-position.
+		 *
+		 * @return the Y-position
+		 */
+		public float getY() {
+			return y;
+		}
+
 		/* (non-Javadoc)
 		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#draw(com.itextpdf.kernel.pdf.canvas.PdfCanvas, com.itextpdf.kernel.geom.Rectangle)
 		 */
@@ -724,6 +721,6 @@ public class HTMLService implements Serializable{
 		@Override
 		public void setLineWidth(float lineWidth) {
 		}
-    	
-    }
+
+	}
 }

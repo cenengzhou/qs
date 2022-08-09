@@ -84,8 +84,6 @@ public class ConsultancyAgreementService {
             ConsultancyAgreement existingCA = getMemo(jobNo, subcontractNo);
             if (existingCA == null) {
                 ca.setIdSubcontract(subcontract);
-                ca.setDateSubmission(new Date());
-                ca.setDateApproval(new Date());
                 ca.setStatusApproval(ConsultancyAgreement.PENDING);
             }
             consultancyAgreementRepository.save(ca);
@@ -111,7 +109,11 @@ public class ConsultancyAgreementService {
             wrapper.setCompanyName(companyNameStr);
             wrapper.setRef(memo.getRef());
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
-            wrapper.setDate(sdf.format(memo.getDateSubmission()));
+            
+            if(memo.getDateSubmission() == null)
+            	wrapper.setDate(sdf.format(new Date()));
+            else
+            	wrapper.setDate(sdf.format(memo.getDateSubmission()));
 
             // optimise performance with hashmap
             Map<String, String> userHashMap = new HashMap<>();
@@ -194,6 +196,7 @@ public class ConsultancyAgreementService {
             result = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNo, subcontractNo, "0", "", approvalType, approvalSubType, ca.getFeeEstimate().doubleValue(), currency, securityService.getCurrentUser().getUsername(), null);
             if (result == null || "".equals(result.trim())) {
                 logger.info("Create Approval Route Message: " + result);
+                ca.setDateSubmission(new Date());
                 ca.setStatusApproval(ConsultancyAgreement.SUBMITTED);
             }
         } catch (Exception e) {

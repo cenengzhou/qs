@@ -160,11 +160,13 @@ public class AttachmentService {
 				ConsultancyAgreement ca = consultancyAgreementService.getMemo(noJob, noSubcontract);		
 				
 				if(subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_100_PACKAGE_CREATED) || 
-						subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY)){
+						subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_160_TA_READY) ||
+						subcontractForCA.getSubcontractStatus().equals(Subcontract.SCSTATUS_340_AWARD_REJECTED)){
 					
 					resultMap.put(Attachment.ID_TABLE, ca.getId().toString());
 				}else
 				{
+					resultMap.replace(Attachment.NAME_TABLE, Attachment.SUBCONTRACT_TABLE);
 					resultMap.put(Attachment.ID_TABLE, subcontractForCA.getId().toString());
 				}
 				break;

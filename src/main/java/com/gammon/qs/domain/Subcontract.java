@@ -88,11 +88,11 @@ public class Subcontract extends BasePersistedObject {
 	public static final String[][] SPLITTERMINATESTATUSES = new String[][] { new String[] { SPLITTERMINATE_DEFAULT, "Not Submitted" }, new String[] { SPLIT_SUBMITTED, "Split SC Submitted" }, new String[] { TERMINATE_SUBMITTED, "Terminate SC Submitted" }, new String[] { SPLIT_APPROVED, "Split Approved" }, new String[] { TERMINATE_APPROVED, "Terminate Approved" }, new String[] { SPLIT_REJECTED, "Split Rejected" }, new String[] { TERMINATE_REJECTED, "Terminate Rejected" } };
 
 	// Sub-Contract Status
-	public static final String SCSTATUS_500_AWARDED = "500";
-	public static final String SCSTATUS_340_AWARD_REJECTED = "340";
-	public static final String SCSTATUS_330_AWARD_SUBMITTED = "330";
-	public static final String SCSTATUS_160_TA_READY = "160";
-	public static final String SCSTATUS_100_PACKAGE_CREATED = "100";
+	public static final Integer SCSTATUS_500_AWARDED = 500;
+	public static final Integer SCSTATUS_340_AWARD_REJECTED = 340;
+	public static final Integer SCSTATUS_330_AWARD_SUBMITTED = 330;
+	public static final Integer SCSTATUS_160_TA_READY = 160;
+	public static final Integer SCSTATUS_100_PACKAGE_CREATED = 100;
 
 	// SC Document Signed Status
 	public static final String SC_DOC_SIGNED = "Y";

@@ -160,7 +160,7 @@ public class AddendumController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendum', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('AddendumController','updateAddendumAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateAddendumAdmin", method = RequestMethod.POST)
 	public String updateAddendumAdmin(@RequestBody Addendum addendum) {
 		String result = updateAddendum(addendum);
@@ -272,7 +272,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetail', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isRoleExisted('AddendumController','updateAddendumDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateAddendumDetailListAdmin", method = RequestMethod.POST)
 	public String updateAddendumDetailListAdmin(@RequestBody List<AddendumDetail> addendumDetailList) {
 		String result = updateAddendumDetailList(addendumDetailList);
