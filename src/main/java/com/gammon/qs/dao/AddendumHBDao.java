@@ -119,6 +119,21 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 	}
 
 	
+	
+	public Addendum getLatestCEDApprovedAddendum(String noJob, String noSubcontract) throws DataAccessException{
+
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noJob", noJob));
+		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.eq("cedApproval", "Y"));
+		criteria.add(Restrictions.eq("status", Addendum.STATUS.APPROVED.toString()));
+		criteria.addOrder(Order.desc("no"));
+		criteria.setMaxResults(1);
+		
+		return criteria.uniqueResult() == null ? null : (Addendum) criteria.uniqueResult();
+	}
+	
+	
 	public AddendumHBDao() {
 		super(Addendum.class);
 	}

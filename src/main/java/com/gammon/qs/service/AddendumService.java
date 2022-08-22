@@ -221,21 +221,29 @@ public class AddendumService{
 
 			
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(addendum.getNoJob(), addendum.getNoSubcontract());
-
+			
 			
 			// Get CED Approval Amount
-			try {
-				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(addendum.getNoJob(), Integer.parseInt(addendum.getNoSubcontract()));
-				logger.info("Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract() + " cedAmount: "+cedApproval.getApprovalAmount());
-				if (cedApproval != null){
-					subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
-					subcontractHBDao.update(subcontract);
-					
+			
+			Addendum latestCEDApprovedAddendum = addendumHBDao.getLatestCEDApprovedAddendum(addendum.getNoJob(), addendum.getNoSubcontract());
+
+			if(latestCEDApprovedAddendum != null)
+				subcontract.setAmtCEDApproved(latestCEDApprovedAddendum.getAmtSubcontractRevisedTba());
+
+			else{
+				try {
+					CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(addendum.getNoJob(), Integer.parseInt(addendum.getNoSubcontract()));
+					logger.info("Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract() + " cedAmount: "+cedApproval.getApprovalAmount());
+					if (cedApproval != null){
+						subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
+					}	
+				} catch (Exception e) {
+					logger.info("Failed to Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract());
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				logger.info("Failed to Get CED Approval: "+addendum.getNoJob()+" Package: "+addendum.getNoSubcontract());
-				e.printStackTrace();
 			}
+			subcontractHBDao.update(subcontract);
+			
 			
 			
 			addendum.setIdSubcontract(subcontract);
@@ -1023,6 +1031,7 @@ public class AddendumService{
 
 			//Define Approval Type
 			String approvalType = Addendum.APPROVAL_TYPE_SM;
+			addendum.setCedApproval(Addendum.CED_APPROVAL.N.toString());
 			
 			BigDecimal addendumAmtInHKD = CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2);
 			
@@ -1039,6 +1048,15 @@ public class AddendumService{
 			//Check if CED approval is required
 			if(addendum.getAmtCEDApproved()==null){
 				addendum.setAmtCEDApproved(subcontract.getAmtCEDApproved() == null ? new BigDecimal(0): subcontract.getAmtCEDApproved());
+			}
+			
+			//get latestCEDApprovedAmount
+			Addendum latestCEDApprovedAddendum = addendumHBDao.getLatestCEDApprovedAddendum(addendum.getNoJob(), addendum.getNoSubcontract());
+
+
+			if(latestCEDApprovedAddendum != null){
+				subcontract.setAmtCEDApproved(latestCEDApprovedAddendum.getAmtSubcontractRevisedTba());
+				addendum.setAmtCEDApproved(latestCEDApprovedAddendum.getAmtSubcontractRevisedTba());
 			}
 			
 			BigDecimal amtCEDApproved = CalculationUtil.roundToBigDecimal((addendum.getAmtCEDApproved()==null ? new BigDecimal(0) :addendum.getAmtCEDApproved()).multiply(exchangeRateToHKD),2);
@@ -1175,14 +1193,8 @@ public class AddendumService{
 				}
 			}
 			// update CED Approval Amount to SC
-			try {
-				CEDApproval cedApproval = cedApprovalRepository.getByJobPackage(jobNo, Integer.parseInt(subcontractNo));
-				logger.info("Get CED Approval: "+jobNo+" Package: "+subcontractNo + " cedAmount: "+cedApproval.getApprovalAmount());
-				if (cedApproval != null)
-					subcontract.setAmtCEDApproved(cedApproval.getApprovalAmount());
-			} catch (Exception e) {
-				logger.info("Failed to update CED Approval: "+jobNo+" Package: "+subcontractNo);
-				e.printStackTrace();
+			if(addendum.getCedApproval().equals(Addendum.CED_APPROVAL.Y.toString())){
+				subcontract.setAmtCEDApproved(addendum.getAmtSubcontractRevisedTba());
 			}
 			
 			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
