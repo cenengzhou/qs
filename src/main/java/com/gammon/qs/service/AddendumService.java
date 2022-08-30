@@ -330,7 +330,7 @@ public class AddendumService{
 			addendumDetailHBDao.delete(addendumDetailHeader);
 
 			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
-			for(AddendumDetail addendumDetail: addendumDetailList){
+			for (AddendumDetail addendumDetail : addendumDetailList) {
 				addendumDetail.setIdHeaderRef(null);
 				addendumDetailHBDao.update(addendumDetail);
 			}
@@ -344,20 +344,28 @@ public class AddendumService{
 		return error;
 	}
 
+	public String validPendingAddendum(Addendum addendum, String jobNo, String subcontractNo, String addendumNo) {
+		String result = "";
+		String addendumInfo = "Job: " + jobNo + " - SC " + subcontractNo + " - Addendum No." + addendumNo;
+		if (addendum == null) {
+			result =  addendumInfo + "does not exist.";
+		}
+		if (!addendum.getStatus().equals(Addendum.STATUS.PENDING.toString())) {
+			result = addendumInfo + " is " + addendum.getStatus();
+		}
+		return result;
+	}
+	
 	public String addAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
 		String error = "";
 		boolean validateToAddCF = true;
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
-			if (addendum ==null){
-				error = "Job: "+ noJob + " - SC "+ noSubcontract + " - Addendum No."+addendumNo +"does not exist.";
+			error = validPendingAddendum(addendum, noJob, noSubcontract, "" + addendumNo);
+			if (error.length() > 0) {
 				return error;
 			}
-			if(!addendum.getStatus().equals(Addendum.STATUS.PENDING.toString())){
-				error = "Job: "+ noJob + " - SC "+ noSubcontract + " - Addendum No."+addendumNo +" is "+ addendum.getStatus();
-				return error;
-			}
-			
+
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetail.getIdHeaderRef());
 			if(addendumDetailHeader!= null && addendumDetailHeader.getId()!=null){
 				addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
@@ -528,6 +536,11 @@ public class AddendumService{
 			
 			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
+			error = validPendingAddendum(addendum, jobNo, subcontractNo, "" + addendumNo);
+			if (error.length() > 0) {
+				return error;
+			}
+			
 			int nextSeqNo = addendum.getNoAddendumDetailNext().intValue();
 			for(ResourceSummary resourceSummary: resourceSummaryList){
 				String lineType = "";
