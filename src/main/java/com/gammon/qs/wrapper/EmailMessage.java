@@ -1,6 +1,7 @@
 package com.gammon.qs.wrapper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,11 +11,12 @@ import java.util.List;
 public class EmailMessage implements Serializable{
 	
 	private static final long serialVersionUID = 4991782607877399234L;
-	private List<String> recipients;
-	private List<String> ccRecipients;
+	private List<String> recipients = new ArrayList<>();
+	private List<String> ccRecipients = new ArrayList<>();
+	private List<String> bccRecipients = new ArrayList<>();
 	private String subject;
 	private String content;
-	private List<String> attachmentPaths;
+	private List<String> attachmentPaths = new ArrayList<>();
 	
 	
 	public List<String> getRecipients() {
@@ -26,8 +28,14 @@ public class EmailMessage implements Serializable{
 	public List<String> getCcRecipients() {
 		return ccRecipients;
 	}
-	public void setCcRecipients(List<String> ccRecipients) {
-		this.ccRecipients = ccRecipients;
+	public void setCcRecipients(List<String> bccRecipients) {
+		this.bccRecipients = bccRecipients;
+	}
+		public List<String> getBccRecipients() {
+		return bccRecipients;
+	}
+	public void setBccRecipients(List<String> bccRecipients) {
+		this.bccRecipients = bccRecipients;
 	}
 	public String getSubject() {
 		return subject;

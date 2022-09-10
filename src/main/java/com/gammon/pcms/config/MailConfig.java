@@ -13,6 +13,10 @@ public class MailConfig {
 
 	@Value("#{${mail.smtp}}")
 	private Map<String, Object> mailSmtp;
+	@Value("${mail.sendBy}")
+	private String sendBy;
+	@Value("${mail.ews.uri}")
+	private String mailEwsUri;
 	
 	@Autowired
 	private ApplicationConfig applicationConfig;
@@ -25,7 +29,19 @@ public class MailConfig {
 		return (Map<String, String>) mailSmtp.get(applicationConfig.getDeployEnvironment());
 	}
 	
-	public String getMailSmtp(String key){
+	public String getMailSmtp(String key) {
 		return getMailSmtp().get(key);
+	}
+	
+	public String getSendBy() {
+		return sendBy;
+	}
+
+	public boolean isSendByEws() {
+		return true; //sendBy.equals("EWS");
+	}
+
+	public String getMailEwsUri() {
+		return mailEwsUri;
 	}
 }

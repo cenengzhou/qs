@@ -87,8 +87,8 @@ public class MailContentGenerator {
 		emailMessage.setContent(content);
 
 		// 1d. Set attachment paths
-		List<String> attachmentPaths = null;
-		emailMessage.setAttachmentPaths(attachmentPaths);
+		// List<String> attachmentPaths = null;
+		// emailMessage.setAttachmentPaths(attachmentPaths);
 
 		// 2. Send email
 		sent = mailService.sendEmail(emailMessage);

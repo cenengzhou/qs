@@ -292,6 +292,10 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	public String getWsAzureAlertSender() {
 		return getWsAzure("alertSender");
 	}
+
+	public String getWsAzureAuthority() {
+		return "https://login.microsoftonline.com/" + getWsAzureTenantId();
+	}
 	/**
 	 * @return the qsKeystore
 	 */

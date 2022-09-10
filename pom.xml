@@ -3,7 +3,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2022-08-22</version>
+	<version>2022-09-08</version>
 	<packaging>war</packaging>
 
 	<scm>
@@ -90,7 +90,7 @@
 		<jasperreports.version>6.16.0</jasperreports.version>
 		<javax.annotation.version>1.2</javax.annotation.version>
 		<javax.validation.version>1.0.0.GA</javax.validation.version>
-		<javax.mail.version>1.4.7</javax.mail.version>
+		<javax.mail.version>1.6.2</javax.mail.version>
 		<jibx.version>1.2.6</jibx.version>
 		<jsp-api.version>2.3.1</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
@@ -138,6 +138,7 @@
 		<itext.version>7.1.4</itext.version>
 		<itext.pdfhtml.version>2.1.1</itext.pdfhtml.version>
 		<xml.bind.version>2.3.0</xml.bind.version>
+		<ews-java-api.version>2.0</ews-java-api.version>
 	</properties>
 
 	<!-- Bill of material for version management on framework dependency -->
@@ -565,8 +566,8 @@
 
 		<!-- Java API: send and receive email via SMTP -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
 			<version>${javax.mail.version}</version>
 		</dependency>
 
@@ -737,6 +738,17 @@
 			<version>1.1-SNAPSHOT</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.microsoft.ews-java-api</groupId>
+			<artifactId>ews-java-api</artifactId>
+			<version>${ews-java-api.version}</version>
+		</dependency>
+		
+		<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.4.1</version>
+		</dependency>
 		<!-- JDE Web Services for PCMS to access JDE Web Services -->
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
