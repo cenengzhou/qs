@@ -71,7 +71,14 @@ mainApp.controller('AdminRevisionsAddendumDetailCtrl', ['$scope', 'modalService'
 	             { field: 'dateLastModified', width: '120', displayName: "Last Modify Date", enableCellEdit: false },
 	             { field: 'usernameLastModified', width: '120', displayName: "Last Modify User", enableCellEdit: false },
 	             { field: 'dateCreated', width: '120', displayName: "Date Create", enableCellEdit: false },
-	             { field: 'usernameCreated', width: '120', displayName: "User Create", enableCellEdit: false }
+	             { field: 'usernameCreated', width: '120', displayName: "User Create", enableCellEdit: false },
+	             { field: 'typeRecoverable', width: '120', displayName: "Recoverable", enableCellEdit: $scope.canEdit,
+									editableCellTemplate : 'ui-grid/dropdownEditor',
+									editDropdownOptionsArray : GlobalParameter.recoverableOptions,
+									cellFilter : 'dropdownFilter:"recoverableOptions"',
+									editDropdownIdLabel : 'id',
+									editDropdownValueLabel : 'value'
+	             }
 			]
 	}
 	

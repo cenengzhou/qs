@@ -296,6 +296,11 @@ mainApp.constant('GlobalParameter', {
 		{id: 'ACTIVE', value: 'ACTIVE'},
 		{id: 'INACTIVE', value: 'INACTIVE'}
 	],
+	recoverableOptions: [
+		{id: null, value: ''},
+		{id: 'R', value: 'Recoverable'},
+		{id: 'NR', value: 'Non-Recoverable'}
+	],
 	zeroOneOptions:[
 		{id: true, value: 'True'},
 		{id: false, value: 'False'}
