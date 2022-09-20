@@ -134,11 +134,18 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 	             { field: 'createdDate', width: '120', displayName: "Date Create", enableCellEdit: false },
 	             { field: 'createdUser', width: '120', displayName: "User Create", enableCellEdit: false },
 	             { field: 'systemStatus', width: '120', displayName: "System Status", enableCellEdit: $scope.canEdit,
-					editableCellTemplate : 'ui-grid/dropdownEditor',
-					editDropdownOptionsArray : GlobalParameter.systemStatuOptions,
-					cellFilter : 'dropdownFilter:"systemStatuOptions"',
-					editDropdownIdLabel : 'id',
-					editDropdownValueLabel : 'value'
+									editableCellTemplate : 'ui-grid/dropdownEditor',
+									editDropdownOptionsArray : GlobalParameter.systemStatuOptions,
+									cellFilter : 'dropdownFilter:"systemStatuOptions"',
+									editDropdownIdLabel : 'id',
+									editDropdownValueLabel : 'value'
+								},
+	             { field: 'typeRecoverable', width: '120', displayName: "Recoverable", enableCellEdit: $scope.canEdit,
+									editableCellTemplate : 'ui-grid/dropdownEditor',
+									editDropdownOptionsArray : GlobalParameter.recoverableOptions,
+									cellFilter : 'dropdownFilter:"recoverableOptions"',
+									editDropdownIdLabel : 'id',
+									editDropdownValueLabel : 'value'
 	             }
 			]
 	}
