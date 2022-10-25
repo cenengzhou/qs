@@ -210,14 +210,14 @@ public class AddendumService{
 				return error;
 			}
 			
-			if(addendum.getNo()!=1 && addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.N.toString())){
+			/*if(addendum.getNo()!=1 && addendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.N.toString())){
 				List<Addendum> finalAddendumList = addendumHBDao.getFinalAddendumList(addendum.getNoJob(), addendum.getNoSubcontract());
 				
 				if(finalAddendumList != null && finalAddendumList.size() > 0) {
 					error = "Final account has been approved. Pls select final account if amendment is needed.";
 					return error;
 				}
-			}
+			}*/
 
 			
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(addendum.getNoJob(), addendum.getNoSubcontract());
