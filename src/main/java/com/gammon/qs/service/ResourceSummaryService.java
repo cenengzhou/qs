@@ -526,9 +526,9 @@ public class ResourceSummaryService implements Serializable {
 	 *  
 	 * For LineType [BQ]
 	 */
-	public Boolean releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double newAmount, List<Long> voIDResourceSummaryList) throws Exception{
+	public Boolean releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double newSdAmount, Double origalSdAmount, List<Long> voIDResourceSummaryList) throws Exception{
 		DecimalFormat format = new DecimalFormat("##,##0.0000");
-		logger.info("Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode+" New Amount: "+format.format(newAmount));
+		logger.info("Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode+" New Amount: "+format.format(newSdAmount));
 	
 		List<ResourceSummary> resourceSummaries = resourceSummaryHBDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
 		
@@ -545,10 +545,10 @@ public class ResourceSummaryService implements Serializable {
 				totalAmountofSameAccountCode += resourceSummary.getAmountBudget();
 			}
 		}
-		logger.info("Total Amount of the Same Account Code: "+format.format(totalAmountofSameAccountCode)+"; New Amount: "+format.format(newAmount));
+		logger.info("Total Amount of the Same Account Code: "+format.format(totalAmountofSameAccountCode)+"; New Amount: "+format.format(newSdAmount));
 
 		//if (totalAmountofSameAccountCode == 0.0 && newAmount.doubleValue() != 0.0) {
-		if (totalAmountofSameAccountCode < newAmount.doubleValue()) {
+		if (totalAmountofSameAccountCode < newSdAmount.doubleValue()) {
 			logger.info("Warning: New Amount is greater than the Total Amount of the Same Account Code.");
 			return Boolean.FALSE;
 		}
@@ -557,10 +557,11 @@ public class ResourceSummaryService implements Serializable {
 		 * Fixing: To handle special Case that user is splitting or terminating a sub-contract with resource budget = 0
 		 * Modified on 30 April 2014 by Tiky Wong
 		 */
-		Double newResourceAmtQty = totalAmountofSameAccountCode - newAmount;
+		Double splitAmt = origalSdAmount - newSdAmount;
+		Double resourceProportion = (totalAmountofSameAccountCode - splitAmt) / totalAmountofSameAccountCode;
 		double proportion = new BigDecimal(
-			(newAmount!=0 && totalAmountofSameAccountCode!=0) 
-			? newAmount / totalAmountofSameAccountCode 
+			(newSdAmount!=0 && totalAmountofSameAccountCode!=0) 
+			? resourceProportion
 			: 0.0
 			).setScale(4, RoundingMode.DOWN).doubleValue();
 		if (proportion==1){
@@ -568,14 +569,20 @@ public class ResourceSummaryService implements Serializable {
 			return Boolean.FALSE;
 		}
 		
-		logger.info("proportion: "+proportion);
+		logger.info(
+			"origalSdAmount: " + origalSdAmount +
+			" newSdAmount:" + newSdAmount + 
+			" splitAmt: " + splitAmt + 
+			" resourceProportion:" + resourceProportion + 
+			" proportion:" + proportion
+		);
 		
 		/**
 		 * @author koeyyeung
 		 * modified on 2nd Dec,2015
 		 * Fix the proportion issue in split
 		 * **/
-		double newAmtRemain = newAmount;
+		double newAmtRemain = newSdAmount;
 		//ResourceSummary of BQs which created before contract award
 		String message = "";
 		int counter = 1;
@@ -604,9 +611,9 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setResourceDescription("Split from SC " + packageNo + " " + (count+1));
 		newResource.setUnit("AM");
 		newResource.setRate(Double.valueOf(1));
-		newResource.setQuantity(newResourceAmtQty);
+		newResource.setQuantity(splitAmt);
 		newResource.setSplitFrom(resourceSummaries.get(0));
-		newResource.setAmountBudget(newResourceAmtQty);
+		newResource.setAmountBudget(splitAmt);
 		if (newResource.getQuantity().doubleValue()!=0){
 			resourceSummaryHBDao.saveOrUpdate(newResource);
 			logger.info(job.getJobNumber()+"."+objectCode+"."+subsidiaryCode+" X "+packageNo+" new Resource summary saved.");

@@ -988,8 +988,10 @@ public class SubcontractService {
 	 * refactored on November 13, 2012
 	 * refactored on May 15, 2013 (Cannot release resources properly)
 	 */
-	public String toCompleteSplitTerminate(String jobNumber, String packageNo, String approvedOrRejected, String splitOrTerminate) throws Exception{
-		logger.info("Job: "+jobNumber+" - PackageNo:" +packageNo+" - Approved: "+approvedOrRejected+" - Split/Terminate: "+splitOrTerminate);
+	public String toCompleteSplitTerminate(String jobNumber, String packageNo, String approvedOrRejected,
+			String splitOrTerminate) throws Exception {
+		logger.info("Job: " + jobNumber + " - PackageNo:" + packageNo + " - Approved: " + approvedOrRejected
+				+ " - Split/Terminate: " + splitOrTerminate);
 		String message = null;
 		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 
@@ -1000,32 +1002,35 @@ public class SubcontractService {
 		//Excluded Inactive (deleted) scDetails
 		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.obtainSCDetails(jobNumber, packageNo);
 		DecimalFormat format = new DecimalFormat("##,##0.0000");
-		if ("A".equals(approvedOrRejected)){
-			if (scDetailList==null){
-				message = "Job: "+scPackage.getJobInfo().getJobNumber()+" SC:"+scPackage.getPackageNo()+" has no SCDetail.";
+		if ("A".equals(approvedOrRejected)) {
+			if (scDetailList == null) {
+				message = "Job: " + scPackage.getJobInfo().getJobNumber() + " SC:" + scPackage.getPackageNo()
+						+ " has no SCDetail.";
 				logger.info(message);
 				return message;
 			}
 
 			//for finding ResourceSummary
-			List<SubcontractDetail> scDetailBQList = new ArrayList<SubcontractDetail> ();
-			List<SubcontractDetail> scDetailVOList = new ArrayList<SubcontractDetail> ();
+			List<SubcontractDetail> scDetailBQList = new ArrayList<SubcontractDetail>();
+			List<SubcontractDetail> scDetailVOList = new ArrayList<SubcontractDetail>();
 			List<Long> voIDResourceSummaryList = new ArrayList<Long>();
-			
+
 			//1. separating scDetails into BQ(BQ) and VO(V1, V3) lists
-			for(SubcontractDetail scDetail : scDetailList){
-				if(SubcontractDetailBQ.INACTIVE.equals(scDetail.getSystemStatus()))
+			for (SubcontractDetail scDetail : scDetailList) {
+				if (SubcontractDetailBQ.INACTIVE.equals(scDetail.getSystemStatus()))
 					continue;
 
-				if ("BQ".equalsIgnoreCase(scDetail.getLineType())){
+				if ("BQ".equalsIgnoreCase(scDetail.getLineType())) {
 					scDetailBQList.add(scDetail);
-					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"+format.format(scDetail.getCostRate())+" AmountSubcontract:"+ format.format(scDetail.getAmountSubcontract()) + " AmountSubcontractNew:" + format.format(scDetail.getAmountSubcontractNew()));
-				}
-				else if (("V1".equalsIgnoreCase(scDetail.getLineType()) || "V3".equalsIgnoreCase(scDetail.getLineType())) && 
-						scDetail.getResourceNo()!=null && scDetail.getResourceNo()!=0){ 
-						//&&
-						//scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0){
-				
+					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"
+							+ format.format(scDetail.getCostRate()) + " AmountSubcontract:"
+							+ format.format(scDetail.getAmountSubcontract()) + " AmountSubcontractNew:"
+							+ format.format(scDetail.getAmountSubcontractNew()));
+				} else if (("V1".equalsIgnoreCase(scDetail.getLineType()) || "V3".equalsIgnoreCase(scDetail.getLineType())) &&
+						scDetail.getResourceNo() != null && scDetail.getResourceNo() != 0) {
+					//&&
+					//scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0){
+
 					//Assume the resource number is equal to the BQResourceSummary ID for V1(with budget) and V3
 					ResourceSummary resourceSummary = resourceSummaryHBDao.get(scDetail.getResourceNo().longValue());
 
@@ -1033,60 +1038,68 @@ public class SubcontractService {
 					 * @author koeyyeung
 					 * added on 2nd Dec,2015
 					 * Prepare a VO filter list for BQ Split with the same account code**/
-					if(resourceSummary!=null)
+					if (resourceSummary != null)
 						voIDResourceSummaryList.add(resourceSummary.getId());
-					
-					if ((scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0)){
-						if(resourceSummary!=null && 
-								scDetail.getSubcontract().getJobInfo().getJobNumber().trim().equals(resourceSummary.getJobInfo().getJobNumber().trim()) && 
-								scDetail.getSubcontract().getPackageNo().trim().equals(resourceSummary.getPackageNo().trim()) && 
-								RoundingUtil.round(scDetail.getCostRate().doubleValue(), 2)==RoundingUtil.round(resourceSummary.getRate().doubleValue(), 2) && 
-								RoundingUtil.round(scDetail.getQuantity().doubleValue(), 4)==RoundingUtil.round(resourceSummary.getQuantity().doubleValue(), 4))
+
+					if ((scDetail.getCostRate() != null && Math.abs(scDetail.getCostRate()) > 0)) {
+						if (resourceSummary != null &&
+								scDetail.getSubcontract().getJobInfo().getJobNumber().trim()
+										.equals(resourceSummary.getJobInfo().getJobNumber().trim())
+								&&
+								scDetail.getSubcontract().getPackageNo().trim().equals(resourceSummary.getPackageNo().trim()) &&
+								RoundingUtil.round(scDetail.getCostRate().doubleValue(), 2) == RoundingUtil
+										.round(resourceSummary.getRate().doubleValue(), 2)
+								&&
+								RoundingUtil.round(scDetail.getQuantity().doubleValue(), 4) == RoundingUtil
+										.round(resourceSummary.getQuantity().doubleValue(), 4))
 
 							scDetailVOList.add(scDetail);
-						else{	//for unknown scDetail which has Resource Summary, group it to BQ List
+						else { //for unknown scDetail which has Resource Summary, group it to BQ List
 							//logger.info("--------- VO Added To scDetailBQList");
 							scDetailBQList.add(scDetail);
 						}
 					}
-					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ format.format(scDetail.getQuantity()) + " NewQuantity:" + format.format(scDetail.getNewQuantity()));
-				}
-				else{
-					logger.info("SKIPPED - LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem()+" ID:"+scDetail.getId());
+					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"
+							+ format.format(scDetail.getQuantity()) + " NewQuantity:" + format.format(scDetail.getNewQuantity()));
+				} else {
+					logger.info("SKIPPED - LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " ID:"
+							+ scDetail.getId());
 					continue;
 				}
 			}
-			
-			
+
 			//2. Release VO Resource Summaries
-			for (SubcontractDetail scDetail:scDetailVOList){
-				if (Math.abs(scDetail.getAmountSubcontractNew().doubleValue()-scDetail.getAmountSubcontract().doubleValue())>0){
-					try{
-						ResourceSummary bqResourceSummary = resourceSummaryService.releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(job, packageNo, scDetail);
-						
+			for (SubcontractDetail scDetail : scDetailVOList) {
+				if (Math.abs(
+						scDetail.getAmountSubcontractNew().doubleValue() - scDetail.getAmountSubcontract().doubleValue()) > 0) {
+					try {
+						ResourceSummary bqResourceSummary = resourceSummaryService
+								.releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(job, packageNo, scDetail);
+
 						logger.info("VO Resources Summary of " +
-									" SCDetails ID:" + scDetail.getId() +
-									" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
-									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
-									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
-									" has "+ (bqResourceSummary!=null?"":"NOT ") +"been released.");
-					}catch(ValidateBusinessLogicException ve){
-						message = 	"VO Resources Summary of " +
-									" SCDetails ID:" + scDetail.getId() +
-									" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
-									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
-									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
-									" has NOT been released.";
-				
+								" SCDetails ID:" + scDetail.getId() +
+								" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
+								" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
+								" Package No.: " + scDetail.getSubcontract().getPackageNo() +
+								" has " + (bqResourceSummary != null ? "" : "NOT ") + "been released.");
+					} catch (ValidateBusinessLogicException ve) {
+						message = "VO Resources Summary of " +
+								" SCDetails ID:" + scDetail.getId() +
+								" New AmountSubcontract:" + format.format(scDetail.getAmountSubcontractNew()) +
+								" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
+								" Package No.: " + scDetail.getSubcontract().getPackageNo() +
+								" has NOT been released.";
+
 						logger.info(message);
 						return message;
 					}
 				}
 			}
-			
-			
-			
+   
+   
+   
 			double totalAmountWithSameAccCode = 0.0;
+			double totalAmountWithSameAccCodeOrignal = 0.0;
 			String lastObjCode = scDetailBQList.get(0).getObjectCode();
 			String lastSubsidCode = scDetailBQList.get(0).getSubsidiaryCode();
 			String scDetailIDsForSameAccCode = "";
@@ -1094,86 +1107,48 @@ public class SubcontractService {
 			Boolean isSameAccCode = Boolean.TRUE;
 			
 			//3.. Release BQ Resource Summaries
-			for (SubcontractDetail scDetail: scDetailBQList){
-				if(scDetail.getCostRate()==0)
+			for (SubcontractDetail scDetail : scDetailBQList) {
+				if (scDetail.getCostRate() == 0)
 					continue;
 				double scDetailNewCostAmount = CalculationUtil.round(
-					scDetail.getAmountSubcontractNew().doubleValue() / scDetail.getScRate() *scDetail.getCostRate()
-				, 2);
+						scDetail.getAmountSubcontractNew().doubleValue() / scDetail.getScRate() * scDetail.getCostRate(), 2);
 
 				//Group the amounts with the same object and subsidiary code
-				logger.info("SCDetails Object Code: "+scDetail.getObjectCode()+" Subsidiary Code: "+scDetail.getSubsidiaryCode()+" Last Object Code: "+lastObjCode+" Last Subidiary Code: "+lastSubsidCode);
+				logger.info(
+						"SCDetails Object Code: " + scDetail.getObjectCode() + " Subsidiary Code: " + scDetail.getSubsidiaryCode()
+								+ " Last Object Code: " + lastObjCode + " Last Subidiary Code: " + lastSubsidCode);
 				if (lastObjCode.equalsIgnoreCase(scDetail.getObjectCode()) &&
-					lastSubsidCode.equalsIgnoreCase(scDetail.getSubsidiaryCode())){
+						lastSubsidCode.equalsIgnoreCase(scDetail.getSubsidiaryCode())) {
 					totalAmountWithSameAccCode += scDetailNewCostAmount;
-					scDetailIDsForSameAccCode += scDetail.getId()+" ";
-				}
-				else
+					totalAmountWithSameAccCodeOrignal += scDetail.getAmountSubcontract().doubleValue();
+					scDetailIDsForSameAccCode += scDetail.getId() + " ";
+				} else
 					isSameAccCode = Boolean.FALSE;
 
 				//with different account code or end of the SCDetailBQ list
-				if(!isSameAccCode || numberOfProcessedscDetailBQ==scDetailBQList.size()){
-					try{
-						boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
-
-						logger.info("Resources Summary of " +
-									" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
-									" Job: " + job.getJobNumber() +
-									" Package No.: " + packageNo +
-									" Object Code: " + lastObjCode +
-									" Subsidiary Code: " + lastSubsidCode +
-									" has "+ (isReleased?"":"NOT ") +"been released.");
-
-						totalAmountWithSameAccCode = scDetailNewCostAmount;
-						lastObjCode = scDetail.getObjectCode();
-						lastSubsidCode = scDetail.getSubsidiaryCode();
-						scDetailIDsForSameAccCode = "";
-						isSameAccCode = Boolean.TRUE;
-					}catch(ValidateBusinessLogicException ve){
-						message = 	" Failed: Resources Summary of " +
-									" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
-									" Job: " + job.getJobNumber() +
-									" Package No.: " + packageNo +
-									" Object Code: " + lastObjCode +
-									" Subsidiary Code: " + lastSubsidCode +
-									" has NOT been released.";
-							
-							logger.info(message);
-							return message;
-					}
+				if (!isSameAccCode || numberOfProcessedscDetailBQ == scDetailBQList.size()) {
+					message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
+							packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
+							totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
+					if (message != null)
+						return message;
+					
+					totalAmountWithSameAccCode = scDetailNewCostAmount;
+					totalAmountWithSameAccCodeOrignal = scDetail.getAmountSubcontract().doubleValue();
+					lastObjCode = scDetail.getObjectCode();
+					lastSubsidCode = scDetail.getSubsidiaryCode();
+					scDetailIDsForSameAccCode = "";
+					isSameAccCode = Boolean.TRUE;
 				}
 				numberOfProcessedscDetailBQ++;
 			}
-			
-			
-			
-			
-			
+
 			//4. Release the last scDetail
-			try{
-				boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
-
-				logger.info("Resources Summary of " +
-							" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
-							" Job: " + job.getJobNumber() +
-							" Package No.: " + packageNo +
-							" Object Code: " + lastObjCode +
-							" Subsidiary Code: " + lastSubsidCode +
-							" has "+ (isReleased?"":"NOT ") +"been released.");
-
-			}catch(ValidateBusinessLogicException ve){
-				message = 	" Failed: Resources Summary of " +
-							" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
-							" Job: " + job.getJobNumber() +
-							" Package No.: " + packageNo +
-							" Object Code: " + lastObjCode +
-							" Subsidiary Code: " + lastSubsidCode +
-							" has NOT been released.";
-					
-					logger.info(message);
-					return message;
-			}
-
+			message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
+										packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
+										totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
+			if (message != null)
+				return message;
 
 			//calculate new figures
 			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
@@ -1182,7 +1157,7 @@ public class SubcontractService {
 				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_APPROVED);
 			else
 				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_APPROVED);
-		}else{
+		} else {
 			if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
 				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_REJECTED);
 			else
@@ -1190,11 +1165,42 @@ public class SubcontractService {
 		}
 
 		subcontractHBDao.updateSubcontract(scPackage);
-		message = null;	//reset message
+		message = null; //reset message
 
-		return message;	//return null means the split/termination has done successfully
+		return message; //return null means the split/termination has done successfully
 	}
 
+	private String releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(String scDetailIDsForSameAccCode, JobInfo job, String packageNo,
+			String lastObjCode, String lastSubsidCode, Double totalAmountWithSameAccCode,
+			Double totalAmountWithSameAccCodeOrignal, List<Long> voIDResourceSummaryList) {
+		String message = null;
+		try {
+			boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job,
+					packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
+					totalAmountWithSameAccCodeOrignal.doubleValue(), voIDResourceSummaryList);
+
+			logger.info("Resources Summary of " +
+					" Grouped SCDetatil ID(s): " + scDetailIDsForSameAccCode +
+					" Job: " + job.getJobNumber() +
+					" Package No.: " + packageNo +
+					" Object Code: " + lastObjCode +
+					" Subsidiary Code: " + lastSubsidCode +
+					" has " + (isReleased ? "" : "NOT ") + "been released.");
+
+		} catch (Exception ve) {
+			message = " Failed: Resources Summary of " +
+					" Grouped SCDetatil ID(s): " + scDetailIDsForSameAccCode +
+					" Job: " + job.getJobNumber() +
+					" Package No.: " + packageNo +
+					" Object Code: " + lastObjCode +
+					" Subsidiary Code: " + lastSubsidCode +
+					" has NOT been released.";
+
+			logger.info(message);
+		}
+		return message;
+	}
+	
 	/**
 	 * 
 	 * @author tikywong
@@ -1415,9 +1421,11 @@ public class SubcontractService {
 					break;
 				}
 
-				scDetailInDB.setNewQuantity(scDetail.getNewQuantity());
-				scDetailInDB.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
-				toBeUpdatedscDetails.add(scDetailInDB);
+				if (scDetailInDB.getScRate() > 0) {
+					scDetailInDB.setNewQuantity(scDetail.getNewQuantity());
+					scDetailInDB.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
+					toBeUpdatedscDetails.add(scDetailInDB);
+				}
 			}
 			
 		}
