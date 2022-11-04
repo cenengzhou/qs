@@ -57,6 +57,7 @@
 									<input data-parsley-type="number" class="form-control"
 										ng-change="calculate('quantity')"
 										ng-paste="calculate('quantity')"
+										ng-model-options='{ debounce: 1000 }'
 										ng-model="resourceSummary.quantity" required />
 								</div>
 							</div>
@@ -66,6 +67,7 @@
 									<label>Budget Rate</label> 
 									<input data-parsley-type="number"  
 										ng-change="calculate('rate')" 
+										ng-model-options='{ debounce: 1000 }'
 										ng-paste="calculate('rate')"
 										class="form-control " 
 										ng-model="resourceSummary.rate" 
@@ -75,9 +77,14 @@
 
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>Total Amount</label> <input data-parsley-type="number"  ng-model="resourceSummary.amountBudget" ng-change="calculate('totalAmount')" ng-paste="calculate('totalAmount')"
-										class="form-control" 
-										required />
+									<label>Total Amount</label> 
+										<input data-parsley-type="number"  
+											ng-model="resourceSummary.amountBudget" 
+											ng-change="calculate('totalAmount')" 
+											ng-paste="calculate('totalAmount')"
+											ng-model-options='{ debounce: 1000 }'
+											class="form-control" 
+											required />
 								</div>
 							</div>
 
@@ -132,4 +139,3 @@
 		<span class="fa fa-save"></span> Add
 	</button>
 </div>
-
