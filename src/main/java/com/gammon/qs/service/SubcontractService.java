@@ -1140,38 +1140,37 @@ public class SubcontractService {
 		        numberOfProcessedscDetailBQ++;
 		      }
 
-
-			//4. Release the last scDetail
-		      message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
-		                    packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
-		                    totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
-		      if (message != null)
-		        return message;
-
-		      //calculate new figures
-		      scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
-
-		      if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
-		        scPackage.setSplitTerminateStatus(Subcontract.SPLIT_APPROVED);
-		      else
-		        scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_APPROVED);
-		    } else {
-		      if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
-		        scPackage.setSplitTerminateStatus(Subcontract.SPLIT_REJECTED);
-		      else
-		        scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_REJECTED);
-		    }
-
-		    subcontractHBDao.updateSubcontract(scPackage);
-		    message = null; //reset message
-
-		    return message; //return null means the split/termination has done successfully
-		  }
+    			//4. Release the last scDetail
+    			message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
+    										packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
+    										totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
+    			if (message != null)
+    				return message;
+    
+    			//calculate new figures
+    			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
 			
+    			if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
+    				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_APPROVED);
+    			else
+    				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_APPROVED);
+    		} else {
+    			if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
+    				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_REJECTED);
+    			else
+    				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_REJECTED);
+    		}
+			
+		subcontractHBDao.updateSubcontract(scPackage);
+		message = null; //reset message
+
+		return message; //return null means the split/termination has done successfully
+	}   
+
 	private String releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(String scDetailIDsForSameAccCode, JobInfo job, String packageNo,
-		      String lastObjCode, String lastSubsidCode, Double totalAmountWithSameAccCode,
-		      Double totalAmountWithSameAccCodeOrignal, List<Long> voIDResourceSummaryList) {
-		    String message = null;
+			String lastObjCode, String lastSubsidCode, Double totalAmountWithSameAccCode,
+			Double totalAmountWithSameAccCodeOrignal, List<Long> voIDResourceSummaryList) {
+		String message = null;
 			try{
 			boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job,
 					packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
