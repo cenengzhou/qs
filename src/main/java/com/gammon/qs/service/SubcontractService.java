@@ -1009,15 +1009,19 @@ public class SubcontractService {
 			//for finding ResourceSummary
 			List<SubcontractDetail> scDetailBQList = new ArrayList<SubcontractDetail> ();
 			List<SubcontractDetail> scDetailVOList = new ArrayList<SubcontractDetail> ();
-			List<Long> voIDResourceSummaryList = new ArrayList<Long>();
+			List<Long> bypassResourceSummaryList = new ArrayList<Long>();
 			
 			//1. separating scDetails into BQ(BQ) and VO(V1, V3) lists
 			for(SubcontractDetail scDetail : scDetailList){
 				if(SubcontractDetailBQ.INACTIVE.equals(scDetail.getSystemStatus()))
 					continue;
 
-				if ("BQ".equalsIgnoreCase(scDetail.getLineType())){
-					scDetailBQList.add(scDetail);
+				if ("BQ".equalsIgnoreCase(scDetail.getLineType())) {
+					if (scDetail.getScRate() > 0) {
+						scDetailBQList.add(scDetail);
+					} else {
+						bypassResourceSummaryList.add(scDetail.getResourceNo().longValue());
+					}
 					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"
 							+ format.format(scDetail.getCostRate()) + " AmountSubcontract:"
 							+ format.format(scDetail.getAmountSubcontract()) + " AmountSubcontractNew:"
@@ -1035,7 +1039,7 @@ public class SubcontractService {
 					 * added on 2nd Dec,2015
 					 * Prepare a VO filter list for BQ Split with the same account code**/
 					if(resourceSummary!=null)
-						voIDResourceSummaryList.add(resourceSummary.getId());
+						bypassResourceSummaryList.add(resourceSummary.getId());
 					
 					if ((scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0)){
 						if(resourceSummary!=null && 
@@ -1126,7 +1130,7 @@ public class SubcontractService {
 				if(!isSameAccCode || numberOfProcessedscDetailBQ==scDetailBQList.size()){
 					message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
 							packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
-							totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
+							totalAmountWithSameAccCodeOrignal, bypassResourceSummaryList);
 					if (message != null)
 						return message;
 
@@ -1143,7 +1147,7 @@ public class SubcontractService {
     			//4. Release the last scDetail
     			message = releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(scDetailIDsForSameAccCode, job,
     										packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
-    										totalAmountWithSameAccCodeOrignal, voIDResourceSummaryList);
+    										totalAmountWithSameAccCodeOrignal, bypassResourceSummaryList);
     			if (message != null)
     				return message;
     
@@ -1169,12 +1173,12 @@ public class SubcontractService {
 
 	private String releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(String scDetailIDsForSameAccCode, JobInfo job, String packageNo,
 			String lastObjCode, String lastSubsidCode, Double totalAmountWithSameAccCode,
-			Double totalAmountWithSameAccCodeOrignal, List<Long> voIDResourceSummaryList) {
+			Double totalAmountWithSameAccCodeOrignal, List<Long> bypassResourceSummaryList) {
 		String message = null;
 			try{
 			boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job,
 					packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode,
-					totalAmountWithSameAccCodeOrignal.doubleValue(), voIDResourceSummaryList);
+					totalAmountWithSameAccCodeOrignal.doubleValue(), bypassResourceSummaryList);
 
 				logger.info("Resources Summary of " +
 							" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
@@ -1196,7 +1200,7 @@ public class SubcontractService {
 					logger.info(message);
 		}
 					return message;
-			}
+	}
 
 	/**
 	 * 
