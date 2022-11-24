@@ -20,19 +20,12 @@
 						<h5>{{tender.nameSubcontractor}}</h5>
 						<h5 class="text-primary" ng-if="companyCurrencyCode==tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss) | currency}}</h5>
 						<h5 class="text-primary" ng-if="companyCurrencyCode!=tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss)/tender.exchangeRate | currency}}</h5>
+						<h5 class="text-danger-light" ng-if="tender.validTenderer=='Yes'">(Valid Tenderer)</h5>
 						</div>
 					</div>
 					</a>
 					
-					<!-- <a ng-click="updateRecommendedTender(tender.vendorNo)" >
-						<div class="check"></div> 
-						<span class="icofont icofont-worker icofont-5x"></span>
-						
-						<h5>{{tender.vendorNo}}</h5>
-						<h5>{{tender.nameSubcontractor}}</h5>
-						<h5 class="text-primary" ng-if="companyCurrencyCode==tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss) | currency}}</h5>
-						<h5 class="text-primary" ng-if="companyCurrencyCode!=tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss)/tender.exchangeRate | currency}}</h5>
-					</a> -->
+				
 					
 					<div class="col-md-12">
 						<div class="col-md-12" ng-show = "showViewButton">

@@ -241,7 +241,7 @@ public class TenderService implements Serializable {
 	}
 		
 	public String updateTenderAnalysisDetails(String jobNo, String packageNo,
-			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String statusChangeExecutionOfSC,
+			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String validTenderer, BigDecimal latestBudgetForecast,
 			List<TenderDetail> taDetails, boolean validate)
 			throws Exception {
 		
@@ -298,9 +298,12 @@ public class TenderService implements Serializable {
 					}
 				}
 				tenderAnalysis.setRemarks(remarks);
-				tenderAnalysis.setStatusChangeExecutionOfSC(statusChangeExecutionOfSC);
+				
 			}
 			tenderAnalysis.setCurrencyCode(currencyCode);
+			
+			tenderAnalysis.setValidTender(validTenderer);
+      tenderAnalysis.setLatestBudgetForecast(latestBudgetForecast);
 			
 			if(tenderAnalysis.getCurrencyCode().equals(companyCurrencyCode)){
 				tenderAnalysis.setExchangeRate(1.0);
@@ -316,6 +319,8 @@ public class TenderService implements Serializable {
 			tenderAnalysis.setSubcontract(scPackage);
 			tenderAnalysis.setCurrencyCode(currencyCode);
 			tenderAnalysis.setExchangeRate(1.0);
+			tenderAnalysis.setValidTender(validTenderer);
+			tenderAnalysis.setLatestBudgetForecast(latestBudgetForecast);
 			tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 		}
 
@@ -685,8 +690,14 @@ public class TenderService implements Serializable {
 			
 			for (Tender tender: tenderList){
 				if(vendorNo.equals(tender.getVendorNo())){
-					tender.setStatus(Tender.TA_STATUS_RCM);
 					
+				  if(tender.getValidTender() ==null || !tender.getValidTender().equals("Yes")){
+				    error = "Only Valid Tenderer can be selected as recommended Tenderer.";
+		        return error;
+				  }
+				  
+				  tender.setStatus(Tender.TA_STATUS_RCM);
+										
 					subcontract.setVendorNo(vendorNo.toString());
 					subcontract.setNameSubcontractor(tender.getNameSubcontractor());
 				}

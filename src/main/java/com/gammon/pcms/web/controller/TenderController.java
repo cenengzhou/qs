@@ -8,6 +8,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -140,11 +141,12 @@ public class TenderController {
 										@RequestParam(name="currencyCode") String currencyCode,
 										@RequestParam(name="exchangeRate") Double exchangeRate,
 										@RequestParam(name="remarks") String remarks,
-										@RequestParam(name="statusChangeExecutionOfSC") String statusChangeExecutionOfSC,
+										@RequestParam(name="validTenderer") String validTenderer,
+										@RequestParam(name="latestBudgetForecast") BigDecimal latestBudgetForecast,
 										@RequestParam(name="validate") Boolean validate,
 										@Valid @RequestBody List<TenderDetail> taDetails) throws Exception{
 		String result = "";
-		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate);
+		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, validTenderer, latestBudgetForecast, taDetails, validate);
 		return result;
 	}
 

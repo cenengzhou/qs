@@ -56,6 +56,8 @@ public class Tender extends BasePersistedObject{
 	private Date datePrepared;
 	
 	private String nameSubcontractor; 
+	private String validTender;
+	private BigDecimal latestBudgetForecast = new BigDecimal(0);
 	
 	public Tender() {
 		super();
@@ -199,6 +201,24 @@ public class Tender extends BasePersistedObject{
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
 	}
+
+	@Column(name = "VALID_TENDER", length = 10)
+  public String getValidTender() {
+    return validTender;
+  }
+
+  public void setValidTender(String validTender) {
+    this.validTender = validTender;
+  }
+
+  @Column(name = "LASTEST_BUDGET_FORECAST", precision = 19,  scale = 2)
+  public BigDecimal getLatestBudgetForecast() {
+    return latestBudgetForecast;
+  }
+
+  public void setLatestBudgetForecast(BigDecimal latestBudgetForecast) {
+    this.latestBudgetForecast = latestBudgetForecast;
+  }
 
 	
 }

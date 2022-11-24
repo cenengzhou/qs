@@ -140,7 +140,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate) {
+	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, validTenderer, latestBudgetForecast, taDetails, validate) {
 		var request = $http({
 			method: "post",
 			url: "service/tender/updateTenderDetails",
@@ -152,7 +152,8 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 				currencyCode: currencyCode,
 				exchangeRate: exchangeRate,
 				remarks: remarks,
-				statusChangeExecutionOfSC: statusChangeExecutionOfSC,
+				validTenderer: validTenderer,
+				latestBudgetForecast: latestBudgetForecast,
 				validate: validate
 			},
 			data: taDetails

@@ -25,14 +25,17 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			          selected: "HKD"
 	};
 	
-	$scope.statusChangeExecutionOfSC = {
-			options: ["Y",
-			          "N",
-			          "N/A"
-			          ],
-			          selected: "N/A"
-	};
-
+	
+	$scope.validTenderer = {
+			options: [
+		          "Yes",
+		          "No"
+		          ],
+		          selected: "Yes"
+	} 
+		
+	
+	
 	loadData();
 
 
@@ -245,7 +248,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 				function( data ) {
 					$scope.tender = data;
 					$scope.currencyCode.selected = data.currencyCode;
-					$scope.statusChangeExecutionOfSC.selected = data.statusChangeExecutionOfSC;
+					$scope.validTenderer.selected = data.validTenderer;
 
 				});
 	}
@@ -270,7 +273,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 	}
 	
 	function updateTenderDetails(taData) {
-		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.statusChangeExecutionOfSC.selected,
+		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.validTenderer.selected, $scope.tender.latestBudgetForecast,
 				taData, true)
 		.then(
 				function( data ) {

@@ -338,6 +338,7 @@ public class RocService {
 
 			} else {
 				if (!RocDateUtils.compareDatePeriod(today(), dbRoc.getClosedDate())) {
+				  logger.info("Cannot reopen other month period");
 					return "Cannot reopen other month period";
 				}
 				dbRoc.setClosedDate(null);

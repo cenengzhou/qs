@@ -222,12 +222,14 @@
 					<tr>
 						<td colspan="4" class="th" ng-reflect-ng-class="[object Object]">TENDERER</td>
 						<td colspan="2" class="th" ng-reflect-ng-class="[object Object]">AMOUNT</td>
-						<td colspan="6" class="th" ng-reflect-ng-class="[object Object]">REMARKS</td>
+						<td colspan="1" class="th" ng-reflect-ng-class="[object Object]">VALID</td>
+						<td colspan="5" class="th" ng-reflect-ng-class="[object Object]">REMARKS</td>
 					</tr> [#list tenderList as tenderer] 
 					<tr>
 						<td colspan="4">${tenderer.nameSubcontractor!"&nbsp;"}</td>
 						<td colspan="2"> ${companyCurrencyCode!""} ${((tenderer.budgetAmount!0) - (tenderer.amtBuyingGainLoss!0))?string["#,##0.00"]} </td>
-						<td colspan="6">${tenderer.remarks!"&nbsp;"}</td>
+						<td colspan="1">${tenderer.validTenderer!"&nbsp;"}</td>
+						<td colspan="5">${tenderer.remarks!"&nbsp;"}</td>
 					</tr> [/#list]
 
 					<tr>
@@ -256,12 +258,20 @@
 										</td>
 									</tr>
 									<tr>
-										<td>Tender &amp; \ or Latest Forecast Budget *</td>
+										<td>Tender Budget</td>
 										<td>${companyCurrencyCode!""} ${(budgetTender.budgetAmount!0)?string["#,##0.00"]}</td>
 									</tr>
 									<tr>
-										<td>Buying Gain \ (Loss)</td>
+										<td>Buying Gain\(Loss) against Tender Budget</td>
 										<td>${companyCurrencyCode!""} ${(rcmTenderer.amtBuyingGainLoss!0)?string["#,##0.00"]}</td>
+									</tr>
+									<tr>
+										<td>Latest 1FC or 2FC Budget</td>
+										<td>${companyCurrencyCode!""} ${(rcmTenderer.latestBudgetForecast!0)?string["#,##0.00"]}</td>
+									</tr>
+									<tr>
+										<td>Buying Gain\(Loss) against Latest Budget</td>
+										<td>${companyCurrencyCode!""} ${( (rcmTenderer.latestBudgetForecast!0) - ((rcmTenderer.budgetAmount!0)-(rcmTenderer.amtBuyingGainLoss!0)) )?string["#,##0.00"]}</td>
 									</tr>
 									<tr class="border1t">
 										<td>Package Stretch Target ([#if subcontract.amountPackageStretchTarget?? \and subcontract.amountPackageStretchTarget &gt; 0 \and rcmTenderer.budgetAmount?? \and rcmTenderer.budgetAmount &gt; 0]${((1 - (subcontract.amountPackageStretchTarget / rcmTenderer.budgetAmount))  * 100)?string["0.##"]}[#else]&nbsp;[/#if]% )</td>
