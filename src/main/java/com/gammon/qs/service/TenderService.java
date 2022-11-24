@@ -241,7 +241,7 @@ public class TenderService implements Serializable {
 	}
 		
 	public String updateTenderAnalysisDetails(String jobNo, String packageNo,
-			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String validTenderer, BigDecimal latestBudgetForecast,
+			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String validTender, BigDecimal latestBudgetForecast,
 			List<TenderDetail> taDetails, boolean validate)
 			throws Exception {
 		
@@ -302,7 +302,7 @@ public class TenderService implements Serializable {
 			}
 			tenderAnalysis.setCurrencyCode(currencyCode);
 			
-			tenderAnalysis.setValidTender(validTenderer);
+			tenderAnalysis.setValidTender(validTender);
       tenderAnalysis.setLatestBudgetForecast(latestBudgetForecast);
 			
 			if(tenderAnalysis.getCurrencyCode().equals(companyCurrencyCode)){
@@ -319,7 +319,7 @@ public class TenderService implements Serializable {
 			tenderAnalysis.setSubcontract(scPackage);
 			tenderAnalysis.setCurrencyCode(currencyCode);
 			tenderAnalysis.setExchangeRate(1.0);
-			tenderAnalysis.setValidTender(validTenderer);
+			tenderAnalysis.setValidTender(validTender);
 			tenderAnalysis.setLatestBudgetForecast(latestBudgetForecast);
 			tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 		}

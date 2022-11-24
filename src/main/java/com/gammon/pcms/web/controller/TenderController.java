@@ -141,12 +141,12 @@ public class TenderController {
 										@RequestParam(name="currencyCode") String currencyCode,
 										@RequestParam(name="exchangeRate") Double exchangeRate,
 										@RequestParam(name="remarks") String remarks,
-										@RequestParam(name="validTenderer") String validTenderer,
+										@RequestParam(name="validTender") String validTender,
 										@RequestParam(name="latestBudgetForecast") BigDecimal latestBudgetForecast,
 										@RequestParam(name="validate") Boolean validate,
 										@Valid @RequestBody List<TenderDetail> taDetails) throws Exception{
 		String result = "";
-		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, validTenderer, latestBudgetForecast, taDetails, validate);
+		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, validTender, latestBudgetForecast, taDetails, validate);
 		return result;
 	}
 

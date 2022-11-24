@@ -159,7 +159,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
       Criteria criteria = getSession().createCriteria(this.getType());
       criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
       criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
-      criteria.add(Restrictions.eq("validTenderer", "Yes"));
+      criteria.add(Restrictions.eq("validTender", "Yes"));
       criteria.addOrder(Order.asc("vendorNo"));
       result = criteria.list();
     }catch (HibernateException he){

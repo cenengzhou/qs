@@ -26,7 +26,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 	};
 	
 	
-	$scope.validTenderer = {
+	$scope.validTender = {
 			options: [
 		          "Yes",
 		          "No"
@@ -248,7 +248,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 				function( data ) {
 					$scope.tender = data;
 					$scope.currencyCode.selected = data.currencyCode;
-					$scope.validTenderer.selected = data.validTenderer;
+					$scope.validTender.selected = data.validTender;
 
 				});
 	}
@@ -273,7 +273,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 	}
 	
 	function updateTenderDetails(taData) {
-		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.validTenderer.selected, $scope.tender.latestBudgetForecast,
+		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.validTender.selected, $scope.tender.latestBudgetForecast,
 				taData, true)
 		.then(
 				function( data ) {
