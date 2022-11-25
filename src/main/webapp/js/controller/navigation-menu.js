@@ -70,7 +70,7 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 			$.gritter.add({
 				title: 'Announcement',
 				/*text: 'Do you know we have just updated the system? You can find out more in the Annoucement Board!',*/
-				text: 'Year End Cutoff 2022 has been released. Special attention for Singapore users!',
+				text: 'Year End Cutoff 2021 has been released. You can find out more in the Announcement Board!',
 				image: 'image/new2.png',
 				sticky: false,
 				time: '8000'
