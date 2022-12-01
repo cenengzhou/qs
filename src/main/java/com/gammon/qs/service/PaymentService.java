@@ -1409,7 +1409,7 @@ public class PaymentService{
 			
 			if ("F".equals(paymentType)){
 				Addendum lastAddendum = addendumHBDao.getLatestApprovedAddendum(jobNo, subcontractNo);
-				if(lastAddendum == null || lastAddendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.N.toString())) {
+				if(lastAddendum == null || lastAddendum.getFinalAccount() == null || lastAddendum.getFinalAccount().equals(Addendum.FINAL_ACCOUNT_VALUE.N.toString())) {
 					error = "Please submit Final Addendum/Final Account before releasing Final Payment.";
 					return error;
 				}

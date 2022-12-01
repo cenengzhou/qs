@@ -444,7 +444,13 @@
 											<table class="border2">
 												<tbody>
 													<tr>
-														<td>[#if tenderList?size lt 3]Yes[#else]No[/#if]</td>
+														[#assign validTender = 0] 
+														[#list tenderList as tenderer]	
+															[#if tenderer.validTender?? & tenderer.validTender =="Yes"]
+																[#assign validTender++]
+															[/#if]		
+														[/#list]
+														<td>[#if validTender < 3]Yes[#else]No[/#if]</td>
 													</tr>
 												</tbody>
 											</table>
