@@ -545,10 +545,11 @@ public class ResourceSummaryService implements Serializable {
 				totalAmountofSameAccountCode += resourceSummary.getAmountBudget();
 			}
 		}
-		logger.info("Total Amount of the Same Account Code: "+format.format(totalAmountofSameAccountCode)+"; New Amount: "+format.format(newSdAmount));
+		logger.info("Total Amount of the Same Account Code: "+format.format(totalAmountofSameAccountCode)+"; origalSdAmount: " + origalSdAmount + " New Amount: "+format.format(newSdAmount));
 
 		//if (totalAmountofSameAccountCode == 0.0 && newAmount.doubleValue() != 0.0) {
-		if (totalAmountofSameAccountCode < newSdAmount.doubleValue()) {
+		Double splitAmt = origalSdAmount - newSdAmount;
+		if (splitAmt < 0) {
 			logger.info("Warning: New Amount is greater than the Total Amount of the Same Account Code.");
 			return Boolean.FALSE;
 		}
@@ -557,7 +558,6 @@ public class ResourceSummaryService implements Serializable {
 		 * Fixing: To handle special Case that user is splitting or terminating a sub-contract with resource budget = 0
 		 * Modified on 30 April 2014 by Tiky Wong
 		 */
-		Double splitAmt = origalSdAmount - newSdAmount;
 		Double resourceProportion = (totalAmountofSameAccountCode - splitAmt) / totalAmountofSameAccountCode;
 		double proportion = new BigDecimal(
 			(newSdAmount!=0 && totalAmountofSameAccountCode!=0) 
