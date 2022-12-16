@@ -38,12 +38,12 @@ public class AddressBook implements java.io.Serializable {
 	private String securityBu;
 	private String vendorApprStatusCode;
 	private String vendorApprovalStatus;
-	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class, AddressBookView.Name.class})
 	private String addressBookTypeCode;
 	private String addrBookType;
 	private String supplierApprovalCode;
 	private String supplierApproval;
-	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class, AddressBookView.Name.class})
 	private String subcontractorApprovalCode;
 	private String subcontractorApproval;
 	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
@@ -54,7 +54,7 @@ public class AddressBook implements java.io.Serializable {
 	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String vendorStatusCode;
 	private String vendorStatus;
-	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class, AddressBookView.Name.class})
 	private String holdCode;
 	private String hold;
 	private String vmsExemptedCode;

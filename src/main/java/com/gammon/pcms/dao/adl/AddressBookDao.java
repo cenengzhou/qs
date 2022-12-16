@@ -53,5 +53,13 @@ public class AddressBookDao extends BaseAdlHibernateDao<AddressBook> {
 		}
 		return resultList;
 	}
+	
+	public AddressBook obtainSubcontractor(BigDecimal addressBookNumber) {
+		Criteria criteria = getSession().createCriteria(getType());
+		criteria.add(Restrictions.in("addressBookTypeCode", new String[] { "O  ", "V  " }));
+		criteria.add(Restrictions.eq("addressBookNumber", addressBookNumber));
+		AddressBook addressBook = (AddressBook) criteria.uniqueResult();
+		return addressBook;
+	}
 
 }

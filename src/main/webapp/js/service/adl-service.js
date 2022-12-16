@@ -6,7 +6,8 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	getMonthlyJobCostList:						getMonthlyJobCostList,
     	getAccountLedgerList:						getAccountLedgerList,
     	getAccountLedgerListByGlDate:				getAccountLedgerListByGlDate,
-    	getAddressBook:								getAddressBook,
+			getAddressBook: getAddressBook,
+			obtainSubcontractor:	obtainSubcontractor,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
     	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
     	getMonthlyJobCostListByPeroidRange:			getMonthlyJobCostListByPeroidRange,
@@ -84,6 +85,17 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     		}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+							}
+							
+		function obtainSubcontractor(addressBookNo){
+    	var request = $http({
+    		method: 'GET',
+    		url: 'service/adl/obtainSubcontractor',
+    		params:{
+    			addressBookNo: addressBookNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddressBookListOfSubcontractorAndClient(addressBookParam, addressBookTypeCode){
@@ -126,7 +138,3 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     }
     
 }]);
-
-
-
-

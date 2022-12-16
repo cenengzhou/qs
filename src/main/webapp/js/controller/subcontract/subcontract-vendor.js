@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'paymentService',
-                                         function($scope, subcontractService, jdeService, tenderService, modalService, confirmService, $state, GlobalMessage, paymentService) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'paymentService', 'adlService',
+                                         function($scope, subcontractService, jdeService, tenderService, modalService, confirmService, $state, GlobalMessage, paymentService, adlService) {
 	
 	loadData();
 
@@ -32,13 +32,13 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 	$scope.addTenderer = function(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			if($scope.newVendorNo != null){
-				jdeService.getSubcontractor($scope.newVendorNo)
+				adlService.obtainSubcontractor($scope.newVendorNo)
 				.then(
 						function( data ) {
-							if(data.length==0)
+							if(!data)
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Tenderer number is invalid.");
 							else{
-								if(data.scFinancialAlert !="" && data.scFinancialAlert !=null){
+								if(data.hold == 1){
 									var modalOptions = {
 										bodyText: GlobalMessage.subcontractorHoldMessage
 									};
@@ -227,7 +227,3 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 		 
 	
 }]);
-
-
-
-

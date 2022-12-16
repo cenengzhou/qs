@@ -407,6 +407,10 @@ public class ADLService {
 		return addressBookDao.get(addressBookNo);
 	}
 	
+	public AddressBook obtainSubcontractor(BigDecimal addressBookNo) {
+		return addressBookDao.obtainSubcontractor(addressBookNo);
+	}
+	
 	public BusinessUnit getBusinessUnit(String jobNo) throws DataAccessException {
 		return businessUnitDao.find(jobNo);
 	}

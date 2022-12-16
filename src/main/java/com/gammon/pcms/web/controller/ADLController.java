@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.gammon.pcms.dto.rs.provider.response.JobDashboardDTO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +41,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class ADLController {
 
-	// private static Logger logger = Logger.getLogger(ADLController.class);
+	private Logger logger = LoggerFactory.getLogger(ADLController.class);
 
 	@Autowired
 	private ADLService adlService;
@@ -70,7 +73,7 @@ public class ADLController {
 		try {
 			return adlService.getMonthlyJobCostList(year, month, noJob, noSubcontract);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<>();
 		}
@@ -93,7 +96,7 @@ public class ADLController {
 		try {
 			return adlService.getMonthlyJobCostListByPeriodRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<>();
 		}
@@ -126,7 +129,7 @@ public class ADLController {
 		try {
 			return adlService.getAAJILedgerList(yearStart, yearEnd, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<AccountBalanceAAJI>();
 		}
@@ -153,7 +156,7 @@ public class ADLController {
 		try {
 			return adlService.getJobDashboardData(noJob, year);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<>();
 		}
@@ -173,7 +176,7 @@ public class ADLController {
 		try {
 			return adlService.getAccountBalanceList(year, month, typeLedger, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<AccountBalanceSC>();
 		}
@@ -194,7 +197,7 @@ public class ADLController {
 		try {
 			return adlService.getAccountLedgerList(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<AccountLedger>();
 		}
@@ -220,7 +223,7 @@ public class ADLController {
 		try {
 			return adlService.getAccountMasterList(noJob);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<AccountMaster>();
 		}
@@ -235,7 +238,7 @@ public class ADLController {
 		try {
 			return adlService.getAccountMaster(noJob, codeObject, codeSubsidiary);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return null;
 		}
@@ -250,7 +253,7 @@ public class ADLController {
 		try {
 			return adlService.getAddressBookListOfSubcontractorAndClient(addressBookParam, addressBookTypeCode);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<>();
 		}
@@ -265,7 +268,20 @@ public class ADLController {
 		try {
 			return adlService.getAddressBook(addressBookNo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return null;
+		}
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBook', @securityConfig.getRolePcmsEnq())")
+	@JsonView(AddressBookView.Name.class)
+	@RequestMapping(value = "obtainSubcontractor", method = RequestMethod.GET)
+	public AddressBook obtainSubcontractor(@RequestParam(required = true) BigDecimal addressBookNo) {
+		try {
+			return adlService.obtainSubcontractor(addressBookNo);
+		} catch (Exception e) {
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return null;
 		}
@@ -301,7 +317,7 @@ public class ADLController {
 		try {
 			return adlService.getApprovalHeaderList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<ApprovalHeader>();
 		}
@@ -326,7 +342,7 @@ public class ADLController {
 		try {
 			return adlService.getApprovalDetailList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error", e);
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<ApprovalDetail>();
 		}
