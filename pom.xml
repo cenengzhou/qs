@@ -2,8 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gammon</groupId>
-	<artifactId>pcms</artifactId>
-	<version>2022-12-14</version>
+	<artifactId>pcms</artifactId><version>2022-12-14</version>
 	<packaging>war</packaging>
 
 	<scm>
@@ -60,14 +59,14 @@
 	<properties>
 		<!-- START: Customize the following properties after checking out the project -->
 		<!-- Java -->
-		<java.version>1.8</java.version>
-		<jdk1.8>C:\Program Files\Java\jdk1.8.0_65</jdk1.8>
+		<!-- <java.version>1.8</java.version>
+		<jdk1.8>C:\Program Files\Java\jdk1.8.0_65</jdk1.8> -->
 		<!-- END -->
 
 		<!-- Maven -->
 		<m2eclipse.wtp.contextRoot>pcms</m2eclipse.wtp.contextRoot>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<!-- <maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target> -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hbm2ddl.skip>true</hbm2ddl.skip>
 
@@ -1097,7 +1096,7 @@
 				</configuration>
 			</plugin>
 			<!-- ====== Step 3: Compile .java to .class by Maven plug-in ====== -->
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-plugin.version}</version>
@@ -1107,8 +1106,16 @@
 					<executable>"${jdk1.8}\bin\javac.exe"</executable>
 					<compilerVersion>${java.version}</compilerVersion>
 				</configuration>
+			</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
 			</plugin>
-
 			<!-- ====== Step 4: Package the project as WAR file ====== -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
