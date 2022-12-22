@@ -1,16 +1,16 @@
-mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'GlobalParameter',
-                                            function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, GlobalParameter) {
+mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'GlobalParameter', 'adlService',
+                                            function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, GlobalParameter, adlService) {
 	 $scope.customPrint = GlobalHelper.customPrint;
 	loadData();
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
-    		jdeService.getSubcontractor($scope.rcmTenderer.vendorNo)
+    		adlService.obtainSubcontractor($scope.rcmTenderer.vendorNo)
 		    	.then(
 		    			function( data ) {
 		    				if(data.length!=0){
 		    					var message = "";
-		    					if((data.scFinancialAlert !="" && data.scFinancialAlert !=null)){
+		    					if((data.hold== 1)){
 		    						message = "1. "+GlobalMessage.subcontractorHoldMessage+"<br/>";
 		    					}
 		    					if($scope.rcmTenderer.currencyCode !="HKD"){
