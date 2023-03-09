@@ -52,7 +52,7 @@ public class AccountCodeWSDao {
 		} catch (SoapFaultClientException sme) {
 			try {
 				logger.log(Level.INFO, "RETRY: createAccountCode (" + jobNumber + "." + objectCode + "." + subsidiaryCode + ") ");
-				Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+				Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 				getUpdateAccMasterByObjSubWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 
 			} catch (Exception e) {

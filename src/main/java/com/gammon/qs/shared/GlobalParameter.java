@@ -48,7 +48,7 @@ public class GlobalParameter {
     public final static int PAGE_SIZE = 100;
     
     //RETRY INTERVERAL
-    public final static long RETRY_INTERVERAL = 30000;
+    public final static long RETRY_INTERVAL = 30000;
     
     //Error Message of Validate Cost Type and Cost Code
     public final static String ERROR_OBJ_SUB = "Invalid Combination of Cost Code and Cost Type";

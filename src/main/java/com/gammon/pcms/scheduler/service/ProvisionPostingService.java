@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,6 +36,7 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.admin.MailContentGenerator;
+import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ProvisionWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
@@ -216,11 +218,37 @@ public class ProvisionPostingService {
 
 		// --------------------- START: Setup ---------------------
 		// JDE EDI Batch No. & EDI Transaction No.
-		try {
-			ediBatchNo = createGLDao.getEdiBatchNumber();
-		} catch (Exception e1) {
-			e1.printStackTrace();
+		for(int i = 0; i < 3; i++){				//retry for 3 times
+			if(GenericValidator.isBlankOrNull(ediBatchNo)){
+				try {
+					ediBatchNo = createGLDao.getEdiBatchNumber();	
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				logger.info("Get JDE EDI Batch No: "+i + " - ediBatchNo: "+ediBatchNo);
+				
+				if(GenericValidator.isBlankOrNull(ediBatchNo)){
+					try {
+						Thread.sleep(GlobalParameter.RETRY_INTERVAL);// Delay 30 secs
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+			else{
+				break; 
+			}
 		}
+
+		if(GenericValidator.isBlankOrNull(ediBatchNo)){
+			String content = mailContentGenerator.obtainEmailContentForScheduleJob(startTime, new Date(), "Cannot Get EDI Batch Next Number");
+			mailContentGenerator.sendEmail("QS System Notification - Scheduled Job: Provision Posting [ERROR]", content);
+			logger.info("--------------------[Monthly Provision Posting Ended with Error]: Cannot Get EDI Batch Next Number------------------------------------");
+			return;
+		}
+		
 		ediTransactionNo = 10000;
 
 		// Counters

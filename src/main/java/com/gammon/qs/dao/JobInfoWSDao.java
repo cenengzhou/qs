@@ -267,13 +267,13 @@ public class JobInfoWSDao{
 			logger.info("FAIL to call WS (updateJobBudgetPostedFlag), pending for RETRY");
 			start = System.currentTimeMillis();
 			try {
-				Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+				Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 				return e1.getLocalizedMessage();
 			}				
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end-start)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :"+ ((end-start)/1000.00));
 			try{
 				logger.info("RETRY calling ws (updateJobBudgetPostedFlag)");
 				start = System.currentTimeMillis();
@@ -311,13 +311,13 @@ public class JobInfoWSDao{
 			logger.info("FAIL to call WS (checkConvertedStatusInJDE), pending for RETRY");
 			start = System.currentTimeMillis();
 			try {
-				Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+				Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 				return e1.getLocalizedMessage();
 			}				
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end-start)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :"+ ((end-start)/1000.00));
 			try{
 				logger.info("RETRY calling ws (checkConvertedStatusInJDE)");
 				start = System.currentTimeMillis();

@@ -519,9 +519,9 @@ public class MasterListWSDao{
 			
 			logger.info("FAIL to call WS (CheckAwardValidation), pending for RETRY");
 			start = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);				
+			Thread.sleep(GlobalParameter.RETRY_INTERVAL);				
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end-start)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :"+ ((end-start)/1000.00));
 			try {
 				logger.info("RETRY calling ws(CheckAwardValidation):"); 
 				start = System.currentTimeMillis();
@@ -627,7 +627,7 @@ public class MasterListWSDao{
 
 				logger.log(Level.INFO,"RETRY: createAccountCode ("+jobNumber+"."+objectCode+"."+subsidiaryCode+") ");
 				sme.printStackTrace();
-				Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+				Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE,"FAIL: createAccountCode("+jobNumber+"."+objectCode+"."+subsidiaryCode+") is failure");
 				e.printStackTrace();

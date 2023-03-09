@@ -114,9 +114,9 @@ public class SubcontractWSDao {
 		} catch (SoapFaultClientException e1) {
 			logger.info("FAIL to call WS (addUpdateAttachmentWebServiceTemplate), pending for RETRY");
 			start = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+			Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end - start) / 1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :" + ((end - start) / 1000.00));
 			try {
 				logger.info("RETRY calling WS (addUpdateAttachmentWebServiceTemplate)");
 				start = System.currentTimeMillis();
@@ -153,9 +153,9 @@ public class SubcontractWSDao {
 		{
 			logger.info("FAIL to call WS (addUpdateTextWebServiceTemplate), pending for RETRY");
 			long start1 = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+			Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			long end2 = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end2 - start1) / 1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :" + ((end2 - start1) / 1000.00));
 
 			try {
 				logger.info("RETRY calling WS (addUpdateTextWebServiceTemplate)");
@@ -213,9 +213,9 @@ public class SubcontractWSDao {
 		} catch (SoapFaultClientException e1) {
 			logger.info("FAIL to call WS (deleteTextMediaObjectWebServiceTemplate), pending for RETRY");
 			start = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+			Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end - start) / 1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVAL) :" + ((end - start) / 1000.00));
 			try {
 				logger.info("RETRY calling ws (deleteTextMediaObjectWebServiceTemplate)");
 				start = System.currentTimeMillis();
@@ -300,7 +300,7 @@ public class SubcontractWSDao {
 
 		} catch (SoapFaultClientException soapEx) {
 			logger.info("FAIL to Web Service(PlainTextManager-getPlainText()), PENDING FOR RETRY");
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+			Thread.sleep(GlobalParameter.RETRY_INTERVAL);
 			try {
 				logger.info("RETRY calling Web Service(PlainTextManager-getPlainText())");
 				responseObj = (GetPlainTextResponseObj) getPlainTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
