@@ -218,6 +218,10 @@ public class ProvisionPostingService {
 
 		// --------------------- START: Setup ---------------------
 		// JDE EDI Batch No. & EDI Transaction No.
+		
+		//Reset EDIBatchNo
+		ediBatchNo = null;
+		
 		for(int i = 0; i < 3; i++){				//retry for 3 times
 			if(GenericValidator.isBlankOrNull(ediBatchNo)){
 				try {
