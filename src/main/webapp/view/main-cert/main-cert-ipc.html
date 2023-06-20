@@ -76,9 +76,9 @@
 								<div class="panel-title">
 									<b>Certificate No.: {{cert.certificateNumber}}</b>
 									<label class="m-l-10"><b>Client Cert No.:</b></label>
-									<label class="m-l-10" ng-show="disableButtons || cert.certificateStatus !=120"><b>{{cert.clientCertNo}}</b></label>
+									<label class="m-l-10" ng-show="disableButtons"><b>{{cert.clientCertNo}}</b></label>
 									<input type="text" class=" input-sm  text-black text-right"
-										   ng-model="cert.clientCertNo" ng-hide="disableButtons || cert.certificateStatus !=120">
+										   ng-model="cert.clientCertNo" ng-hide="disableButtons">
 									<label class="m-l-10"> <b>Posting Amount
 										{{postingAmount = (cert.certifiedMainContractorAmount +
 												cert.certifiedNSCNDSCAmount + cert.certifiedClaimsAmount+ cert.certifiedVariationAmount+
@@ -111,7 +111,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMainContractorAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -119,7 +119,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMainContractorAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -130,7 +130,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedNSCNDSCAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -138,7 +138,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedNSCNDSCAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -149,7 +149,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedClaimsAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -157,7 +157,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedClaimsAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -168,7 +168,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedVariationAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -176,7 +176,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedVariationAmount"
-													   ng-disabled="disableButtons  || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -187,7 +187,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMOSAmount"
-													   ng-disabled="disableButton || cert.certificateStatus !=120">
+													   ng-disabled="disableButton">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -195,7 +195,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMOSAmount"
-													   ng-disabled="disableButton || cert.certificateStatus !=120">
+													   ng-disabled="disableButton">
 											</div>
 										</div>
 									</div>
@@ -207,7 +207,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedAdjustmentAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -215,7 +215,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedAdjustmentAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -226,7 +226,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedAdvancePayment"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -234,7 +234,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedAdvancePayment"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -245,7 +245,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedCPFAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -253,7 +253,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedCPFAmount"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -287,7 +287,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMainContractorRetentionReleased"
-													   ng-disabled="disableButtons|| cert.certificateStatus !=120 ">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -295,7 +295,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMainContractorRetentionReleased"
-													   ng-disabled="disableButtons|| cert.certificateStatus !=120 ">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -306,7 +306,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedRetentionforNSCNDSCReleased"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -314,7 +314,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedRetentionforNSCNDSCReleased"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -325,7 +325,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMOSRetentionReleased"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -333,7 +333,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMOSRetentionReleased"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -344,7 +344,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMainContractorRetention"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -352,7 +352,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMainContractorRetention"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -363,7 +363,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedRetentionforNSCNDSC"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -371,7 +371,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedRetentionforNSCNDSC"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -382,7 +382,7 @@
 												<input type="text" ng-currency ng-required="true"
 													   class="form-control input-sm text-right"
 													   ng-model="cert.certifiedMOSRetention"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -390,7 +390,7 @@
 												<input type="text" ng-currency ng-required="isMovementColumnShown"
 													   class="form-control input-sm text-right"
 													   ng-model="certMovement.certifiedMOSRetention"
-													   ng-disabled="disableButtons || cert.certificateStatus !=120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 									</div>
@@ -401,9 +401,9 @@
 												<input type="text" class="form-control input-sm text-right"
 													   ng-click="editContraCharge()"
 													   value="{{cert.certifiedContraChargeAmount | currency}}"
-													   ng-disabled="disableButtons || cert.certificateStatus != 120">
+													   ng-disabled="disableButtons">
 											</div>
-											<a ng-show="disableButtons || cert.certificateStatus != 120"
+											<a ng-show="disableButtons"
 											   ng-click="editContraCharge('view')">(View Detail)</a>
 										</div>
 										<div ng-class="getMvmtColCss(isMovementColumnShown)">
@@ -413,7 +413,7 @@
 													   ng-click="editContraCharge()"
 													   ng-disabled="true"
 													   value="{{certMovement.certifiedContraChargeAmount | currency}}"
-													   ng-disabled="disableButtons || cert.certificateStatus != 120">
+													   ng-disabled="disableButtons">
 											</div>
 										</div>
 
@@ -469,7 +469,7 @@
 															<input type="text" ng-currency ng-required="true"
 																   class="form-control input-sm text-right"
 																   ng-model="cert.gstReceivable"
-																   ng-disabled="disableButtons || cert.certificateStatus !=120">
+																   ng-disabled="disableButtons">
 														</div>
 													</div>
 													<div class="form-group col-md-6  col-xs-12">
@@ -478,7 +478,7 @@
 															<input type="text" ng-currency ng-required="true"
 																   class="form-control input-sm text-right"
 																   ng-model="cert.gstPayable"
-																   ng-disabled="disableButtons || cert.certificateStatus !=120">
+																   ng-disabled="disableButtons">
 														</div>
 													</div>
 												</div>
@@ -502,7 +502,7 @@
 																		class="fa fa-calendar"></i>
 																</span> <input class="form-control"
 																			   ng-model="cert.certIssueDate"
-																			   ng-disabled="disableButtons || cert.certificateStatus !=120">
+																			   ng-disabled="disableButtons">
 
 															</div>
 														</div>
@@ -519,7 +519,7 @@
 																		class="fa fa-calendar"></i>
 																</span> <input class="form-control"
 																			   ng-model="cert.certAsAtDate"
-																			   ng-disabled="disableButtons || cert.certificateStatus !=120">
+																			   ng-disabled="disableButtons">
 
 															</div>
 														</div>
@@ -534,7 +534,7 @@
 																<span class="input-group-addon"> <i
 																		class="fa fa-calendar"></i>
 																</span> <input class="form-control" ng-model="cert.certDueDate"
-																			   ng-disabled="disableButtons || cert.certificateStatus !=120">
+																			   ng-disabled="disableButtons">
 
 															</div>
 														</div>
@@ -569,7 +569,7 @@
 													<label>Brief explanation of difference to Cumulative IPA</label>
 													<textarea class="form-control" rows="2"
 															  ng-model="cert.remark" ng-style="{height: 50 + 'px'}"
-															  ng-disabled="disableButtons || cert.certificateStatus !=120"></textarea>
+															  ng-disabled="disableButtons"></textarea>
 												</div>
 											</div>
 										</div>
@@ -579,7 +579,7 @@
 								<div class="row ">
 									<div class=" col-md-12 m-t-10">
 										<button class="btn btn-primary btn-block"
-												ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+												ng-disabled="disableButtons" ng-hide="disableButtons"
 												ng-click="save()">
 											Save <i class="fa fa-floppy-o"></i>
 										</button>

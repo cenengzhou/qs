@@ -125,11 +125,11 @@ public class MainCertService {
 		String jobNo = newMainContractCert.getJobNo();
 		Integer mainCertNo = newMainContractCert.getCertificateNumber();
 		
-		MainCert latestMainCert = getLatestMainCert(jobNo, null);
+		/*MainCert latestMainCert = getLatestMainCert(jobNo, null);
 		if(latestMainCert != null && new Integer(latestMainCert.getCertificateStatus()) < new Integer(MainCert.CERT_POSTED)) {
 			message = "Main Cert " + latestMainCert.getCertificateNumber() + " not posted yet";
 			return message;
-		}		
+		}*/		
 		
 		if (mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(), mainCertNo)!=null){
 			message = "The Main Contract Certificate existed already. Job: "+jobNo+" Cert No.: "+mainCertNo;
@@ -181,7 +181,15 @@ public class MainCertService {
 			if(!MainCert.CERT_CREATED.equals(mainCert.getCertificateStatus())){
 				message = "Main Contract Certificate No."+mainCertNo+" cannot be deleted. Status: "+MainCert.getCertStatusDescription(mainCert.getCertificateStatus())+".";
 				return message;
+				
 			}else{
+				//Check if next main cert is 100 or not
+				MainCert latestMainCert = getLatestMainCert(jobNo, null);
+				if(latestMainCert != null && !(latestMainCert.getCertificateNumber().equals(mainCertNo))) {
+					message = "Main Cert " + mainCertNo + " cannot be deleted as there is next main cert " + latestMainCert.getCertificateNumber();
+					return message;
+				}	
+
 				attachmentService.deleteAttachmentByMainCert(mainCert);
 				mainCertHBDao.delete(mainCert);
 			}
@@ -251,6 +259,23 @@ public class MainCertService {
 	 * Integrate process of inserting IPA to JDE and updating Main Certificate at QS
 	 */
 	public String insertIPAAndUpdateMainContractCert(MainCert mainCert) throws DatabaseOperationException{
+		String message = "";
+		//Check if previous main cert is posted or not
+		
+		if (mainCert.getCertificateNumber() !=1 ){
+			MainCert prevMainCert =	mainCertHBDao.findByJobNoAndCertificateNo(mainCert.getJobNo(), mainCert.getCertificateNumber()-1);
+			
+			if(prevMainCert != null && !(prevMainCert.getCertificateStatus().equals(MainCert.CERT_POSTED))) {
+				message = "Previous Main Cert " + prevMainCert.getCertificateNumber() + " has not yet posted. Status: "+ prevMainCert.getCertificateStatus();
+				return message;
+			}else if (prevMainCert == null){
+				message = "Previous Main Cert " + (mainCert.getCertificateNumber()-1) + " cannot be found in the system.";
+				return message;
+				
+			}
+			
+		}
+		
 		//Insert IPA to JDE
 		insertIPA(mainCert, securityService.getCurrentUser().getUsername());
 		logger.info("Job: "+mainCert.getJobNo()+" IPA has been inserted to JDE successfully.");
@@ -260,7 +285,7 @@ public class MainCertService {
 		toBeUpdatedMainCert.setIpaSentoutDate(new Date());
 		toBeUpdatedMainCert.setCertificateStatus("120");
 		toBeUpdatedMainCert.setCertStatusChangeDate(new Date());
-		String message = updateMainContractCert(toBeUpdatedMainCert);
+		message = updateMainContractCert(toBeUpdatedMainCert);
 		
 		if(message==null)
 			logger.info("Job: "+mainCert.getJobNo()+" IPA has been sent out successfully.");

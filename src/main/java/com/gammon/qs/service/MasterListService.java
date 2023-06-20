@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddressBookWithSCStatus.GetAddressBookWithSCStatusRequestObj;
+import com.gammon.pcms.dao.adl.AccountMasterDao;
+import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.domain.MasterListObject;
@@ -28,12 +30,15 @@ public class MasterListService {
 	private MasterListWSDao masterListDao;
 	@Autowired
 	private AdminService adminService;
-
+	@Autowired
+	private AccountMasterDao accountMasterDao;
+	
 	// server cache
 	private List<MasterListVendor> vendorList;
 	private List<MasterListObject> objectList;
 	private List<MasterListSubsidiary> subsidiaryList;
 	private List<MasterListVendor> clientList;
+	
 
 	public List<MasterListVendor> getClientList() {
 		return clientList;
@@ -529,7 +534,11 @@ public class MasterListService {
 	}
 	
 	public boolean isJobLevelAccExist(String jobNumber, String objectCode, String subsidiaryCode) {
-		return masterListDao.validateAccNum(jobNumber, objectCode, subsidiaryCode);
+		AccountMaster accountMaster = accountMasterDao.findByAccountCode(jobNumber, objectCode, subsidiaryCode);
+		if(accountMaster != null)
+			return true;
+		else return false;
+		//return masterListDao.validateAccNum(jobNumber, objectCode, subsidiaryCode);
 	}
 
 	public List<WorkScopeWrapper> getSubcontractorWorkScope(String vendorNo)throws Exception{
