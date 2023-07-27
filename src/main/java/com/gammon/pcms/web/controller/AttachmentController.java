@@ -78,7 +78,7 @@ public class AttachmentController {
 		return result;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "deleteAttachmentAdmin", method = RequestMethod.POST)
 	public Boolean deleteAttachmentAdmin(@RequestParam String nameObject, @RequestParam String textKey,
 			@RequestParam Integer sequenceNumber) throws Exception {
