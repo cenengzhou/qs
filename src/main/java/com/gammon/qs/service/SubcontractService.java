@@ -631,7 +631,7 @@ public class SubcontractService {
 			approvalType = "VB";
 		String approvalSubType = scPackage.getApprovalRoute();
 
-		message = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNumber, vendorNo, vendorName, approvalType, approvalSubType, 0.00, currencyCode, securityService.getCurrentUser().getUsername(), null);
+		message = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNumber, vendorNo, vendorName, approvalType, approvalSubType, 0.00, currencyCode, securityService.getCurrentUser().getUsername(), null, null);
 
 		if (message==null || "".equals(message.trim())){
 			logger.info("Job: "+jobNumber+" SCPackage: "+packageNumber+" has submitted the Split/Terminate Subcontract Approval successfully.");
@@ -824,7 +824,7 @@ public class SubcontractService {
 					String currencyCode = getCompanyBaseCurrency(jobNumber);
 					String userID = securityService.getCurrentUser().getUsername();
 					
-					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, rcmTender.getVendorNo().toString(), rcmTender.getNameSubcontractor(), approvalType, approvalSubType, approvalAmount, currencyCode, userID, subcontract.getInternalJobNo());
+					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, rcmTender.getVendorNo().toString(), rcmTender.getNameSubcontractor(), approvalType, approvalSubType, approvalAmount, currencyCode, userID, subcontract.getInternalJobNo(), subcontract.getWorkscope());
 					if(msg!=null)
 						logger.info("Create Approval Route Message: "+msg);
 					

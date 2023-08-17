@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.webservice.WSConfig;
 //@EnableWs
 @Configuration
@@ -66,6 +67,12 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 
 	@Value("#{'${excludeInternalTradeRoutes}'.split(',')}")
 	private List<String> excludeInternalTradeRoutes;
+	
+	
+	
+	private List<String> includeSCAwardRoutes;
+	
+	
 
 	public static final String GSF_APPLICATION_CODE = "QS";
 	public static final String GSF_GETROLE = "GetRole";
@@ -343,5 +350,14 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	
 	public int getWsConnectionTimeout(){
 		return this.wsConnectionTimeout;
+	}
+
+	public List<String> getIncludeSCAwardRoutes() {
+		this.includeSCAwardRoutes = Arrays.asList(new String[] { Subcontract.APPROVAL_TYPE_AW, Subcontract.APPROVAL_TYPE_ST, Subcontract.APPROVAL_TYPE_V5, Subcontract.APPROVAL_TYPE_V6, Subcontract.APPROVAL_TYPE_CA});
+		return this.includeSCAwardRoutes;
+	}
+
+	public void setIncludeSCAwardRoutes(List<String> includeSCAwardRoutes) {
+		this.includeSCAwardRoutes = includeSCAwardRoutes;
 	}
 }

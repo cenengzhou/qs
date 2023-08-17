@@ -35,10 +35,10 @@ public class APWebServiceConnectionDao {
 	 *  Commented by Tiky Wong
 	 */
 	public String createApprovalRoute(	String company, String jobNumber, String packageNo, String vendorNo, String vendorName, 
-										String approvalType, String approvalSubType, Double approvalAmount, String currencyCode, String userID, String internalJobNo ){
+										String approvalType, String approvalSubType, Double approvalAmount, String currencyCode, String userID, String internalJobNo , Integer workScope){
 		logger.info("jobNumber:"+jobNumber+" packageNo:"+packageNo+" vendorNo:"+vendorNo+" vendorName:"+vendorName+
 					" company:"+company+" approvalType:"+approvalType+" approvalSubType:"+approvalSubType+
-					" approvalAmount:"+approvalAmount+" userID:"+userID + " internalJobNo:"+internalJobNo);
+					" approvalAmount:"+approvalAmount+" userID:"+userID + " internalJobNo:"+internalJobNo + "workScope: "+workScope);
 		
 		ApprovalServiceRequest approvalRequest = new ApprovalServiceRequest();
 		approvalRequest.setOrderNumber(packageNo);
@@ -53,11 +53,13 @@ public class APWebServiceConnectionDao {
 		approvalRequest.setCompany(company);
 		approvalRequest.setPoCurrency(currencyCode);
 
-		return createApprovalRoute(approvalRequest, internalJobNo);
+		return createApprovalRoute(approvalRequest, internalJobNo, workScope);
 	}
 	
-	public String createApprovalRoute(ApprovalServiceRequest requestObj, String internalJobNo) {
-
+	public String createApprovalRoute(ApprovalServiceRequest requestObj, String internalJobNo, Integer workScope) {
+		//SC Award with Steel workscope requires Finance ED to approve
+		requestObj = createAwardApprovalRouteForFinanceCheck(requestObj, workScope);
+		//Remove CEO for all Internal Trade routes
 		requestObj = createApprovalRouteInternalTradeCheck(requestObj, internalJobNo);
 
 		String errorMsg = "";
@@ -97,4 +99,19 @@ public class APWebServiceConnectionDao {
 		}
 		return requestObj;
 	}
+	
+	private ApprovalServiceRequest createAwardApprovalRouteForFinanceCheck(ApprovalServiceRequest requestObj, Integer workScope) {
+		if (workScope !=null && workScope == 213) { //Rebar Fixing Contract
+			if (webServiceConfig.getIncludeSCAwardRoutes().indexOf(requestObj.getOrderType()) >= 0) {
+				String approvalSubType = "FD";
+				if (StringUtils.isNotBlank(requestObj.getApprovalSubType())) {
+					approvalSubType = requestObj.getApprovalSubType() + "-FD";
+				} 
+				requestObj.setApprovalSubType(approvalSubType);
+			}
+		}
+		return requestObj;
+	}
+	
+	
 }

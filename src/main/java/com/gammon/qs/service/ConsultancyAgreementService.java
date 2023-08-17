@@ -193,7 +193,7 @@ public class ConsultancyAgreementService {
             String currency = accountCodeWSDao.obtainCurrencyCode(jobNo);
             String approvalType = ConsultancyAgreement.CA;
             String approvalSubType = subcontract.getApprovalRoute();
-            result = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNo, subcontractNo, "0", "", approvalType, approvalSubType, ca.getFeeEstimate().doubleValue(), currency, securityService.getCurrentUser().getUsername(), null);
+            result = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNo, subcontractNo, "0", "", approvalType, approvalSubType, ca.getFeeEstimate().doubleValue(), currency, securityService.getCurrentUser().getUsername(), null, null);
             if (result == null || "".equals(result.trim())) {
                 logger.info("Create Approval Route Message: " + result);
                 ca.setDateSubmission(new Date());

@@ -50,6 +50,11 @@ public class Subcontract extends BasePersistedObject {
 	// SC Award - Varied
 	public static final String APPROVAL_TYPE_V5 = "V5";
 	public static final String APPROVAL_TYPE_V6 = "V6"; // Over Budget
+	
+	// SC Award - Consultancy Agreement
+	public static final String APPROVAL_TYPE_CA = "CA";
+		
+	
 
 	// Retention
 	public static final String RETENTION_LUMPSUM = "Lump Sum Amount Retention";

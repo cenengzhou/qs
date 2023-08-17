@@ -2068,7 +2068,7 @@ public class PaymentService{
 					currencyCode = getCompanyBaseCurrency(jobNo);
 
 					resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, jobNo, subcontractNo.toString(), vendorNo, vendorName,
-							approvalType, approvalSubType, certAmount, currencyCode, securityServiceImpl.getCurrentUser().getUsername(), subcontract.getInternalJobNo());
+							approvalType, approvalSubType, certAmount, currencyCode, securityServiceImpl.getCurrentUser().getUsername(), subcontract.getInternalJobNo(), null);
 				}
 
 				logger.info("resultMsg" + resultMsg);

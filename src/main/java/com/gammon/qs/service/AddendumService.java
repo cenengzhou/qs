@@ -1120,7 +1120,7 @@ public class AddendumService{
 				approvalRequest.setCompany(company);
 				approvalRequest.setPoCurrency(currencyCode);
 				approvalRequest.setOrderSuffix(noAddendum.toString());
-				resultMsg = apWebServiceConnectionDao.createApprovalRoute(approvalRequest, subcontract.getInternalJobNo());
+				resultMsg = apWebServiceConnectionDao.createApprovalRoute(approvalRequest, subcontract.getInternalJobNo(), null);
 			}else{
 				logger.info(resultMsg);
 				return resultMsg;
