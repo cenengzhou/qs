@@ -81,8 +81,9 @@ public class APWebServiceConnectionDao {
 			logger.log(Level.SEVERE,e.getMessage(),e);
 			errorMsg = "Approval " + requestObj.getOrderType() + 
 			" subtype " + (StringUtils.isBlank(requestObj.getApprovalSubType()) ? "NA" : requestObj.getApprovalSubType()) +
-			(requestObj.getApprovalSubType() != null && requestObj.getApprovalSubType().indexOf("IT") > -1 ? " for internal trade" : "") +
-			" cannot be created. Please contact helpdesk.";
+			" cannot be created. Please contact helpdesk....." +
+			(requestObj.getApprovalSubType() != null && requestObj.getApprovalSubType().indexOf("FD") > -1 ? " \n (FD: Finance Director approval is required for Rebar Fixing)" : "") +
+			(requestObj.getApprovalSubType() != null && requestObj.getApprovalSubType().indexOf("IT") > -1 ? " \n (IT: CEO's approval is excluded under Internal Trade)" : "") ;
 		}
 		return errorMsg;
 	}
