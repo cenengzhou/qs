@@ -91,7 +91,7 @@ export class FormComponent implements OnInit {
       { title: 'Subcontract Requisition Approved Date', h: '2020-01-01', f: '[#if subcontract.requisitionApprovedDate??]${subcontract.requisitionApprovedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
       { title: 'Subcontract Tender Analysis Approved Date', h: '2020-01-01', f: '[#if subcontract.tenderAnalysisApprovedDate??]${subcontract.tenderAnalysisApprovedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
       { title: 'Pre-Award Finalization Meeting Date', h: '2020-01-01', f: '[#if subcontract.preAwardMeetingDate??]${subcontract.preAwardMeetingDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
-      { title: 'Letter of Acceptance Signed by Subcontractor Date', h: '2020-01-01', f: '[#if subcontract.loaSignedDate??]${subcontract.loaSignedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
+      { title: 'Letter of Award Signed by Subcontractor Date', h: '2020-01-01', f: '[#if subcontract.loaSignedDate??]${subcontract.loaSignedDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
       { title: 'Subcontract Document Executed by Subcontractor Date', h: '2020-01-01', f: '[#if subcontract.scDocScrDate??]${subcontract.scDocScrDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
       { title: 'Subcontract Document Executed by Legal Date', h: '2020-01-01', f: '[#if subcontract.scDocLegalDate??]${subcontract.scDocLegalDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },
       { title: 'Works Commencement Date', h: '2020-01-01', f: '[#if subcontract.workCommenceDate??]${subcontract.workCommenceDate?date?string("dd/MM/yyyy")}[#else]&nbsp;[/#if]' },

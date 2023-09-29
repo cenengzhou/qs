@@ -69,7 +69,7 @@ public class SubcontractDate {
 		case SCDATE_preAwardMeetingDate:
 			return new SubcontractDate().config(SCDATE_preAwardMeetingDate, 3, SCDATE_GROUP_CD, SCDATE_ATTACHMENT_MIDDLE, "Pre-Award Finalization Meeting");
 		case SCDATE_loaSignedDate:
-			return new SubcontractDate().config(SCDATE_loaSignedDate, 4, SCDATE_GROUP_CD, SCDATE_ATTACHMENT_TOP, "Letter of Award / Letter of Acceptance Signed by Subcontractor");
+			return new SubcontractDate().config(SCDATE_loaSignedDate, 4, SCDATE_GROUP_CD, SCDATE_ATTACHMENT_TOP, "Letter of Award Signed by Subcontractor");
 		case SCDATE_scDocScrDate:
 			return new SubcontractDate().config(SCDATE_scDocScrDate, 5, SCDATE_GROUP_CD, SCDATE_ATTACHMENT_TOP, "Subcontract Document Executed by Subcontractor");
 		case SCDATE_scDocLegalDate:
