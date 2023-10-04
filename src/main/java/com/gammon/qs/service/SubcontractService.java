@@ -819,6 +819,12 @@ public class SubcontractService {
 					String msg = "";
 					String approvalSubType = subcontract.getApprovalRoute();	//used to pass "null" to Phase 2 in-order to display NA
 
+					// if approval type = over budget then approval amount should be based on buying loss
+					if(tenderBudget.compareTo(originalBudget) >0 )
+					{
+						approvalAmount = tenderBudget.doubleValue() - originalBudget.doubleValue();
+					}
+
 					// the currency pass to approval system should be the company base currency
 					// so change the currencyCode to company base currency here since it will not affect other part of code
 					String currencyCode = getCompanyBaseCurrency(jobNumber);
@@ -959,9 +965,10 @@ public class SubcontractService {
 		
 			//Tender Budget is greater than Original Budget
 			if(tenderBudget.compareTo(originalBudget) >0 ){
-				if(variedSubcontract)
-					approvalType = Subcontract.APPROVAL_TYPE_V6;
-				else
+				// All over-budget award should goest to ST approval 
+				//if(variedSubcontract)
+				//	approvalType = Subcontract.APPROVAL_TYPE_V6;
+				//else
 					approvalType = Subcontract.APPROVAL_TYPE_ST;
 			}else{
 				if(variedSubcontract)
