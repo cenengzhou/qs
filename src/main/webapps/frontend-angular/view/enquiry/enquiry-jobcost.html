@@ -1,0 +1,47 @@
+<div>
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading bg-inverse">Job Cost</div>
+					<div class="panel-body" style="padding-top:0px">
+					
+					<!-- begin #content -->
+<div id="content" class="content" style="margin-left:0px;padding:0px;">
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Job Cost</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+	<div class="row">
+		<!-- ng-style="{height: 800 + 'px'}" -->
+		<div class="col-md-12">
+		<!-- Main content -->
+			<div class="row">
+				<section class="box box-primary">
+					<ul class="nav nav-tabs">
+						<li role="presentation" ng-class="{active:isSelected('ADL')}"><a
+								href ui-sref="enquiry.jobCost.adl" ng-click="selectTab('ADL')">By Period</a></li>
+						<li role="presentation" ng-class="{active:isSelected('JDE')}"><a
+								href ui-sref="enquiry.jobCost.jde" ng-click="selectTab('JDE')">By Date Range</a></li>
+					</ul>
+					<div class="box col-md-12" ui-view></div>
+				</section>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end #content -->
+
+					</div>
+				</div><!-- panel -->
+			</div>
+		</div>
+
+	</section>
+
+</div>

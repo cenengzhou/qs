@@ -1,0 +1,27 @@
+<div class="panel-group" id="accordion">
+	<div class="panel {{list.panelCss}}" ng-repeat="list in completeApprovalItemList">
+		<div class="panel-heading" style="cursor:pointer" ng-click="showPanel($index)" data-target="{{list.name}}Panel" data-parent="#accordion" data-toggle="collapse">
+			<h4 class="panel-title">
+				{{list.title}}
+			</h4>
+		</div>
+		<div id="{{list.name}}Panel" class="panel-collapse collapse {{list.collapse}}">
+			<form name="{{list.name}}Form">
+				<span class="col-md-4 p-t-20" ng-repeat="param in list.params | filter: {type:'text'}">
+					<label for="{{list.name + param.name}}">{{GlobalHelper.camelToNormalString(param.name)}}</label>
+					<input class="form-control" type="text" ng-model="param.value" required ng-change="canAdminJob(param.value, param.name)" >
+				</span>
+				<span class="col-md-4 p-t-20" ng-repeat="param in list.params | filter: {type:'select'}">
+					<label for="{{list.name + param.name}}">{{GlobalHelper.camelToNormalString(param.name)}}</label>
+					<select id="{{list.name + param.name}}" class="form-control" ng-model="param.value" required>
+						<option ng-repeat="option in param.options" value="{{option.id}}">{{option.value}}</option>
+					</select>
+				</span>
+				<span class="col-md-12 p-t-20" >
+					<button ng-show="showIMSAdmin" class="form-control btn btn-primary" type="submit" ng-click="onUpdate(list.fn, list.params)" style="color:white" ng-disabled="!adminSearchBtn">Update</button>
+				</span>
+			</form>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>

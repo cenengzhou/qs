@@ -1,0 +1,74 @@
+<div>
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Provision History</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Provision History</div>
+					<div class="panel-body">
+						<form role="form" name="searchProvisionHistoryForm" id="searchJobCostForm" ng-submit="loadGridData()" class="form-input-flat">
+							<div>
+								<div class="col-md-2">
+									<label for="searchJobNo">Job No.</label> 
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
+								</div>
+								<div class="col-md-2">
+									<label for="searchSubcontractNo">Subcontract No.</label> 
+									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters">
+								</div>
+								<div class="col-md-2">
+									<label for="searchYear">Year</label>
+									<div class="input-group" moment-picker="searchYear"
+										format="YYYY" start-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchYear" name="searchYear"
+											ng-model="searchYear"
+											pattern=".{4,4}" title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }" required>
+									</div>
+									<p ng-show="searchProvisionHistoryForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchMonth">Period</label>
+									<div class="input-group" moment-picker="searchMonth"
+										format="M" start-view="month" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchMonth" name="searchMonth"
+											ng-model="searchMonth"
+											pattern=".{1,2}" title="Please select Month from the date picker" ng-model-options="{ updateOn: 'blur' }" required>
+									</div>
+									<p ng-show="searchProvisionHistoryForm.searchMonth.$error.pattern" class="red">Please select Month from the date picker</p>
+								</div>
+
+								<div class="col-md-3"></div>
+								<div class="col-md-1">
+									<label>&nbsp;</label>
+									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<br>
+						</form>
+						<div class="col-md-12" block-ui="blockEnquiryProvisionHistory">
+								<div id="" save-and-restore-grid-state="enquiry_provisionHistory" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns
+									ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+									style="height:450px">
+								</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		</div>
+	</section>
+
+</div>

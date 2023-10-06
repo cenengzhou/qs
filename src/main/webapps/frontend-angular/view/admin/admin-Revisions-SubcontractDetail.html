@@ -1,0 +1,26 @@
+<div class="row well">
+	<form name="RevisionsSubcontractDetailSearch"
+		ng-submit="onSubmitSubcontractDetailSearch()" class="form">
+		<div class="col-md-4">
+			<input type="text" class="form-control" placeholder="Job Number:" required pattern="[0-9]{5,5}" ng-change="canAdminJob(subcontractDetailSearch.jobNo)" 
+				id="subcontractDetailSearch_jobNo" ng-model="subcontractDetailSearch.jobNo">
+		</div>
+		<div class="col-md-4">
+			<input type="number" class="form-control" placeholder="Subcontract Number:" required
+				id="subcontractDetailSearch_subcontractNo" ng-model="subcontractDetailSearch.subcontractNo">
+		</div>
+		<div class="col-md-4">
+			<button type="submit" class="btn btn-block btn-primary"
+				id="subcontractDetailSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
+		</div>
+	</form>
+</div>
+<div class="col-md-12"><br>
+	<div id="" save-and-restore-grid-state="admin_revisions_subcontract_detail" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns 
+		ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+		resize ng-style="resizeWithOffset(365)">
+	</div>
+	<div class="row">
+		<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary" ng-disabled="!adminSearchBtn">Update Subcontract Detail</button>
+	</div>
+</div>

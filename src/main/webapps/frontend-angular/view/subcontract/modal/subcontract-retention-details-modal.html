@@ -1,0 +1,84 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h4 class="modal-title">Subcontract Retention Details</h4>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-white">
+
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<div class="widget widget-stat bg-inverse text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-dollar"></i>
+				</div>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">Max. Retention Amount</div>
+					<div class="widget-stat-number">{{
+						subcontract.retentionAmount | currency}}</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-12 col-xs-12">
+			<div class="col-md-12">
+				<div class="widget widget-stat bg-success text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-plus"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Accumulated Retention Amount</div>
+						<div class="widget-stat-number">{{
+							subcontract.accumlatedRetention | currency}}</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-md-12">
+				<div class="widget widget-stat bg-success text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-plus"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Retention Released Amount</div>
+						<div class="widget-stat-number">{{
+							subcontract.retentionReleased | currency}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-12 text-center">
+				<i class="fa fa-arrow-down fa-3x"></i>
+			</div>
+
+			<div class="col-md-12">
+				<div class="widget widget-stat bg-success text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-balance-scale"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Retention Balance</div>
+						<div class="widget-stat-number">{{
+							subcontract.retentionBalance | currency}}</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+
+
+	</div>
+
+</div>
+
+

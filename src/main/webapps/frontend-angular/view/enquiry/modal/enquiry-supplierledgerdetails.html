@@ -1,0 +1,58 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12">
+		<tr>
+		<td><span class="fa fa-dollar"></span> <label>Account Payable Details</label></td>
+		</tr>
+		</table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<table class="table table-striped">
+			<tr>
+				<th>Supplier No:</th><th>{{entity.supplierNumber}}</th><th colspan=2>{{supplierName}}</th>
+			</tr>
+			<tr>
+				<td>Invoice No:</td><td>{{entity.invoiceNumber}}</td><td>Doc No/ Type/ Co</td><td>{{entity.documentNumber}}/{{entity.documentType}}/{{entity.company}}</td>
+			</tr>
+			<tr>
+				<td>Invoice Date:</td><td>{{entity.invoiceDate | date: 'dd/MM/yyyy'}}</td><td>G/L Date:</td><td>{{entity.glDate | date: 'dd/MM/yyyy'}}</td>
+			</tr>
+			<tr>
+				<td>Currency:</td><td>{{entity.currency}}</td><td>Pay Status:</td><td>{{entity.payStatusDesc}}</td>
+			</tr>
+			<tr>
+				<td>Gross Amount:</td><td ng-class="{'red':entity.grossAmount<0}">{{entity.grossAmount | number:2}}</td><td>Open Amount:</td><td ng-class="{'red':entity.openAmount<0}">{{entity.openAmount | number:2}}</td>
+			</tr>
+			<tr>
+				<td>Foreign Amount:</td><td ng-class="{'red':entity.foreignAmount<0}">{{entity.foreignAmount | number:2}}</td><td>Foreign Open Amount:</td><td ng-class="{'red':entity.foreignOpenAmount<0}">{{entity.foreignOpenAmount | number:2}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="row">
+		<table class="table table-striped">			
+			<thead>
+				<tr class="inverse">
+					<th style="border: 1px solid black !important;">Payment Date</th>
+					<th style="border: 1px solid black !important;">Payment Amount</th>
+				</tr>
+			</thead>
+			<tbody >
+				<tr ng-repeat="paymentDate in paymentDates" style="height:30px">
+					<td style="border: 1px solid black !important;">{{paymentDate.paymentDate | date: GlobalParameter.DATE_FORMAT}}</td>
+					<td style="border: 1px solid black !important;" ng-class="{'red': paymentDate.paymntAmount < 0}">{{paymentDate.paymntAmount | number}}</td>
+				</tr>
+				<tr ng-show="paymentDates.length < 4"><td style="border: 1px solid black !important;">&nbsp;</td><td style="border: 1px solid black !important;">&nbsp;</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+
+<html ng-app="initApp">
+<head>
+<meta http-equiv="cache-control" content="private">
+<meta charset="utf-8">
+<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge">
+
+<title>Index</title>
+	<link rel="stylesheet" href="plugins/angular-block-ui/v0.2/css/angular-block-ui.min.css">
+	<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
+	<script src="plugins/angularjs/1.4.9/angular.min.js"></script>	
+	<script src="plugins/angular-block-ui/v0.2/js/angular-block-ui.min.js"></script>
+<script>
+document.execCommand("ClearAuthenticationCache"); 
+var initApp = angular.module('initApp',  ['blockUI'])
+.config(function(blockUIConfig) {		
+	blockUIConfig.autoBlock = true;
+	blockUIConfig.delay = 100;
+	blockUIConfig.autoInjectBodyBlock = true;
+})
+.run(['$http', '$window', function($http,$window){
+
+	var userAgent = $window.navigator.userAgent;
+    var browsers = {chrome: /chrome/i, safari: /safari/i, firefox: /firefox/i, edge: /Edge/i, ie: /Trident/i};
+    
+	var validateSession = function(){
+		console.log("init");
+		$http.get('home.html')
+		.then(function(response){
+			$http.post('service/ValidateCurrentSession')
+			.then(function(response){
+				if(response.data){
+					console.log('redirect to home.html');
+					$window.location.href = 'home.html';					
+				} else {
+					console.log('redirect to login.htm');
+					$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
+				}
+			}, function(error){
+				console.log('error ValidateCurrentSession:'+error);
+				$window.location.href = 'login.htm?ValidateCurrentSessionError';
+			});
+		}, function(error){
+			console.log('error get home.html:'+error);
+			$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
+		});
+	};
+	
+// 	if (browsers['chrome'].test(userAgent) && !browsers['edge'].test(userAgent)) {
+    	window.location.href = 'home.html';
+//     } else {
+//     	validateSession();
+//     }
+
+}]); 
+
+</script>
+ 
+</head>
+<body>
+</body>
+</html>

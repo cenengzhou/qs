@@ -138,6 +138,14 @@
 		<itext.pdfhtml.version>2.1.1</itext.pdfhtml.version>
 		<xml.bind.version>2.3.0</xml.bind.version>
 		<ews-java-api.version>2.0</ews-java-api.version>
+		
+		<!-- Version - react -->
+		<node.version>v18.18.0</node.version>
+		<yarn.version>v1.22.15</yarn.version>
+		<frontend-maven-plugin.version>1.14.0</frontend-maven-plugin.version>
+		<frontend-directory>src/main/webapps</frontend-directory>
+		<frontend-directory-angular>${frontend-directory}/frontend-angular</frontend-directory-angular>
+		<frontend-directory-react>${frontend-directory}/frontend-react</frontend-directory-react>
 	</properties>
 
 	<!-- Bill of material for version management on framework dependency -->
@@ -1134,6 +1142,15 @@
 							<Implementation-Build>svn#${buildNumber}</Implementation-Build>
 						</manifestEntries>
 					</archive>
+					<webResources>
+						<resource>
+							<directory>${frontend-directory-angular}</directory>
+						</resource>
+						<resource>
+							<directory>${frontend-directory-react}/build</directory>
+							<targetPath>web</targetPath>
+						</resource>
+					</webResources>
 				</configuration>
 				<executions>
 					<execution>
@@ -1235,7 +1252,44 @@
 					<hibernateDialect>org.hibernate.dialect.Oracle10gDialect</hibernateDialect>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend-maven-plugin.version}</version>
+				<configuration>
+					<nodeVersion>${node.version}</nodeVersion>
+					<yarnVersion>${yarn.version}</yarnVersion>
+					<workingDirectory>${frontend-directory-react}</workingDirectory>
+					<installDirectory>${project.build.directory}</installDirectory>
+    		</configuration>
+				<executions>
+					<execution>
+							<id>install-frontend-tools</id>
+							<goals>
+									<goal>install-node-and-yarn</goal>
+							</goals>
+					</execution>
+					<execution>
+							<id>yarn-install</id>
+							<goals>
+									<goal>yarn</goal>
+							</goals>
+							<configuration>
+									<arguments>install</arguments>
+							</configuration>
+					</execution>
+					<execution>
+							<id>build-frontend</id>
+							<goals>
+									<goal>yarn</goal>
+							</goals>
+							<phase>prepare-package</phase>
+							<configuration>
+									<arguments>build</arguments>
+							</configuration>
+					</execution>
+    		</executions>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>

@@ -1,0 +1,61 @@
+<div id="content" class="content">
+	<div class="row">
+		<div class="col-md-9">
+			<h1 class="page-header"></h1>
+		</div>
+
+		<div class="col-md-3">
+			<ol class="breadcrumb pull-right">
+				<li><a ui-sref="job.dashboard"><i class="fa fa-home"></i>
+						Home</a></li>
+			</ol>
+		</div>
+	</div>
+
+
+	<div class="col-md-10 col-md-offset-1">
+		<!-- begin panel -->
+		<div class="panel">
+			<ul class="nav nav-tabs nav-tabs-primary nav-justified">
+				<li class="active"><a href="#" data-target="#announcement-tab"
+					data-toggle="tab" target="_self"><span
+						class="icofont icofont-alarm icofont-4x"></span>
+						<h4>Announcement Setting</h4></a></li>
+			</ul>
+			<div class="tab-content m-b-0">
+				<p class="lead m-b-10"><small>Update Announcement Setting for ALL users.</small></p>
+				<div class="tab-pane fade active in" id="announcement-tab">
+
+					<div class="row offset-10 m-t-40">
+						<div class="col-md-6">
+							<div class="col-md-12">
+								<a type="button" class="btn btn-lg btn-primary"
+									style="width: 300px" ng-click="updateAnnouncentSetting('N')">
+									<i class="icofont icofont-volume-bar fa-5x"></i><br> <b>Switch
+										ON</b>
+								</a>
+							</div>
+							<div class="col-md-10 m-t-20">
+								<p>Announcement pop up will be shown.</p>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-12">
+								<a type="button" class="btn btn-lg btn-inverse"
+									style="width: 300px" ng-click="updateAnnouncentSetting('Y')"> <i
+									class="icofont icofont-volume-mute fa-5x"></i><br> <b>Switch
+										OFF</b>
+								</a>
+							</div>
+							<div class="col-md-10 m-t-20">
+								<p>Announcement pop up will be hidden.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- end panel -->
+	</div>
+</div>

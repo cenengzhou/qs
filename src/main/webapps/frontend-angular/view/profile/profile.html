@@ -1,0 +1,146 @@
+<div class="m-t-20 m-l-20 m-r-20">
+	<div class="row">
+		<div class="col-md-9">
+			<h1 class="page-header"></h1>
+		</div>
+
+		<div class="col-md-3">
+			<ol class="breadcrumb pull-right">
+				<li><a ui-sref="job.dashboard"><i class="fa fa-home"></i>
+						Home</a></li>
+			</ol>
+		</div>
+	</div>
+
+
+	<div class="col-md-12">
+		<!-- begin panel -->
+		<div class="panel">
+			<ul class="nav nav-tabs nav-tabs-primary nav-justified">
+				<li class="active"><a href="#" data-target="#profile-tab"
+					data-toggle="tab" target="_self"><span
+						class="icofont icofont-user icofont-4x"></span>
+					<h5>Profile</h5></a></li>
+				<li><a href="#" data-target="#roles-tab" data-toggle="tab"
+					target="_self"><span
+						class="icofont icofont-address-book icofont-4x"></span>
+					<h5>Role</h5></a></li>
+				<li><a href="#" data-target="#defaultjob-tab" data-toggle="tab"
+					target="_self"><span
+						class="icofont icofont-home-search icofont-4x"></span>
+					<h5>Default Job</h5></a></li>
+				<li><a href="#" data-target="#preference-tab" data-toggle="tab" ng-disabled="true"
+					target="_self"><span class="icofont icofont-paper icofont-4x"></span>
+					<h5>Preference</h5>
+						<span class="badge bg-lime-light text-white">Coming soon!</span></a></li>
+			</ul>
+<div class="tab-content m-b-0">
+
+			<div class="tab-pane fade active in" id="profile-tab">
+				<div class="row">
+				<div class="col-md-6">
+					<table class="table height-sm">
+						<tr>
+							<td>
+								<div class="col-md-12">
+									<span class="pull-right" id="userBigImage"> <img
+										data-ng-src="{{userIcon}}"
+										style="border: 3px solid; border-color: rgba(255, 255, 255, 0.2); width: 184px;"
+										imageonload roll-back-image="resources/images/profile.png" />
+									</span>
+								</div>
+							</td>
+							<td>
+								<table class="table">
+									<tr>
+										<td>Name:</td>
+										<td>{{user.fullname}}</td>
+									</tr>
+									<tr>
+										<td>Position:</td>
+										<td>{{user.title}}</td>
+									</tr>
+									<tr>
+										<td>Staff Id</td>
+										<td>{{user.StaffID}}</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="roles-tab">
+				<div class="row">
+						<div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-heading-btn">
+                                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-grey" data-click="panel-expand" data-original-title="" title=""><i class="fa fa-expand"></i></a>
+                                </div>
+                                <h4 class="panel-title">Current system role granted:</h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped table-td-valign-middle">
+                                    <thead>
+                                        <tr class="inverse">
+                                            <th class="text-center">Type</th>
+                                            <th>Role</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="role in user.authorities | orderBy: 'RoleName'">
+                                            <td class="pull-right"><i class="icofont icofont-2x {{icon.iconClass}} rounded-corner" title="{{icon.type}}" ng-repeat="icon in getRoleIcon(role.RoleName)"></td>
+                                            <td>{{role.RoleName}}</td>
+                                            <td >{{role.RoleDescription}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="defaultjob-tab">
+				<div class="row height-md">
+						<div class="widget widget-form col-md-offset-3 col-md-6" style="margin-top:50px">
+			                <div class="widget-header bg-inverse" align="center">
+			                    <h4 class="text-white">Default Job</h4>
+			                </div>
+			                <div class="widget-body">
+                                <form class="form-input-flat">
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <select id="defaultJobTabList" class="form-control text-info" ng-model="defaultJobNo" ng-options="job.jobNo as (job.jobNo + ' - ' + job.description) for job in jobs"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="btn btn-block btn-inverse" ng-click="settingDefaultJobNo()">
+							<i class="fa fa-hand-o-right"></i> Set default job</label>
+                                    </div>
+                                    <p class="help-block text-muted f-s-11 m-b-0" ng-show="showDefaultJobStatus" ng-class="{'animated fadeIn':showDefaultJobStatus, 'animated fadeOut':!showDefaultJobStatus}">Default job updated
+                                    </p>
+                                </form>
+			                </div>
+			            </div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="preference-tab">
+				<div class="row">
+				<div class="col-md-6">
+					<table class="table height-sm">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+				</div>
+			</div>
+</div>
+		</div>
+		<!-- end panel -->
+	</div>
+</div>

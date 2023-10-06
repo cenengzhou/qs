@@ -1,0 +1,93 @@
+<div ng-controller="EnquiryPaymentCtrl">
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Payment Certificate</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Payment Certificate</div>
+					<div class="panel-body">
+						<div class="col-md-12">
+							<form role="form" class="form-input-flat form-horizatial"
+								name="enquiryPaymentForm">
+								<div class="form-group">
+								<div class="col-md-2">{{searchJobNo}}
+									<label for="searchJobNo">Job No.</label> <input type="text"
+										class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo"
+										pattern=".{5,5}" title="Please enter 5 characters">
+										<p ng-show="enquiryPaymentForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchPackage">Subcontract No.</label> 
+									<input type="text"
+										class="form-control" id="searchSubcontractNo" name="searchPackage"
+										ng-model="searchPackage" pattern=".{4,4}"
+										title="Please enter 4 characters">
+									<p ng-show="searchSubcontractDetailForm.searchPackage.$error.pattern"
+										class="red">Please enter 5 characters</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchVendorNo">Subcontractor No.</label> 
+									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo"
+										ng-model="searchVendorNo">
+								</div>
+								<div class="col-md-2">
+									<label for="searchCompany">Company</label> 
+									<select-box selected-item="searchCompany" item-type="company"></select-box>
+								</div>	
+								<div class="col-md-2">
+									<label for="searchPaymentTerms">Payment Terms</label> 
+									<select-box selected-item="searchPaymentTerms" item-type="paymentTerms"></select-box>
+								</div>	
+								<div class="col-md-2">
+									<label for="searchPaymentStatus">Payment Status</label> 
+									<select-box selected-item="searchPaymentStatus" item-type="paymentStatus"></select-box>
+								</div>	
+									<div class="col-md-2">
+									<label for="searchDueDateType">Due Date Range</label>
+										<input
+										type="checkbox" data-ios-toggle="toggle"
+										id="searchDueDateType" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="On Or Before"
+										data-off="Exact Date" ng-model="searchDueDateType" data-width="100%">
+									</div>
+									<div class="col-md-2">
+									<label>Due Date</label>
+										<div class="input-group block" moment-picker="searchDueDate"
+											format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true">
+											<span class="input-group-addon"> <i
+												class="fa fa-calendar"></i>
+											</span> <input class="form-control" id="searchDueDate" 
+												ng-model="searchDueDate" ng-model-options="{ updateOn: 'blur' }">
+										</div>
+									</div>
+									<div class="col-md-7"></div>
+									<div class="col-md-1">
+									<label >&nbsp;</label>
+										<button class="btn btn-block btn-primary" type="submit"
+											ng-click="loadGridData()"><span class="fa fa-search"></span> Search</button>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div block-ui="blockEnquiryPayment"><br>
+									<div id="" save-and-restore-grid-state="enquiry_payment" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler"
+										ui-grid-resize-columns ui-grid-selection ui-grid-move-columns
+										ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid" style="height:450px"></div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>

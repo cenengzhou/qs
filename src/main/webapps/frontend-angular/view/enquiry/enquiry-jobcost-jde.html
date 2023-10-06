@@ -1,0 +1,80 @@
+
+						<form role="form" name="searchJobCostForm" id="searchJobCostForm" ng-submit="loadGridData()" class="form-input-flat">
+							<div class="form-group">
+								<div class="col-md-1">
+									<label for="searchJobNo">Job No.:</label> <input type="text"
+										class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo"
+										pattern=".{5,5}" required title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchJobCostForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+								</div>
+								<div class="col-md-1">
+									<label for="searchSubcontractNo">SC No.:</label> <input
+										type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
+										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
+								</div>
+								<div ng-class="{'col-md-2':showCumulative, 'col-md-3':!showCumulative}">
+									<div ng-show="showCumulative" >
+										<label for="searchJdePeriod">Period:</label>
+										<div class="input-group" moment-picker="searchJdePeriod"
+											format="YYYY-MM" start-view="year" today="true">
+											<span class="input-group-addon"> <i
+												class="fa fa-calendar"></i>
+											</span> <input class="form-control" id="searchJdePeriod" name="searchJdePeriod"
+												ng-model="searchJdePeriod"
+												pattern=".{7,7}" required title="Please select period from the date picker" ng-model-options="{ updateOn: 'blur' }">
+										</div>
+									</div>
+									<div ng-show="!showCumulative">
+										<date-range-picker ng-model="jdesearchDate"></date-range-picker>
+									</div>
+								</div>
+								<div class="col-md-3">
+								<label for="searchSubcontractNo">&nbsp;</label>
+									<div class="btn-group btn-group-justified" ng-click="loadGridData()">
+										<label class="btn"
+											ng-class="{'btn-primary' : postFlag == 'P', 'btn-inverse' : postFlag != 'P'}"
+											ng-model="postFlag"
+											uib-btn-radio="'P'">Posted</label> 
+										<label class="btn"
+											ng-class="{'btn-primary' : postFlag == 'U', 'btn-inverse' : postFlag != 'U'}"
+											ng-model="postFlag"
+											uib-btn-radio="'U'">Unposted</label> 
+										<label class="btn"
+											ng-class="{'btn-primary' : postFlag == '*', 'btn-inverse' : postFlag != '*'}"
+											ng-model="postFlag"
+											uib-btn-radio="'*'">All</label>
+									</div>
+								</div>								
+								<div class="col-md-2">
+									<label for="showCumulative">&nbsp;</label><br> <input
+										type="checkbox" data-ios-toggle="toggle"
+										id="showCumulative" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="Cumulative"
+										data-off="Movement" ng-model="showCumulative" data-width="100%"
+										ng-change="triggerCumulative()">
+								</div>
+
+								<div ng-class="{'col-md-3':showCumulative, 'col-md-2':!showCumulative}">
+									<label>&nbsp;</label><br>
+									<div class="col-md-6">
+										<input
+										type="checkbox" data-ios-toggle="toggle"
+										id="showZero" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="Show Zero Amount"
+										data-off="Hide Zero Amount" ng-model="showZero" data-width="100%"
+										ng-change="loadGridData()">
+									</div>
+									<div class="col-md-6">
+									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+								</div>
+							</div>
+						</form>
+						<div class="clearfix"></div>
+						<br>
+					<div class="col-md-12">
+						<div id="" ui-grid="gridOptions" external-scopes="clickHandler" style="height: 400px"
+							ui-grid-resize-columns ui-grid-selection ui-grid-move-columns
+							ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
+					</div>
+

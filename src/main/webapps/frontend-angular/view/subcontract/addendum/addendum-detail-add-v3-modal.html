@@ -1,0 +1,40 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h4 class="modal-title">Add New Addendum Detail from Budget (Resource Summary)</h4>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-white">
+	<div class="row">
+
+		<!-- Addendum -->
+		<div class="animated fadeIn">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="" save-and-restore-grid-state="subcontract_addendum_detail_add" ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
+						ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter
+						class="grid "></div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<div class="modal-footer">
+	<div class="col-md-6">
+		<button class="btn btn-primary btn-block" ng-click="save()" ng-hide="disableButtons" ng-disabled="disableButtons">Add <span class="fa fa-save"></span></button>
+	</div>
+	<div class="col-md-6">
+		<button class="btn btn-success btn-block" ng-click="saveWithDetail()" ng-hide="disableButtons" ng-disabled="disableButtons">Add with Update Detail<span class="fa fa-save"></span></button>
+	</div>
+
+</div>

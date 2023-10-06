@@ -1,0 +1,50 @@
+<div class="row well">
+	<form name="RevisionsAddendumSearch"
+		ng-submit="onAddendumSearch()" class="form">
+		<div class="col-md-3">
+			<input type="text" class="form-control" placeholder="Job Number:" required pattern="[0-9]{5,5}" ng-change="canAdminJob(addendumSearch.jobNo)" 
+				id="AddendumSearch_jobNo" ng-model="addendumSearch.jobNo">
+		</div>
+		<div class="col-md-3">
+			<input type="number" class="form-control" placeholder="Subcontract Number:" required
+				id="AddendumSearch_subcontractNo" ng-model="addendumSearch.subcontractNo">
+		</div>
+		<div class="col-md-3">
+			<input type="number" class="form-control" placeholder="Addendum Number:" required
+				id="AddendumSearch_addendumNo" ng-model="addendumSearch.addendumNo">
+		</div>
+		<div class="col-md-3">
+			<button type="submit" class="btn btn-block btn-primary"
+				id="AddendumSearch_submit" ng-disabled="!adminSearchBtn">Search</button>
+		</div>
+	</form>
+</div>
+<div ng-if="addendum.id" class="panel panel-default">
+	<div class="panel-headinig"></div>
+	<div class="panel-body">
+		<span ng-repeat="field in fieldList | filter:{visible:true, type:'text'}" class="col-md-4 p-t-20">
+			<label>{{field.label}}</label>
+			<input type="text" class="form-control" ng-model="addendum[field.name]">
+		</span>
+		<span ng-repeat="field in fieldList | filter:{visible:true, type:'number'}" class="col-md-4 p-t-20">
+			<label>{{field.label}}</label>
+			<input type="number" class="form-control" ng-model="addendum[field.name]">
+		</span>
+		<span ng-repeat="field in fieldList | filter:{visible:true, type:'select'}" class="col-md-4 p-t-20">
+			<label>{{field.label}}</label>
+			<select class="form-control" ng-model="addendum[field.name]">
+				<option ng-repeat="option in field.options" value="{{option.id}}">{{option.value}}</option>
+			</select>
+		</span>
+		<span ng-repeat="field in fieldList | filter:{visible:true, type:'date'}" class="col-md-4 p-t-20" on-finish-ng-repeat call-fn="loadDatePickerFn()">
+			<label>{{field.label}}</label>
+			<div class="input-group">
+				<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+				<input class="form-control" type="text" name="{{field.name}}.singleDate" ng-model="addendum[field.name]"/>
+			</div>
+		</span>
+		<span class="col-md-12 p-t-20" >
+			<button class="form-control btn btn-primary" ng-show="showQSAdmin" type="submit" ng-click="onAddendumUpdate()" style="color:white" ng-disabled="!adminSearchBtn">Update</button>
+		</span>
+	</div>
+</div>

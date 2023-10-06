@@ -1,0 +1,54 @@
+<div>
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Main Contract Certificate Enquiry</li>
+		</ol>
+	</section>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-inverse">
+					<div class="panel-heading bg-inverse">Main Contract
+						Certificate Enquiry</div>
+					<div class="panel-body">
+							<div>
+							<form name="form-validate" id="form-validate"
+								class="ng-pristine ng-valid">
+								<div class="form-group">
+										<label class="col-md-1 control-label">Job Number</label>
+										<div class="col-md-7">
+											<div class="input-group">
+												<input class="form-control input-sm text-right" 
+													data-parsley-type="number"  ng-required="true"
+													ng-model="jobNo"
+													data-parsley-minlength="5"
+													data-parsley-maxlength="5">
+											</div>
+										</div>
+									</div>
+									
+
+								<div class="col-md-4">
+									<button class="btn btn-block btn-primary" ng-click="search()">
+										<span class="fa fa-search"></span> Search
+									</button>
+								</div>
+								</form>
+							</div>
+						<div class="col-md-12 m-t-20">
+							<div id="" save-and-restore-grid-state="enquiry_mainCert"
+								ui-grid-save-state ui-grid="gridOptions"
+								external-scopes="clickHandler" ui-grid-pinning
+								ui-grid-resize-columns ui-grid-exporter ui-grid-selection
+								ui-grid-cellnav class="grid" ui-grid-move-columns></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

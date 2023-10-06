@@ -1,0 +1,61 @@
+<div>
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Subcontract Detail</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Subcontract Detail</div>
+						<div class="panel-body">
+							<form role="form" name="searchSubcontractDetailForm"
+								id="searchSubcontractDetailForm" ng-submit="loadGridData()"
+								class="form-input-flat">
+		
+								<div>
+									<div class="col-md-2">
+										<label for="searchSubcontractNo">Subcontract No.</label> 
+										<input type="text"
+											class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
+											ng-model="commonKeyValue['subcontract.packageNo']" pattern=".{4,4}"
+											title="Please enter 4 characters">
+										<p ng-show="searchSubcontractDetailForm.searchSubcontractNo.$error.pattern"
+											class="red">Please enter 5 characters</p>
+									</div>
+									<div class="col-md-2">
+										<label for="searchLineType">Line Type</label> 
+										<select-box selected-item="commonKeyValue['lineType']" item-type="subcontractDetailLineType" id="searchLineType"></select-box>
+									</div>
+									<div class="col-md-2">
+										<label for="searchStatus">Status</label> 
+										<select-box selected-item="commonKeyValue['approved']" item-type="subcontractDetailStatus" id="searchStatus"></select-box>
+									</div>
+									<div class="col-md-5"></div>
+									<div class="col-md-1">
+										<label>&nbsp;</label>
+										<button type="submit" class="btn btn-block btn-primary">
+											<span class="fa fa-search"></span> Search
+										</button>
+									</div>
+								</div>
+		
+							</form>
+							<div class="col-md-12"><br>
+								<div id="" save-and-restore-grid-state="enquiry_subcontractDetail" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns
+									ui-grid-exporter ui-grid-selection ui-grid-cellnav class="grid" style="height:520px" ></div>
+							</div>
+					
+				</div>
+			</div>
+		</div>
+		</div>
+	</section>
+
+</div>

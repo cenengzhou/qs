@@ -1,0 +1,71 @@
+<div>
+	<div class="emailContactChips" >
+		<md-content class="md-padding autocomplete" layout="row">
+
+		 <md-list layout="column" class="fixedRows" resize ng-style="resizeWithOffset(100)" style="width:450px !important">
+               <md-subheader class="md-no-sticky">Contacts</md-subheader>
+               <md-list-item class=" contact-item" ng-click="clickContact($index)" ng-mouseover="checkFocusElement()" style="width:100% !important" ng-repeat="(index, contact) in ctrl.allContacts | orderBy:'name'"
+                  ng-if="ctrl.contacts.indexOf(contact) < 0 && ctrl.contactsCc.indexOf(contact) < 0">
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <div class=" compact" style="cursor:pointer" >
+                     <h3>{{contact.name}}</h3>
+                     <p>{{contact.email}}</p>
+                  </div>
+               </md-list-item>
+               <md-list-item class=" contact-item selected" ng-repeat="(index, contact) in ctrl.contacts | orderBy:'name'">
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <div class=" compact">
+                     <h3>{{contact.name}}</h3>
+                     <p>{{contact.email}}</p>
+                  </div>
+               </md-list-item>
+              <md-list-item class=" contact-item selected" ng-repeat="(index, contact) in ctrl.contactsCc | orderBy:'name'">
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <div class=" compact">
+                     <h3>{{contact.name}}</h3>
+                     <p>{{contact.email}}</p>
+                  </div>
+               </md-list-item>
+            </md-list>
+            <div class="col-md-12">
+			<div>
+            <md-contact-chips
+            	md-name="toField"
+               ng-model="ctrl.contacts"
+               md-contacts="ctrl.querySearch($query)"
+               md-contact-name="name"
+               md-contact-image="image"
+               md-contact-email="email"
+               md-require-match="false"
+               md-highlight-flags="i"
+               filter-selected="ctrl.filterSelected"
+               md-separator-keys="ctrl.customKeys"
+               placeholder="To"
+               secondary-placeholder="To">
+            </md-contact-chips>
+            <md-contact-chips
+               ng-model="ctrl.contactsCc"
+               md-contacts="ctrl.querySearchCc($query)"
+               md-contact-name="name"
+               md-contact-image="image"
+               md-contact-email="email"
+               md-require-match="false"
+               md-highlight-flags="i"
+               filter-selected="ctrl.filterSelected"
+                md-separator-keys="ctrl.customKeys"
+               placeholder="Cc"
+               secondary-placeholder="Cc">
+            </md-contact-chips>
+       		</div>
+       			<div class="mail-subject-box">
+                 <div class="mail-input-box">
+                           <input type="text" class="form-control" readOnly ng-model="ctrl.emailSubject">
+                 </div>
+             </div>
+             <div class="note-editable">
+				<input type="textarea" ui-tinymce="tinymceOptions" ng-model="ctrl.emailContext">
+			</div>
+			<button class="btn btn-primary btn-block hidden-print" ng-click="ctrl.sendEmail()" ng-show = "ctrl.contacts.length>0 && ctrl.emailContext.length>0" ng-disabled="disableButtons"><span class="fa fa-send"></span> <b>Send</b></button>
+			</div>
+         </md-content>
+</div>

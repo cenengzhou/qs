@@ -1,0 +1,102 @@
+<div id="content" class="content">
+	<div class="row">
+		<div ng-repeat="(key, personnels) in ctrl.site | orderBy: 'sort'" class="col-md-12 panel" ng-class="personnels.clazz">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{key}} 
+				<button 
+					type="button"
+					ng-if="key != 'Management1'" 
+					class="btn btn-primary pull-right" 
+					ng-click="ctrl.editRequest(key, personnels)" 
+					data-toggle="modal"
+					data-target="#approvalModal"
+					 >Edit</button>
+				</h3>
+			</div>
+			<span ng-include src="'job-personnel-template'"></span>
+		</div>
+		
+		<div class="col-md-12" ng-hide="ctrl.checkDisable('site')">
+			<a class="btn btn-primary btn-block" ng-click="ctrl.saveJobInfo()">Save
+				<i class="fa fa-floppy-o"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="approvalModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document" style="width:1200px !important">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title pull-right">
+					<button type="button class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body col-md-12">
+				<div ng-init="personnel=ctrl.personnelPendingModal">
+					<div ng-include src="'job-personnel-template'"></div>
+				</div>				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" >Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="job-personnelModal-template">
+<div style="padding-top:20px" ng-repeat="person in ctrl.personnelsModal.store | orderBy: 'sort'" class="col-md-2">
+	<span ng-include src="'job-person-template'"></span>
+</div>
+</script>
+<script type="text/ng-template" id="job-personnelPendingModal-template">
+<div style="padding-top:20px" ng-repeat="person in ctrl.personnelsPendingModal.store | orderBy: 'sort'" class="col-md-2">
+	<span ng-include src="'job-person-template'"></span>
+</div>
+</script>
+<script type="text/ng-template" id="job-personnel-template">
+<div style="padding-top:20px" ng-repeat="person in personnels.store | orderBy: 'sort'" class="col-md-2">
+	<span ng-include src="'job-person-template'"></span>
+</div>
+</script>
+<script type="text/ng-template" id="job-person-template">
+<div style="text-align:center;">
+<div style="height:45px;font-weight:700;font-size:12px">{{person.placeholder}}</div>
+	<img class="img-circle" style="width:90px;height:90px;margin-bottom:20px" data-ng-src="{{person.selectedItem ? person.selectedItem.image : 'resources/images/profile.png'}}" alt="" imageonload roll-back-image="resources/images/profile.png"/>
+	<md-autocomplete style="text-align:center"
+	    id="{{person.id}}"
+	    class="custom-template"
+	    ng-disabled="person.disabled"
+	    md-require-match="false"
+	    md-delay="300"
+	    md-clear-button="!person.disabled"
+	    md-autoselect="true"
+	    md-no-cache="ctrl.noCache"
+	    md-selected-item="person.selectedItem"
+	    md-search-text-change="ctrl.searchTextChange(person.searchText, person.id)"
+	    md-search-text="person.searchText"
+	    md-selected-item-change="ctrl.selectedItemChange(item, person.id)"
+	    md-items="item in ctrl.querySearch(person.searchText)"
+	    md-item-text="item.fullName"
+	    md-min-length="3"
+	    md-menu-class="autocomplete-custom-template"
+	    md-menu-container-class="custom-container">
+	  <md-item-template>
+	    <span class="item-title">
+	      <span> <strong>{{item.fullName}}</strong></span>
+	    </span>
+	    <span class="item-metadata">
+	      <span>
+	        <small style="font-weight:300 !important;position:relative;top:-10px">{{item.email}}</small>
+	      </span>
+	    </span>
+	  </md-item-template>
+	</md-autocomplete>
+</div>
+</script>
+
+
+

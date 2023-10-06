@@ -1,0 +1,44 @@
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Revisions</li>
+	</ol>
+	<!-- end breadcrumb -->		
+	<div class="row">
+		<!-- ng-style="{height: 800 + 'px'}" -->
+	
+		<!-- Main content -->
+		<div class="row">
+			<section class="box box-primary">
+				<ul class="nav nav-tabs">
+					<li role="presentation" ng-class="{active:isSelected('Subcontract')}"><a href ui-sref="admin.Revisions.Subcontract({activeTab:'Subcontract'})" ng-click="selectTab('Subcontract')">Subcontract</a></li>
+					<li role="presentation" ng-class="{active:isSelected('SubcontractDetail')}"><a href ui-sref="admin.Revisions.SubcontractDetail({activeTab:'SubcontractDetail'})" ng-click="selectTab('SubcontractDetail')">Subcontract Detail</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Payment')}"><a href ui-sref="admin.Revisions.Payment({activeTab:'Payment'})" ng-click="selectTab('Payment')">Payment</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Addendum')} "><a href ui-sref="admin.Revisions.Addendum({activeTab:'Addendum'})" ng-click="selectTab('Addendum')">Addendum</a></li>
+					<li role="presentation" ng-class="{active:isSelected('AddendumDetail')} "><a href ui-sref="admin.Revisions.AddendumDetail({activeTab:'AddendumDetail'})" ng-click="selectTab('AddendumDetail')">Addendum Detail</a></li>
+					<li role="presentation" ng-class="{active:isSelected('MainCert')}"><a href ui-sref="admin.Revisions.MainCert({activeTab:'MainCert'})" ng-click="selectTab('MainCert')">Main Certificate</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Repackaging')}"><a href ui-sref="admin.Revisions.Repackaging({activeTab:'Repackaging'})" ng-click="selectTab('Repackaging')">Repackaging</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Approval')}" ng-if="showIMSEnquiry || showIMSAdmin"><a href ui-sref="admin.Revisions.Approval({activeTab:'Approval'})" ng-click="selectTab('Approval')">Approval</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Attachment')}"><a href ui-sref="admin.Revisions.Attachment({activeTab:'Attachment'})" ng-click="selectTab('Attachment')">Attachment</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Transit')}" ng-if="showIMSEnquiry || showIMSAdmin"><a href ui-sref="admin.Revisions.Transit({activeTab:'Transit'})" ng-click="selectTab('Transit')">Transit</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Tender')}"><a href ui-sref="admin.Revisions.Tender({activeTab:'Tender'})" ng-click="selectTab('Tender')">Tender</a></li>
+					<li role="presentation" ng-class="{active:isSelected('TenderDetail')}"><a href ui-sref="admin.Revisions.TenderDetail({activeTab:'TenderDetail'})" ng-click="selectTab('TenderDetail')">Tender Detail</a></li>
+					<li role="presentation" ng-class="{active:isSelected('MonthlyMovement')}"><a href ui-sref="admin.Revisions.MonthlyMovement({activeTab:'MonthlyMovement'})" ng-click="selectTab('MonthlyMovement')">Monthly Movement</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Roc')}"><a href ui-sref="admin.Revisions.Roc({activeTab:'Roc'})" ng-click="selectTab('Roc')">ROC</a></li>
+					<li role="presentation" ng-class="{active:isSelected('RocDetail')}"><a href ui-sref="admin.Revisions.RocDetail({activeTab:'RocDetail'})" ng-click="selectTab('RocDetail')">ROC Detail</a></li>
+					<li role="presentation" ng-class="{active:isSelected('RocSubdetail')}"><a href ui-sref="admin.Revisions.RocSubdetail({activeTab:'RocSubdetail'})" ng-click="selectTab('RocSubdetail')">ROC Subdetail</a></li>
+					<li role="presentation" ng-class="{active:isSelected('FinalAccount')}"><a href ui-sref="admin.Revisions.FinalAccount({activeTab:'FinalAccount'})" ng-click="selectTab('FinalAccount')">Final Account</a></li>
+					<li role="presentation" ng-class="{active:isSelected('ConsultancyAgreement')}"><a href ui-sref="admin.Revisions.ConsultancyAgreement({activeTab:'ConsultancyAgreement'})" ng-click="selectTab('ConsultancyAgreement')">Consultancy Agreement</a></li>
+				</ul>
+				
+				<div class="box col-md-12" ui-view></div>
+			</section>
+		</div>
+
+
+	</div>
+</div>
+<!-- end #content -->

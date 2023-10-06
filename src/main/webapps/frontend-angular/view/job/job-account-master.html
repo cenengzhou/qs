@@ -1,0 +1,132 @@
+<div id="content" class="content">
+	<!-- <ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol> -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+
+	<div class="row">
+		<div class="col-md-6">
+			<form name="form-validate" id="form-validate"
+				class="form-input-flat ng-pristine ng-valid">
+
+				<div class="panel panel-inverse ">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+								href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						</div>
+						<h4 class="panel-title">
+							<b>Create Account Code by Object Subsidiary</b>
+						</h4>
+					</div>
+					<div class="panel-body"
+						ng-style="{height: 200 + 'px', 'overflow': 'auto'}">
+						<div class="row">
+
+							<div class="col-md-12">
+								<div class="col-md-4">
+									<label>Object Code</label>
+								</div>
+								<div class="form-group col-md-4">
+									<input type="text" class="form-control"
+										data-parsley-minlength="6" data-parsley-maxlength="6"
+										data-parsley-error-message="Must be in 6 digits"
+										ng-model="objectCode" required>
+								</div>
+							</div>
+
+							<div class="col-md-12">
+								<div class="col-md-4">
+									<label>Subsidiary Code</label>
+								</div>
+								<div class="form-group col-md-4">
+									<input type="text" class="form-control"
+										data-parsley-minlength="8" data-parsley-maxlength="8"
+										data-parsley-error-message="Must be in 8 digits"
+										ng-model="subsidiaryCode" required>
+								</div>
+
+
+
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer bg-white">
+						<button class="btn btn-danger btn-block"
+							ng-click="createAccountCode()">
+							Create <i class="fa fa-plus-circle"></i>
+						</button>
+					</div>
+				</div>
+
+
+			</form>
+		</div>
+
+		<!-- <div class="col-md-6">
+			<div class="panel panel-inverse ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						<b>Create Account Code by Job</b>
+					</h4>
+				</div>
+				<div class="panel-body"
+					ng-style="{height: 200 + 'px', 'overflow': 'auto'}">
+					<div class="row">
+
+						<div class="form-group col-md-12">
+							<label><input type="checkbox" name="iCheck"
+								ng-model="checkedResource" ng-icheck /> Resource</label>
+						</div>
+
+
+						<div class="form-group col-md-12">
+							<label><input type="checkbox" name="iCheck"
+								ng-model="checkedResourceSummary" ng-icheck /> Resource Summary</label>
+						</div>
+
+
+						<div class="form-group col-md-12">
+							<label><input type="checkbox" name="iCheck"
+								ng-model="checkedSCDetails" ng-icheck /> Subcontract Details</label>
+						</div>
+
+					</div>
+
+				</div>
+
+
+
+
+				<div class="panel-footer bg-white">
+					<button class="btn btn-danger btn-block"
+						ng-click="createAccountCodeByJob()">
+						Create <i class="fa fa-plus-circle"></i>
+					</button>
+				</div>
+			</div>
+
+		</div> -->
+
+	</div>
+
+</div>
+
+
