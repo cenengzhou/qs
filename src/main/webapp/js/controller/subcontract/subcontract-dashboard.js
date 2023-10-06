@@ -177,9 +177,15 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 									value.amountPostedCert = 0.0001
 									if(value.amountCumulativeWD == 0)
 										value.amountCumulativeWD = 0.0001
+
+										if( value.amountSubcontract >= 0 && value.amountPostedCert >= 0 && value.amountCumulativeWD >= 0)
+										{
+
+										
 										barChartJson.voData.push(
 												[value.amountSubcontract],[value.amountPostedCert], [value.amountCumulativeWD]
-										);	
+										);
+									}	
 						}
 					});
 
