@@ -5,3 +5,6 @@
 .idea
 pcms.iml
 /.settings
+
+/node_modules
+/build
