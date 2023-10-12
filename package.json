@@ -7,6 +7,7 @@
     "@syncfusion/ej2-react-buttons": "^23.1.39",
     "@syncfusion/ej2-react-lists": "^23.1.36",
     "@syncfusion/ej2-react-navigations": "^23.1.40",
+    "@syncfusion/ej2-react-popups": "^23.1.38",
     "@syncfusion/ej2-react-splitbuttons": "^23.1.36",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

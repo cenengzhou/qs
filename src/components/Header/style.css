@@ -26,7 +26,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
 }
 
 .header-right .e-avatar{
@@ -36,8 +36,13 @@
 
 .username {
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .header-right span.e-icons{
   margin: 0 5px;
+}
+
+.header-right span {
+  cursor: pointer;
 }
