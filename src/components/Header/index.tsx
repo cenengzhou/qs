@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { AppBarComponent } from '@syncfusion/ej2-react-navigations'
+import { AppBarComponent, ToolbarComponent, ItemsDirective, ItemDirective } from '@syncfusion/ej2-react-navigations'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { DialogComponent } from '@syncfusion/ej2-react-popups'
 import {
@@ -76,16 +76,18 @@ const Header = () => {
         <img src={logo} alt="logo" />
         <span>DEV</span>
       </div>
-      <ButtonComponent cssClass="e-inherit">Repackaging</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">
-        Main Contract Certificate
-      </ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Subcontract</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Internal Valuation</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Enquiry</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Reports</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Transit</ButtonComponent>
-      <ButtonComponent cssClass="e-inherit">Admin</ButtonComponent>
+      <ToolbarComponent overflowMode='Scrollable' id="toolbar_scrollable">
+        <ItemsDirective>
+          <ItemDirective prefixIcon='e-icons e-cut' text='Repackaging' click={e => console.log(e)} />
+          <ItemDirective prefixIcon='e-icons e-copy' text='Main Contract Certificate'/>
+          <ItemDirective prefixIcon='e-icons e-paste' text='Subcontract'/>
+          <ItemDirective prefixIcon='e-icons e-bold' text='Internal Valuation'/>
+          <ItemDirective prefixIcon='e-icons e-underline' text='Enquiry'/>
+          <ItemDirective prefixIcon='e-icons e-italic' text='Reports'/>
+          <ItemDirective prefixIcon='e-icons e-align-left' text='Transit'/>
+          <ItemDirective prefixIcon='e-icons e-align-right' text='Admin'/>
+        </ItemsDirective>
+      </ToolbarComponent>
       <div className="header-right">
         <span
           className="e-icons e-comments e-large"

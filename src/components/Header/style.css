@@ -2,6 +2,18 @@
   height: 56px !important;
 }
 
+.e-appbar .e-toolbar, .e-appbar .e-toolbar .e-toolbar-items, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover{
+  background-color: transparent !important;
+}
+
+.e-appbar .e-hscroll .e-scroll-nav, .e-appbar .e-toolbar .e-toolbar-item:hover{
+  background-color: #353131 !important;
+}
+
+.e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn .e-tbar-btn-text, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn .e-icons, .e-appbar .e-hscroll .e-scroll-nav .e-icons, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover .e-icons, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover .e-tbar-btn-text{
+  color: #fff !important;
+}
+
 .e-dialog .e-dlg-content {
   padding: 0 !important;
   border-radius: 5px;
@@ -15,6 +27,7 @@
   width: 222px !important;
   height: 35px;
   padding: 10px;
+  flex: none !important;
   position: relative;
 }
 
@@ -32,7 +45,8 @@
 }
 
 .header-right {
-  flex: 1;
+  padding-left: 10px;
+  flex: 0;
   display: flex;
   align-items: center;
   justify-content: end;
