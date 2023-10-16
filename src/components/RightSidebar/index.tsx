@@ -19,72 +19,74 @@ const RightSidebar = () => {
       title: "Helpdesk",
       content:
         "The fastest way to get help from IMS! Tell us about your problem so we can help ASAP!",
-      icon: "question",
+      icon: "circle-info bg-gray",
       category: "Useful Links",
     },
     {
       title: "Guidelines",
       content:
         "Step-by-Step video to guide you through the core workflows and comprehensive documentation of QS 2.0",
-      icon: "book",
+      icon: "bookmark-fill bg-green",
       category: "Useful Links",
     },
     {
       title: "Forms, Templates & <br>Documents",
       content: "Common forms for download",
-      icon: "file",
+      icon: "border-box bg-blue",
       category: "Useful Links",
     },
     {
       title: "Tips",
       content: "Information and tips",
-      icon: "user",
+      icon: "comment-add bg-purple",
       category: "Useful Links",
     },
     {
       title: "UCC List",
       content: "UCC List",
-      icon: "list",
+      icon: "list-unordered bg-yellow",
       category: "Useful Links",
     },
     {
       title: "Approval System",
       content:
         "To Review and Enquiry Subcontract, Procurement, Subcontract Appraisal Approvals",
-      icon: "check",
+      icon: "check bg-red",
       category: "Useful Systems",
     },
     {
       title: "Gammon ERP Portal",
       content: "Gammon ERP Portal",
-      icon: "cog",
+      icon: "settings bg-yellow",
       category: "Useful Systems",
     },
     {
       title: "JDE",
       content: "Oracle JD Edwards",
-      icon: "leaf",
+      icon: "form-field bg-green",
       category: "Useful Systems",
     },
     {
       title: "Business Management System",
       content:
         "Documents for Pre-Contract, Project Delivery, Group Wide and Business Support",
-      icon: "file",
+      icon: "page-columns bg-cyan",
       category: "Useful Systems",
     },
     {
       title: "Other Gammon Systems",
       content: "Full list of Gammon Systems",
-      icon: "plus",
+      icon: "plus-small bg-yellow",
       category: "Useful Systems",
     },
   ];
   const fields = { text: "Name", groupBy: "category" };
   const listTemplate = (data: linksDataPorps) => {
     return (
-      <div className="settings e-list-wrapper e-list-multi-line e-list-avatar">
-        <span className={`e-icons e-${data.icon} e-avatar e-avatar-circle`}></span>
+      <div className="e-list-wrapper e-list-multi-line e-list-avatar">
+        <div className={`${data.icon} e-avatar e-avatar-circle`}>
+          <span className={`e-icons e-${data.icon} e-large color-white`}></span>
+        </div>
         <span className="e-list-item-header">{data.title}</span>
         <span className="e-list-content">{data.content}</span>
       </div>
