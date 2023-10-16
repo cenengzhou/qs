@@ -8,6 +8,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.e-btn {
+* {
+  font-size: 14px;
+}
+
+.e-btn, .e-tab-text {
   text-transform: none !important;
 }

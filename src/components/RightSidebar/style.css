@@ -1,0 +1,12 @@
+#linksList {
+  .e-listview .e-list-group-item {
+    color: #837c7c;
+    padding: 0;
+  }
+  .e-list-wrapper span {
+    font-size: 12px;
+  }
+  .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-item-header {
+    font-size: 12px;
+  }
+}

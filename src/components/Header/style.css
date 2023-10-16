@@ -53,7 +53,6 @@
 }
 
 .header-right .e-avatar{
-  border-radius: 50%;
   margin: 0 15px;
 }
 
@@ -71,14 +70,14 @@
   cursor: pointer;
 }
 
-.messageHeader, .messageFooter {
+.notifyHeader, .notifyFooter {
   line-height: 36px;
   font-size: 12px;
   padding: 0 20px;
   color: #777;
 }
 
-.messageFooter {
+.notifyFooter {
   cursor: pointer;
   text-align: center;
   font-weight: bold;
@@ -88,7 +87,7 @@
   }
 }
 
-.messageBody {
+.notifyBody {
   cursor: pointer;
   font-size: 11px;
   padding: 15px 20px;
@@ -103,7 +102,7 @@
   }
 }
 
-.messageBody .e-avatar {
+.notifyBody .e-avatar {
   background-color: #4d9ce1;
   margin-right: 10px
 }
@@ -150,4 +149,8 @@
   background-color: #f9f9f9;
   display: flex;
   justify-content: space-between;
+}
+
+.right-sidebar.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap{
+  padding: 0 10px;
 }
