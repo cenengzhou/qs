@@ -30,7 +30,7 @@ const RightSidebar = () => {
       category: "Useful Links",
     },
     {
-      title: "Forms, Templates & <br>Documents",
+      title: "Forms, Templates & Documents",
       content: "Common forms for download",
       icon: "border-box bg-blue",
       category: "Useful Links",
@@ -84,11 +84,15 @@ const RightSidebar = () => {
   const listTemplate = (data: linksDataPorps) => {
     return (
       <div className="e-list-wrapper e-list-multi-line e-list-avatar">
-        <div className={`${data.icon} e-avatar e-avatar-circle`}>
-          <span className={`e-icons e-${data.icon} e-large color-white`}></span>
+        <div className={`${data.icon} e-avatar e-avatar-small e-avatar-circle`}>
+          <span className={`e-icons e-${data.icon} color-white`}></span>
         </div>
-        <span className="e-list-item-header">{data.title}</span>
-        <span className="e-list-content">{data.content}</span>
+        <span className="e-list-item-header" title={data.title}>
+          {data.title}
+        </span>
+        <span className="e-list-content" title={data.content}>
+          {data.content}
+        </span>
       </div>
     );
   };

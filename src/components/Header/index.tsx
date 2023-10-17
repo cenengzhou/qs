@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { AppBarComponent, ToolbarComponent, ItemsDirective, ItemDirective, TabComponent, TabItemsDirective, TabItemDirective } from '@syncfusion/ej2-react-navigations'
+import { AppBarComponent, ToolbarComponent, ItemsDirective, ItemDirective } from '@syncfusion/ej2-react-navigations'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { DialogComponent } from '@syncfusion/ej2-react-popups'
 import {
@@ -90,23 +90,23 @@ const Header = () => {
       <ToolbarComponent overflowMode="Scrollable" id="toolbar_scrollable">
         <ItemsDirective>
           <ItemDirective
-            prefixIcon="e-icons e-cut"
+            prefixIcon="e-icons e-volume"
             text="Repackaging"
             click={(e) => console.log(e)}
           />
           <ItemDirective
-            prefixIcon="e-icons e-copy"
+            prefixIcon="e-icons e-bookmark-fill"
             text="Main Contract Certificate"
           />
-          <ItemDirective prefixIcon="e-icons e-paste" text="Subcontract" />
+          <ItemDirective prefixIcon="e-icons e-activities" text="Subcontract" />
           <ItemDirective
-            prefixIcon="e-icons e-bold"
+            prefixIcon="e-icons e-chart-2d-stacked-line"
             text="Internal Valuation"
           />
-          <ItemDirective prefixIcon="e-icons e-underline" text="Enquiry" />
-          <ItemDirective prefixIcon="e-icons e-italic" text="Reports" />
-          <ItemDirective prefixIcon="e-icons e-align-left" text="Transit" />
-          <ItemDirective prefixIcon="e-icons e-align-right" text="Admin" />
+          <ItemDirective prefixIcon="e-icons e-circle-info" text="Enquiry" />
+          <ItemDirective prefixIcon="e-icons e-changes-track" text="Reports" />
+          <ItemDirective prefixIcon="e-icons e-page-columns" text="Transit" />
+          <ItemDirective prefixIcon="e-icons e-people" text="Admin" />
         </ItemsDirective>
       </ToolbarComponent>
       <div className="header-right">
@@ -161,7 +161,9 @@ const Header = () => {
       >
         <div>
           <div className="profileHeader">
-            <span className="e-avatar template-image e-avatar-circle"></span>
+            <div className="e-avatar template-image e-avatar-circle">
+              <img src={user} alt="" />
+            </div>
             <div className="userName">Ce Neng Zhou - System Developer</div>
             <div className="staff">
               <small>Staff ID: 000001</small>

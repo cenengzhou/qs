@@ -3,11 +3,20 @@
     color: #837c7c;
     padding: 0;
   }
-  .e-list-wrapper .e-list-item-content {
+  .e-list-group-item .e-list-wrapper {
+    padding-left: 0;
+  }
+  .e-list-item .e-list-wrapper .e-list-content, &.e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-item-header {
     font-size: 12px;
   }
-  .e-listview.e-list-template .e-list-wrapper.e-list-multi-line .e-list-item-header {
-    font-size: 12px;
+  &.e-listview.e-list-template .e-list-wrapper.e-list-avatar:not(.e-list-badge) {
+    margin-left: 0.8em;
+    padding: 0.8em;
+    padding-left: 3em;
+    border-bottom: 1px solid #eee;
+  }
+  &.e-listview.e-list-template .e-list-wrapper.e-list-multi-line.e-list-avatar .e-avatar {
+    margin-left: -0.8em;
   }
 }
 
