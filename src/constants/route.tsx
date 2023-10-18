@@ -1,6 +1,6 @@
 import { Route } from '../interfaces/Route'
 import Home from '../screens/Home'
-import Admin from '../screens/admin/Revisisons'
+import Admin from '../screens/admin'
 import { ScreenName } from './screen'
 
 export const ROUTE_BASE_NAME = 'pcms/web'
@@ -12,7 +12,7 @@ export const ROUTE_LIST: Route[] = [
     element: <Home />,
   },
   {
-    path: "/admin",
+    path: "/admin/*",
     name: ScreenName.Admin,
     element: <Admin />,
   },

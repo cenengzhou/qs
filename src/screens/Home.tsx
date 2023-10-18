@@ -1,15 +1,10 @@
 import Header from '../components/Header'
 import Sidebar from '../components/SideBar'
-import Revisions from './admin/Revisisons';
+import Revisions from './admin';
 
 function Home() {
   return (
-    <div>
-      <Header></Header>
-      <div className="">
-        <Sidebar></Sidebar>
-      </div>
-    </div>
+    <div>123</div>
   );
 }
 

@@ -4,8 +4,7 @@ import {
   TabItemDirective,
   TabItemsDirective,
 } from '@syncfusion/ej2-react-navigations'
-import Sidebar from '../../../components/SideBar'
-import Subcontract from './Subcontract'
+import Subcontract from '../Revisisons/Subcontract'
 
 const Revisions = () => {
   const headertext = [

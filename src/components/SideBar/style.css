@@ -8,7 +8,8 @@
   .left-sidebar {
     flex: 0;
   }
-  #listView.e-listview {
+  .listView {
+    flex: 1;
     overflow: hidden;
   }
 }
@@ -20,11 +21,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-bottom: 1px solid #eee;
 }
 .main-treeview.e-treeview .e-ul {
   padding: 0;
   .e-list-parent .e-text-content {
-    padding: 0;
     .e-icons.e-radio-button::before {
       content: "\e7b2";
     }
