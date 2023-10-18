@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useRef, useState } from 'react';
 import { SidebarComponent, TreeViewComponent, ToolbarComponent, NodeSelectEventArgs, ItemsDirective, ItemDirective, ClickEventArgs } from '@syncfusion/ej2-react-navigations';
 import { ListViewComponent, SelectEventArgs } from '@syncfusion/ej2-react-lists';
+import Revisions from '../../screens/admin/Revisisons';
 import './style.css';
 const Sidebar = () => {
     let sidebarobj = useRef<SidebarComponent>(null);
@@ -90,20 +91,13 @@ const Sidebar = () => {
     };
     const listTemplate = (data: any) => {
         return (
-            <div className="e-list-wrapper e-list-avatar e-list-multi-line">
-                <span className="e-avatar e-avatar-circle e-icon sf-icon-profile"></span>
-                <span className="e-list-item-header">{data.text}</span>
-                <span className="e-list-content">{data.subject}</span>
-                <span className="e-list-text">{data.message}</span>
-            </div>
+            <Revisions></Revisions>
         );
     }
     let fields: { [ key: string]: Object } = { id: "id", text: "text" }
 
     return (
       <div className="control-section" id="sidebar-wrapper">
-        {/* main content declaration */}
-        <div></div>
         <div className="maincontent">
           <ListViewComponent
             id="listView"
@@ -113,25 +107,26 @@ const Sidebar = () => {
             dataSource={data}
             fields={fields}
           ></ListViewComponent>
+
+          <SidebarComponent
+            id="defaultSidebar"
+            ref={sidebarobj}
+            className="default-sidebar"
+            width="250px"
+            mediaQuery="(min-width: 600px)"
+            target=".maincontent"
+            position="Left"
+            isOpen={true}
+          >
+            <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
+            <TreeViewComponent
+                id="mainTree"
+                cssClass="main-treeview"
+                fields={treeFields}
+                expandOn="Click"
+            ></TreeViewComponent>
+          </SidebarComponent>
         </div>
-        <SidebarComponent
-          id="defaultSidebar"
-          ref={sidebarobj}
-          className="default-sidebar"
-          width="250px"
-          mediaQuery="(min-width: 600px)"
-          target=".maincontent"
-          position="Left"
-          isOpen={true}
-        >
-          <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
-          <TreeViewComponent
-            id="mainTree"
-            cssClass="main-treeview"
-            fields={treeFields}
-            expandOn="Click"
-          ></TreeViewComponent>
-        </SidebarComponent>
       </div>
     );
     

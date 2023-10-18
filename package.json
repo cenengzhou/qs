@@ -5,6 +5,7 @@
   "dependencies": {
     "@syncfusion/ej2-layouts": "^23.1.36",
     "@syncfusion/ej2-react-buttons": "^23.1.39",
+    "@syncfusion/ej2-react-inputs": "^23.1.40",
     "@syncfusion/ej2-react-lists": "^23.1.36",
     "@syncfusion/ej2-react-navigations": "^23.1.40",
     "@syncfusion/ej2-react-popups": "^23.1.38",
@@ -18,6 +19,7 @@
     "@types/react-dom": "^18.2.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"

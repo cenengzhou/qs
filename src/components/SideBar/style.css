@@ -2,6 +2,14 @@
   height: calc(100vh - 56px);
   .e-sidebar-context {
     height: 100%;
+    overflow: hidden;
+    display: flex;
+  }
+  .left-sidebar {
+    flex: 0;
+  }
+  #listView.e-listview {
+    overflow: hidden;
   }
 }
 .sidebar-title {

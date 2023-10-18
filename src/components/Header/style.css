@@ -1,5 +1,10 @@
 .e-appbar {
   height: 56px !important;
+  justify-content: stretch;
+}
+
+#toolbar_scrollable.e-toolbar {
+  flex: 1;
 }
 
 .e-appbar .e-toolbar, .e-appbar .e-toolbar .e-toolbar-items, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover{

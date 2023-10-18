@@ -1,12 +1,14 @@
-import React from 'react';
-import Home from './pages/Home';
+import { ROUTE_LIST } from "./constants/route"
+import Header from "./components/Header";
+import RouteNavigator from "./components/RouteNavigator"
 import './App.css';
 
 function App() {
   return (
-    <div>
-      <Home></Home>
-    </div>
+    <>
+      <Header></Header>
+      <RouteNavigator routeList={ROUTE_LIST} />
+    </>
   );
 }
 
