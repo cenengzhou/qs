@@ -1807,10 +1807,10 @@
     "@svgr/plugin-svgo" "^5.5.0"
     "loader-utils" "^2.0.0"
 
-"@syncfusion/ej2-base@~23.1.36", "@syncfusion/ej2-base@~23.1.38":
-  "integrity" "sha512-48nRJLJ8uyfJi2ne/9Jwkwu78Cz1njDnt2jsq3n+6A9ebZFEqMlYC4pO177kTz/XTnd47CsJT3vsyKpt0haG5g=="
-  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-base/-/ej2-base-23.1.38.tgz"
-  "version" "23.1.38"
+"@syncfusion/ej2-base@~23.1.36", "@syncfusion/ej2-base@~23.1.38", "@syncfusion/ej2-base@~23.1.41":
+  "integrity" "sha512-ROtvuLIVkKl4eL+ubQjQQLleRMY98nYlxlBaFw4axtiDLoBbzOYtiFXmdP/KE+uNrMquZAwl+aduPX0loG3EAw=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-base/-/ej2-base-23.1.41.tgz"
+  "version" "23.1.41"
   dependencies:
     "@syncfusion/ej2-icons" "~23.1.36"
 
@@ -1821,12 +1821,32 @@
   dependencies:
     "@syncfusion/ej2-base" "~23.1.38"
 
+"@syncfusion/ej2-buttons@~23.1.41":
+  "integrity" "sha512-nuCd8pqSrYFZIcPRGH1fS8GiFEj52X14cl5iSVn+odzi7Nkim6FcwE2yfbEGA8iXUeNcexHUOrq/gu1T2i+6MA=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-buttons/-/ej2-buttons-23.1.41.tgz"
+  "version" "23.1.41"
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.41"
+
 "@syncfusion/ej2-data@~23.1.36":
   "integrity" "sha512-9MUJQx48QV63r8TwmsK77OBljBH6D7crB8R0ihf45lzJNxD/Hea3zllCoy7vfG0j19lSwLmMqVHRbhGWCf8JNg=="
   "resolved" "https://registry.npmjs.org/@syncfusion/ej2-data/-/ej2-data-23.1.36.tgz"
   "version" "23.1.36"
   dependencies:
     "@syncfusion/ej2-base" "~23.1.36"
+
+"@syncfusion/ej2-dropdowns@23.1.41":
+  "integrity" "sha512-qrxMNqI1wXGeCKSxmnFrUm8+dx/ZYvCSlHhKIlipS/EcDRgQy+qh9Mhr6gAMtDzw4ujDMTpJJ9rZOZ/NH2bhRw=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-dropdowns/-/ej2-dropdowns-23.1.41.tgz"
+  "version" "23.1.41"
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.41"
+    "@syncfusion/ej2-data" "~23.1.36"
+    "@syncfusion/ej2-inputs" "~23.1.40"
+    "@syncfusion/ej2-lists" "~23.1.36"
+    "@syncfusion/ej2-navigations" "~23.1.41"
+    "@syncfusion/ej2-notifications" "~23.1.40"
+    "@syncfusion/ej2-popups" "~23.1.38"
 
 "@syncfusion/ej2-icons@~23.1.36":
   "integrity" "sha512-Q7S50bOzXL9X46doNIGSGr61RCY/1RW9iz1U7yyARr2XBQhWnijk+t/FVBk1piR0nioRXbKQcPZOLiEo6zf1xw=="
@@ -1859,6 +1879,18 @@
     "@syncfusion/ej2-buttons" "~23.1.36"
     "@syncfusion/ej2-data" "~23.1.36"
 
+"@syncfusion/ej2-navigations@~23.1.41":
+  "integrity" "sha512-bZsDL+UG0a7yl6fed2D5o1m78o2fI4pVAP3IOhtL0hEbOC7qf5b+0MdnbqRaQ9s8UBf0X7iNijV3+1Uk6guE7Q=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-navigations/-/ej2-navigations-23.1.41.tgz"
+  "version" "23.1.41"
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.41"
+    "@syncfusion/ej2-buttons" "~23.1.41"
+    "@syncfusion/ej2-data" "~23.1.36"
+    "@syncfusion/ej2-inputs" "~23.1.40"
+    "@syncfusion/ej2-lists" "~23.1.36"
+    "@syncfusion/ej2-popups" "~23.1.38"
+
 "@syncfusion/ej2-navigations@23.1.40":
   "integrity" "sha512-YhuFXI+Giyb8nCP8vw4UHPpqdesf/sn8DwP+XzurkTjVOZfeJgDwdga1PJWm6fFh8js2jaEDrCJmOplptPdsEw=="
   "resolved" "https://registry.npmjs.org/@syncfusion/ej2-navigations/-/ej2-navigations-23.1.40.tgz"
@@ -1869,6 +1901,15 @@
     "@syncfusion/ej2-data" "~23.1.36"
     "@syncfusion/ej2-inputs" "~23.1.40"
     "@syncfusion/ej2-lists" "~23.1.36"
+    "@syncfusion/ej2-popups" "~23.1.38"
+
+"@syncfusion/ej2-notifications@~23.1.40":
+  "integrity" "sha512-xB0U/THNVQN09AK+5DV6f9e7YbvWi5UqhdObCdpZarAMOFUEZBtAIVQRxc1LrINRmRapGU7NMFQj1F1xU7DVyw=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-notifications/-/ej2-notifications-23.1.40.tgz"
+  "version" "23.1.40"
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.38"
+    "@syncfusion/ej2-buttons" "~23.1.39"
     "@syncfusion/ej2-popups" "~23.1.38"
 
 "@syncfusion/ej2-popups@~23.1.36", "@syncfusion/ej2-popups@~23.1.38", "@syncfusion/ej2-popups@23.1.38":
@@ -1893,6 +1934,15 @@
   dependencies:
     "@syncfusion/ej2-base" "~23.1.38"
     "@syncfusion/ej2-buttons" "23.1.39"
+    "@syncfusion/ej2-react-base" "~23.1.36"
+
+"@syncfusion/ej2-react-dropdowns@^23.1.41":
+  "integrity" "sha512-tcl5k7t1D5nhqvkMNyB64TDWI39XC+oVOLk4A9IrITG3YljJbiQqtNw8knrsw+64DzTTd3zV6HwJpVwjJ926Qw=="
+  "resolved" "https://registry.npmjs.org/@syncfusion/ej2-react-dropdowns/-/ej2-react-dropdowns-23.1.41.tgz"
+  "version" "23.1.41"
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.41"
+    "@syncfusion/ej2-dropdowns" "23.1.41"
     "@syncfusion/ej2-react-base" "~23.1.36"
 
 "@syncfusion/ej2-react-inputs@^23.1.40":

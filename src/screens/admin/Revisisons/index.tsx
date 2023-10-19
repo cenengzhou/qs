@@ -5,6 +5,7 @@ import {
   TabItemsDirective,
 } from '@syncfusion/ej2-react-navigations'
 import Subcontract from '../Revisisons/Subcontract'
+import './style.css'
 
 const Revisions = () => {
   const headertext = [
@@ -47,19 +48,14 @@ const Revisions = () => {
   }
 
   return (
-    <div className="control-pane">
-      <div className="control-section tab-control-section">
-        {/* Render the Tab Component */}
-        <TabComponent id="defaultTab" overflowMode="MultiRow">
-          <TabItemsDirective>
-            {headertext.map(e => (
-              <TabItemDirective header={e} content={contents[e.id]} key={e.id} />
-            ))}
-          </TabItemsDirective>
-        </TabComponent>
-      </div>
-    </div>
-  )
+    <TabComponent id="defaultTab" overflowMode="MultiRow">
+      <TabItemsDirective>
+        {headertext.map((e) => (
+          <TabItemDirective header={e} content={contents[e.id]} key={e.id} />
+        ))}
+      </TabItemsDirective>
+    </TabComponent>
+  );
 }
 
 export default Revisions;

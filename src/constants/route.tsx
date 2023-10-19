@@ -1,6 +1,6 @@
 import { Route } from '../interfaces/Route'
 import Home from '../screens/Home'
-import Admin from '../screens/admin'
+import Admin from '../screens/Admin'
 import { ScreenName } from './screen'
 
 export const ROUTE_BASE_NAME = 'pcms/web'

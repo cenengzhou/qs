@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { useRef, useState } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
-import { SidebarComponent, TreeViewComponent, NodeSelectEventArgs } from '@syncfusion/ej2-react-navigations';
+import {
+  SidebarComponent,
+  TreeViewComponent,
+  NodeSelectEventArgs,
+  BreadcrumbComponent,
+} from "@syncfusion/ej2-react-navigations";
 import './style.css'
 import { Route as RouteType } from '../../interfaces/Route'
 
@@ -107,12 +112,11 @@ const Sidebar = ({ routeList }: Props) => {
     <div className="control-section" id="sidebar-wrapper">
       <div className="maincontent">
         <div className="listView">
+          <BreadcrumbComponent cssClass="breadcrumb"></BreadcrumbComponent>
           <Routes>
-            {
-              routeList.map((item, index) => (
-                <Route key={index} path={item.path} element={item.element} />
-              ))
-            }
+            {routeList.map((item, index) => (
+              <Route key={index} path={item.path} element={item.element} />
+            ))}
           </Routes>
         </div>
 
@@ -128,16 +132,16 @@ const Sidebar = ({ routeList }: Props) => {
         >
           <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
           <TreeViewComponent
-              id="mainTree"
-              cssClass="main-treeview"
-              fields={treeFields}
-              expandOn="Click"
-              nodeSelected={onSelect.bind(this)}
+            id="mainTree"
+            cssClass="main-treeview"
+            fields={treeFields}
+            expandOn="Click"
+            nodeSelected={onSelect.bind(this)}
           ></TreeViewComponent>
         </SidebarComponent>
       </div>
     </div>
-  )
+  );
 }
 
 export default Sidebar;

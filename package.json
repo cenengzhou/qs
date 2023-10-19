@@ -5,6 +5,7 @@
   "dependencies": {
     "@syncfusion/ej2-layouts": "^23.1.36",
     "@syncfusion/ej2-react-buttons": "^23.1.39",
+    "@syncfusion/ej2-react-dropdowns": "^23.1.41",
     "@syncfusion/ej2-react-inputs": "^23.1.40",
     "@syncfusion/ej2-react-lists": "^23.1.36",
     "@syncfusion/ej2-react-navigations": "^23.1.40",

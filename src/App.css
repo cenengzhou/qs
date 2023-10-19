@@ -8,4 +8,5 @@
 @import '../node_modules/@syncfusion/ej2-layouts/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
 @import '../src/asset/css/bootstrap-grid.min.css'

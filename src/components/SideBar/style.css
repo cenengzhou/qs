@@ -11,6 +11,13 @@
   .listView {
     flex: 1;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .breadcrumb {
+    text-align: right;
+    flex: 0;
+    background-color: #eee;
   }
 }
 .sidebar-title {
