@@ -1,6 +1,7 @@
 import { TextBoxComponent, NumericTextBoxComponent } from '@syncfusion/ej2-react-inputs'
 import { ButtonComponent, CheckBoxComponent } from '@syncfusion/ej2-react-buttons'
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
+import DatePicker from '../../../../components/DatePicker'
 import './style.css'
 
 const Subcontract = () => {
@@ -430,6 +431,62 @@ const Subcontract = () => {
           </div>
         </div>
         {/* numericText */}
+
+        {/* datePicker */}
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Requisition Approved Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC Approval Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC Award Approval Requestent Date" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC Created Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC DOC LEGAL Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC Doc SCR Date" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="TA Approved Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Work Commence Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="On-site start Date" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC final account draft date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="SC final account sign off date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Target date for subcontract execution" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Sub-Contract Duration From" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Sub-Contract Duration To" />
+          </div>
+        </div>
+        {/* datePicker */}
+
       </div>
     </div>
   );
