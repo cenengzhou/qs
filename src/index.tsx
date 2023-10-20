@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom"
+import { registerLicense } from "@syncfusion/ej2-base";
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+
+registerLicense(
+  "Ngo9BigBOggjHTQxAR8/V1NHaF5cXmVCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdgWH9ccHRVRmhdV01/X0Y="
+)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

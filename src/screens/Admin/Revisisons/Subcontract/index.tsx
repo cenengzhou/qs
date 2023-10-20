@@ -12,9 +12,9 @@ const Subcontract = () => {
     {text: "4444", value: 4}
   ]
   return (
-    <div className="subcontract">
+    <div className="admin-container">
       {/* input */}
-      <div className="subcontract-header row">
+      <div className="admin-header row">
         <div className="col-lg-4 col-md-4">
           <TextBoxComponent
             placeholder="Job Number"
@@ -34,7 +34,7 @@ const Subcontract = () => {
         </div>
       </div>
       {/* content */}
-      <div className="subcontract-content">
+      <div className="admin-content">
         <div className="row">
           <div className="col-lg-4 col-md-4">
             <TextBoxComponent
@@ -430,9 +430,153 @@ const Subcontract = () => {
             />
           </div>
         </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Original SC Sum"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Remeasured SC Sum"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Retention Amount"
+              floatLabelType="Auto"
+              cssClass="e-outline"
+              format="c2"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Retention Release"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total CC Posted Amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total Cumlated Cert Amount"
+              floatLabelType="Auto"
+              cssClass="e-outline"
+              format="c2"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total Cumulated Work Done Amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total MOS Posted Amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total Posted Cert Amount"
+              floatLabelType="Auto"
+              cssClass="e-outline"
+              format="c2"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Total Posted Work Done Amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Package Stretch Target Amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Recoverable"
+              floatLabelType="Auto"
+              cssClass="e-outline"
+              format="c2"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="Non-Recoverable"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <NumericTextBoxComponent
+              placeholder="CEO Approved amount"
+              floatLabelType="Auto"
+              format="c2"
+              cssClass="e-outline"
+            />
+          </div>
+        </div>
         {/* numericText */}
 
         {/* datePicker */}
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Final Payment Issued Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="First Payment Cert Issued Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Last Addendum Value Update Date" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Last Payment Cert Issueed Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="LOA Signed Date" />
+          </div>
+          <div className="col-lg-4 col-md-4">
+            <DatePicker placeholder="Preaward Metting Date" />
+          </div>
+        </div>
         <div className="row">
           <div className="col-lg-4 col-md-4">
             <DatePicker placeholder="Requisition Approved Date" />
@@ -486,7 +630,6 @@ const Subcontract = () => {
           </div>
         </div>
         {/* datePicker */}
-
       </div>
     </div>
   );

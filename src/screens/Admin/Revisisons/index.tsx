@@ -5,6 +5,7 @@ import {
   TabItemsDirective,
 } from '@syncfusion/ej2-react-navigations'
 import Subcontract from '../Revisisons/Subcontract'
+import SubcontractDetail from './SubcontractDetail'
 import './style.css'
 
 const Revisions = () => {
@@ -28,8 +29,8 @@ const Revisions = () => {
     { text: "Consultancy Agreement", id: "consultancyAgreement" },
   ]
   const contents: { [key: string]: any } = {
-    subcontract: () => <Subcontract></Subcontract>,
-    subcontractDetail: () => <div>2</div>,
+    subcontract: () => <Subcontract />,
+    subcontractDetail: () => <SubcontractDetail />,
     payment: () => <div>3</div>,
     addendum: () => <div>4</div>,
     addendumDetail: () => <div>5</div>,
@@ -47,8 +48,14 @@ const Revisions = () => {
     consultancyAgreement: () => <div>17</div>,
   }
 
+  const select = (e: any) => {
+    if (e.isSwiped) {
+      e.cancel = true;
+    }
+  };
+
   return (
-    <TabComponent id="defaultTab" overflowMode="MultiRow">
+    <TabComponent id="defaultTab" overflowMode="MultiRow" selecting={select}>
       <TabItemsDirective>
         {headertext.map((e) => (
           <TabItemDirective header={e} content={contents[e.id]} key={e.id} />

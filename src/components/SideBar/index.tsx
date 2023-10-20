@@ -128,6 +128,7 @@ const Sidebar = ({ routeList }: Props) => {
           mediaQuery="(min-width: 600px)"
           target=".maincontent"
           position="Left"
+          enableGestures={false}
           isOpen={true}
         >
           <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
