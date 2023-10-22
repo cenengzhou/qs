@@ -15,7 +15,8 @@ import {
   VirtualScroll,
   Sort,
   ExcelExport,Toolbar,
-  Page
+  Page,
+  ColumnChooser
 } from "@syncfusion/ej2-react-grids"
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns"
 import { TooltipComponent } from "@syncfusion/ej2-react-popups"
@@ -23,7 +24,7 @@ import './style.css'
 
 const SubcontractDetail = () => {
 
-  const toolbar: ToolbarItems[] = ['Search', 'ExcelExport', 'CsvExport'];
+  const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser'];
   const data = [
     {
       createdUser: "SYSTEM",
@@ -1565,6 +1566,8 @@ const SubcontractDetail = () => {
           height="100%"
           allowExcelExport
           toolbar={toolbar}
+          allowTextWrap={true}
+          showColumnChooser
         >
           <ColumnsDirective>
             <ColumnDirective
@@ -1588,11 +1591,7 @@ const SubcontractDetail = () => {
               width="160"
             />
             <ColumnDirective
-              template={(e: any) => (
-                <TooltipComponent content={e.description}>
-                  <div className="nowrap">{e.description}</div>
-                </TooltipComponent>
-              )}
+              field="description"
               headerText="Description"
               width="200"
             ></ColumnDirective>
@@ -1747,7 +1746,7 @@ const SubcontractDetail = () => {
               width="100"
             ></ColumnDirective>
           </ColumnsDirective>
-          <Inject services={[Page, ExcelExport, Toolbar]} />
+          <Inject services={[Page, ExcelExport, Toolbar, ColumnChooser]} />
         </GridComponent>
       </div>
     </div>
