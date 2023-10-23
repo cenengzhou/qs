@@ -6,6 +6,11 @@ import {
 } from '@syncfusion/ej2-react-navigations'
 import Subcontract from '../Revisisons/Subcontract'
 import SubcontractDetail from './SubcontractDetail'
+import Payment from './Payment'
+import Addendum from './Addendum'
+import AddendumDetail from './AddendumDetail'
+import MainCertificate from './MainCertificate'
+import Approval from './Approval'
 import './style.css'
 
 const Revisions = () => {
@@ -31,11 +36,11 @@ const Revisions = () => {
   const contents: { [key: string]: any } = {
     subcontract: () => <Subcontract />,
     subcontractDetail: () => <SubcontractDetail />,
-    payment: () => <div>3</div>,
-    addendum: () => <div>4</div>,
-    addendumDetail: () => <div>5</div>,
-    mainCertificate: () => <div>6</div>,
-    approval: () => <div>7</div>,
+    payment: () => <Payment />,
+    addendum: () => <Addendum />,
+    addendumDetail: () => <AddendumDetail />,
+    mainCertificate: () => <MainCertificate />,
+    approval: () => <Approval />,
     attachment: () => <div>8</div>,
     transit: () => <div>9</div>,
     tender: () => <div>10</div>,

@@ -157,7 +157,7 @@ const Header = () => {
       </div>
       <DialogComponent
         position={notifyPosition}
-        id="notify"
+        cssClass="nopadding"
         width="315px"
         visible={notify}
         ref={(e) => (notifyRef.current = e)}
@@ -181,6 +181,7 @@ const Header = () => {
         position={profilePosition}
         width="280px"
         visible={profile}
+        cssClass="nopadding"
         ref={(e) => (profileRef.current = e)}
       >
         <div>
@@ -212,6 +213,7 @@ const Header = () => {
         width="250px"
         height={window.innerHeight - 56}
         visible={rightSidebar}
+        cssClass="nopadding"
       >
         <RightSidebar></RightSidebar>
       </DialogComponent>

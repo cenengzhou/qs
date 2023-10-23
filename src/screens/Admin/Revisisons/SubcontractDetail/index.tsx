@@ -12,8 +12,8 @@ import {
   Inject,
   ToolbarItems,
   Filter,
-  VirtualScroll,
   Sort,
+  ColumnMenu,
   ExcelExport,Toolbar,
   Page,
   ColumnChooser
@@ -1555,7 +1555,7 @@ const SubcontractDetail = () => {
           />
         </div>
         <div className="col-lg-4 col-md-4">
-          <ButtonComponent cssClass="e-info search-btn">Search</ButtonComponent>
+          <ButtonComponent cssClass="e-info full-btn">Search</ButtonComponent>
         </div>
       </div>
       <div className="admin-content">
@@ -1568,6 +1568,11 @@ const SubcontractDetail = () => {
           toolbar={toolbar}
           allowTextWrap={true}
           showColumnChooser
+          showColumnMenu
+          allowFiltering
+          allowSorting
+          filterSettings={{ type: "Menu" }}
+          cssClass="no-margin-right"
         >
           <ColumnsDirective>
             <ColumnDirective
@@ -1578,12 +1583,12 @@ const SubcontractDetail = () => {
             <ColumnDirective
               field="jobNo"
               headerText="Job Number"
-              width="150"
+              width="120"
             ></ColumnDirective>
             <ColumnDirective
               template={(e: any) => e.subcontract.id}
               headerText="Subcontract"
-              width="150"
+              width="120"
             />
             <ColumnDirective
               field="sequenceNo"
@@ -1622,7 +1627,7 @@ const SubcontractDetail = () => {
             <ColumnDirective
               field="unit"
               headerText="Unit"
-              width="80"
+              width="100"
             ></ColumnDirective>
             <ColumnDirective
               field="lineType"
@@ -1637,7 +1642,7 @@ const SubcontractDetail = () => {
             <ColumnDirective
               field="resourceNo"
               headerText="Resource Number"
-              width="100"
+              width="150"
             ></ColumnDirective>
             <ColumnDirective
               template={(e: any) => (
@@ -1653,17 +1658,34 @@ const SubcontractDetail = () => {
               )}
               format="n4"
               headerText="Subcontract Rate"
-              width="120"
+              width="180"
             ></ColumnDirective>
             <ColumnDirective
-              field="objectCode"
-              headerText="Object Code"
-              width="100"
+              field="quantity"
+              headerText="Quantity"
+              width="180"
+              format="n4"
             ></ColumnDirective>
             <ColumnDirective
-              field="objectCode"
-              headerText="Object Code"
-              width="100"
+              template={(e: any) => (
+                <div
+                  className={
+                    typeof e.amountCumulativeCert === "number" &&
+                    e.amountCumulativeCert < 0
+                      ? "text-red"
+                      : ""
+                  }
+                >
+                  {e.amountCumulativeCert.toFixed(4)}
+                </div>
+              )}
+              headerText="Cum Certified Amount"
+              width="180"
+            ></ColumnDirective>
+            <ColumnDirective
+              field="cumCertifiedQuantity"
+              headerText="Cum Certified Quantity"
+              width="180"
             ></ColumnDirective>
             <ColumnDirective
               field="objectCode"
@@ -1746,7 +1768,17 @@ const SubcontractDetail = () => {
               width="100"
             ></ColumnDirective>
           </ColumnsDirective>
-          <Inject services={[Page, ExcelExport, Toolbar, ColumnChooser]} />
+          <Inject
+            services={[
+              Page,
+              ExcelExport,
+              Toolbar,
+              ColumnChooser,
+              ColumnMenu,
+              Filter,
+              Sort,
+            ]}
+          />
         </GridComponent>
       </div>
     </div>

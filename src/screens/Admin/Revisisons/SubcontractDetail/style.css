@@ -1,9 +1,8 @@
-.nowrap {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .text-red {
   color: #f00;
+}
+
+.no-margin-right.e-grid .e-gridheader .e-sortfilter .e-fltr-icon .e-headercelldiv {
+  margin-right: 0;
+  padding-right: 0.6em;
 }

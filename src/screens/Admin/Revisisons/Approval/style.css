@@ -1,0 +1,15 @@
+.padding15 {
+  padding: 15px !important;
+}
+
+.e-control.e-accordion .e-acrdn-item.e-selected.e-select > .e-acrdn-header, .e-control.e-accordion .e-acrdn-item.e-select>.e-acrdn-header {
+  background-color: #eee;
+}
+
+.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state > .e-acrdn-header {
+  background-color: #2184DA;
+}
+
+.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state>.e-acrdn-header .e-acrdn-header-content {
+  color: #fff;
+}

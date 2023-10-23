@@ -30,7 +30,7 @@ const Subcontract = () => {
           />
         </div>
         <div className="col-lg-4 col-md-4">
-          <ButtonComponent cssClass="e-info search-btn">Search</ButtonComponent>
+          <ButtonComponent cssClass="e-info full-btn">Search</ButtonComponent>
         </div>
       </div>
       {/* content */}

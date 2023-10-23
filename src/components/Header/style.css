@@ -1,6 +1,7 @@
 .e-appbar {
   height: 56px !important;
   justify-content: stretch;
+  box-sizing: border-box;
 }
 
 #toolbar_scrollable.e-toolbar {
@@ -19,7 +20,7 @@
   color: #fff !important;
 }
 
-.e-dialog .e-dlg-content {
+.nopadding.e-dialog .e-dlg-content {
   padding: 0 !important;
   border-radius: 5px;
 }

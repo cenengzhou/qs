@@ -137,7 +137,7 @@ const Sidebar = ({ routeList }: Props) => {
             cssClass="main-treeview"
             fields={treeFields}
             expandOn="Click"
-            nodeSelected={onSelect.bind(this)}
+            nodeSelected={onSelect}
           ></TreeViewComponent>
         </SidebarComponent>
       </div>

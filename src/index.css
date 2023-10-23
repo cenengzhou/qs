@@ -18,9 +18,22 @@ body {
 
 .e-float-input.e-control-wrapper {
   background-color: #fff !important;
-  .e-label-bottom .e-float-text-content{
-    line-height: 18px !important;
-    white-space: normal !important;
-    margin-top: 18px !important;
-  }
+}
+
+.e-float-input.e-control-wrapper .e-label-bottom .e-float-text-content {
+  line-height: 18px !important;
+  white-space: normal !important;
+  margin-top: 18px !important;
+}
+
+.e-grid .e-ccdlg .e-dlg-content {
+  padding: 16px 18px 13px 9px !important;
+}
+
+.e-grid .e-headercelldiv span {
+  font-size: 12px;
+}
+
+.row {
+  padding: 10px;
 }
