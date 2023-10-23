@@ -1,3 +1,4 @@
 export enum ScreenName {
-  HOME = 'Home'
+  HOME = 'Home',
+  ADMIN = 'Admin'
 }

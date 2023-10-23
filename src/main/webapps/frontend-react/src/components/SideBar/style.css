@@ -1,0 +1,69 @@
+.control-section {
+  height: calc(100vh - 56px);
+  .e-sidebar-context {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+  }
+  .left-sidebar {
+    flex: 0;
+  }
+  .listView {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .breadcrumb {
+    text-align: right;
+    flex: 0;
+    background-color: #eee;
+  }
+}
+.sidebar-title {
+  margin: 0;
+  font-size: 12px;
+  padding: 15px 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #eee;
+}
+.main-treeview.e-treeview .e-ul {
+  padding: 0;
+  .e-list-parent .e-text-content {
+    .e-icons.e-radio-button::before {
+      content: "\e7b2";
+    }
+  }
+}
+.e-treeview .e-list-item div.e-icons {
+  &.e-folder::before {
+    content: "\e83c";
+  }
+  &.e-form-field::before {
+    content: "\e7cd";
+  }
+  &.e-edit-2::before {
+    content: "\e81e";
+  }
+  &.e-page-columns:before {
+    content: "\e8b4";
+  }
+  &.e-activities:before {
+    content: "\e8ce";
+  }
+  &.e-month:before {
+    content: "\e7c5";
+  }
+  &.e-comments:before {
+    content: "\ec10";
+  }
+  &.e-circle-info:before {
+    content: "\e800";
+  }
+  &.e-zoom-in-2:before {
+    content: "\ec0a";
+  }
+}

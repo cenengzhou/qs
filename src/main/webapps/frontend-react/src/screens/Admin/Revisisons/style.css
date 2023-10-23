@@ -1,0 +1,19 @@
+#defaultTab {
+ flex: 1;
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+  & > .e-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  .e-item.e-active,
+  .e-item.e-active>div,
+  .e-item.e-active>div>div {
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+  }
+ }
+}
