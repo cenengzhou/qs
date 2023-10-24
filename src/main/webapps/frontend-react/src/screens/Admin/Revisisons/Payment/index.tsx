@@ -1,8 +1,8 @@
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
-  TextBoxComponent,
   NumericTextBoxComponent,
-} from "@syncfusion/ej2-react-inputs"
-import { ButtonComponent } from "@syncfusion/ej2-react-buttons"
+  TextBoxComponent
+} from '@syncfusion/ej2-react-inputs'
 
 const Payment = () => {
   return (
@@ -36,7 +36,7 @@ const Payment = () => {
       </div>
       <div className="admin-content"></div>
     </div>
-  );
-};
+  )
+}
 
-export default Payment;
+export default Payment

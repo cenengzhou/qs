@@ -1,29 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
-  TextBoxComponent,
-  NumericTextBoxComponent
-} from "@syncfusion/ej2-react-inputs"
-import {
-  ButtonComponent
-} from "@syncfusion/ej2-react-buttons"
-import {
-  GridComponent,
-  ColumnsDirective,
+  ColumnChooser,
   ColumnDirective,
-  Inject,
-  ToolbarItems,
-  Filter,
-  Sort,
   ColumnMenu,
-  ExcelExport,Toolbar,
+  ColumnsDirective,
+  ExcelExport,
+  Filter,
+  GridComponent,
+  Inject,
   Page,
-  ColumnChooser
-} from "@syncfusion/ej2-react-grids"
-import { TooltipComponent } from "@syncfusion/ej2-react-popups"
+  Sort,
+  Toolbar,
+  ToolbarItems
+} from '@syncfusion/ej2-react-grids'
+import { TextBoxComponent } from '@syncfusion/ej2-react-inputs'
+import { TooltipComponent } from '@syncfusion/ej2-react-popups'
+
 import './style.css'
 
 const Repackaging = () => {
-  const toolbar: ToolbarItems[] = ["ExcelExport", "CsvExport", "ColumnChooser"];
-  const data: any[] = [];
+  const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser']
+  const data: any[] = []
   return (
     <div className="admin-container">
       {/* input */}
@@ -52,7 +50,7 @@ const Repackaging = () => {
           showColumnMenu
           allowFiltering
           allowSorting
-          filterSettings={{ type: "Menu" }}
+          filterSettings={{ type: 'Menu' }}
           cssClass="no-margin-right"
         >
           <ColumnsDirective>
@@ -129,9 +127,9 @@ const Repackaging = () => {
               template={(e: any) => (
                 <div
                   className={
-                    typeof e.scRate === "number" && e.scRate < 0
-                      ? "text-red"
-                      : ""
+                    typeof e.scRate === 'number' && e.scRate < 0
+                      ? 'text-red'
+                      : ''
                   }
                 >
                   {e.scRate.toFixed(4)}
@@ -151,10 +149,10 @@ const Repackaging = () => {
               template={(e: any) => (
                 <div
                   className={
-                    typeof e.amountCumulativeCert === "number" &&
+                    typeof e.amountCumulativeCert === 'number' &&
                     e.amountCumulativeCert < 0
-                      ? "text-red"
-                      : ""
+                      ? 'text-red'
+                      : ''
                   }
                 >
                   {e.amountCumulativeCert.toFixed(4)}
@@ -257,13 +255,13 @@ const Repackaging = () => {
               ColumnChooser,
               ColumnMenu,
               Filter,
-              Sort,
+              Sort
             ]}
           />
         </GridComponent>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default Repackaging

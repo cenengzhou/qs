@@ -1,15 +1,22 @@
-import { TextBoxComponent, NumericTextBoxComponent } from '@syncfusion/ej2-react-inputs'
-import { ButtonComponent, CheckBoxComponent } from '@syncfusion/ej2-react-buttons'
+import {
+  ButtonComponent,
+  CheckBoxComponent
+} from '@syncfusion/ej2-react-buttons'
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
+import {
+  NumericTextBoxComponent,
+  TextBoxComponent
+} from '@syncfusion/ej2-react-inputs'
+
 import DatePicker from '../../../../components/DatePicker'
 import './style.css'
 
 const Subcontract = () => {
   const data = [
-    {text: "1111", value: 1},
-    {text: "2222", value: 2},
-    {text: "3333", value: 3},
-    {text: "4444", value: 4}
+    { text: '1111', value: 1 },
+    { text: '2222', value: 2 },
+    { text: '3333', value: 3 },
+    { text: '4444', value: 4 }
   ]
   return (
     <div className="admin-container">
@@ -632,7 +639,7 @@ const Subcontract = () => {
         {/* datePicker */}
       </div>
     </div>
-  );
+  )
 }
 
 export default Subcontract
