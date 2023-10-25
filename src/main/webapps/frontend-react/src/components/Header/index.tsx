@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+/* eslint-disable @typescript-eslint/naming-convention */
+import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
@@ -24,25 +25,19 @@ const Header = () => {
   const [notify, setNotify] = useState(false)
   const [profile, setProfile] = useState(false)
   const [rightSidebar, SetRightSidebar] = useState(false)
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [notifyPosition, setNotifyPosition] = useState({ X: 0, Y: 0 })
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [profilePosition, setProfilePosition] = useState({ X: 0, Y: 0 })
   const notifyBtnRef = useRef(null)
   const profileBtnRef = useRef(null)
   const notifyRef = useRef<DialogComponent | null>()
   const profileRef = useRef<DialogComponent | null>()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const notifyShow = (e: any) => {
+  const notifyShow = (e: SyntheticEvent) => {
     setNotify(true)
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    setNotifyPosition({ X: e.target.offsetLeft - 280, Y: 56 })
+    setNotifyPosition({ X: (e.target as HTMLElement).offsetLeft - 280, Y: 56 })
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const profileShow = (e: any) => {
+  const profileShow = (e: SyntheticEvent) => {
     setProfile(true)
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    setProfilePosition({ X: e.target.offsetLeft - 200, Y: 56 })
+    setProfilePosition({ X: (e.target as HTMLElement).offsetLeft - 200, Y: 56 })
   }
   const notifyClose = () => {
     setNotify(false)
@@ -54,19 +49,18 @@ const Header = () => {
     SetRightSidebar(!rightSidebar)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDocumentClick = useCallback((e: any) => {
+  const handleDocumentClick = useCallback((e: MouseEvent) => {
     if (
       e.target !== notifyBtnRef.current &&
       notifyRef.current &&
-      !notifyRef.current.element.contains(e.target)
+      !notifyRef.current.element.contains(e.target as HTMLElement)
     ) {
       notifyClose()
     }
     if (
       e.target !== profileBtnRef.current &&
       profileRef.current &&
-      !profileRef.current.element.contains(e.target)
+      !profileRef.current.element.contains(e.target as HTMLElement)
     ) {
       profileClose()
     }

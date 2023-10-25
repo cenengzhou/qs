@@ -46,14 +46,14 @@ const Approval = () => {
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
-                  placeholder="Payment Method"
+                  placeholder="Approved Or Rejected"
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <ButtonComponent cssClass="e-info full-btn">
-                  Search
+                  Update
                 </ButtonComponent>
               </div>
             </div>
@@ -89,14 +89,14 @@ const Approval = () => {
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
-                  placeholder="Payment Method"
+                  placeholder="Approved Or Rejected"
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <ButtonComponent cssClass="e-info full-btn">
-                  Search
+                  Update
                 </ButtonComponent>
               </div>
             </div>
@@ -132,14 +132,25 @@ const Approval = () => {
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
-                  placeholder="Payment Method"
+                  placeholder="Approved Or Rejected"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-4 col-md-4">
+                <DropDownListComponent
+                  dataSource={['Split', 'Terminate']}
+                  cssClass="e-outline"
+                  floatLabelType="Always"
+                  showClearButton
+                  placeholder="Split Or Terminate"
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <ButtonComponent cssClass="e-info full-btn">
-                  Search
+                  Update
                 </ButtonComponent>
               </div>
             </div>
@@ -175,14 +186,14 @@ const Approval = () => {
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
-                  placeholder="Payment Method"
+                  placeholder="Approved Or Rejected"
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <ButtonComponent cssClass="e-info full-btn">
-                  Search
+                  Update
                 </ButtonComponent>
               </div>
             </div>
@@ -218,14 +229,14 @@ const Approval = () => {
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
-                  placeholder="Payment Method"
+                  placeholder="Approved Or Rejected"
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <ButtonComponent cssClass="e-info full-btn">
-                  Search
+                  Update
                 </ButtonComponent>
               </div>
             </div>
@@ -236,8 +247,8 @@ const Approval = () => {
   ]
 
   return (
-    <div className="padding15">
-      <AccordionComponent>
+    <div className="admin-container">
+      <AccordionComponent expandMode="Single">
         <AccordionItemsDirective>
           {approvalData.map((e: Data, index) => {
             return (

@@ -6,10 +6,11 @@
   background-color: #eee;
 }
 
-.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state > .e-acrdn-header {
+.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state > .e-acrdn-header, .e-accordion .e-acrdn-item.e-item-focus.e-select.e-selected.e-expand-state .e-acrdn-header:hover:focus {
   background-color: #2184DA;
 }
 
-.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state>.e-acrdn-header .e-acrdn-header-content {
-  color: #fff;
+.e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state > .e-acrdn-header .e-tgl-collapse-icon.e-icons.e-expand-icon, .e-control.e-accordion .e-acrdn-item.e-selected.e-select.e-active.e-expand-state > .e-acrdn-header .e-acrdn-header-content, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header .e-acrdn-header-content > div > div {
+  color: #fff !important;
 }
+

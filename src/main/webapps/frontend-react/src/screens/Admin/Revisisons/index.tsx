@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 
 import {
+  SelectingEventArgs,
   TabComponent,
   TabItemDirective,
   TabItemsDirective
@@ -13,52 +12,72 @@ import Subcontract from '../Revisisons/Subcontract'
 import Addendum from './Addendum'
 import AddendumDetail from './AddendumDetail'
 import Approval from './Approval'
+import Attachment from './Attachment'
 import MainCertificate from './MainCertificate'
 import Payment from './Payment'
 import SubcontractDetail from './SubcontractDetail'
 import './style.css'
 
-const Revisions = () => {
-  const headertext = [
-    { text: 'Subcontract', id: 'subcontract' },
-    { text: 'Subcontract Detail', id: 'subcontractDetail' },
-    { text: 'Payment', id: 'payment' },
-    { text: 'Addendum', id: 'addendum' },
-    { text: 'Addendum Detail', id: 'addendumDetail' },
-    { text: 'Main Certificate', id: 'mainCertificate' },
-    { text: 'Approval', id: 'approval' },
-    { text: 'Attachment', id: 'attachment' },
-    { text: 'Transit', id: 'transit' },
-    { text: 'Tender', id: 'tender' },
-    { text: 'Tender Detail', id: 'tenderDetail' },
-    { text: 'Monthly Movement', id: 'monthlyMovement' },
-    { text: 'ROC', id: 'ROC' },
-    { text: 'ROC Detail', id: 'ROCDetail' },
-    { text: 'ROC Subdetail', id: 'ROCSubdetail' },
-    { text: 'Final Account', id: 'finalAccount' },
-    { text: 'Consultancy Agreement', id: 'consultancyAgreement' }
-  ]
-  const contents: { [key: string]: any } = {
-    subcontract: () => <Subcontract />,
-    subcontractDetail: () => <SubcontractDetail />,
-    payment: () => <Payment />,
-    addendum: () => <Addendum />,
-    addendumDetail: () => <AddendumDetail />,
-    mainCertificate: () => <MainCertificate />,
-    approval: () => <Approval />,
-    attachment: () => <div>8</div>,
-    transit: () => <div>9</div>,
-    tender: () => <div>10</div>,
-    tenderDetail: () => <div>11</div>,
-    monthlyMovement: () => <div>12</div>,
-    ROC: () => <div>13</div>,
-    ROCDetail: () => <div>14</div>,
-    ROCSubdetail: () => <div>15</div>,
-    finalAccount: () => <div>16</div>,
-    consultancyAgreement: () => <div>17</div>
-  }
+interface TabData {
+  text: string
+  id: string
+  content: JSX.Element
+}
 
-  const select = (e: any) => {
+const Revisions = () => {
+  const tabData: TabData[] = [
+    { text: 'Subcontract', id: 'subcontract', content: <Subcontract /> },
+    {
+      text: 'Subcontract Detail',
+      id: 'subcontractDetail',
+      content: <SubcontractDetail />
+    },
+    { text: 'Payment', id: 'payment', content: <Payment /> },
+    { text: 'Addendum', id: 'addendum', content: <Addendum /> },
+    {
+      text: 'Addendum Detail',
+      id: 'addendumDetail',
+      content: <AddendumDetail />
+    },
+    {
+      text: 'Main Certificate',
+      id: 'mainCertificate',
+      content: <MainCertificate />
+    },
+    { text: 'Approval', id: 'approval', content: <Approval /> },
+    { text: 'Attachment', id: 'attachment', content: <Attachment /> },
+    { text: 'Transit', id: 'transit', content: <div>Transit</div> },
+    { text: 'Tender', id: 'tender', content: <div>Tender</div> },
+    {
+      text: 'Tender Detail',
+      id: 'tenderDetail',
+      content: <div>tenderDetail</div>
+    },
+    {
+      text: 'Monthly Movement',
+      id: 'monthlyMovement',
+      content: <div>monthlyMovement</div>
+    },
+    { text: 'ROC', id: 'ROC', content: <div>ROC</div> },
+    { text: 'ROC Detail', id: 'ROCDetail', content: <div>ROCDetail</div> },
+    {
+      text: 'ROC Subdetail',
+      id: 'ROCSubdetail',
+      content: <div>ROCSubdetail</div>
+    },
+    {
+      text: 'Final Account',
+      id: 'finalAccount',
+      content: <div>finalAccount</div>
+    },
+    {
+      text: 'Consultancy Agreement',
+      id: 'consultancyAgreement',
+      content: <div>consultancyAgreement</div>
+    }
+  ]
+
+  const select = (e: SelectingEventArgs) => {
     if (e.isSwiped) {
       e.cancel = true
     }
@@ -67,8 +86,8 @@ const Revisions = () => {
   return (
     <TabComponent id="defaultTab" overflowMode="MultiRow" selecting={select}>
       <TabItemsDirective>
-        {headertext.map(e => (
-          <TabItemDirective header={e} content={contents[e.id]} key={e.id} />
+        {tabData.map((e: TabData) => (
+          <TabItemDirective header={e} content={() => e.content} key={e.id} />
         ))}
       </TabItemsDirective>
     </TabComponent>

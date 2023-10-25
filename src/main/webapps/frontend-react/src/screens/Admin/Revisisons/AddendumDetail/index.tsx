@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
   ColumnChooser,
@@ -23,7 +24,7 @@ import './style.css'
 
 const AddendumDetail = () => {
   const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser']
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const data: any[] = []
   return (
     <div className="admin-container">
@@ -75,7 +76,6 @@ const AddendumDetail = () => {
               width="120"
             ></ColumnDirective>
             <ColumnDirective
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               template={(e: any) => e.subcontract.id}
               headerText="Subcontract"
               width="120"
@@ -91,7 +91,6 @@ const AddendumDetail = () => {
               width="200"
             ></ColumnDirective>
             <ColumnDirective
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               template={(e: any) => (
                 <TooltipComponent content={e.remark}>
                   <div className="nowrap">{e.remark}</div>
@@ -136,7 +135,6 @@ const AddendumDetail = () => {
               width="150"
             ></ColumnDirective>
             <ColumnDirective
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               template={(e: any) => (
                 <div
                   className={
@@ -159,7 +157,6 @@ const AddendumDetail = () => {
               format="n4"
             ></ColumnDirective>
             <ColumnDirective
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               template={(e: any) => (
                 <div
                   className={
