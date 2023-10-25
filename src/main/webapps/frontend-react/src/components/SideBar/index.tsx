@@ -98,9 +98,11 @@ const Sidebar = ({ routeList }: Props) => {
 
   const onSelect = (e: NodeSelectEventArgs) => {
     if (e.nodeData.text === 'Session') {
-      navigate('/admin/session')
+      navigate('/admin/Session')
     } else if (e.nodeData.text === 'Revisions') {
-      navigate('/admin/revisisons')
+      navigate('/admin/Revisisons')
+    } else if (e.nodeData.text === 'Manual Procedures') {
+      navigate('/admin/ManualProcedures')
     }
   }
 

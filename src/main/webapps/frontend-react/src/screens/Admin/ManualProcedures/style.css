@@ -1,0 +1,41 @@
+.manual-procedures-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.manual-procedures .e-card {
+  justify-content: space-between;
+}
+
+.manual-procedures .e-card .e-card-content {
+  text-overflow: initial;
+}
+
+.manual-procedures .e-card .e-card-content.text-content {
+  flex: 1;
+}
+
+.manual-procedures .e-card .e-card-content.text-content .text-border {
+  padding: 10px 20px;
+  height: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid #ebebeb;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.manual-procedures .e-card .e-card-actions {
+  padding: 0 10px 10px;
+}
+
+.manual-procedures .e-card .e-card-content .col-lg-6 {
+  padding-top: 15px;
+}
+
+.bg-info {
+  background-color: #2184da;
+}
+
+.bg-info .e-card-header-caption .e-card-header-title {
+  color: #fff;
+}

@@ -1,16 +1,20 @@
 import React, { useRef } from 'react'
 
 import {
+  CalendarView,
   ChangedEventArgs,
   DatePickerComponent
 } from '@syncfusion/ej2-react-calendars'
 
 interface Props {
   placeholder?: string
+  start?: CalendarView
+  depth?: CalendarView
+  format?: string
   onChange?: (e: ChangedEventArgs) => void
 }
 
-const DatePicker = ({ placeholder, onChange }: Props) => {
+const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
   const datePickerRef = useRef<DatePickerComponent | null>()
 
   const handleFocus = () => {
@@ -23,7 +27,9 @@ const DatePicker = ({ placeholder, onChange }: Props) => {
     <div className="App">
       <DatePickerComponent
         placeholder={placeholder}
-        format="yyyy-MM-dd"
+        format={format ? format : 'yyyy-MM-dd'}
+        start={start ? start : undefined}
+        depth={depth ? depth : undefined}
         ref={e => (datePickerRef.current = e)}
         cssClass="e-outline"
         floatLabelType={placeholder ? 'Auto' : 'Never'}

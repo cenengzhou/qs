@@ -37,3 +37,7 @@ body {
 .row {
   padding: 10px;
 }
+
+.nopadding {
+  padding: 0 !important;
+}

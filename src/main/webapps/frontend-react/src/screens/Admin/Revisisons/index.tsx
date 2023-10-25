@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 
 import {
@@ -35,7 +38,6 @@ const Revisions = () => {
     { text: 'Final Account', id: 'finalAccount' },
     { text: 'Consultancy Agreement', id: 'consultancyAgreement' }
   ]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contents: { [key: string]: any } = {
     subcontract: () => <Subcontract />,
     subcontractDetail: () => <SubcontractDetail />,
@@ -49,17 +51,13 @@ const Revisions = () => {
     tender: () => <div>10</div>,
     tenderDetail: () => <div>11</div>,
     monthlyMovement: () => <div>12</div>,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     ROC: () => <div>13</div>,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     ROCDetail: () => <div>14</div>,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     ROCSubdetail: () => <div>15</div>,
     finalAccount: () => <div>16</div>,
     consultancyAgreement: () => <div>17</div>
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const select = (e: any) => {
     if (e.isSwiped) {
       e.cancel = true

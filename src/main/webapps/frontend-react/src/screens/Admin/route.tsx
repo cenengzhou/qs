@@ -1,15 +1,21 @@
 import { Route } from '../../interfaces/Route'
+import ManualProcedures from './ManualProcedures'
 import Revisions from './Revisisons'
 import Session from './Session'
 
 export const ROUTE_LIST: Route[] = [
   {
-    path: '/session',
+    path: '/Session',
     name: 'SESSION',
     element: <Session />
   },
   {
-    path: '/revisisons',
+    path: '/ManualProcedures',
+    name: 'SESSION',
+    element: <ManualProcedures />
+  },
+  {
+    path: '/Revisisons',
     name: 'REVISISONS',
     element: <Revisions />
   },
