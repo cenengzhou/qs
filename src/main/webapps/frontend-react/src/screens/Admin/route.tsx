@@ -2,6 +2,8 @@ import { Route } from '../../interfaces/Route'
 import ManualProcedures from './ManualProcedures'
 import Revisions from './Revisisons'
 import Session from './Session'
+import ResourceCodeMaintenance from './Transit/ResourceCodeMaintenance'
+import UOMMaintenance from './Transit/UOMMaintenance'
 
 export const ROUTE_LIST: Route[] = [
   {
@@ -18,6 +20,16 @@ export const ROUTE_LIST: Route[] = [
     path: '/Revisisons',
     name: 'REVISISONS',
     element: <Revisions />
+  },
+  {
+    path: '/TransitUOMMaintenance',
+    name: 'UOMMaintenance',
+    element: <UOMMaintenance />
+  },
+  {
+    path: '/TransitResourceCodeMaintenance',
+    name: 'ResourceCodeMaintenance',
+    element: <ResourceCodeMaintenance />
   },
   {
     path: '/',

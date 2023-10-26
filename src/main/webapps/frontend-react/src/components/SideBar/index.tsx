@@ -103,6 +103,10 @@ const Sidebar = ({ routeList }: Props) => {
       navigate('/admin/Revisisons')
     } else if (e.nodeData.text === 'Manual Procedures') {
       navigate('/admin/ManualProcedures')
+    } else if (e.nodeData.text === 'UOM Maintenance') {
+      navigate('/admin/TransitUOMMaintenance')
+    } else if (e.nodeData.text === 'Resource Code Maintenance') {
+      navigate('/admin/TransitResourceCodeMaintenance')
     }
   }
 

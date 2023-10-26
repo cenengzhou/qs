@@ -1,0 +1,33 @@
+.padding10 {
+  padding: 10px !important;
+}
+
+.e-card.transit-card {
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.e-card.transit-card .e-card-header {
+  min-height: auto;
+}
+
+.transit-title {
+  padding: 5px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.transit-title > span {
+  padding: 0 5px;
+}
+
+.e-card.transit-card .transit-content {
+  padding: 20px;
+}
+
+.e-card.transit-card .transit-content h3 {
+  font-size: 24px;
+  font-weight: 500;
+  color: rgb(48, 55, 62);
+}
