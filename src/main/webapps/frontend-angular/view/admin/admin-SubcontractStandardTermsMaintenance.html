@@ -15,11 +15,8 @@
 		<div class="panel panel-inverse ">
 			<div class="panel-heading">
 				<div class="panel-heading-btn">
-					<a href="javascript:;"
-						class="btn btn-xs btn-icon btn-circle btn-white"
-						data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
-						href="javascript:;"
-						class="btn btn-xs btn-icon btn-circle btn-white"
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-white" data-click="panel-expand"><i
+							class="fa fa-expand"></i></a> <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-white"
 						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 				</div>
 				<h4 class="panel-title">
@@ -29,34 +26,29 @@
 			<div class="panel-body">
 
 				<div class="row col-md-12" block-ui="blockStandardTerms">
-					<div
-						save-and-restore-grid-state="admin_subcontractStandardTemsMaintenance"
-						ui-grid-save-state ui-grid="gridOptions"
-						external-scopes="clickHandler" ui-grid-row-edit ui-grid-selection
-						ui-grid-cellnav ui-grid-edit class="grid" resize
-						ng-style="resizeWithOffset(350)"></div>
+					<div save-and-restore-grid-state="admin_subcontractStandardTemsMaintenance" ui-grid-save-state
+						ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-row-edit ui-grid-selection ui-grid-cellnav
+						ui-grid-edit class="grid" resize ng-style="resizeWithOffset(350)"></div>
 				</div>
 
 			</div>
 			<div class="panel-footer bg-white">
-				<div class="row" ng-show="showQSAdmin">
+				<div class="row">
 					<div class="col-md-12">
-							<div class = "col-md-4" ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
-								<button
-									class="btn btn-block btn-primary"
-									ng-click="onUpdate()"><span class ="glyphicon glyphicon-edit"></span> Update Modified Standard Terms</button>
-							</div>
-							<div class = "col-md-4" ng-show="selectedRows.length>0">
-								<button
-									class="btn btn-block btn-success"
-									ng-click="onDelete()"><span class ="glyphicon glyphicon-remove-sign"></span>  Delete Selected Standard Terms </button>
-							</div>
-							<div class = "col-md-4">
-								<button class="btn btn-block btn-danger" ng-click="onAdd()">
-									<i class="glyphicon glyphicon-plus-sign"></i> Create New
-									Standard Terms
-								</button>
-							</div>
+						<div class="col-md-4">
+							<button class="btn btn-block btn-primary" ng-click="onUpdate()"><span
+									class="glyphicon glyphicon-edit"></span> Update Modified Standard Terms</button>
+						</div>
+						<div class="col-md-4">
+							<button class="btn btn-block btn-success" ng-click="onDelete()"><span
+									class="glyphicon glyphicon-remove-sign"></span> Delete Selected Standard Terms </button>
+						</div>
+						<div class="col-md-4">
+							<button class="btn btn-block btn-danger" ng-click="onAdd()">
+								<i class="glyphicon glyphicon-plus-sign"></i> Create New
+								Standard Terms
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

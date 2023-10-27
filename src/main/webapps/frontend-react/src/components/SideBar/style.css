@@ -1,5 +1,7 @@
 .control-section {
   height: calc(100vh - 56px);
+  position: relative;
+  transition: all 0.5s;
 }
 .control-section .e-sidebar-context {
   height: 100%;
@@ -8,6 +10,26 @@
 }
 .control-section .left-sidebar {
   flex: 0;
+}
+.siderbar-btn-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 50px;
+  margin-left: 0;
+  background-color: #efefef;
+  transition: all 0.5s;
+}
+.siderbar-btn-content span {
+  padding: 10px;
+}
+.siderbar-btn-content span:hover {
+  color: #2184DA;
 }
 .control-section .listView {
   flex: 1;
@@ -67,4 +89,7 @@
 }
 .e-treeview .e-list-item div.e-icons.e-zoom-in-2:before {
   content: "\ec0a";
+}
+.paddingL50 {
+  padding-left: 50px;
 }

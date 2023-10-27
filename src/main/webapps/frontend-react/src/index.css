@@ -34,6 +34,10 @@ body {
   font-size: 12px;
 }
 
+.e-table tr:nth-of-type(even) {
+  background-color: #eee;
+}
+
 .row {
   padding: 10px;
 }

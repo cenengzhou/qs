@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import {
@@ -18,7 +18,8 @@ interface Props {
 
 const Sidebar = ({ routeList }: Props) => {
   const navigate = useNavigate()
-  const sidebarobj = useRef<SidebarComponent>(null)
+  const sidebar = useRef<SidebarComponent>(null)
+  const [isOpen, setIsOpen] = useState(true)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const treeData: { [key: string]: Object }[] = [
@@ -107,11 +108,32 @@ const Sidebar = ({ routeList }: Props) => {
       navigate('/admin/TransitUOMMaintenance')
     } else if (e.nodeData.text === 'Resource Code Maintenance') {
       navigate('/admin/TransitResourceCodeMaintenance')
+    } else if (e.nodeData.text === 'Standard Terms Maintenance') {
+      navigate('/admin/SubcontractStandardTermsMaintenance')
     }
   }
 
+  const sidebarToggle = () => {
+    sidebar.current?.toggle()
+  }
+
+  const sidebarChange = () => {
+    setIsOpen((p: boolean) => {
+      return !p
+    })
+  }
+
   return (
-    <div className="control-section" id="sidebar-wrapper">
+    <div
+      className={isOpen ? 'control-section' : 'control-section paddingL50'}
+      id="sidebar-wrapper"
+    >
+      <div className="siderbar-btn-content">
+        <span
+          className="e-icons e-chevron-right-double e-large"
+          onClick={sidebarToggle}
+        ></span>
+      </div>
       <div className="maincontent">
         <div className="listView">
           <BreadcrumbComponent cssClass="breadcrumb"></BreadcrumbComponent>
@@ -124,14 +146,15 @@ const Sidebar = ({ routeList }: Props) => {
 
         <SidebarComponent
           id="defaultSidebar"
-          ref={sidebarobj}
+          ref={sidebar}
           className="default-sidebar"
           width="250px"
           mediaQuery="(min-width: 600px)"
           target=".maincontent"
           position="Left"
           enableGestures={false}
-          isOpen={true}
+          isOpen={isOpen}
+          change={sidebarChange}
         >
           <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
           <TreeViewComponent

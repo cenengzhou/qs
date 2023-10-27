@@ -139,7 +139,7 @@ const Attachment = () => {
               width="200"
             ></ColumnDirective>
             <ColumnDirective
-              template={(e: any) => e.text || ''}
+              template={(e: any) => e.text}
               headerText="Text"
               width="200"
             ></ColumnDirective>
