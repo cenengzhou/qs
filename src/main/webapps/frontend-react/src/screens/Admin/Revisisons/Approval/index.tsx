@@ -256,6 +256,7 @@ const Approval = () => {
                 header={e.header}
                 expanded={index === 0}
                 content={e.content}
+                key={index}
               />
             )
           })}

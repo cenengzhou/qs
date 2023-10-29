@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -11,6 +9,7 @@ import {
   Edit,
   ExcelExport,
   Filter,
+  ForeignKey,
   GridComponent,
   Inject,
   Page,
@@ -97,7 +96,15 @@ const StandardTermsMaintenance = () => {
 
   const save = (e: any) => {
     console.log(e)
+    console.log(data)
   }
+
+  const data2 = [
+    { scPaymentTerm: 'QS1', value: 'QS1-1111' },
+    { scPaymentTerm: 'QS2', value: 'QS2-2222' },
+    { scPaymentTerm: 'QS3', value: 'QS3-3333' },
+    { scPaymentTerm: 'QS4', value: 'QS4-4444' }
+  ]
 
   return (
     <div className="admin-container">
@@ -137,11 +144,12 @@ const StandardTermsMaintenance = () => {
               width="150"
             ></ColumnDirective>
             <ColumnDirective
-              template={(e: any) => e.scPaymentTerm}
+              field="scPaymentTerm"
               headerText="SC Payment Term"
-              editType="dropdownedit"
-              edit={{ params: { popupHeight: '300px' } }}
               width="200"
+              dataSource={data2}
+              foreignKeyField="scPaymentTerm"
+              foreignKeyValue="value"
             />
             <ColumnDirective
               field="scMaxRetentionPercent"
@@ -162,7 +170,7 @@ const StandardTermsMaintenance = () => {
               width="200"
             ></ColumnDirective>
             <ColumnDirective
-              template={(e: any) => e?.retentionType}
+              field="retentionType"
               headerText="Retention Type"
               width="200"
             ></ColumnDirective>
@@ -176,7 +184,8 @@ const StandardTermsMaintenance = () => {
               ColumnMenu,
               Filter,
               Sort,
-              Edit
+              Edit,
+              ForeignKey
             ]}
           />
         </GridComponent>

@@ -152,6 +152,8 @@ const Attachment = () => {
               field="dateCreated"
               headerText="Created Date"
               width="200"
+              type="date"
+              format="yyyy-MM-dd hh:mm"
             ></ColumnDirective>
             <ColumnDirective
               field="usernameLastModified"
@@ -162,6 +164,8 @@ const Attachment = () => {
               field="dateLastModified"
               headerText="Last Modified Date"
               width="200"
+              type="date"
+              format="yyyy-MM-dd hh:mm"
             ></ColumnDirective>
           </ColumnsDirective>
           <Inject
