@@ -34,7 +34,7 @@
 }
 
 .bg-info {
-  background-color: #2184da;
+  background-color: var(--blue);
 }
 
 .bg-info .e-card-header-caption .e-card-header-title {

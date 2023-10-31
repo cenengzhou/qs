@@ -29,7 +29,7 @@
   padding: 10px;
 }
 .siderbar-btn-content span:hover {
-  color: #2184DA;
+  color: var(--blue);
 }
 .control-section .listView {
   flex: 1;
@@ -43,7 +43,6 @@
   flex: 0;
   background-color: #eee;
 }
-
 .sidebar-title {
   margin: 0;
   font-size: 12px;
@@ -54,15 +53,16 @@
   text-overflow: ellipsis;
   border-bottom: 1px solid #eee;
 }
-
 .main-treeview.e-treeview .e-ul {
   padding: 0;
 }
-
+.chevron-container {
+  text-align: center;
+  padding: 5px;
+}
 .main-treeview.e-treeview .e-ul .e-list-parent .e-text-content .e-icons.e-radio-button::before {
   content: "\e7b2";
 }
-
 .e-treeview .e-list-item div.e-icons.e-folder::before {
   content: "\e83c";
 }

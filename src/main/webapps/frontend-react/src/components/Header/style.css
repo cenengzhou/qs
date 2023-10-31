@@ -140,7 +140,7 @@
   color: #fff;
   line-height: 20px;
   text-align: center;
-  background-color: #2184DA;
+  background-color: var(--blue);
 }
 
 .profileHeader .e-avatar {

@@ -2,6 +2,27 @@ html, body {
   height: 100%;
 }
 body {
+  --red: #F04B46;
+  --lightRed: #F36F6B;
+  --blue: #2184DA;
+  --lightBlue: #4D9CE1;
+  --green: #17B6A4;
+  --lightGreen: #98ded7;
+  --yellow: #fcaf41;
+  --lightYellow: #FCBF67;
+  --grey: #aab3ba;
+  --lightGrey: #BBC2C7;
+  --purple: #9b59b6;
+  --lightPurple: #cfafdc;
+  --pink: #f94877;
+  --lightPink: #f71752;
+  --primary: #2184DA;
+  --lime: #65C56F;
+  --lightLime: #83D08B;
+  --info: #38AFD3;
+  --lightInfo: #5FBFDB;
+  --white: #fff;
+  --black: #3C454D;
   margin: 0;
   font-family: 'Source Sans Pro','Helvetica Neue', Helvetica,Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -44,4 +65,8 @@ body {
 
 .nopadding {
   padding: 0 !important;
+}
+
+.e-spinner-pane .e-spinner-inner .e-spin-material {
+  stroke: var(--blue);
 }

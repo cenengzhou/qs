@@ -18,9 +18,7 @@ const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
   const datePickerRef = useRef<DatePickerComponent | null>()
 
   const handleFocus = () => {
-    if (datePickerRef.current) {
-      datePickerRef.current.show()
-    }
+    datePickerRef.current?.show()
   }
 
   return (

@@ -18,6 +18,7 @@ import {
   ToolbarItems
 } from '@syncfusion/ej2-react-grids'
 
+import { GLOBALPARAMETER } from '../../../../constants/data'
 import './style.css'
 
 const StandardTermsMaintenance = () => {
@@ -99,13 +100,6 @@ const StandardTermsMaintenance = () => {
     console.log(data)
   }
 
-  const data2 = [
-    { scPaymentTerm: 'QS1', value: 'QS1-1111' },
-    { scPaymentTerm: 'QS2', value: 'QS2-2222' },
-    { scPaymentTerm: 'QS3', value: 'QS3-3333' },
-    { scPaymentTerm: 'QS4', value: 'QS4-4444' }
-  ]
-
   return (
     <div className="admin-container">
       <div className="admin-content">
@@ -147,9 +141,10 @@ const StandardTermsMaintenance = () => {
               field="scPaymentTerm"
               headerText="SC Payment Term"
               width="200"
-              dataSource={data2}
-              foreignKeyField="scPaymentTerm"
+              dataSource={GLOBALPARAMETER.paymentTerms}
+              foreignKeyField="id"
               foreignKeyValue="value"
+              edit={{ params: { popupWidth: '280px' } }}
             />
             <ColumnDirective
               field="scMaxRetentionPercent"

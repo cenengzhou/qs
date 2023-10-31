@@ -89,7 +89,6 @@ const Header = () => {
 
   useEffect(() => {
     document.addEventListener('click', handleDocumentClick)
-
     return () => {
       document.removeEventListener('click', handleDocumentClick)
     }

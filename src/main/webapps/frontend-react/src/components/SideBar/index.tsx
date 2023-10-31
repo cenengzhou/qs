@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
 import { useRef, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
   BreadcrumbComponent,
+  FieldsSettingsModel,
   NodeSelectEventArgs,
   SidebarComponent,
   TreeViewComponent
@@ -14,103 +17,22 @@ import './style.css'
 
 interface Props {
   routeList: RouteType[]
+  treeData: { [key: string]: Object }[]
+  onSelect: (e: NodeSelectEventArgs) => void
 }
 
-const Sidebar = ({ routeList }: Props) => {
-  const navigate = useNavigate()
+const Sidebar = ({ routeList, treeData, onSelect }: Props) => {
   const sidebar = useRef<SidebarComponent>(null)
   const [isOpen, setIsOpen] = useState(true)
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  const treeData: { [key: string]: Object }[] = [
-    {
-      id: '1',
-      name: 'Session',
-      iconCss: 'e-icons e-folder',
-      selected: true
-    },
-    {
-      id: '2',
-      name: 'Manual Procedures',
-      iconCss: 'e-icons e-form-field'
-    },
-    { id: '3', name: 'Revisions', iconCss: 'e-icons e-edit-2' },
-    {
-      id: '4',
-      name: 'Transit',
-      iconCss: 'e-icons e-page-columns',
-      child: [
-        {
-          id: '41',
-          name: 'UOM Maintenance',
-          iconCss: 'e-icons e-radio-button'
-        },
-        {
-          id: '42',
-          name: 'Resource Code Maintenance',
-          iconCss: 'e-icons e-radio-button'
-        }
-      ]
-    },
-    {
-      id: '5',
-      name: 'Subcontract',
-      iconCss: 'e-icons e-activities',
-      child: [
-        {
-          id: '51',
-          name: 'Standard Terms Maintenance',
-          iconCss: 'e-icons e-radio-button'
-        }
-      ]
-    },
-    {
-      id: '6',
-      name: 'Scheduler Maintenance',
-      iconCss: 'e-icons e-month'
-    },
-    {
-      id: '7',
-      name: 'Announcement Setting',
-      iconCss: 'e-icons e-comments'
-    },
-    {
-      id: '8',
-      name: 'System Information',
-      iconCss: 'e-icons e-circle-info'
-    },
-    {
-      id: '9',
-      name: 'System Information',
-      iconCss: 'e-icons e-zoom-in-2'
-    }
-  ]
-
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  const treeFields: { [key: string]: Object } = {
+  const treeFields: FieldsSettingsModel = {
     dataSource: treeData,
     id: 'id',
-    text: 'name',
+    text: 'text',
     selected: 'selected',
     child: 'child',
     expanded: 'expanded',
     iconCss: 'iconCss'
-  }
-
-  const onSelect = (e: NodeSelectEventArgs) => {
-    if (e.nodeData.text === 'Session') {
-      navigate('/admin/Session')
-    } else if (e.nodeData.text === 'Revisions') {
-      navigate('/admin/Revisisons')
-    } else if (e.nodeData.text === 'Manual Procedures') {
-      navigate('/admin/ManualProcedures')
-    } else if (e.nodeData.text === 'UOM Maintenance') {
-      navigate('/admin/TransitUOMMaintenance')
-    } else if (e.nodeData.text === 'Resource Code Maintenance') {
-      navigate('/admin/TransitResourceCodeMaintenance')
-    } else if (e.nodeData.text === 'Standard Terms Maintenance') {
-      navigate('/admin/SubcontractStandardTermsMaintenance')
-    }
   }
 
   const sidebarToggle = () => {
@@ -157,6 +79,13 @@ const Sidebar = ({ routeList }: Props) => {
           change={sidebarChange}
         >
           <h6 className="sidebar-title">19019 HKHA Wah King St FDN</h6>
+          <div className="chevron-container">
+            <ButtonComponent
+              cssClass="e-small e-round"
+              iconCss="e-info e-icons e-chevron-left-double"
+              onClick={() => sidebar.current?.hide()}
+            />
+          </div>
           <TreeViewComponent
             id="mainTree"
             cssClass="main-treeview"
