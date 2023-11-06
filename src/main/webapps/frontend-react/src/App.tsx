@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 
@@ -12,8 +13,9 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 const App = () => {
   useEffect(() => {
-    createSpinner({ target: document.getElementById('root') as HTMLElement })
+    createSpinner({ target: document.getElementById('root')! })
   }, [])
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}></PersistGate>

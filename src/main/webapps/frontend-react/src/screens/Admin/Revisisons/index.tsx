@@ -16,6 +16,7 @@ import Attachment from './Attachment'
 import MainCertificate from './MainCertificate'
 import Payment from './Payment'
 import SubcontractDetail from './SubcontractDetail'
+import Transit from './Transit'
 import './style.css'
 
 interface TabData {
@@ -46,7 +47,7 @@ const Revisions = () => {
     },
     { text: 'Approval', id: 'approval', content: <Approval /> },
     { text: 'Attachment', id: 'attachment', content: <Attachment /> },
-    { text: 'Transit', id: 'transit', content: <div>Transit</div> },
+    { text: 'Transit', id: 'transit', content: <Transit /> },
     { text: 'Tender', id: 'tender', content: <div>Tender</div> },
     {
       text: 'Tender Detail',

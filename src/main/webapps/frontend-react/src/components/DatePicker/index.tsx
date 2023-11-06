@@ -15,7 +15,7 @@ interface Props {
 }
 
 const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
-  const datePickerRef = useRef<DatePickerComponent | null>()
+  const datePickerRef = useRef<DatePickerComponent>(null)
 
   const handleFocus = () => {
     datePickerRef.current?.show()
@@ -28,7 +28,7 @@ const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
         format={format ? format : 'yyyy-MM-dd'}
         start={start ? start : undefined}
         depth={depth ? depth : undefined}
-        ref={e => (datePickerRef.current = e)}
+        ref={datePickerRef}
         cssClass="e-outline"
         floatLabelType={placeholder ? 'Auto' : 'Never'}
         onChange={onChange}

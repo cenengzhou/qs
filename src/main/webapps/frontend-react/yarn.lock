@@ -2166,7 +2166,7 @@
     "@syncfusion/ej2-lists" "~23.1.36"
     "@syncfusion/ej2-popups" "~23.1.38"
 
-"@syncfusion/ej2-notifications@~23.1.40":
+"@syncfusion/ej2-notifications@23.1.40", "@syncfusion/ej2-notifications@~23.1.40":
   version "23.1.40"
   resolved "https://registry.npmmirror.com/@syncfusion/ej2-notifications/-/ej2-notifications-23.1.40.tgz#efec47c01bd46f9b64d7a6c10977029f6d8a5606"
   integrity sha512-xB0U/THNVQN09AK+5DV6f9e7YbvWi5UqhdObCdpZarAMOFUEZBtAIVQRxc1LrINRmRapGU7NMFQj1F1xU7DVyw==
@@ -2258,6 +2258,15 @@
   dependencies:
     "@syncfusion/ej2-base" "~23.1.41"
     "@syncfusion/ej2-navigations" "23.1.41"
+    "@syncfusion/ej2-react-base" "~23.1.36"
+
+"@syncfusion/ej2-react-notifications@^23.1.40":
+  version "23.1.40"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-react-notifications/-/ej2-react-notifications-23.1.40.tgz#71abad558a729f0cec164df91b21384739460eb0"
+  integrity sha512-PPgV4xkeRt7RqxFbhsko4e/w2016L4JZyr0f2xIv8/Dkbn7udMln6y2EA57IQWkhbYqAd3kf7S1VyqMHBE13OA==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.1.38"
+    "@syncfusion/ej2-notifications" "23.1.40"
     "@syncfusion/ej2-react-base" "~23.1.36"
 
 "@syncfusion/ej2-react-popups@^23.1.38":

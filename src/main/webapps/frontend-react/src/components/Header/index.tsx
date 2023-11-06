@@ -29,8 +29,8 @@ const Header = () => {
   const [profilePosition, setProfilePosition] = useState({ X: 0, Y: 0 })
   const notifyBtnRef = useRef(null)
   const profileBtnRef = useRef(null)
-  const notifyRef = useRef<DialogComponent | null>()
-  const profileRef = useRef<DialogComponent | null>()
+  const notifyRef = useRef<DialogComponent>(null)
+  const profileRef = useRef<DialogComponent>(null)
   const notifyShow = (e: SyntheticEvent) => {
     setNotify(true)
     setNotifyPosition({ X: (e.target as HTMLElement).offsetLeft - 280, Y: 56 })
@@ -167,7 +167,7 @@ const Header = () => {
         cssClass="nopadding"
         width="315px"
         visible={notify}
-        ref={e => (notifyRef.current = e)}
+        ref={notifyRef}
       >
         <div>
           <div className="notifyHeader">Notifications</div>
@@ -189,7 +189,7 @@ const Header = () => {
         width="280px"
         visible={profile}
         cssClass="nopadding"
-        ref={e => (profileRef.current = e)}
+        ref={profileRef}
       >
         <div>
           <div className="profileHeader">

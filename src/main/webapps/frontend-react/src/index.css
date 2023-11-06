@@ -70,3 +70,17 @@ body {
 .e-spinner-pane .e-spinner-inner .e-spin-material {
   stroke: var(--blue);
 }
+
+.e-toast-container.full {
+  width: 100%;
+  height:100%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.e-toast-container .e-toast {
+  background-color: var(--blue);
+}
