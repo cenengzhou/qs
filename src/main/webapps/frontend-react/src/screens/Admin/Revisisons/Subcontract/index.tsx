@@ -47,7 +47,7 @@ const Subcontract = () => {
             <TextBoxComponent
               placeholder="Job Number"
               floatLabelType="Auto"
-              cssClass="e-outline"
+              cssClass="e-outline readonly-input"
               value="13892"
               readOnly
             />
@@ -56,7 +56,7 @@ const Subcontract = () => {
             <TextBoxComponent
               placeholder="Subcontract Number"
               floatLabelType="Auto"
-              cssClass="e-outline"
+              cssClass="e-outline readonly-input"
               value="1001"
               readOnly
             />
@@ -637,6 +637,11 @@ const Subcontract = () => {
           </div>
         </div>
         {/* datePicker */}
+      </div>
+      <div className="row">
+        <div className="col-lg-12 col-md-12">
+          <ButtonComponent cssClass="e-info full-btn">Update</ButtonComponent>
+        </div>
       </div>
     </div>
   )

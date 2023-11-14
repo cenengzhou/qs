@@ -23,6 +23,7 @@ body {
   --lightInfo: #5FBFDB;
   --white: #fff;
   --black: #3C454D;
+  --gray: #efefef;
   margin: 0;
   font-family: 'Source Sans Pro','Helvetica Neue', Helvetica,Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -83,4 +84,8 @@ body {
 
 .e-toast-container .e-toast {
   background-color: var(--blue);
+}
+
+.e-float-input.e-control-wrapper.readonly-input {
+  background-color: var(--gray) !important;
 }

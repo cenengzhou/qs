@@ -11,10 +11,18 @@ interface Props {
   start?: CalendarView
   depth?: CalendarView
   format?: string
+  value?: Date | string
   onChange?: (e: ChangedEventArgs) => void
 }
 
-const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
+const DatePicker = ({
+  placeholder,
+  onChange,
+  format,
+  start,
+  depth,
+  value
+}: Props) => {
   const datePickerRef = useRef<DatePickerComponent>(null)
 
   const handleFocus = () => {
@@ -31,6 +39,7 @@ const DatePicker = ({ placeholder, onChange, format, start, depth }: Props) => {
         ref={datePickerRef}
         cssClass="e-outline"
         floatLabelType={placeholder ? 'Auto' : 'Never'}
+        value={value ? new Date(value) : undefined}
         onChange={onChange}
         onFocus={handleFocus}
       />

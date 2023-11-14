@@ -5,6 +5,7 @@ import { NodeSelectEventArgs } from '@syncfusion/ej2-react-navigations'
 
 import Sidebar from '../../components/SideBar'
 import { ROUTE_LIST } from './route'
+import './style.css'
 
 const Admin = () => {
   const navigate = useNavigate()

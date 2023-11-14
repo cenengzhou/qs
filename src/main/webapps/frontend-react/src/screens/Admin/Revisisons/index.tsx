@@ -16,6 +16,8 @@ import Attachment from './Attachment'
 import MainCertificate from './MainCertificate'
 import Payment from './Payment'
 import SubcontractDetail from './SubcontractDetail'
+import Tender from './Tender'
+import TenderDetail from './TenderDetail'
 import Transit from './Transit'
 import './style.css'
 
@@ -48,11 +50,11 @@ const Revisions = () => {
     { text: 'Approval', id: 'approval', content: <Approval /> },
     { text: 'Attachment', id: 'attachment', content: <Attachment /> },
     { text: 'Transit', id: 'transit', content: <Transit /> },
-    { text: 'Tender', id: 'tender', content: <div>Tender</div> },
+    { text: 'Tender', id: 'tender', content: <Tender /> },
     {
       text: 'Tender Detail',
       id: 'tenderDetail',
-      content: <div>tenderDetail</div>
+      content: <TenderDetail />
     },
     {
       text: 'Monthly Movement',
