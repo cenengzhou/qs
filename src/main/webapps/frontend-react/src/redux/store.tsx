@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+import apiSlice from '../services'
 import combinedReducer from './'
 import logger from 'redux-logger'
 import { persistReducer, persistStore } from 'redux-persist'
@@ -13,7 +14,8 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, combinedReducer)
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [logger]
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(logger, apiSlice.middleware)
 })
 const persistor = persistStore(store)
 

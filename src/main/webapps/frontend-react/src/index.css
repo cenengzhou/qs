@@ -89,3 +89,7 @@ body {
 .e-float-input.e-control-wrapper.readonly-input {
   background-color: var(--gray) !important;
 }
+
+.e-list-item.e-level-2 .e-text-content {
+  padding-left: 50px;
+}
