@@ -16,7 +16,7 @@ import {
 } from '@syncfusion/ej2-react-splitbuttons'
 
 import logo from '../../assets/gammon.png'
-import user from '../../assets/user.png'
+import userImg from '../../assets/profile.png'
 import RightSidebar from '../RightSidebar'
 import './style.css'
 
@@ -151,7 +151,7 @@ const Header = () => {
           ref={notifyBtnRef}
         ></span>
         <div className="e-avatar e-avatar-circle">
-          <img src={user} alt="" />
+          <img src={userImg} alt="" />
         </div>
         <div className="username" onClick={profileShow} ref={profileBtnRef}>
           cenengzhou
@@ -194,7 +194,7 @@ const Header = () => {
         <div>
           <div className="profileHeader">
             <div className="e-avatar template-image e-avatar-circle">
-              <img src={user} alt="" />
+              <img src={userImg} alt="" />
             </div>
             <div className="userName">Ce Neng Zhou - System Developer</div>
             <div className="staff">

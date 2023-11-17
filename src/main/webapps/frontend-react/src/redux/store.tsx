@@ -9,7 +9,7 @@ import storage from 'redux-persist/lib/storage'
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['toast']
+  blacklist: [apiSlice.reducerPath]
 }
 const persistedReducer = persistReducer(persistConfig, combinedReducer)
 const store = configureStore({
