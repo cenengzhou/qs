@@ -13,6 +13,7 @@ interface Props {
   format?: string
   value?: Date | string
   onChange?: (e: ChangedEventArgs) => void
+  readonly?: boolean
 }
 
 const DatePicker = ({
@@ -21,7 +22,8 @@ const DatePicker = ({
   format,
   start,
   depth,
-  value
+  value,
+  readonly
 }: Props) => {
   const datePickerRef = useRef<DatePickerComponent>(null)
 
@@ -42,6 +44,7 @@ const DatePicker = ({
         value={value ? new Date(value) : undefined}
         onChange={onChange}
         onFocus={handleFocus}
+        readonly={readonly}
       />
     </div>
   )

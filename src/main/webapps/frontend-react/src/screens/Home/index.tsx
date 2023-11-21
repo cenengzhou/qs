@@ -9,7 +9,10 @@ import { changeEnv } from '../../redux/appConfigReducer'
 import { RootState } from '../../redux/store'
 import {
   useGetCurrentUserQuery,
+  useGetJobDatesQuery,
   useGetJobQuery,
+  useGetNotificationReadStatusByCurrentUserQuery,
+  useGetRepackagingQuery,
   useObtainCacheKeyQuery,
   useObtainUserPreferenceByCurrentUserQuery,
   useValidateCurrentSessionQuery
@@ -28,7 +31,10 @@ const Home = () => {
   } = useGetCurrentUserQuery(undefined)
   const { data: data3 } = useValidateCurrentSessionQuery(undefined)
   const { data: data2 } = useObtainCacheKeyQuery('COMPLETED_JOB_LIST')
-  useGetJobQuery('90013')
+  useGetJobQuery({ jobNo: '90013' })
+  useGetJobDatesQuery({ jobNo: '90013' })
+  useGetRepackagingQuery({ jobNo: '90013', version: 1 })
+  useGetNotificationReadStatusByCurrentUserQuery()
   useEffect(() => {
     dispatch(changeEnv(setEnv()))
   }, [])

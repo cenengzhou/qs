@@ -266,7 +266,7 @@ const Tender = () => {
             <TextBoxComponent
               placeholder="Job Number"
               floatLabelType="Auto"
-              cssClass="e-outline readonly-input"
+              cssClass="e-outline"
               value={data.jobNo}
               readOnly
             />
@@ -275,7 +275,7 @@ const Tender = () => {
             <TextBoxComponent
               placeholder="Tender Number"
               floatLabelType="Auto"
-              cssClass="e-outline readonly-input"
+              cssClass="e-outline"
               value={data.packageNo}
               readOnly
             />
@@ -284,7 +284,7 @@ const Tender = () => {
             <TextBoxComponent
               placeholder="Vendor Number"
               floatLabelType="Auto"
-              cssClass="e-outline readonly-input"
+              cssClass="e-outline"
               value={data.vendorNo.toString()}
               readOnly
             />

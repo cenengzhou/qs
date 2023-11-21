@@ -47,7 +47,7 @@ const Subcontract = () => {
             <TextBoxComponent
               placeholder="Job Number"
               floatLabelType="Auto"
-              cssClass="e-outline readonly-input"
+              cssClass="e-outline"
               value="13892"
               readOnly
             />
@@ -56,7 +56,7 @@ const Subcontract = () => {
             <TextBoxComponent
               placeholder="Subcontract Number"
               floatLabelType="Auto"
-              cssClass="e-outline readonly-input"
+              cssClass="e-outline"
               value="1001"
               readOnly
             />

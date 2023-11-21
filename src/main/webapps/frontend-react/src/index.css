@@ -44,8 +44,16 @@ body {
 
 .e-float-input.e-control-wrapper .e-label-bottom .e-float-text-content {
   line-height: 18px !important;
-  white-space: normal !important;
   margin-top: 18px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 50px;
+}
+
+.e-float-input.e-control-wrapper:has(textarea) .e-label-bottom .e-float-text-content {
+  white-space: normal !important;
+  margin-right: 0;
 }
 
 .e-grid .e-ccdlg .e-dlg-content {
@@ -86,7 +94,7 @@ body {
   background-color: var(--blue);
 }
 
-.e-float-input.e-control-wrapper.readonly-input {
+.e-float-input.e-control-wrapper:has(input[readonly]:not(.e-dropdownlist)), .e-float-input.e-control-wrapper.e-readonly {
   background-color: var(--gray) !important;
 }
 
