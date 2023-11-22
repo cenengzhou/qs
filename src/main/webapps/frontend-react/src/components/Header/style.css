@@ -1,11 +1,12 @@
 .e-appbar {
   height: 56px !important;
-  justify-content: stretch;
+  justify-content: space-between;
   box-sizing: border-box;
 }
 
-#toolbar_scrollable.e-toolbar {
-  flex: 1;
+.toolbar_scrollable {
+  width: calc(100% - 470px);
+  overflow: hidden;
 }
 
 .e-appbar .e-toolbar, .e-appbar .e-toolbar .e-toolbar-items, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover{
@@ -13,7 +14,11 @@
 }
 
 .e-appbar .e-hscroll .e-scroll-nav, .e-appbar .e-toolbar .e-toolbar-item:hover{
-  background-color: #353131 !important;
+  background-color: transparent !important;
+}
+
+.e-appbar .e-hscroll .e-scroll-nav.e-overlay {
+  opacity: 0;
 }
 
 .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn .e-tbar-btn-text, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn .e-icons, .e-appbar .e-hscroll .e-scroll-nav .e-icons, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover .e-icons, .e-appbar .e-toolbar .e-toolbar-item .e-tbar-btn:hover .e-tbar-btn-text{
@@ -30,6 +35,7 @@
 }
 
 .logo-container {
+  flex: 0;
   width: 222px !important;
   height: 35px;
   padding: 10px;
@@ -56,6 +62,23 @@
   display: flex;
   align-items: center;
   justify-content: end;
+}
+
+.header-right .e-comments {
+ position: relative;
+}
+
+.read {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--statusGreen);
+  z-index: 10;
+  opacity: 1;
+  transition: all .2s linear;
 }
 
 .header-right .e-avatar{
@@ -94,12 +117,13 @@
 }
 
 .notifyBody {
+  position: relative;
   cursor: pointer;
   font-size: 11px;
   padding: 15px 20px;
   color: #86939E;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -113,16 +137,17 @@
   margin-right: 10px
 }
 
-.mContent {
-  position: relative;
+.notifyBody .e-icons.e-eye {
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  color: var(--statusGreen);
 }
 
-.mContent .e-icons {
-  position: absolute;
-  top: 5px;
-  right: -10px;
-  z-index: 1;
-  color: #1ABC9C;
+.mContent {
+  position: relative;
 }
 
 .mTitle {
@@ -130,6 +155,10 @@
   color: #777;
   margin-bottom: 3px;
   font-weight: 500;
+}
+
+.mTime {
+  font-size: 11px;
 }
 
 .profileHeader, .profileBody, .profileFooter {

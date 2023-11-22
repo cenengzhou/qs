@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { setEnv } from '../../config/appConfig'
-import { changeEnv } from '../../redux/appConfigReducer'
 import { RootState } from '../../redux/store'
 import {
   useGetCurrentUserQuery,
   useGetJobDatesQuery,
   useGetJobQuery,
-  useGetNotificationReadStatusByCurrentUserQuery,
   useGetRepackagingQuery,
   useObtainCacheKeyQuery,
   useObtainUserPreferenceByCurrentUserQuery,
@@ -21,7 +18,6 @@ import './style.css'
 
 const Home = () => {
   const env = useSelector((state: RootState) => state.appConfig.env)
-  const dispatch = useDispatch()
   const { isLoading, isSuccess, data } =
     useObtainUserPreferenceByCurrentUserQuery(undefined)
   const {
@@ -34,10 +30,6 @@ const Home = () => {
   useGetJobQuery({ jobNo: '90013' })
   useGetJobDatesQuery({ jobNo: '90013' })
   useGetRepackagingQuery({ jobNo: '90013', version: 1 })
-  useGetNotificationReadStatusByCurrentUserQuery()
-  useEffect(() => {
-    dispatch(changeEnv(setEnv()))
-  }, [])
 
   return (
     <div>

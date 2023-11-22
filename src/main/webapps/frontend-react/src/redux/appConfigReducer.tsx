@@ -1,9 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ReducerName } from '../interfaces/Redux'
+import { CurrentUser } from '../services'
 
-const initialState = {
-  env: 'PRO'
+type InitialState = {
+  env?: string
+  currentUser?: CurrentUser
+}
+
+const initialState: InitialState = {
+  env: 'PRO',
+  currentUser: {}
 }
 
 export const appConfigSlice = createSlice({
@@ -12,9 +19,12 @@ export const appConfigSlice = createSlice({
   reducers: {
     changeEnv: (state, action) => {
       return { ...state, env: action.payload }
+    },
+    setCurrentUser: (state, action) => {
+      return { ...state, currentUser: action.payload }
     }
   }
 })
 
-export const { changeEnv } = appConfigSlice.actions
+export const { changeEnv, setCurrentUser } = appConfigSlice.actions
 export default appConfigSlice.reducer

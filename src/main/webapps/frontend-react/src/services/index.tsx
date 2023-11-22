@@ -6,6 +6,7 @@ const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: '/pcms'
   }),
+  tagTypes: ['updateStatus'],
   endpoints: builder => {
     return {
       validateCurrentSession: builder.query<boolean, void>({
@@ -23,7 +24,7 @@ const apiSlice = createApi({
           url: 'service/userPreference/obtainUserPreferenceByCurrentUser'
         })
       }),
-      getCurrentUser: builder.query<CurrentUserResponse, void>({
+      getCurrentUser: builder.query<CurrentUser, void>({
         query: () => ({
           url: 'service/security/getCurrentUser'
         })
@@ -41,7 +42,19 @@ const apiSlice = createApi({
       >({
         query: () => ({
           url: 'service/userPreference/getNotificationReadStatusByCurrentUser'
-        })
+        }),
+        providesTags: ['updateStatus']
+      }),
+      updateNotificationReadStatusByCurrentUser: builder.mutation<
+        NotificationReadStatus,
+        string
+      >({
+        query: queryArg => ({
+          method: 'POST',
+          url: 'service/userPreference/updateNotificationReadStatusByCurrentUser',
+          body: queryArg
+        }),
+        invalidatesTags: ['updateStatus']
       }),
       getProperties: builder.query<PropertiesResponse, void>({
         query: () => ({
@@ -97,7 +110,7 @@ const apiSlice = createApi({
           url: 'service/adl/getAllWorkScopes'
         })
       }),
-      getSubcontract: builder.query<AllWorkScopesResponse, void>({
+      getSubcontract: builder.mutation<SubcontractResponse, void>({
         query: () => ({
           url: 'service/subcontract/getSubcontract'
         })
@@ -120,7 +133,7 @@ export type Job = JobNo & {
 
 export type JobListResponse = Job[]
 
-export type NotificationReadStatus = 'Y' | 'N'
+export type NotificationReadStatus = 'Y' | 'N' | ''
 
 export type UserPreferenceResponse = {
   GRID_subcontract_details?: string
@@ -131,7 +144,7 @@ export type UserPreferenceResponse = {
   GRIDPREFIX?: string
 }
 
-export type CurrentUserResponse = {
+export type CurrentUser = {
   EmailAddress?: string
   StaffID?: string
   accountNonExpired?: boolean
@@ -145,8 +158,8 @@ export type CurrentUserResponse = {
   password?: string
   title?: string
   username?: string
-  UserRoles: Role[]
-  authorities: Role[]
+  UserRoles?: Role[]
+  authorities?: Role[]
 }
 
 export type Role = {
@@ -348,7 +361,7 @@ export type SubcontractResponse = {
   amtCEDApproved?: string
   approvalRoute?: string
   approvedVOAmount?: number
-  awarded: true
+  awarded?: boolean
   balanceToCompleteAmount?: number
   cpfBasePeriod?: number
   cpfBaseYear?: string
@@ -368,14 +381,14 @@ export type SubcontractResponse = {
   id?: number
   interimRentionPercentage?: number
   internalJobNo?: string
-  jobInfo: JobInfo
-  labourIncludedContract: true
+  jobInfo?: JobInfo
+  labourIncludedContract?: boolean
   lastModifiedDate?: string
   lastModifiedUser?: string
   lastPaymentCertIssuedDate?: string
   latestAddendumValueUpdatedDate?: string
   loaSignedDate?: string
-  materialIncludedContract: true
+  materialIncludedContract?: boolean
   maxRetentionPercentage?: number
   mosRetentionPercentage?: number
   nameSubcontractor?: string
@@ -393,7 +406,7 @@ export type SubcontractResponse = {
   paymentTerms?: string
   paymentTermsDescription?: string
   periodForPayment?: string
-  plantIncludedContract: false
+  plantIncludedContract?: boolean
   preAwardMeetingDate?: string
   reasonLoa?: string
   reasonManner?: string
@@ -450,7 +463,8 @@ export const {
   useGetJobDashboardDataQuery,
   useGetResourceSummariesGroupByObjectCodeQuery,
   useGetJobListQuery,
-  useGetSubcontractQuery,
-  useGetAllWorkScopesQuery
+  useGetSubcontractMutation,
+  useGetAllWorkScopesQuery,
+  useUpdateNotificationReadStatusByCurrentUserMutation
 } = apiSlice
 export default apiSlice

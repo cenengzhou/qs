@@ -24,6 +24,7 @@ body {
   --white: #fff;
   --black: #3C454D;
   --gray: #efefef;
+  --statusGreen: #1abc9c;
   margin: 0;
   font-family: 'Source Sans Pro','Helvetica Neue', Helvetica,Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

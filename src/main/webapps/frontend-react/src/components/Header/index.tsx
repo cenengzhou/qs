@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
@@ -9,7 +10,11 @@ import {
   ItemsDirective,
   ToolbarComponent
 } from '@syncfusion/ej2-react-navigations'
-import { DialogComponent } from '@syncfusion/ej2-react-popups'
+import {
+  DialogComponent,
+  hideSpinner,
+  showSpinner
+} from '@syncfusion/ej2-react-popups'
 import {
   DropDownButtonComponent,
   ItemModel
@@ -17,11 +22,26 @@ import {
 
 import logo from '../../assets/gammon.png'
 import userImg from '../../assets/profile.png'
+import { setEnv } from '../../config/appConfig'
+import { changeEnv, setCurrentUser } from '../../redux/appConfigReducer'
+import { RootState } from '../../redux/store'
+import {
+  useGetCurrentUserQuery,
+  useGetNotificationReadStatusByCurrentUserQuery,
+  useUpdateNotificationReadStatusByCurrentUserMutation
+} from '../../services'
 import RightSidebar from '../RightSidebar'
 import './style.css'
 
 const Header = () => {
+  const dispatch = useDispatch()
+  const env = useSelector((state: RootState) => state.appConfig.env)
   const navigate = useNavigate()
+  const { isSuccess, data } = useGetCurrentUserQuery()
+  const { data: readStatus } = useGetNotificationReadStatusByCurrentUserQuery()
+  const [updateNotificationReadStatus, { isLoading: updateLoading }] =
+    useUpdateNotificationReadStatusByCurrentUserMutation()
+
   const [notify, setNotify] = useState(false)
   const [profile, setProfile] = useState(false)
   const [rightSidebar, SetRightSidebar] = useState(false)
@@ -31,6 +51,7 @@ const Header = () => {
   const profileBtnRef = useRef(null)
   const notifyRef = useRef<DialogComponent>(null)
   const profileRef = useRef<DialogComponent>(null)
+
   const notifyShow = (e: SyntheticEvent) => {
     setNotify(true)
     setNotifyPosition({ X: (e.target as HTMLElement).offsetLeft - 280, Y: 56 })
@@ -88,6 +109,32 @@ const Header = () => {
   ]
 
   useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setCurrentUser(data))
+    }
+    const root = document.getElementById('root')!
+    if (updateLoading) {
+      showSpinner(root)
+    } else {
+      hideSpinner(root)
+    }
+  }, [isSuccess, data, updateLoading])
+
+  useEffect(() => {
+    dispatch(changeEnv(setEnv()))
+    document.onclick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.id === 'read') {
+        try {
+          updateNotificationReadStatus('Y').unwrap()
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     document.addEventListener('click', handleDocumentClick)
     return () => {
       document.removeEventListener('click', handleDocumentClick)
@@ -95,61 +142,67 @@ const Header = () => {
   }, [handleDocumentClick])
 
   return (
-    <AppBarComponent colorMode="Dark">
+    <AppBarComponent
+      colorMode={env !== 'DEV' && env !== 'UAT' ? 'Primary' : 'Dark'}
+    >
       <div className="logo-container">
         <img src={logo} alt="logo" />
-        <span>DEV</span>
+        <span>{env}</span>
       </div>
-      <ToolbarComponent overflowMode="Scrollable" id="toolbar_scrollable">
-        <ItemsDirective>
-          <ItemDirective
-            prefixIcon="e-icons e-volume"
-            text="Repackaging"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-bookmark-fill"
-            text="Main Contract Certificate"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-activities"
-            text="Subcontract"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-chart-2d-stacked-line"
-            text="Internal Valuation"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-circle-info"
-            text="Enquiry"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-changes-track"
-            text="Reports"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-page-columns"
-            text="Transit"
-            click={() => navigate('/')}
-          />
-          <ItemDirective
-            prefixIcon="e-icons e-people"
-            text="Admin"
-            click={() => navigate('/admin')}
-          />
-        </ItemsDirective>
-      </ToolbarComponent>
+      <div className="toolbar_scrollable">
+        <ToolbarComponent overflowMode="Scrollable">
+          <ItemsDirective>
+            <ItemDirective
+              prefixIcon="e-icons e-volume"
+              text="Repackaging"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-bookmark-fill"
+              text="Main Contract Certificate"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-activities"
+              text="Subcontract"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-chart-2d-stacked-line"
+              text="Internal Valuation"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-circle-info"
+              text="Enquiry"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-changes-track"
+              text="Reports"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-page-columns"
+              text="Transit"
+              click={() => navigate('/')}
+            />
+            <ItemDirective
+              prefixIcon="e-icons e-people"
+              text="Admin"
+              click={() => navigate('/admin')}
+            />
+          </ItemsDirective>
+        </ToolbarComponent>
+      </div>
       <div className="header-right">
-        <span
-          className="e-icons e-comments"
+        <div
+          className="e-icons e-comments e-large"
           onClick={notifyShow}
           ref={notifyBtnRef}
-        ></span>
+        >
+          {readStatus === 'Y' && <span className="read"></span>}
+        </div>
         <div className="e-avatar e-avatar-circle">
           <img src={userImg} alt="" />
         </div>
@@ -178,8 +231,8 @@ const Header = () => {
               <div className="mTime">
                 Special attention for Singapore users!
               </div>
-              <span className="e-icons e-bullet-1 e-small"></span>
             </div>
+            <span className="e-icons e-eye" id="read"></span>
           </div>
           <div className="notifyFooter">Go to Announcement Board</div>
         </div>
