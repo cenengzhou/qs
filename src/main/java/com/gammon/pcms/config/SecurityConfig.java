@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 		.authenticationProvider(ldapAuthenticationProvider())
-		.authenticationProvider(kerberosServiceAuthenticationProvider())
+		//.authenticationProvider(kerberosServiceAuthenticationProvider())
 		.inMemoryAuthentication().withUser(webServiceConfig.getPcmsApi("USERNAME")).password(webServiceConfig.getPcmsApi("PASSWORD")).authorities("ROLE_"+getRolePcmsWs());
 	}
 
@@ -307,24 +307,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	//kerberosServiceAuthenticationProvider
-	@Bean
-	public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
-		KerberosServiceAuthenticationProvider provider = new KerberosServiceAuthenticationProvider();
-		provider.setTicketValidator(sunJaasKerberosTicketValidator());
-		provider.setUserDetailsService(userDetailsService());
-		return provider;
-	}
+	// @Bean
+	// public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
+	// 	KerberosServiceAuthenticationProvider provider = new KerberosServiceAuthenticationProvider();
+	// 	provider.setTicketValidator(sunJaasKerberosTicketValidator());
+	// 	provider.setUserDetailsService(userDetailsService());
+	// 	return provider;
+	// }
 
-	@Bean
-	public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
-		SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-		ticketValidator.setServicePrincipal(getKerberosServicePrincipal());
-		String keyTabPath = getKerberosKeytabLocation().replace("file:/", ""); 
-		LoggerFactory.getLogger(getClass()).info(keyTabPath);
-		ticketValidator.setKeyTabLocation(new FileSystemResource(keyTabPath));
-		ticketValidator.setDebug(getKerberosDebug());
-		return ticketValidator;
-	}
+	// @Bean
+	// public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
+	// 	SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
+	// 	ticketValidator.setServicePrincipal(getKerberosServicePrincipal());
+	// 	String keyTabPath = getKerberosKeytabLocation().replace("file:/", ""); 
+	// 	LoggerFactory.getLogger(getClass()).info(keyTabPath);
+	// 	ticketValidator.setKeyTabLocation(new FileSystemResource(keyTabPath));
+	// 	ticketValidator.setDebug(getKerberosDebug());
+	// 	return ticketValidator;
+	// }
 	
 	/**
 	 * to keep Spring Security updated about session lifecycle events
