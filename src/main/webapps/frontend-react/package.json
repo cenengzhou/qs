@@ -17,6 +17,7 @@
     "@syncfusion/ej2-react-notifications": "^23.1.40",
     "@syncfusion/ej2-react-popups": "^23.1.38",
     "@syncfusion/ej2-react-splitbuttons": "^23.1.36",
+    "@syncfusion/ej2-react-spreadsheet": "^23.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

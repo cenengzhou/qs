@@ -1,19 +1,21 @@
 #defaultTab {
- flex: 1;
- overflow: hidden;
- display: flex;
- flex-direction: column;
-  & > .e-content {
   flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  .e-item.e-active,
-  .e-item.e-active>div,
-  .e-item.e-active>div>div {
-   height: 100%;
-   display: flex;
-   flex-direction: column;
-  }
  }
+
+#defaultTab > .e-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#defaultTab > .e-content > .e-item.e-active,
+#defaultTab > .e-content > .e-item.e-active > div,
+#defaultTab > .e-content > .e-item.e-active > div > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
 }

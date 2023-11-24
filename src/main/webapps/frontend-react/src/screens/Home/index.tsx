@@ -18,6 +18,9 @@ import './style.css'
 
 const Home = () => {
   const env = useSelector((state: RootState) => state.appConfig.env)
+  const getRolesList = useSelector(
+    (state: RootState) => state.appConfig.rolesList
+  )
   const { isLoading, isSuccess, data } =
     useObtainUserPreferenceByCurrentUserQuery(undefined)
   const {
@@ -33,6 +36,7 @@ const Home = () => {
 
   return (
     <div>
+      {getRolesList?.map((e, i) => <div key={i}>{e}</div>)}
       {env}
       {isLoading && <div>loading</div>}
       {loading && <div>loading22</div>}

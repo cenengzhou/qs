@@ -23,9 +23,16 @@ import {
 import logo from '../../assets/gammon.png'
 import userImg from '../../assets/profile.png'
 import { setEnv } from '../../config/appConfig'
-import { changeEnv, setCurrentUser } from '../../redux/appConfigReducer'
+import { GLOBALPARAMETER } from '../../constants/global'
+import { useHasRole } from '../../hooks/useHasRole'
+import {
+  changeEnv,
+  currentUser,
+  hasRolesList
+} from '../../redux/appConfigReducer'
 import { RootState } from '../../redux/store'
 import {
+  Role,
   useGetCurrentUserQuery,
   useGetNotificationReadStatusByCurrentUserQuery,
   useUpdateNotificationReadStatusByCurrentUserMutation
@@ -36,6 +43,12 @@ import './style.css'
 const Header = () => {
   const dispatch = useDispatch()
   const env = useSelector((state: RootState) => state.appConfig.env)
+  const getCurrentUser = useSelector(
+    (state: RootState) => state.appConfig.currentUser
+  )
+  const getRolesList = useSelector(
+    (state: RootState) => state.appConfig.rolesList
+  )
   const navigate = useNavigate()
   const { isSuccess, data } = useGetCurrentUserQuery()
   const { data: readStatus } = useGetNotificationReadStatusByCurrentUserQuery()
@@ -52,13 +65,23 @@ const Header = () => {
   const notifyRef = useRef<DialogComponent>(null)
   const profileRef = useRef<DialogComponent>(null)
 
+  const [imageUrl, setImageUrl] = useState(
+    GLOBALPARAMETER.imageServerAddress + getCurrentUser?.StaffID + '.jpg'
+  )
+
+  const [rolesList, setRolesList] = useState<ItemModel[]>([])
+
   const notifyShow = (e: SyntheticEvent) => {
     setNotify(true)
     setNotifyPosition({ X: (e.target as HTMLElement).offsetLeft - 280, Y: 56 })
   }
   const profileShow = (e: SyntheticEvent) => {
+    e.stopPropagation()
     setProfile(true)
-    setProfilePosition({ X: (e.target as HTMLElement).offsetLeft - 200, Y: 56 })
+    setProfilePosition({
+      X: (profileBtnRef.current! as HTMLElement).offsetLeft! - 120,
+      Y: 56
+    })
   }
   const notifyClose = () => {
     setNotify(false)
@@ -87,30 +110,10 @@ const Header = () => {
     }
   }, [])
 
-  const roleList: ItemModel[] = [
-    {
-      text: 'JOB_ALL'
-    },
-    {
-      text: 'ROLE_QS_ENQ'
-    },
-    {
-      text: 'ROLE_QS_IMS_ADM'
-    },
-    {
-      text: 'ROLE_QS_IMS_ENQ'
-    },
-    {
-      text: 'ROLE_QS_QS'
-    },
-    {
-      text: 'ROLE_QS_REVIEWER'
-    }
-  ]
-
   useEffect(() => {
     if (isSuccess && data) {
-      dispatch(setCurrentUser(data))
+      dispatch(currentUser(data))
+      dispatch(hasRolesList(data.UserRoles?.map((e: Role) => e.authority)))
     }
     const root = document.getElementById('root')!
     if (updateLoading) {
@@ -122,11 +125,14 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(changeEnv(setEnv()))
-    document.onclick = (e: MouseEvent) => {
+    if (getRolesList && getRolesList.length > 0) {
+      setRolesList(getRolesList.map((e: string) => ({ text: e })))
+    }
+    document.onclick = async (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (target.id === 'read') {
         try {
-          updateNotificationReadStatus('Y').unwrap()
+          await updateNotificationReadStatus('Y').unwrap()
         } catch (error) {
           console.log(error)
         }
@@ -147,7 +153,7 @@ const Header = () => {
     >
       <div className="logo-container">
         <img src={logo} alt="logo" />
-        <span>{env}</span>
+        {env !== 'PRO' && <span>{env}</span>}
       </div>
       <div className="toolbar_scrollable">
         <ToolbarComponent overflowMode="Scrollable">
@@ -187,11 +193,13 @@ const Header = () => {
               text="Transit"
               click={() => navigate('/')}
             />
-            <ItemDirective
-              prefixIcon="e-icons e-people"
-              text="Admin"
-              click={() => navigate('/admin')}
-            />
+            {useHasRole('QS_ENQ') && (
+              <ItemDirective
+                prefixIcon="e-icons e-people"
+                text="Admin"
+                click={() => navigate('/admin')}
+              />
+            )}
           </ItemsDirective>
         </ToolbarComponent>
       </div>
@@ -203,12 +211,18 @@ const Header = () => {
         >
           {readStatus === 'Y' && <span className="read"></span>}
         </div>
-        <div className="e-avatar e-avatar-circle">
-          <img src={userImg} alt="" />
-        </div>
-        <div className="username" onClick={profileShow} ref={profileBtnRef}>
-          cenengzhou
-          <span className="e-icons e-chevron-down-fill e-small"></span>
+        <div
+          className="user-Container"
+          onClick={profileShow}
+          ref={profileBtnRef}
+        >
+          <div className="e-avatar e-avatar-circle">
+            <img src={imageUrl} onError={() => setImageUrl(userImg)} alt="" />
+          </div>
+          <div className="username">
+            cenengzhou
+            <span className="e-icons e-chevron-down-fill e-small"></span>
+          </div>
         </div>
         <span
           className="e-icons e-align-left"
@@ -247,13 +261,15 @@ const Header = () => {
         <div>
           <div className="profileHeader">
             <div className="e-avatar template-image e-avatar-circle">
-              <img src={userImg} alt="" />
+              <img src={imageUrl} onError={() => setImageUrl(userImg)} alt="" />
             </div>
-            <div className="userName">Ce Neng Zhou - System Developer</div>
+            <div className="userName">
+              {getCurrentUser?.fullname + ' ' + getCurrentUser?.title}
+            </div>
             <div className="staff">
-              <small>Staff ID: 000001</small>
+              <small>Staff ID: {getCurrentUser?.StaffID}</small>
               <DropDownButtonComponent
-                items={roleList}
+                items={rolesList}
                 cssClass="e-caret-hide"
                 className="e-success e-small"
               >
@@ -269,7 +285,6 @@ const Header = () => {
         </div>
       </DialogComponent>
       <DialogComponent
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         position={{ X: 'right', Y: 56 }}
         width="250px"
         height={window.innerHeight - 56}

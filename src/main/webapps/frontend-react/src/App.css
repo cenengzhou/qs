@@ -12,4 +12,5 @@
 @import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-grids/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-notifications/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-react-spreadsheet/styles/material.css';
 @import '../src/assets/css/bootstrap-grid.min.css'
