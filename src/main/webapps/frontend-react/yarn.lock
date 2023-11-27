@@ -2116,19 +2116,19 @@
   dependencies:
     "@syncfusion/ej2-file-utils" "~23.2.4"
 
+"@syncfusion/ej2-data@^23.2.4", "@syncfusion/ej2-data@~23.2.4":
+  version "23.2.4"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-data/-/ej2-data-23.2.4.tgz#3873ef82a17ed5dbb8b5c43b90fd650892050da3"
+  integrity sha512-hVTo3pNOXLYgd5Au2E5AMUzeqstbwvqzr68bxgQoJJWjKd/hD3bKOQiPHaPbS8wvKgzs4mQ6rt/OuwoLErXALQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.4"
+
 "@syncfusion/ej2-data@~23.1.36":
   version "23.1.36"
   resolved "https://registry.npmmirror.com/@syncfusion/ej2-data/-/ej2-data-23.1.36.tgz#4976d3cd0832f68514c8cb099284275fa5b72cb6"
   integrity sha512-9MUJQx48QV63r8TwmsK77OBljBH6D7crB8R0ihf45lzJNxD/Hea3zllCoy7vfG0j19lSwLmMqVHRbhGWCf8JNg==
   dependencies:
     "@syncfusion/ej2-base" "~23.1.36"
-
-"@syncfusion/ej2-data@~23.2.4":
-  version "23.2.4"
-  resolved "https://registry.npmmirror.com/@syncfusion/ej2-data/-/ej2-data-23.2.4.tgz#3873ef82a17ed5dbb8b5c43b90fd650892050da3"
-  integrity sha512-hVTo3pNOXLYgd5Au2E5AMUzeqstbwvqzr68bxgQoJJWjKd/hD3bKOQiPHaPbS8wvKgzs4mQ6rt/OuwoLErXALQ==
-  dependencies:
-    "@syncfusion/ej2-base" "~23.2.4"
 
 "@syncfusion/ej2-dropdowns@23.1.41", "@syncfusion/ej2-dropdowns@~23.1.41":
   version "23.1.41"

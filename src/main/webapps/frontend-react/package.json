@@ -6,6 +6,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@reduxjs/toolkit": "^1.9.7",
+    "@syncfusion/ej2-data": "^23.2.4",
     "@syncfusion/ej2-layouts": "^23.1.36",
     "@syncfusion/ej2-react-buttons": "^23.1.39",
     "@syncfusion/ej2-react-calendars": "^23.1.41",
