@@ -18,7 +18,7 @@ import {
   ToolbarItems
 } from '@syncfusion/ej2-react-grids'
 
-import { GLOBALPARAMETER } from '../../../../constants/data'
+import { GLOBALPARAMETER } from '../../../../constants/global'
 import './style.css'
 
 const StandardTermsMaintenance = () => {

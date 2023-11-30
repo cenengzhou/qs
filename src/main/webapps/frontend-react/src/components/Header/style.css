@@ -85,10 +85,15 @@
   margin: 0 15px;
 }
 
+.user-Container {
+  display: flex;
+}
+
 .username {
   font-size: 12px;
   margin-right: 10px;
   cursor: pointer;
+  align-self: center;
 }
 
 .header-right span.e-icons{

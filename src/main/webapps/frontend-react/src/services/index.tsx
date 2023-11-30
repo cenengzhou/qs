@@ -110,9 +110,15 @@ const apiSlice = createApi({
           url: 'service/adl/getAllWorkScopes'
         })
       }),
-      getSubcontract: builder.mutation<SubcontractResponse, void>({
+      getSubcontract: builder.mutation<Subcontract, void>({
         query: () => ({
           url: 'service/subcontract/getSubcontract'
+        })
+      }),
+      getSCDetails: builder.mutation<SCDetail[], SCDetailRequest>({
+        query: queryArg => ({
+          url: 'service/subcontract/getSCDetails',
+          params: queryArg
         })
       })
     }
@@ -355,7 +361,7 @@ export type SubcontractResquest = JobNo & {
   subcontractNo?: string
 }
 
-export type SubcontractResponse = {
+export type Subcontract = {
   accumlatedRetention?: number
   amountPackageStretchTarget?: string
   amtCEDApproved?: string
@@ -450,6 +456,58 @@ export type SubcontractResponse = {
   workscope?: number
 }
 
+export type SCDetail = CreatedUser & {
+  jobNo?: string
+  sequenceNo?: number
+  resourceNo?: number
+  billItem?: string
+  description?: string
+  quantity?: number
+  scRate?: number
+  objectCode?: string
+  subsidiaryCode?: string
+  lineType?: string
+  approved?: string
+  unit?: string
+  remark?: string
+  typeRecoverable?: string
+  postedCertifiedQuantity?: number
+  cumCertifiedQuantity?: number
+  amountCumulativeCert?: number
+  amountPostedCert?: number
+  amountSubcontractNew?: number
+  newQuantity?: number
+  originalQuantity?: number
+  tenderAnalysisDetail_ID?: string
+  subcontract?: Subcontract
+  amountSubcontract?: number
+  amountBudget?: number
+  balanceType?: string
+  amountPostedWD?: number
+  postedWorkDoneQuantity?: number
+  amountCumulativeWD?: number
+  cumWorkDoneQuantity?: number
+  costRate?: number
+  ivamount?: number
+  sourceType?: string
+  totalAmount?: number
+  toBeApprovedAmount?: number
+  provision?: number
+  projectedProvision?: number
+  workDoneMovement?: number
+  altObjectCode?: string
+  toBeApprovedRate?: number
+  toBeApprovedQuantity?: number
+  contraChargeSCNo?: string
+  corrSCLineSeqNo?: number
+  amountBudgetNew?: number
+}
+
+export type SCDetailRequest = {
+  jobNo?: string
+  subcontractNo?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -465,6 +523,7 @@ export const {
   useGetJobListQuery,
   useGetSubcontractMutation,
   useGetAllWorkScopesQuery,
-  useUpdateNotificationReadStatusByCurrentUserMutation
+  useUpdateNotificationReadStatusByCurrentUserMutation,
+  useGetSCDetailsMutation
 } = apiSlice
 export default apiSlice

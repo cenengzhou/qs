@@ -3,7 +3,16 @@ import { configureStore } from '@reduxjs/toolkit'
 import apiSlice from '../services'
 import combinedReducer from './'
 import logger from 'redux-logger'
-import { persistReducer, persistStore } from 'redux-persist'
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore
+} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
@@ -15,7 +24,11 @@ const persistedReducer = persistReducer(persistConfig, combinedReducer)
 const store = configureStore({
   reducer: persistedReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(logger, apiSlice.middleware)
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+      }
+    }).concat(logger, apiSlice.middleware)
 })
 const persistor = persistStore(store)
 

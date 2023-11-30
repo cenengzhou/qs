@@ -6,11 +6,13 @@ import { CurrentUser } from '../services'
 type InitialState = {
   env?: string
   currentUser?: CurrentUser
+  rolesList?: string[]
 }
 
 const initialState: InitialState = {
   env: 'PRO',
-  currentUser: {}
+  currentUser: {},
+  rolesList: []
 }
 
 export const appConfigSlice = createSlice({
@@ -20,11 +22,14 @@ export const appConfigSlice = createSlice({
     changeEnv: (state, action) => {
       return { ...state, env: action.payload }
     },
-    setCurrentUser: (state, action) => {
+    currentUser: (state, action) => {
       return { ...state, currentUser: action.payload }
+    },
+    hasRolesList: (state, action) => {
+      return { ...state, rolesList: action.payload }
     }
   }
 })
 
-export const { changeEnv, setCurrentUser } = appConfigSlice.actions
+export const { changeEnv, currentUser, hasRolesList } = appConfigSlice.actions
 export default appConfigSlice.reducer
