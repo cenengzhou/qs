@@ -68,7 +68,7 @@ const Admin = () => {
     },
     {
       id: '9',
-      text: 'System Information',
+      text: 'Health Check',
       iconCss: 'e-icons e-zoom-in-2'
     }
   ]
@@ -86,6 +86,12 @@ const Admin = () => {
       navigate('/admin/TransitResourceCodeMaintenance')
     } else if (e.nodeData.text === 'Standard Terms Maintenance') {
       navigate('/admin/SubcontractStandardTermsMaintenance')
+    } else if (e.nodeData.text === 'System Information') {
+      navigate('/admin/SystemInformation')
+    } else if (e.nodeData.text === 'Announcement Setting') {
+      navigate('/admin/AnnouncementSetting')
+    } else if (e.nodeData.text === 'Health Check') {
+      navigate('/admin/HealthCheck')
     }
   }
 

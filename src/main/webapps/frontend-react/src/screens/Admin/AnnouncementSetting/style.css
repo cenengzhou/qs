@@ -1,0 +1,111 @@
+.control-pane {
+  font-family: 'Nunito', sans-serif;
+  padding: 10px;
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top: 2px solid #eee;
+  align-items: center;
+}
+
+
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+.e-card-header {
+  font-weight: bold;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  user-select: none;
+}
+
+.e-card-header .e-card-header-caption {
+  margin-top: 10px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--blue);
+}
+
+.e-card-header-title {
+  font-size: 20px;
+}
+
+.e-card-footer {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.e-card-footer .e-card-footer-title {
+  font-size: 16px;
+  text-align: start;
+  padding-left: 20px;
+}
+
+.e-card-footer-content {
+  margin: 40px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content:space-evenly;
+}
+
+.e-card-footer-content-left, .e-card-footer-content-right {
+  margin: 20px;
+}
+
+.e-card-footer-content-button {
+  height: 200px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--white);
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  margin-bottom: 10px;
+}
+
+.e-card-footer-content-button > span {
+  display: block;
+  width: 100px;
+  height: 100px;
+}
+
+.e-card-footer-content-button > b {
+  font-size: 20px;
+  text-align: center;
+  padding-top: 10px;
+}
+
+.on {
+  background: var(--blue);
+}
+
+.on .e-audio {
+  font-size: 100px;
+}
+.off .e-audio {
+  font-size: 100px;
+}
+
+.off {
+  background: var(--black);
+  position: relative;
+}
+
+.off::before {
+  width: 120px;
+  height: 10px;
+  content: '';
+  background: var(--white);
+  transform: rotate(-35deg);
+  top: 70px;
+  position: absolute;
+}

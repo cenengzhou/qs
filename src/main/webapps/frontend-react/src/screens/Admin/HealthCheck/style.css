@@ -1,0 +1,12 @@
+.e-accordion .e-acrdn-item.e-select > .e-acrdn-header {
+  background: var(--black) !important;
+}
+
+.e-accordion .e-acrdn-item.e-select.e-active>.e-acrdn-header .e-acrdn-header-content,
+.e-accordion .e-acrdn-item.e-select.e-item-focus>.e-acrdn-header .e-acrdn-header-content {
+    color: var(--white) !important;
+}
+
+.e-accordion .e-acrdn-item .e-toggle-icon {
+  color: var(--white);
+}

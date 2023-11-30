@@ -1,8 +1,11 @@
 import { Route } from '../../interfaces/Route'
+import AnnouncementSetting from './AnnouncementSetting'
+import HealthCheck from './HealthCheck'
 import ManualProcedures from './ManualProcedures'
 import Revisions from './Revisisons'
 import Session from './Session'
 import StandardTermsMaintenance from './Subcontract/StandardTermsMaintenance'
+import SystemInformation from './SystemInformation'
 import ResourceCodeMaintenance from './Transit/ResourceCodeMaintenance'
 import UOMMaintenance from './Transit/UOMMaintenance'
 
@@ -36,6 +39,21 @@ export const ROUTE_LIST: Route[] = [
     path: '/SubcontractStandardTermsMaintenance',
     name: 'StandardTermsMaintenance',
     element: <StandardTermsMaintenance />
+  },
+  {
+    path: '/AnnouncementSetting',
+    name: 'AnnouncementSetting',
+    element: <AnnouncementSetting />
+  },
+  {
+    path: '/SystemInformation',
+    name: 'SystemInformation',
+    element: <SystemInformation />
+  },
+  {
+    path: '/HealthCheck',
+    name: 'HealthCheck',
+    element: <HealthCheck />
   },
   {
     path: '/',
