@@ -1,191 +1,102 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useRef } from 'react'
+
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
-  ColumnChooser,
   ColumnDirective,
-  ColumnMenu,
   ColumnsDirective,
-  ExcelExport,
-  Filter,
-  GridComponent,
-  Inject,
-  Page,
-  Sort,
-  Toolbar,
-  ToolbarItems
-} from '@syncfusion/ej2-react-grids'
+  RangeDirective,
+  RangesDirective,
+  SheetDirective,
+  SheetsDirective,
+  SpreadsheetComponent
+} from '@syncfusion/ej2-react-spreadsheet'
 
 import './style.css'
+import dayjs from 'dayjs'
 
+// TODO 接口 service/system/GetSessionList POST
 const Session = () => {
-  const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser']
-
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
   const data: any[] = [
     {
       authType: 'LDAP',
-      idleTime: 65,
-      expired: false,
       creationTime: 1698219512026,
       lastAccessedTime: 1698289099682,
       maxInactiveInterval: 60000,
       principal: {
-        fullname: 'Ce Neng Zhou',
-        username: 'cenengzhou',
-        authType: 'LDAP',
-        domainName: null,
-        title: 'System Developer',
-        jobNoExcludeList: [],
-        enabled: true,
-        password: null,
-        authorities: [
-          {
-            authority: 'ROLE_QS_QS',
-            RoleDescription: 'QS who can handle daily operations',
-            RoleName: 'ROLE_QS_QS'
-          },
-          {
-            authority: 'ROLE_QS_REVIEWER',
-            RoleDescription:
-              'QS Reviewer who review daily operations that are done by QSs',
-            RoleName: 'ROLE_QS_REVIEWER'
-          },
-          {
-            authority: 'ROLE_QS_ENQ',
-            RoleDescription:
-              'Any user who has to access QS has to be granted with this role',
-            RoleName: 'ROLE_QS_ENQ'
-          },
-          {
-            authority: 'JOB_ALL',
-            RoleDescription: 'All jobs available in Gammon',
-            RoleName: 'JOB_ALL'
-          },
-          {
-            authority: 'ROLE_QS_IMS_ENQ',
-            RoleDescription: 'IMS who can view QS applications settings',
-            RoleName: 'ROLE_QS_IMS_ENQ'
-          },
-          {
-            authority: 'ROLE_QS_IMS_ADM',
-            RoleDescription: 'IMS who can handle QS application settings',
-            RoleName: 'ROLE_QS_IMS_ADM'
-          }
-        ],
-        accountNonLocked: true,
-        credentialsNonExpired: true,
-        accountNonExpired: true,
-        EmailAddress: 'CeNeng.Zhou@gammonconstruction.com',
-        StaffID: '000001',
-        UserRoles: [
-          {
-            authority: 'ROLE_QS_QS',
-            RoleDescription: 'QS who can handle daily operations',
-            RoleName: 'ROLE_QS_QS'
-          },
-          {
-            authority: 'ROLE_QS_REVIEWER',
-            RoleDescription:
-              'QS Reviewer who review daily operations that are done by QSs',
-            RoleName: 'ROLE_QS_REVIEWER'
-          },
-          {
-            authority: 'ROLE_QS_ENQ',
-            RoleDescription:
-              'Any user who has to access QS has to be granted with this role',
-            RoleName: 'ROLE_QS_ENQ'
-          },
-          {
-            authority: 'JOB_ALL',
-            RoleDescription: 'All jobs available in Gammon',
-            RoleName: 'JOB_ALL'
-          },
-          {
-            authority: 'ROLE_QS_IMS_ENQ',
-            RoleDescription: 'IMS who can view QS applications settings',
-            RoleName: 'ROLE_QS_IMS_ENQ'
-          },
-          {
-            authority: 'ROLE_QS_IMS_ADM',
-            RoleDescription: 'IMS who can handle QS application settings',
-            RoleName: 'ROLE_QS_IMS_ADM'
-          }
-        ]
+        username: 'cenengzhou'
       },
       lastRequest: '2023-10-26T02:58:19.621+00:00',
       sessionId: '321EB5F772CB29602D8254C0D38C1584'
     }
   ]
+  const dataSource = data.map(item => {
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      principal,
+      authType,
+      sessionId,
+      creationTime,
+      lastAccessedTime,
+      lastRequest,
+      maxInactiveInterval
+    } = item
+    return {
+      name: item.principal.username,
+      authType,
+      sessionId,
+      creationTime: dayjs(creationTime).format('DD/MM/YYYY HH:MM'),
+      lastAccessedTime: dayjs(lastAccessedTime).format('DD/MM/YYYY HH:MM'),
+      lastRequest: dayjs(lastRequest).format('DD/MM/YYYY HH:MM'),
+      maxInactiveInterval
+    }
+  })
+
+  useEffect(() => {
+    const spreadsheet = spreadsheetRef.current
+    if (spreadsheet) {
+      spreadsheet.cellFormat(
+        {
+          backgroundColor: '#1E88E5',
+          color: '#F5F5F5',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        },
+        'A1:G1'
+      )
+    }
+  }, [])
+
   return (
     <div className="admin-container">
       <div className="admin-content">
-        <GridComponent
-          dataSource={data}
-          allowPaging={true}
-          width="100%"
-          height="100%"
-          allowExcelExport
-          toolbar={toolbar}
-          allowTextWrap={true}
-          showColumnChooser
-          showColumnMenu
-          allowFiltering
-          allowSorting
-          filterSettings={{ type: 'Menu' }}
-          cssClass="no-margin-right"
+        <SpreadsheetComponent
+          ref={spreadsheetRef}
+          allowOpen={true}
+          openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
+          allowSave={true}
+          saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
         >
-          <ColumnsDirective>
-            <ColumnDirective
-              template={(e: any) => e.principal.fullname}
-              headerText="Name"
-              width="180"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="authType"
-              headerText="AuthType"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="sessionId"
-              headerText="Session Id"
-              width="150"
-            />
-            <ColumnDirective
-              template={(e: any) => new Date(e.creationTime).toLocaleString()}
-              headerText="Creation Time"
-              width="180"
-            ></ColumnDirective>
-            <ColumnDirective
-              template={(e: any) =>
-                new Date(e.lastAccessedTime).toLocaleString()
-              }
-              headerText="Last Accessed Time"
-              width="180"
-            ></ColumnDirective>
-            <ColumnDirective
-              template={(e: any) => new Date(e.lastRequest).toLocaleString()}
-              headerText="Last Request"
-              width="180"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="maxInactiveInterval"
-              headerText="Max Inactive Interval"
-              width="200"
-            ></ColumnDirective>
-          </ColumnsDirective>
-          <Inject
-            services={[
-              Page,
-              ExcelExport,
-              Toolbar,
-              ColumnChooser,
-              ColumnMenu,
-              Filter,
-              Sort
-            ]}
-          />
-        </GridComponent>
+          <SheetsDirective>
+            <SheetDirective name="Session">
+              <RangesDirective>
+                <RangeDirective dataSource={dataSource}></RangeDirective>
+              </RangesDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={250}></ColumnDirective>
+                <ColumnDirective width={130}></ColumnDirective>
+                <ColumnDirective width={130}></ColumnDirective>
+                <ColumnDirective width={130}></ColumnDirective>
+                <ColumnDirective width={130}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
       </div>
       <div className="row">
         <ButtonComponent cssClass="e-info full-btn" iconCss="e-icons e-save-2">

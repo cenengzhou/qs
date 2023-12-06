@@ -1,24 +1,24 @@
 const data = [
   {
-    orderId: 10248,
+    id: 10248,
     name: 'VINET',
-    result: '1996-07-04T00:00:00.000Z',
-    status: '1996-07-16T00:00:00.000Z',
-    elapseTime: 32.38
+    result: 'No result',
+    status: true,
+    elapseTime: 0
   },
   {
-    orderId: 10249,
+    id: 10249,
     name: 'TOMSP',
-    result: '1996-07-05T00:00:00.000Z',
-    status: '1996-07-10T00:00:00.000Z',
-    elapseTime: 11.61
+    result: 'No result',
+    status: false,
+    elapseTime: 0
   },
   {
-    orderId: 10250,
+    id: 10250,
     name: 'HANAR',
-    result: '1996-07-08T00:00:00.000Z',
-    status: '1996-07-12T00:00:00.000Z',
-    elapseTime: 65.83
+    result: 'No result',
+    status: null,
+    elapseTime: 0
   }
 ]
 

@@ -30,6 +30,47 @@ import { SCDetail, useGetSCDetailsMutation } from '../../../../services'
 import './style.css'
 
 const SubcontractDetail = () => {
+  const data = [
+    {
+      id: 603069,
+      jobNo: '13892',
+      subcontract: {
+        packageNo: '1001'
+      },
+      sequenceNo: 1,
+      description: 'Ground Investigation Works (Buying Gain)',
+      remark: null,
+      objectCode: '149999',
+      subsidiaryCode: '25999999',
+      billItem: ' ',
+      unit: 'UN',
+      lineType: 'BQ',
+      approved: 'A',
+      resourceNo: 402141,
+      scRate: 0.00125,
+      quantity: 171239.9,
+      cumCertifiedQuantity: 0.0,
+      amountCumulativeWD: 0,
+      amountPostedCert: 0,
+      postedCertifiedQuantity: 0.0,
+      amountSubcontractNew: 0,
+      newQuantity: 171239.9,
+      originalQuantity: 171239.9,
+      toBeApprovedRate: 0.0,
+      amountSubcontract: 0,
+      amountBudget: 171239.9,
+      lastModifiedDate: '2020-11-17T15:00:04.000+00:00',
+      lastModifiedUser: 'SYSTEM',
+      createdDate: '2020-11-17T15:00:04.000+00:00',
+      createdUser: 'SYSTEM',
+      systemStatus: 'ACTIVE',
+      typeRecoverable: null
+    }
+  ]
+  const dataSource = data.map(item => {
+    const { id, subcontract, ...rest } = item
+    return { id, subcontract: subcontract.packageNo, ...rest }
+  })
   const [jobNo, setJobNo] = useState<string>('')
   const [subcontractNo, setSubcontractNo] = useState<number>()
   const spreadsheet = useRef<SpreadsheetComponent>(null)
@@ -119,19 +160,8 @@ const SubcontractDetail = () => {
           <SheetsDirective>
             <SheetDirective name="Subcontract Detail">
               <RangesDirective>
-                <RangeDirective dataSource={detail}></RangeDirective>
+                <RangeDirective dataSource={dataSource}></RangeDirective>
               </RangesDirective>
-              <RowsDirective>
-                <RowDirective>
-                  <CellsDirective>
-                    <CellDirective value="ID"></CellDirective>
-                    <CellDirective value="Job Number"></CellDirective>
-                    <CellDirective value="Subcontract"></CellDirective>
-                    <CellDirective value="Ship City"></CellDirective>
-                    <CellDirective value="Ship Country"></CellDirective>
-                  </CellsDirective>
-                </RowDirective>
-              </RowsDirective>
               <ColumnsDirective>
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
@@ -139,11 +169,11 @@ const SubcontractDetail = () => {
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={280}></ColumnDirective>
-                <ColumnDirective width={180}></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={180}></ColumnDirective>
-                <ColumnDirective width={180}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
               </ColumnsDirective>
             </SheetDirective>
           </SheetsDirective>

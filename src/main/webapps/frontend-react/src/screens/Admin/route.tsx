@@ -3,6 +3,7 @@ import AnnouncementSetting from './AnnouncementSetting'
 import HealthCheck from './HealthCheck'
 import ManualProcedures from './ManualProcedures'
 import Revisions from './Revisisons'
+import SchedulerMaintenance from './SchedulerMaintenance'
 import Session from './Session'
 import StandardTermsMaintenance from './Subcontract/StandardTermsMaintenance'
 import SystemInformation from './SystemInformation'
@@ -54,6 +55,11 @@ export const ROUTE_LIST: Route[] = [
     path: '/HealthCheck',
     name: 'HealthCheck',
     element: <HealthCheck />
+  },
+  {
+    path: '/SchedulerMaintenance',
+    name: 'SchedulerMaintenance',
+    element: <SchedulerMaintenance />
   },
   {
     path: '/',

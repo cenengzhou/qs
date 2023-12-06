@@ -92,6 +92,8 @@ const Admin = () => {
       navigate('/admin/AnnouncementSetting')
     } else if (e.nodeData.text === 'Health Check') {
       navigate('/admin/HealthCheck')
+    } else if (e.nodeData.text === 'Scheduler Maintenance') {
+      navigate('/admin/SchedulerMaintenance')
     }
   }
 

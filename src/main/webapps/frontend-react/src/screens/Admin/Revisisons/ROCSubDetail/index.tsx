@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
@@ -17,27 +16,43 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
-import './style.css'
+import DatePicker from '../../../../components/DatePicker'
 
-const Repackaging = () => {
+const RocSubDetail = () => {
   const spreadsheet = useRef<SpreadsheetComponent>(null)
   return (
     <div className="admin-container">
-      {/* input */}
       <div className="admin-header row">
-        <div className="col-lg-8 col-md-8">
+        <div className="col-lg-3 col-md-3">
           <TextBoxComponent
             placeholder="Job Number"
             floatLabelType="Auto"
             cssClass="e-outline"
           />
         </div>
-        <div className="col-lg-4 col-md-4">
+        <div className="col-lg-3 col-md-3">
+          <TextBoxComponent
+            placeholder="Item No (Optional)"
+            floatLabelType="Auto"
+            cssClass="e-outline"
+          />
+        </div>
+        <div className="col-lg-3 col-md-3">
+          <DatePicker placeholder="Date" />
+        </div>
+
+        <div className="col-lg-3 col-md-3">
           <ButtonComponent cssClass="e-info full-btn">Search</ButtonComponent>
         </div>
       </div>
       <div className="admin-content">
-        <SpreadsheetComponent ref={spreadsheet}>
+        <SpreadsheetComponent
+          ref={spreadsheet}
+          allowOpen={true}
+          openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
+          allowSave={true}
+          saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
+        >
           <SheetsDirective>
             <SheetDirective name="ROC Subdetail">
               <RangesDirective>
@@ -46,22 +61,16 @@ const Repackaging = () => {
               <RowsDirective>
                 <RowDirective>
                   <CellsDirective>
-                    <CellDirective value="id"></CellDirective>
-                    <CellDirective value="subcontractNo"></CellDirective>
-                    <CellDirective value="description"></CellDirective>
-                    <CellDirective value="objectCode"></CellDirective>
-                    <CellDirective value="subsidiaryCode"></CellDirective>
-                    <CellDirective value="budget"></CellDirective>
-                    <CellDirective value="quantity"></CellDirective>
-                    <CellDirective value="currentAmount"></CellDirective>
-                    <CellDirective value="postedAmount"></CellDirective>
-                    <CellDirective value="rate"></CellDirective>
-                    <CellDirective value="unit"></CellDirective>
-                    <CellDirective value="excludeDefect"></CellDirective>
-                    <CellDirective value="excludeLevy"></CellDirective>
-                    <CellDirective value="forIvRollbackOnly"></CellDirective>
-                    <CellDirective value="finalized"></CellDirective>
-                    <CellDirective value="type"></CellDirective>
+                    <CellDirective value="Item No"></CellDirective>
+                    <CellDirective value="Secondary Detail"></CellDirective>
+                    <CellDirective value="Best Case"></CellDirective>
+                    <CellDirective value="Realistic"></CellDirective>
+                    <CellDirective value="Worst Case"></CellDirective>
+                    <CellDirective value="Year"></CellDirective>
+                    <CellDirective value="Month"></CellDirective>
+                    <CellDirective value="Hyperlink"></CellDirective>
+                    <CellDirective value="Remarks"></CellDirective>
+                    <CellDirective value="System Status"></CellDirective>
                   </CellsDirective>
                 </RowDirective>
               </RowsDirective>
@@ -86,4 +95,4 @@ const Repackaging = () => {
   )
 }
 
-export default Repackaging
+export default RocSubDetail

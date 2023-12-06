@@ -233,3 +233,25 @@
   left: -2px;
   cursor: pointer;
 }
+
+.progress {
+  height: 20px;
+  display: block;
+  margin: 0 10px;
+  
+  &__bar {
+    position: relative;
+    background-color: var(--yellow);
+    height: 100%;
+  }
+
+  &__text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--white);
+    font-size: 12px;
+  }
+}

@@ -1,9 +1,24 @@
+import { useRef } from 'react'
+
 import { ListViewComponent } from '@syncfusion/ej2-react-lists'
 import {
   TabComponent,
   TabItemDirective,
   TabItemsDirective
 } from '@syncfusion/ej2-react-navigations'
+import {
+  CellDirective,
+  CellsDirective,
+  ColumnDirective,
+  ColumnsDirective,
+  RangeDirective,
+  RangesDirective,
+  RowDirective,
+  RowsDirective,
+  SheetDirective,
+  SheetsDirective,
+  SpreadsheetComponent
+} from '@syncfusion/ej2-react-spreadsheet'
 
 import './style.css'
 
@@ -118,10 +133,108 @@ const RightSidebar = () => {
     )
   }
   const accountCodeContent = () => {
-    return <div>Account Code</div>
+    return (
+      <div id="AccountCode">
+        <TabComponent cssClass="e-fill" allowDragAndDrop={false}>
+          <TabItemsDirective>
+            <TabItemDirective
+              header={{ text: 'Object Code' }}
+              content={ObjectCode}
+            />
+            <TabItemDirective
+              header={{ text: 'Subsidiary Code' }}
+              content={SubsidiaryCode}
+            />
+          </TabItemsDirective>
+        </TabComponent>
+      </div>
+    )
   }
-  const addressBookContent = () => {
-    return <div>Address Book</div>
+
+  const ObjectCode = () => {
+    const spreadsheet = useRef<SpreadsheetComponent>(null)
+    return (
+      <div id="ObjectCode">
+        <SpreadsheetComponent ref={spreadsheet} height="85vh">
+          <SheetsDirective>
+            <SheetDirective name="Object Code">
+              <RangesDirective>
+                <RangeDirective dataSource={[]}></RangeDirective>
+              </RangesDirective>
+              <RowsDirective>
+                <RowDirective>
+                  <CellsDirective>
+                    <CellDirective value="Object Code"></CellDirective>
+                    <CellDirective value="Description"></CellDirective>
+                  </CellsDirective>
+                </RowDirective>
+              </RowsDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
+      </div>
+    )
+  }
+  const SubsidiaryCode = () => {
+    const spreadsheet = useRef<SpreadsheetComponent>(null)
+    return (
+      <div id="SubsidiaryCode">
+        <SpreadsheetComponent ref={spreadsheet} height="85vh">
+          <SheetsDirective>
+            <SheetDirective name="Subsidiary Code">
+              <RangesDirective>
+                <RangeDirective dataSource={[]}></RangeDirective>
+              </RangesDirective>
+              <RowsDirective>
+                <RowDirective>
+                  <CellsDirective>
+                    <CellDirective value="Object Code"></CellDirective>
+                    <CellDirective value="Description"></CellDirective>
+                  </CellsDirective>
+                </RowDirective>
+              </RowsDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
+      </div>
+    )
+  }
+
+  const AddressBookContent = () => {
+    const addressspreadsheet = useRef<SpreadsheetComponent>(null)
+    return (
+      <div id="AddressBook">
+        <SpreadsheetComponent ref={addressspreadsheet} height="85vh">
+          <SheetsDirective>
+            <SheetDirective name="Address Book">
+              <RangesDirective>
+                <RangeDirective dataSource={[]}></RangeDirective>
+              </RangesDirective>
+              <RowsDirective>
+                <RowDirective>
+                  <CellsDirective>
+                    <CellDirective value="Object Code"></CellDirective>
+                    <CellDirective value="Description"></CellDirective>
+                  </CellsDirective>
+                </RowDirective>
+              </RowsDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
+      </div>
+    )
   }
 
   return (
@@ -137,7 +250,7 @@ const RightSidebar = () => {
         ></TabItemDirective>
         <TabItemDirective
           header={{ text: 'Address Book' }}
-          content={addressBookContent}
+          content={AddressBookContent}
         ></TabItemDirective>
       </TabItemsDirective>
     </TabComponent>

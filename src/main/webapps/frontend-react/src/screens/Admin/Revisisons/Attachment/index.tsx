@@ -1,30 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from 'react'
+
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
-import {
-  ColumnChooser,
-  ColumnDirective,
-  ColumnMenu,
-  ColumnsDirective,
-  ExcelExport,
-  Filter,
-  GridComponent,
-  Inject,
-  Page,
-  Sort,
-  Toolbar,
-  ToolbarItems
-} from '@syncfusion/ej2-react-grids'
 import {
   NumericTextBoxComponent,
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
+import {
+  ColumnDirective,
+  ColumnsDirective,
+  RangeDirective,
+  RangesDirective,
+  SheetDirective,
+  SheetsDirective,
+  SpreadsheetComponent
+} from '@syncfusion/ej2-react-spreadsheet'
 
 import './style.css'
 
 const Attachment = () => {
-  const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser']
-
+  const spreadsheet = useRef<SpreadsheetComponent>(null)
   const data: any[] = [
     {
       usernameCreated: 'victorhui',
@@ -87,99 +83,34 @@ const Attachment = () => {
         </div>
       </div>
       <div className="admin-content">
-        <GridComponent
-          dataSource={data}
-          allowPaging={true}
-          width="100%"
-          height="100%"
-          allowExcelExport
-          toolbar={toolbar}
-          allowTextWrap={true}
-          showColumnChooser
-          showColumnMenu
-          allowFiltering
-          allowSorting
-          filterSettings={{ type: 'Menu' }}
-          cssClass="no-margin-right"
+        <SpreadsheetComponent
+          ref={spreadsheet}
+          allowOpen={true}
+          openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
+          allowSave={true}
+          saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
         >
-          <ColumnsDirective>
-            <ColumnDirective
-              field="id"
-              headerText="ID"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="idTable"
-              headerText="Table ID"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="nameTable"
-              headerText="Table Name"
-              width="150"
-            />
-            <ColumnDirective
-              field="noSequence"
-              headerText="Sequence Number"
-              width="150"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="typeDocument"
-              headerText="Document Type"
-              width="150"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="nameFile"
-              headerText="File Name"
-              width="200"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="pathFile"
-              headerText="File Path"
-              width="200"
-            ></ColumnDirective>
-            <ColumnDirective
-              template={(e: any) => e.text}
-              headerText="Text"
-              width="200"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="usernameCreated"
-              headerText="Created User"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="dateCreated"
-              headerText="Created Date"
-              width="200"
-              type="date"
-              format="yyyy-MM-dd hh:mm"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="usernameLastModified"
-              headerText="Last Modified User"
-              width="200"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="dateLastModified"
-              headerText="Last Modified Date"
-              width="200"
-              type="date"
-              format="yyyy-MM-dd hh:mm"
-            ></ColumnDirective>
-          </ColumnsDirective>
-          <Inject
-            services={[
-              Page,
-              ExcelExport,
-              Toolbar,
-              ColumnChooser,
-              ColumnMenu,
-              Filter,
-              Sort
-            ]}
-          />
-        </GridComponent>
+          <SheetsDirective>
+            <SheetDirective name="Attachment">
+              <RangesDirective>
+                <RangeDirective dataSource={data}></RangeDirective>
+              </RangesDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={80}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
       </div>
     </div>
   )

@@ -59,14 +59,16 @@ const dataSource: any[] = [
 ]
 const SystemInformation = () => {
   return (
-    <div className="control-pane">
-      <div className="control-section">
-        <div className="template-listbox-control">
-          <div className="top_title">System Information</div>
-          <ListBoxComponent
-            dataSource={dataSource}
-            itemTemplate='<div class="list-wrapper"><span class="list-wrapper__left"><span class="e-icons ${iconCss}"> </span><span>${text}</span></span><span class="list-wrapper__right">${value}</span></div>'
-          />
+    <div id="SystemInformation">
+      <div className="control-pane">
+        <div className="control-section">
+          <div className="template-listbox-control">
+            <div className="top_title">System Information</div>
+            <ListBoxComponent
+              dataSource={dataSource}
+              itemTemplate='<div class="list-wrapper"><span class="list-wrapper__left"><span class="e-icons ${iconCss}"> </span><span>${text}</span></span><span class="list-wrapper__right">${value}</span></div>'
+            />
+          </div>
         </div>
       </div>
     </div>
