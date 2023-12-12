@@ -1,24 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useRef } from 'react'
+
 import {
-  ColumnChooser,
   ColumnDirective,
-  ColumnMenu,
   ColumnsDirective,
-  ExcelExport,
-  Filter,
-  GridComponent,
-  Inject,
-  Sort,
-  Toolbar,
-  ToolbarItems
-} from '@syncfusion/ej2-react-grids'
+  RangeDirective,
+  RangesDirective,
+  SheetDirective,
+  SheetsDirective,
+  SpreadsheetComponent
+} from '@syncfusion/ej2-react-spreadsheet'
 
 import './style.css'
 
 const ResourceCodeMaintenance = () => {
-  const toolbar: ToolbarItems[] = ['ExcelExport', 'CsvExport', 'ColumnChooser']
   const data = [
     {
       createdUser: 'chinhangwo',
@@ -129,6 +126,11 @@ const ResourceCodeMaintenance = () => {
       subsidiaryCode: '19999999'
     }
   ]
+  const dataSource = data.map(item => {
+    const { matchingType, resourceCode, objectCode, subsidiaryCode } = item
+    return { matchingType, resourceCode, objectCode, subsidiaryCode }
+  })
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
   return (
     <div className="admin-container flex-row">
       <div className="col-sm-12 col-md-4 padding10">
@@ -167,53 +169,27 @@ const ResourceCodeMaintenance = () => {
         </div>
       </div>
       <div className="admin-content col-sm-12 col-md-8 padding10">
-        <GridComponent
-          dataSource={data}
-          width="100%"
-          height="100%"
-          allowExcelExport
-          toolbar={toolbar}
-          allowTextWrap={true}
-          showColumnChooser
-          showColumnMenu
-          allowFiltering
-          allowSorting
-          filterSettings={{ type: 'Menu' }}
-          cssClass="no-margin-right"
+        <SpreadsheetComponent
+          ref={spreadsheetRef}
+          allowOpen={true}
+          openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
+          allowSave={true}
+          saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
         >
-          <ColumnsDirective>
-            <ColumnDirective
-              field="matchingType"
-              headerText="Matching Type"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="resourceCode"
-              headerText="Resource Code"
-              width="120"
-            ></ColumnDirective>
-            <ColumnDirective
-              field="objectCode"
-              headerText="Object Code"
-              width="150"
-            />
-            <ColumnDirective
-              field="subsidiaryCode"
-              headerText="Subsidiary Code"
-              width="150"
-            ></ColumnDirective>
-          </ColumnsDirective>
-          <Inject
-            services={[
-              ExcelExport,
-              Toolbar,
-              ColumnChooser,
-              ColumnMenu,
-              Filter,
-              Sort
-            ]}
-          />
-        </GridComponent>
+          <SheetsDirective>
+            <SheetDirective name="ResourceCodeMaintenance">
+              <RangesDirective>
+                <RangeDirective dataSource={dataSource}></RangeDirective>
+              </RangesDirective>
+              <ColumnsDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={100}></ColumnDirective>
+                <ColumnDirective width={180}></ColumnDirective>
+                <ColumnDirective width={180}></ColumnDirective>
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
       </div>
     </div>
   )

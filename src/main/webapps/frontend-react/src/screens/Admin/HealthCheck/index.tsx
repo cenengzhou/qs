@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react'
 
 import {
@@ -41,7 +40,7 @@ const HealthCheck = () => {
     { text: 'Database', iconCss: 'e-icons e-list-unordered-3' }
   ]
   return (
-    <div className={styles.control_pane}>
+    <div id="HealthCheck" className={styles.control_pane}>
       <div
         className={classNames(
           ['col-xs-12 col-sn-12 col-lg-6 col-md-6'],
@@ -72,17 +71,37 @@ const HealthCheck = () => {
   )
 }
 
-// ------------------------------- THE TAB --------------------------------------
+// ------------------------------- THE TAB <TabFull> --------------------------------------
 const TabFull = () => {
   return (
     <>
       <div className={styles['e-tab-content']}>
         <div className="col-md-8">
-          <Acrdn title="Full Check" content={AcrdnContentFullCheck} />
+          <div className={styles['acrdn']}>
+            <AccordionComponent>
+              <AccordionItemsDirective>
+                <AccordionItemDirective
+                  header={`<div class="acrdn-header">Full Check</div>`}
+                  expanded={true}
+                  content={AcrdnContentFullCheck}
+                />
+              </AccordionItemsDirective>
+            </AccordionComponent>
+          </div>
         </div>
         <div className="col-md-4">
           <div className={styles['acrdn']}>
-            <Acrdn title="REST" content={AcrdnContentRest} />
+            <div className={styles['acrdn']}>
+              <AccordionComponent>
+                <AccordionItemsDirective>
+                  <AccordionItemDirective
+                    header={`<div class="acrdn-header">REST</div>`}
+                    expanded={true}
+                    content={AcrdnContentRest}
+                  />
+                </AccordionItemsDirective>
+              </AccordionComponent>
+            </div>
             <div className={styles['acrdn-widget']}>
               <div>
                 <span className={styles['acrdn-widget-time']}>0:00:00</span>
@@ -105,6 +124,162 @@ const TabFull = () => {
   )
 }
 
+// ------------------------ Tab 《Full Check》 content --------------------------------
+const AcrdnContentFullCheck = () => {
+  return (
+    <div className={styles['full-check-acrdn']}>
+      <AcrdnContentFullCheckItem
+        title="System"
+        totalNumber={46}
+        successNumber={0}
+        failNumber={0}
+      />
+      <AcrdnContentFullCheckItem
+        title="Database"
+        totalNumber={35}
+        successNumber={10}
+        failNumber={10}
+      />
+    </div>
+  )
+}
+const AcrdnContentFullCheckItem = ({
+  title,
+  totalNumber = 46,
+  successNumber = 2,
+  failNumber = 1
+}: {
+  title: string
+  totalNumber: number
+  successNumber: number
+  failNumber: number
+}) => {
+  const successPercent = Number(
+    ((successNumber / totalNumber) * 100).toFixed(0)
+  )
+  const failPercent = Number(((failNumber / totalNumber) * 100).toFixed(0))
+  const waitting = totalNumber - successNumber - failNumber
+  const waittingPercent = 100 - failPercent - successPercent
+  const progress = successPercent + failPercent
+
+  return (
+    <div className="col-md-6">
+      <div className={styles['full-check-acrdn-content']}>
+        <div className={styles['full-check-acrdn-content-title']}>{title}</div>
+        <div className={styles['full-check-acrdn-content-chart']}>
+          <div style={{ width: '100px', height: '100px' }}>
+            <div className={styles.template}>
+              <AccumulationChartComponent
+                width="100px"
+                height="100px"
+                id={title}
+                legendSettings={{ visible: false }}
+                tooltip={{ enable: true, format: '${point.tooltip}' }}
+                enableSmartLabels={true}
+                enableBorderOnMouseMove={false}
+              >
+                <Inject services={[PieSeries]}></Inject>
+                <AccumulationSeriesCollectionDirective>
+                  <AccumulationSeriesDirective
+                    tooltipMappingName="product"
+                    dataLabel={{
+                      visible: true,
+                      position: 'Outside',
+                      name: 'r',
+                      connectorStyle: { length: '10px', type: 'Curve' }
+                    }}
+                    type="Pie"
+                    palettes={['#F7464A', '#97BBCD', '#ecf0f5']}
+                    dataSource={[
+                      {
+                        product: `success : ${successNumber}`,
+                        percentage: successPercent
+                      },
+                      {
+                        product: `fail : ${failNumber}`,
+                        percentage: failPercent
+                      },
+                      {
+                        product: `waitting : ${waitting}`,
+                        percentage: waittingPercent
+                      }
+                    ]}
+                    xName="product"
+                    yName="percentage"
+                    innerRadius="50%"
+                  ></AccumulationSeriesDirective>
+                </AccumulationSeriesCollectionDirective>
+              </AccumulationChartComponent>
+            </div>
+          </div>
+          <div className={styles['summary']}>
+            <div>
+              <div className={styles['summary-text']}>Success</div>
+              <div>
+                <span className={styles['summary-number']}>
+                  {successNumber}
+                </span>
+                <small className={styles['summary-number-perc']}>
+                  ({successPercent}%)
+                </small>
+              </div>
+            </div>
+            <div>
+              <div className={styles['summary-text']}>Fail</div>
+              <div>
+                <small className={styles['summary-number']}>{failNumber}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {!!progress && (
+          <div className={styles['progress']}>
+            <div
+              className={styles['progress__bar']}
+              style={{ width: `${progress}%` }}
+            >
+              <span className={styles['progress__text']}>{progress}%</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+const AcrdnContentRest = () => {
+  const [checkBoxAll, setcheckBoxAll] = useState(false)
+  const checkBoxChange = () => {
+    setcheckBoxAll((p: boolean) => {
+      return !p
+    })
+  }
+  return (
+    <div className={styles['acrd-rest-content']}>
+      {!checkBoxAll && (
+        <div className={styles['acrd-rest-content__item']}>
+          <TextBoxComponent
+            placeholder="Limit subtask"
+            floatLabelType="Auto"
+            cssClass="e-outline"
+            value=""
+          />
+        </div>
+      )}
+      <div className={styles['acrd-rest-content__item']}>
+        <CheckBoxComponent
+          checked={checkBoxAll}
+          change={checkBoxChange}
+          label="Run all subtask"
+        />
+      </div>
+      <div className={styles['acrd-rest-content__item']}>
+        <ButtonComponent cssClass="e-info">REST Check</ButtonComponent>
+      </div>
+    </div>
+  )
+}
+
+// ------------------------------- THE TAB <TabSystem> --------------------------------------
 const TabSystem = () => {
   const [isTable, setIsTable] = useState(false)
   const [tableName, setTableName] = useState('')
@@ -155,6 +330,7 @@ const TabSystem = () => {
   )
 }
 
+// ------------------------------- THE TAB <TabDatabase> --------------------------------------
 const TabDatabase = () => {
   const [isTable, setIsTable] = useState(false)
   const [tableName, setTableName] = useState('')
@@ -189,220 +365,12 @@ const TabDatabase = () => {
   )
 }
 
-// ------------------------ Tab 《Full Check》 content --------------------------------
-const AcrdnContentFullCheck = () => {
-  return (
-    <div className={styles['full-check-acrdn']}>
-      <div className="col-md-6">
-        <div className={styles['full-check-acrdn-content']}>
-          <div className={styles['full-check-acrdn-content-title']}>System</div>
-          <div className={styles['full-check-acrdn-content-chart']}>
-            <div style={{ width: '100px', height: '100px' }}>
-              <SystemPieChart />
-            </div>
-            <AcrdnSummary successNumber={0} successPerc={0} failNumber={0} />
-          </div>
-        </div>
-      </div>
-      <div className="col-md-6">
-        <div className={styles['full-check-acrdn-content']}>
-          <div className={styles['full-check-acrdn-content-title']}>
-            Database
-          </div>
-          <div className={styles['full-check-acrdn-content-chart']}>
-            <div style={{ width: '100px', height: '100px' }}>
-              <DataBasePieChart />
-            </div>
-            <AcrdnSummary successNumber={0} successPerc={0} failNumber={0} />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-const AcrdnContentRest = () => {
-  const [checkBoxAll, setcheckBoxAll] = useState(false)
-  const checkBoxChange = () => {
-    setcheckBoxAll((p: boolean) => {
-      return !p
-    })
-    if (checkBoxAll === true) {
-      console.log(true)
-    }
-  }
-  return (
-    <div className={styles['acrd-rest-content']}>
-      {!checkBoxAll && (
-        <div className={styles['acrd-rest-content__item']}>
-          <TextBoxComponent
-            placeholder="Limit subtask"
-            floatLabelType="Auto"
-            cssClass="e-outline"
-            value=""
-          />
-        </div>
-      )}
-      <div className={styles['acrd-rest-content__item']}>
-        <CheckBoxComponent
-          checked={checkBoxAll}
-          change={checkBoxChange}
-          label="Run all subtask"
-        />
-      </div>
-      <div className={styles['acrd-rest-content__item']}>
-        <ButtonComponent cssClass="e-info">REST Check</ButtonComponent>
-      </div>
-    </div>
-  )
-}
-
-const SystemPieChart = () => {
-  return (
-    <div className={styles.template}>
-      <AccumulationChartComponent
-        width="100px"
-        height="100px"
-        id="system-pie-chart"
-        legendSettings={{ visible: false }}
-        tooltip={{ enable: true, format: '${point.tooltip}' }}
-        enableSmartLabels={true}
-        enableBorderOnMouseMove={false}
-      >
-        <Inject services={[PieSeries]}></Inject>
-        <AccumulationSeriesCollectionDirective>
-          <AccumulationSeriesDirective
-            tooltipMappingName="product"
-            dataLabel={{
-              visible: true,
-              position: 'Outside',
-              name: 'r',
-              connectorStyle: { length: '10px', type: 'Curve' }
-            }}
-            type="Pie"
-            dataSource={[
-              {
-                product: 'TV : 30 (12%)',
-                percentage: 12,
-                r: 'TV, 30 <br>12%'
-              },
-              {
-                product: 'PC : 20 (8%)',
-                percentage: 8,
-                r: 'PC, 20 <br>8%'
-              }
-            ]}
-            xName="product"
-            yName="percentage"
-            innerRadius="50%"
-          ></AccumulationSeriesDirective>
-        </AccumulationSeriesCollectionDirective>
-      </AccumulationChartComponent>
-    </div>
-  )
-}
-const DataBasePieChart = () => {
-  return (
-    <div className={styles.template}>
-      <AccumulationChartComponent
-        width="100px"
-        height="100px"
-        id="database-pie-chart"
-        legendSettings={{ visible: false }}
-        tooltip={{ enable: true, format: '${point.tooltip}' }}
-        enableSmartLabels={true}
-        enableBorderOnMouseMove={false}
-      >
-        <Inject services={[PieSeries]}></Inject>
-        <AccumulationSeriesCollectionDirective>
-          <AccumulationSeriesDirective
-            tooltipMappingName="product"
-            dataLabel={{
-              visible: true,
-              position: 'Outside',
-              name: 'r',
-              connectorStyle: { length: '10px', type: 'Curve' }
-            }}
-            type="Pie"
-            dataSource={[
-              {
-                product: 'TV : 30 (12%)',
-                percentage: 12,
-                r: 'TV, 30 <br>12%'
-              },
-              {
-                product: 'PC : 20 (8%)',
-                percentage: 8,
-                r: 'PC, 20 <br>8%'
-              }
-            ]}
-            xName="product"
-            yName="percentage"
-            innerRadius="50%"
-          ></AccumulationSeriesDirective>
-        </AccumulationSeriesCollectionDirective>
-      </AccumulationChartComponent>
-    </div>
-  )
-}
-
-const Acrdn = ({
-  title,
-  content
-}: {
-  title: string
-  content: () => JSX.Element
-}) => {
-  return (
-    <div className={styles['acrdn']}>
-      <AccordionComponent>
-        <AccordionItemsDirective>
-          <AccordionItemDirective
-            header={`<div class="acrdn-header">${title}</div>`}
-            expanded={true}
-            content={content}
-          />
-        </AccordionItemsDirective>
-      </AccordionComponent>
-    </div>
-  )
-}
-
-const AcrdnSummary = ({
-  successNumber,
-  successPerc,
-  failNumber
-}: {
-  successNumber: number
-  successPerc: number
-  failNumber: number
-}) => {
-  return (
-    <div className={styles['summary']}>
-      <div>
-        <div className={styles['summary-text']}>Success</div>
-        <div>
-          <span className={styles['summary-number']}>{successNumber}</span>
-          <small className={styles['summary-number-perc']}>
-            ({successPerc}%)
-          </small>
-        </div>
-      </div>
-      <div>
-        <div className={styles['summary-text']}>Fail</div>
-        <div>
-          <small className={styles['summary-number']}>{failNumber}</small>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // -------------------------------- Tab 《System》/《Database》 content ------------------------------------
 export interface TableProps {
   orderId: number
   name: string
   result: string
-  status: string
+  status: boolean
   elapseTime: number
 }
 const Table = ({
@@ -435,17 +403,23 @@ const Table = ({
           dataSource={data}
           allowSorting={true}
           allowPaging={true}
+          // TODO
           pageSettings={{ pageCount: 5, pageSize: 2, pageSizes: true }}
         >
           <ColumnsDirective>
-            <ColumnDirective
-              field="orderId"
-              headerText="Order ID"
-              width="100"
-            />
             <ColumnDirective field="name" headerText="Name" width="100" />
             <ColumnDirective field="result" headerText="Result" width="100" />
-            <ColumnDirective field="status" headerText="Status" width="100" />
+            <ColumnDirective
+              field="status"
+              headerText="Status"
+              width="100"
+              template={(e: TableProps) => (
+                <div>
+                  {e.status === true && <span className="e-icons e-check" />}
+                  {e.status === false && <span className="e-icons e-close" />}
+                </div>
+              )}
+            />
             <ColumnDirective
               field="elapseTime"
               headerText="Elapse Time"

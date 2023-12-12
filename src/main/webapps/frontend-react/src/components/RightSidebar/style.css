@@ -20,6 +20,35 @@
   }
 }
 
+#AccountCode > .e-tab {
+
+  > .e-tab-header  {
+    border-bottom: 2px solid var(--gray);
+  }
+
+  > .e-tab-header > .e-toolbar-item.e-active > .e-tab-wrap {
+    background: var(--gray);
+  }
+
+  > .e-tab-header > .e-toolbar-items {
+    display: flex;
+  }
+
+  > .e-tab-header > .e-toolbar-items .e-toolbar-item {
+    flex: 1;
+  }
+
+  .e-tab-header > .e-toolbar-items .e-toolbar-item.e-active .e-tab-wrap {
+    background: var(--black);
+  }
+}
+
+#SubsidiaryCode, #ObjectCode {
+  .e-tab-header, .e-indicator {
+    border-bottom: 2px Solid var(--gray);
+  }
+}
+
 .color-white {
   color: #fff !important;
 }

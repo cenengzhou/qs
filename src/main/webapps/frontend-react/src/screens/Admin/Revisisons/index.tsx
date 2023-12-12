@@ -13,8 +13,15 @@ import Addendum from './Addendum'
 import AddendumDetail from './AddendumDetail'
 import Approval from './Approval'
 import Attachment from './Attachment'
+import ConsultancyAgreement from './ConsultancyAgreement'
+import FinalAccount from './FinalAccount'
 import MainCertificate from './MainCertificate'
+import MonthlyMovement from './MonthlyMovement'
 import Payment from './Payment'
+import Roc from './ROC'
+import ROCDetail from './ROCDetail'
+import RocSubDetail from './ROCSubDetail'
+import Repackaging from './Repackaging'
 import SubcontractDetail from './SubcontractDetail'
 import Tender from './Tender'
 import TenderDetail from './TenderDetail'
@@ -47,6 +54,11 @@ const Revisions = () => {
       id: 'mainCertificate',
       content: <MainCertificate />
     },
+    {
+      text: 'Repackaging',
+      id: 'Repackaging',
+      content: <Repackaging />
+    },
     { text: 'Approval', id: 'approval', content: <Approval /> },
     { text: 'Attachment', id: 'attachment', content: <Attachment /> },
     { text: 'Transit', id: 'transit', content: <Transit /> },
@@ -59,24 +71,24 @@ const Revisions = () => {
     {
       text: 'Monthly Movement',
       id: 'monthlyMovement',
-      content: <div>monthlyMovement</div>
+      content: <MonthlyMovement />
     },
-    { text: 'ROC', id: 'ROC', content: <div>ROC</div> },
-    { text: 'ROC Detail', id: 'ROCDetail', content: <div>ROCDetail</div> },
+    { text: 'ROC', id: 'ROC', content: <Roc /> },
+    { text: 'ROC Detail', id: 'ROCDetail', content: <ROCDetail /> },
     {
       text: 'ROC Subdetail',
       id: 'ROCSubdetail',
-      content: <div>ROCSubdetail</div>
+      content: <RocSubDetail />
     },
     {
       text: 'Final Account',
       id: 'finalAccount',
-      content: <div>finalAccount</div>
+      content: <FinalAccount />
     },
     {
       text: 'Consultancy Agreement',
       id: 'consultancyAgreement',
-      content: <div>consultancyAgreement</div>
+      content: <ConsultancyAgreement />
     }
   ]
 
