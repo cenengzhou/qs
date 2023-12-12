@@ -29,6 +29,12 @@ const apiSlice = createApi({
           url: 'service/security/getCurrentUser'
         })
       }),
+      getSessionList: builder.query<SessionListDetail[], void>({
+        query: () => ({
+          method: 'POST',
+          url: 'service/system/GetSessionList'
+        })
+      }),
       obtainCacheKey: builder.query<string, string>({
         query: queryArg => ({
           method: 'POST',
@@ -508,6 +514,18 @@ export type SCDetailRequest = {
   subcontractNo?: string
 }
 
+export type SessionListDetail = {
+  authType?: string
+  creationTime?: number
+  expired?: boolean
+  idleTime?: number
+  lastAccessedTime?: number
+  lastRequest?: string
+  maxInactiveInterval?: number
+  principal?: CurrentUser
+  sessionId?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -524,6 +542,7 @@ export const {
   useGetSubcontractMutation,
   useGetAllWorkScopesQuery,
   useUpdateNotificationReadStatusByCurrentUserMutation,
-  useGetSCDetailsMutation
+  useGetSCDetailsMutation,
+  useGetSessionListQuery
 } = apiSlice
 export default apiSlice

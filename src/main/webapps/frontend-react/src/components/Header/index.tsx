@@ -220,7 +220,7 @@ const Header = () => {
             <img src={imageUrl} onError={() => setImageUrl(userImg)} alt="" />
           </div>
           <div className="username">
-            cenengzhou
+            {getCurrentUser?.username}
             <span className="e-icons e-chevron-down-fill e-small"></span>
           </div>
         </div>
