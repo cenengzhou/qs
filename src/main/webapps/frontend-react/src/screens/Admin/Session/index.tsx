@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
+import { ToastComponent } from '@syncfusion/ej2-react-notifications'
+import {
+  PositionDataModel,
+  hideSpinner,
+  showSpinner
+} from '@syncfusion/ej2-react-popups'
 import {
   CellDirective,
   CellsDirective,
@@ -20,10 +26,32 @@ import './style.css'
 import dayjs from 'dayjs'
 
 const Session = () => {
-  const { data } = useGetSessionListQuery()
+  const {
+    isLoading,
+    isError,
+    error,
+    data: sessionDetails
+  } = useGetSessionListQuery()
+
+  useEffect(() => {
+    const root = document.getElementById('root')!
+    if (isLoading) {
+      showSpinner(root)
+    } else {
+      hideSpinner(root)
+    }
+  }, [isLoading])
 
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const dataSource = data?.map(item => {
+  const toastInstance = useRef<ToastComponent>(null)
+
+  function toastCreated() {
+    if (isError) {
+      toastInstance.current?.show()
+    }
+  }
+
+  const dataSource = sessionDetails?.map(item => {
     const {
       authType,
       sessionId,
@@ -58,10 +86,20 @@ const Session = () => {
       )
     }
   }, [])
-
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const position: PositionDataModel = { X: 'Center' }
   return (
     <div className="admin-container">
       <div className="admin-content">
+        <ToastComponent
+          ref={toastInstance}
+          title="Error!"
+          position={position}
+          cssClass="e-toast-danger"
+          content={error}
+          created={toastCreated}
+        />
+
         <SpreadsheetComponent
           ref={spreadsheetRef}
           allowOpen={true}
