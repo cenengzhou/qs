@@ -5,10 +5,14 @@ import { useEffect, useRef } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
+  CellDirective,
+  CellsDirective,
   ColumnDirective,
   ColumnsDirective,
   RangeDirective,
   RangesDirective,
+  RowDirective,
+  RowsDirective,
   SheetDirective,
   SheetsDirective,
   SpreadsheetComponent
@@ -27,7 +31,7 @@ const Session = () => {
       lastAccessedTime: 1698289099682,
       maxInactiveInterval: 60000,
       principal: {
-        username: 'cenengzhou'
+        fullname: 'cenengzhou'
       },
       lastRequest: '2023-10-26T02:58:19.621+00:00',
       sessionId: '321EB5F772CB29602D8254C0D38C1584'
@@ -35,8 +39,6 @@ const Session = () => {
   ]
   const dataSource = data.map(item => {
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      principal,
       authType,
       sessionId,
       creationTime,
@@ -45,7 +47,7 @@ const Session = () => {
       maxInactiveInterval
     } = item
     return {
-      name: item.principal.username,
+      name: item.principal.fullname,
       authType,
       sessionId,
       creationTime: dayjs(creationTime).format('DD/MM/YYYY HH:MM'),
@@ -62,8 +64,9 @@ const Session = () => {
         {
           backgroundColor: '#1E88E5',
           color: '#F5F5F5',
-          fontSize: '14px',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          verticalAlign: 'middle',
+          textAlign: 'center'
         },
         'A1:G1'
       )
@@ -81,10 +84,31 @@ const Session = () => {
           saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
         >
           <SheetsDirective>
-            <SheetDirective name="Session">
+            <SheetDirective
+              name="Session"
+              isProtected={true}
+              protectSettings={{ selectCells: true }}
+            >
               <RangesDirective>
-                <RangeDirective dataSource={dataSource}></RangeDirective>
+                <RangeDirective
+                  dataSource={dataSource}
+                  startCell="A2"
+                  showFieldAsHeader={false}
+                ></RangeDirective>
               </RangesDirective>
+              <RowsDirective>
+                <RowDirective index={0} height={40}>
+                  <CellsDirective>
+                    <CellDirective value="Name"></CellDirective>
+                    <CellDirective value="AuthType"></CellDirective>
+                    <CellDirective value="Session Id"></CellDirective>
+                    <CellDirective value="Creation Time"></CellDirective>
+                    <CellDirective value="Last Accessed Time"></CellDirective>
+                    <CellDirective value="Last Request"></CellDirective>
+                    <CellDirective value="Max Inactive Interval"></CellDirective>
+                  </CellsDirective>
+                </RowDirective>
+              </RowsDirective>
               <ColumnsDirective>
                 <ColumnDirective width={100}></ColumnDirective>
                 <ColumnDirective width={100}></ColumnDirective>

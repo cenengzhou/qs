@@ -296,44 +296,30 @@ const AddendumDetail = () => {
   const data = [
     {
       id: 603069,
-      jobNo: '13892',
-      subcontract: {
-        packageNo: '1001'
-      },
-      sequenceNo: 1,
       description: 'Ground Investigation Works (Buying Gain)',
       remark: null,
       objectCode: '149999',
       subsidiaryCode: '25999999',
-      billItem: ' ',
+      objectCodeForDayWork: '149999',
+      bpi: '12',
       unit: 'UN',
-      lineType: 'BQ',
-      approved: 'A',
-      resourceNo: 402141,
-      scRate: 0.00125,
+      typeVo: 402141,
+      resourceSummary: null,
+      headerReference: 47523469,
+      subcontractChargedRef: '324',
+      rateAddendum: 7800,
+      rateBudget: 0,
       quantity: 171239.9,
-      cumCertifiedQuantity: 0.0,
-      amountCumulativeWd: 0,
-      amountPostedCert: 0,
-      postedCertifiedQuantity: 0.0,
-      amountSubcontractNew: 0,
-      newQuantity: 171239.9,
-      originalQuantity: 171239.9,
-      toBeApprovedRate: 0.0,
-      amountSubcontract: 0,
+      addendumAmount: 22434,
       amountBudget: 171239.9,
       lastModifiedDate: '2020-11-17T15:00:04.000+00:00',
       lastModifiedUser: 'SYSTEM',
       createdDate: '2020-11-17T15:00:04.000+00:00',
       createdUser: 'SYSTEM',
-      systemStatus: 'ACTIVE',
       typeRecoverable: null
     }
   ]
-  const dataSource = data.map(item => {
-    const { id, subcontract, ...rest } = item
-    return { id, subcontract: subcontract.packageNo, ...rest }
-  })
+
   return (
     <div className="admin-container">
       {/* input */}
@@ -361,7 +347,7 @@ const AddendumDetail = () => {
           <SheetsDirective>
             <SheetDirective name="Addendum Detail">
               <RangesDirective>
-                <RangeDirective dataSource={dataSource}></RangeDirective>
+                <RangeDirective dataSource={data}></RangeDirective>
               </RangesDirective>
               <ColumnsDirective>
                 <ColumnDirective width={80}></ColumnDirective>
