@@ -35,6 +35,21 @@ const apiSlice = createApi({
           url: 'service/system/GetSessionList'
         })
       }),
+      getAuditTableMap: builder.query<
+        Map<string, ProceduresAuditTableItemMap>,
+        void
+      >({
+        query: () => ({
+          method: 'POST',
+          url: 'service/system/getAuditTableMap'
+        })
+      }),
+      getCutoffPeriod: builder.query<ProceduresCutoffPeriod, void>({
+        query: () => ({
+          method: 'GET',
+          url: 'service/roc/getCutoffPeriod'
+        })
+      }),
       obtainCacheKey: builder.query<string, string>({
         query: queryArg => ({
           method: 'POST',
@@ -526,6 +541,18 @@ export type SessionListDetail = {
   sessionId?: string
 }
 
+export type ProceduresAuditTableItemMap = {
+  housekeep?: boolean
+  period?: string
+  tableName?: string
+}
+
+export type ProceduresCutoffPeriod = CreatedUser & {
+  cutoffDate?: string
+  excludeJobList?: null | JobListResponse
+  period?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -543,6 +570,8 @@ export const {
   useGetAllWorkScopesQuery,
   useUpdateNotificationReadStatusByCurrentUserMutation,
   useGetSCDetailsMutation,
-  useGetSessionListQuery
+  useGetSessionListQuery,
+  useGetAuditTableMapQuery,
+  useGetCutoffPeriodQuery
 } = apiSlice
 export default apiSlice

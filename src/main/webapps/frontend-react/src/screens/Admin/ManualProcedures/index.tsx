@@ -3,10 +3,32 @@ import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../components/DatePicker'
+import { GLOBALPARAMETER } from '../../../constants/global'
+import {
+  useGetAuditTableMapQuery,
+  useGetCutoffPeriodQuery
+} from '../../../services'
 import './style.css'
 
 const ManualProcedures = () => {
-  // TODO 接口 roc/getCutoffPeriod POST
+  const { data: AuditTable } = useGetAuditTableMapQuery()
+  const auditTables = Object.values(AuditTable ?? {}).map((item, index) => {
+    return {
+      value: index,
+      text: item.tableName
+    }
+  })
+  const { data: CutoffPeriod } = useGetCutoffPeriodQuery()
+  const cutoffMonth = GLOBALPARAMETER.getChineseMonth(
+    CutoffPeriod?.cutoffDate?.split(' ')[1].replace('月,', '')
+  )
+  // format yyyy-MM-dd
+  const newCutoffPeriod =
+    cutoffMonth +
+    '-' +
+    CutoffPeriod?.cutoffDate?.split(' ')[0] +
+    '-' +
+    CutoffPeriod?.cutoffDate?.split(' ')[2]
   return (
     <div className="admin-container">
       <div className="manual-procedures-container">
@@ -15,20 +37,19 @@ const ManualProcedures = () => {
             <div className="e-card">
               <div className="e-card-header bg-info">
                 <div className="e-card-header-caption">
-                  <div className="e-card-header-title">Mayumi Ohno</div>
+                  <div className="e-card-header-title">
+                    Audit Table Housekeep
+                  </div>
                 </div>
               </div>
               <div className="e-card-content">
-                {/* TODO 接口  system/getAuditTableMap POST */}
                 <DropDownListComponent
-                  dataSource={[
-                    { text: '1111', value: 1 },
-                    { text: '2222', value: 2 }
-                  ]}
+                  dataSource={auditTables}
                   cssClass="e-outline"
                   floatLabelType="Always"
                   showClearButton
                   placeholder="Audit Table"
+                  value={auditTables[0]?.text}
                 />
               </div>
               <div className="e-card-actions">
@@ -48,13 +69,13 @@ const ManualProcedures = () => {
               <div className="e-card-content">
                 <div className="row">
                   <TextBoxComponent
-                    placeholder="Internal Job Number"
+                    placeholder="Job Number"
                     floatLabelType="Auto"
                     cssClass="e-outline"
                     value=""
                   />
                 </div>
-                <DatePicker placeholder="GL Date" />
+                <DatePicker placeholder="GL Date" value={new Date()} />
               </div>
               <div className="e-card-actions">
                 <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
@@ -73,14 +94,19 @@ const ManualProcedures = () => {
               <div className="e-card-content">
                 <div className="row nopadding">
                   <div className="col-lg-6 col-md-6">
-                    <DatePicker placeholder="Cutoff Date" />
+                    <DatePicker
+                      placeholder="Cutoff Date"
+                      format="yyyy-MM-dd"
+                      value={newCutoffPeriod}
+                    />
                   </div>
                   <div className="col-lg-6 col-md-6">
                     <DatePicker
-                      format="MMMM y"
+                      format="yyyy-MM"
                       start="Year"
                       depth="Year"
                       placeholder="Period"
+                      value={CutoffPeriod?.period}
                     />
                   </div>
                 </div>
