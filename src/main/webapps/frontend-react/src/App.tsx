@@ -7,6 +7,7 @@ import { createSpinner } from '@syncfusion/ej2-react-popups'
 import './App.css'
 import Header from './components/Header'
 import RouteNavigator from './components/RouteNavigator'
+import Loading from './components/Spinner'
 import { ROUTE_LIST } from './constants/route'
 import { persistor, store } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -22,6 +23,7 @@ const App = () => {
       <React.Fragment>
         <Header></Header>
         <RouteNavigator routeList={ROUTE_LIST} />
+        <Loading />
       </React.Fragment>
     </Provider>
   )

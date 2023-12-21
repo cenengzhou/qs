@@ -1,24 +1,59 @@
+import { useState } from 'react'
+
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
-import { TextBoxComponent } from '@syncfusion/ej2-react-inputs'
+import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
+import {
+  ChangeEventArgs,
+  DropDownListComponent
+} from '@syncfusion/ej2-react-dropdowns'
+import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../components/DatePicker'
+import NotificationModal from '../../../components/NotificationModal'
 import { GLOBALPARAMETER } from '../../../constants/global'
+import { closeLoading, openLoading } from '../../../redux/loadingReducer'
+import { useAppDispatch } from '../../../redux/store'
 import {
+  useGeneratePaymentPDFAdminMutation,
+  useGenerateSCPackageSnapshotManuallyMutation,
   useGetAuditTableMapQuery,
-  useGetCutoffPeriodQuery
+  useGetCutoffPeriodQuery,
+  useHousekeepAuditTableMutation,
+  useRunPaymentPostingMutation,
+  useRunProvisionPostingManuallyMutation,
+  useUpdateCEOApprovalMutation,
+  useUpdateF58001FromSCPackageManuallyMutation,
+  useUpdateF58011FromSCPaymentCertManuallyMutation,
+  useUpdateMainCertFromF03B14ManuallyMutation
 } from '../../../services'
 import './style.css'
+import dayjs from 'dayjs'
 
 const ManualProcedures = () => {
+  const dispatch = useAppDispatch()
+
   const { data: AuditTable } = useGetAuditTableMapQuery()
+  const { data: CutoffPeriod } = useGetCutoffPeriodQuery()
+  const [updateHouseKeep] = useHousekeepAuditTableMutation()
+  const [updateProvisionPosting] = useRunProvisionPostingManuallyMutation()
+  const [updateCeoApproval] = useUpdateCEOApprovalMutation()
+  const [generateSnapshot] = useGenerateSCPackageSnapshotManuallyMutation()
+  const [postSubcontractPayment] = useRunPaymentPostingMutation()
+  const [synchronizeSubcontractPackage] =
+    useUpdateF58001FromSCPackageManuallyMutation()
+  const [synchronizeSubcontractPaymentCert] =
+    useUpdateF58011FromSCPaymentCertManuallyMutation()
+  const [synchronizeMainContract] =
+    useUpdateMainCertFromF03B14ManuallyMutation()
+  const [generatePaymentCertPdf] = useGeneratePaymentPDFAdminMutation()
+
   const auditTables = Object.values(AuditTable ?? {}).map((item, index) => {
     return {
       value: index,
       text: item.tableName
     }
   })
-  const { data: CutoffPeriod } = useGetCutoffPeriodQuery()
+
   const cutoffMonth = GLOBALPARAMETER.getChineseMonth(
     CutoffPeriod?.cutoffDate?.split(' ')[1].replace('月,', '')
   )
@@ -29,6 +64,187 @@ const ManualProcedures = () => {
     CutoffPeriod?.cutoffDate?.split(' ')[0] +
     '-' +
     CutoffPeriod?.cutoffDate?.split(' ')[2]
+
+  const [notificationContent, setNotificationContent] = useState<string>('')
+  const [visibleNotificationModal, setVisibleNotificationModal] =
+    useState<boolean>(false)
+  const [notificationMode, setNotificationMode] = useState<
+    'Success' | 'Fail' | 'Warn'
+  >('Success')
+
+  const [auditTableName, setAuditTableName] = useState(auditTables[0]?.text)
+  const [provisionPostingJobNo, setProvisionPostingJobNo] = useState<string>('')
+  const [provisionPostingDate, setProvisionPostingDate] = useState<string>(
+    dayjs(new Date()).format('YYYY-MM-DD')
+  )
+  const [updateCeoApprovalJobNo, setUpdateCeoApprovalJobNo] =
+    useState<string>('')
+  const [updateCeoApprovalPackageNo, setUpdateCeoApprovalPackageNo] =
+    useState<string>('')
+  const [paymentCertPdfJobNo, setPaymentCertPdfJobNo] = useState<string>('')
+  const [paymentCertPdfPackageNo, setPaymentCertPdfPackageNo] =
+    useState<string>('')
+  const [paymentCertPdfPaymentNo, setPaymentCertPdfPaymentNo] =
+    useState<string>('')
+
+  const houseKeepSubmit = async () => {
+    dispatch(openLoading())
+    try {
+      await updateHouseKeep(auditTableName)
+        .unwrap()
+        .then(payload => {
+          dispatch(closeLoading())
+          if (payload) {
+            setNotificationMode('Success')
+            setVisibleNotificationModal(true)
+            setNotificationContent(
+              `Removed ${payload} records from ${auditTableName}`
+            )
+          }
+        })
+        .catch(error => {
+          dispatch(closeLoading())
+          setNotificationMode('Fail')
+          setVisibleNotificationModal(true)
+          setNotificationContent(error.data.message)
+        })
+    } catch (err) {
+      console.error('failed:', err)
+    }
+  }
+
+  const provisionPostingSubmit = async () => {
+    dispatch(openLoading())
+    try {
+      await updateProvisionPosting({
+        jobNumber: provisionPostingJobNo,
+        glDate: provisionPostingDate
+      })
+        .unwrap()
+        .then(() => {
+          dispatch(closeLoading())
+          setNotificationMode('Success')
+          setVisibleNotificationModal(true)
+          setNotificationContent('Posted.')
+        })
+        .catch(error => {
+          dispatch(closeLoading())
+          setNotificationMode('Fail')
+          setVisibleNotificationModal(true)
+          setNotificationContent(error.data.message)
+        })
+    } catch (err) {
+      console.error(err)
+    }
+    setProvisionPostingJobNo('')
+    setProvisionPostingDate(dayjs(new Date()).format('YYYY-MM-DD'))
+  }
+
+  const updateCeoApprovalSubmit = async () => {
+    try {
+      const updateCeoApprovalPayload = await updateCeoApproval({
+        jobNumber: updateCeoApprovalJobNo,
+        packageNo: updateCeoApprovalPackageNo
+      })
+      setUpdateCeoApprovalJobNo('')
+      setUpdateCeoApprovalPackageNo('')
+      console.log(updateCeoApprovalPayload)
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+
+  const generateSnapshotSubmit = async () => {
+    try {
+      const generateSnapshotPayload = await generateSnapshot()
+      console.log(generateSnapshotPayload)
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+
+  const postSubcontractPaymentSubmit = async () => {
+    try {
+      const postSubcontractPaymentPayload = await postSubcontractPayment()
+      console.log(postSubcontractPaymentPayload)
+    } catch (err) {
+      console.error('failed:', err)
+    }
+  }
+
+  const synchronizeF58001Submit = async () => {
+    try {
+      const synchronizeF58001SubmitPayload =
+        await synchronizeSubcontractPackage()
+      console.log(synchronizeF58001SubmitPayload)
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+
+  const synchronizeSubcontractPaymentCertSubmit = async () => {
+    try {
+      const synchronizeSubcontractPaymentCertPayload =
+        await synchronizeSubcontractPaymentCert()
+      console.log(synchronizeSubcontractPaymentCertPayload)
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+
+  const synchronizeMainContractSubmit = async () => {
+    try {
+      const synchronizeMainContractPayload = await synchronizeMainContract()
+      console.log(synchronizeMainContractPayload)
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+  const generatePaymentCertPdfSubmit = async () => {
+    try {
+      const generatePaymentCertPdfPayload = await generatePaymentCertPdf({
+        jobNo: paymentCertPdfJobNo,
+        packageNo: paymentCertPdfPackageNo,
+        paymentNo: paymentCertPdfPaymentNo
+      })
+      setPaymentCertPdfJobNo('')
+      setPaymentCertPdfPackageNo('')
+      setPaymentCertPdfPaymentNo('')
+      console.log(generatePaymentCertPdfPayload)
+      // {data:"1 payment PDF(s) failed to generate. Please check the log file."}
+    } catch (err) {
+      console.error('Failed:', err)
+    }
+  }
+
+  const changeAudiTableName = (value: ChangeEventArgs) => {
+    setAuditTableName(value.value)
+  }
+  const changeProvisionPostingJobNo = (value?: string) => {
+    setProvisionPostingJobNo(value ?? '')
+  }
+  const changeProvisionPostingDate = (e: calendarsChangedEventArgs) => {
+    setProvisionPostingDate(dayjs(e.value).format('YYYY-MM-DD') ?? new Date())
+  }
+  const changeUpdateCeoApprovalJobNo = (value?: string) => {
+    setUpdateCeoApprovalJobNo(value ?? '')
+  }
+  const changeUpdateCeoApprovalPackageNo = (value?: string) => {
+    setUpdateCeoApprovalPackageNo(value ?? '')
+  }
+  const changeUpadatePaymentCertPdfJobNo = (value?: string) => {
+    setPaymentCertPdfJobNo(value ?? '')
+  }
+  const changeUpadatePaymentCertPdfPackageNo = (value?: string) => {
+    setPaymentCertPdfPackageNo(value ?? '')
+  }
+  const changeUpadatePaymentCertPdfPaymentNo = (value?: string) => {
+    setPaymentCertPdfPaymentNo(value ?? '')
+  }
+  const closeNotification = () => {
+    setVisibleNotificationModal(false)
+  }
+
   return (
     <div className="admin-container">
       <div className="manual-procedures-container">
@@ -49,11 +265,18 @@ const ManualProcedures = () => {
                   floatLabelType="Always"
                   showClearButton
                   placeholder="Audit Table"
-                  value={auditTables[0]?.text}
+                  text={auditTables[0]?.text}
+                  change={(value: ChangeEventArgs) =>
+                    changeAudiTableName(value)
+                  }
                 />
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={houseKeepSubmit}
+                  disabled={!auditTableName}
+                >
                   Housekeep
                 </ButtonComponent>
               </div>
@@ -72,13 +295,24 @@ const ManualProcedures = () => {
                     placeholder="Job Number"
                     floatLabelType="Auto"
                     cssClass="e-outline"
-                    value=""
+                    value={provisionPostingJobNo}
+                    input={(value: InputEventArgs) =>
+                      changeProvisionPostingJobNo(value.value)
+                    }
                   />
                 </div>
-                <DatePicker placeholder="GL Date" value={new Date()} />
+                <DatePicker
+                  placeholder="GL Date"
+                  value={provisionPostingDate}
+                  onChange={changeProvisionPostingDate}
+                />
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={provisionPostingSubmit}
+                  disabled={!provisionPostingJobNo}
+                >
                   Post
                 </ButtonComponent>
               </div>
@@ -141,18 +375,30 @@ const ManualProcedures = () => {
                     placeholder="Job Number"
                     floatLabelType="Auto"
                     cssClass="e-outline"
-                    value=""
+                    value={updateCeoApprovalJobNo}
+                    input={(value: InputEventArgs) =>
+                      changeUpdateCeoApprovalJobNo(value.value)
+                    }
                   />
                 </div>
                 <TextBoxComponent
                   placeholder="Package Number"
                   floatLabelType="Auto"
                   cssClass="e-outline"
-                  value=""
+                  value={updateCeoApprovalPackageNo}
+                  input={(value: InputEventArgs) => {
+                    changeUpdateCeoApprovalPackageNo(value.value)
+                  }}
                 />
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={updateCeoApprovalSubmit}
+                  disabled={
+                    !(updateCeoApprovalJobNo && updateCeoApprovalPackageNo)
+                  }
+                >
                   Post
                 </ButtonComponent>
               </div>
@@ -175,7 +421,10 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={generateSnapshotSubmit}
+                >
                   Generate Snapshot
                 </ButtonComponent>
               </div>
@@ -197,7 +446,10 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={postSubcontractPaymentSubmit}
+                >
                   Post
                 </ButtonComponent>
               </div>
@@ -222,7 +474,10 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={synchronizeF58001Submit}
+                >
                   Synchronize
                 </ButtonComponent>
               </div>
@@ -244,7 +499,10 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={synchronizeSubcontractPaymentCertSubmit}
+                >
                   Synchronize
                 </ButtonComponent>
               </div>
@@ -266,7 +524,10 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={synchronizeMainContractSubmit}
+                >
                   Synchronize
                 </ButtonComponent>
               </div>
@@ -289,6 +550,8 @@ const ManualProcedures = () => {
                 </div>
               </div>
               <div className="e-card-actions">
+                {/* 响应boolean POST /service/subcontract/calculateTotalWDandCertAmount?jobNo=${jobno}&recalculateRententionAmount=false&subcontractNo= */}
+                {/* TODO 接口待优化 */}
                 <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
                   Recalculate
                 </ButtonComponent>
@@ -311,7 +574,10 @@ const ManualProcedures = () => {
                       placeholder="Job Number"
                       floatLabelType="Auto"
                       cssClass="e-outline"
-                      value=""
+                      value={paymentCertPdfJobNo}
+                      input={(value: InputEventArgs) =>
+                        changeUpadatePaymentCertPdfJobNo(value.value)
+                      }
                     />
                   </div>
                   <div className="col-lg-6 col-md-6">
@@ -319,7 +585,10 @@ const ManualProcedures = () => {
                       placeholder="Package Number"
                       floatLabelType="Auto"
                       cssClass="e-outline"
-                      value=""
+                      value={paymentCertPdfPackageNo}
+                      input={(value: InputEventArgs) =>
+                        changeUpadatePaymentCertPdfPackageNo(value.value)
+                      }
                     />
                   </div>
                 </div>
@@ -328,12 +597,19 @@ const ManualProcedures = () => {
                     placeholder="Payment Cert No"
                     floatLabelType="Auto"
                     cssClass="e-outline"
-                    value=""
+                    value={paymentCertPdfPaymentNo}
+                    input={(value: InputEventArgs) =>
+                      changeUpadatePaymentCertPdfPaymentNo(value.value)
+                    }
                   />
                 </div>
               </div>
               <div className="e-card-actions">
-                <ButtonComponent cssClass="e-info full-btn e-card-btn-txt">
+                <ButtonComponent
+                  cssClass="e-info full-btn e-card-btn-txt"
+                  onClick={generatePaymentCertPdfSubmit}
+                  disabled={!paymentCertPdfJobNo}
+                >
                   Generate
                 </ButtonComponent>
               </div>
@@ -341,6 +617,12 @@ const ManualProcedures = () => {
           </div>
         </div>
       </div>
+      <NotificationModal
+        mode={notificationMode}
+        visible={visibleNotificationModal}
+        dialogClose={closeNotification}
+        content={notificationContent}
+      />
     </div>
   )
 }

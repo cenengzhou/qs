@@ -22,8 +22,8 @@ export const ROUTE_LIST: Route[] = [
     element: <ManualProcedures />
   },
   {
-    path: '/Revisisons',
-    name: 'REVISISONS',
+    path: '/Revisions',
+    name: 'REVISIONS',
     element: <Revisions />
   },
   {
@@ -63,7 +63,7 @@ export const ROUTE_LIST: Route[] = [
   },
   {
     path: '/',
-    name: 'REVISISONS',
+    name: 'REVISIONS',
     element: <Revisions />
   }
 ]

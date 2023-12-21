@@ -1,11 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  BaseQueryFn,
+  FetchArgs,
+  createApi,
+  fetchBaseQuery
+} from '@reduxjs/toolkit/query/react'
+
+interface CustomError {
+  data: {
+    status: string
+    message: string
+  }
+  status: number
+}
 
 const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/pcms'
-  }),
+  }) as BaseQueryFn<string | FetchArgs, unknown, CustomError, object>,
   tagTypes: ['updateStatus'],
   endpoints: builder => {
     return {
@@ -140,6 +153,79 @@ const apiSlice = createApi({
         query: queryArg => ({
           url: 'service/subcontract/getSCDetails',
           params: queryArg
+        })
+      }),
+      housekeepAuditTable: builder.mutation<number, string>({
+        query: queryArg => ({
+          url: `service/system/housekeepAuditTable?tableName=${queryArg}`,
+          method: 'POST'
+        })
+      }),
+      runProvisionPostingManually: builder.mutation<
+        void,
+        {
+          glDate?: string | undefined
+          jobNumber?: string | undefined
+        }
+      >({
+        query: ({ glDate, jobNumber }) => ({
+          url: `service/subcontract/runProvisionPostingManually?glDate=${glDate}&jobNumber=${jobNumber}`,
+          method: 'POST'
+        })
+      }),
+      updateCEOApproval: builder.mutation<
+        void,
+        {
+          jobNumber?: string | undefined
+          packageNo?: string | undefined
+        }
+      >({
+        query: ({ jobNumber, packageNo }) => ({
+          url: `service/subcontract/updateCEDApprovalManually?jobNo=${jobNumber}&packageNo=${packageNo}`,
+          method: 'POST'
+        })
+      }),
+      generateSCPackageSnapshotManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/subcontract/generateSCPackageSnapshotManually',
+          method: 'POST'
+        })
+      }),
+      runPaymentPosting: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/payment/runPaymentPosting',
+          method: 'POST'
+        })
+      }),
+      updateF58001FromSCPackageManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/subcontract/updateF58001FromSCPackageManually',
+          method: 'POST'
+        })
+      }),
+      updateF58011FromSCPaymentCertManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/payment/updateF58011FromSCPaymentCertManually',
+          method: 'POST'
+        })
+      }),
+      updateMainCertFromF03B14Manually: builder.mutation<boolean, void>({
+        query: () => ({
+          url: 'service/mainCert/updateMainCertFromF03B14Manually',
+          method: 'POST'
+        })
+      }),
+      generatePaymentPDFAdmin: builder.mutation<
+        string,
+        {
+          jobNo?: string | undefined
+          packageNo?: string | undefined
+          paymentNo?: string | undefined
+        }
+      >({
+        query: ({ jobNo, packageNo, paymentNo }) => ({
+          url: `service/payment/generatePaymentPDFAdmin?jobNo=${jobNo}&packageNo=${packageNo}&paymentNo=${paymentNo}`,
+          method: 'POST'
         })
       })
     }
@@ -572,6 +658,15 @@ export const {
   useGetSCDetailsMutation,
   useGetSessionListQuery,
   useGetAuditTableMapQuery,
-  useGetCutoffPeriodQuery
+  useGetCutoffPeriodQuery,
+  useHousekeepAuditTableMutation,
+  useRunProvisionPostingManuallyMutation,
+  useUpdateCEOApprovalMutation,
+  useGenerateSCPackageSnapshotManuallyMutation,
+  useRunPaymentPostingMutation,
+  useUpdateF58001FromSCPackageManuallyMutation,
+  useUpdateF58011FromSCPaymentCertManuallyMutation,
+  useUpdateMainCertFromF03B14ManuallyMutation,
+  useGeneratePaymentPDFAdminMutation
 } = apiSlice
 export default apiSlice

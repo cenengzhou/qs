@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
@@ -30,7 +29,7 @@ import {
   currentUser,
   hasRolesList
 } from '../../redux/appConfigReducer'
-import { RootState } from '../../redux/store'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
 import {
   Role,
   useGetCurrentUserQuery,
@@ -41,12 +40,12 @@ import RightSidebar from '../RightSidebar'
 import './style.css'
 
 const Header = () => {
-  const dispatch = useDispatch()
-  const env = useSelector((state: RootState) => state.appConfig.env)
-  const getCurrentUser = useSelector(
+  const dispatch = useAppDispatch()
+  const env = useAppSelector((state: RootState) => state.appConfig.env)
+  const getCurrentUser = useAppSelector(
     (state: RootState) => state.appConfig.currentUser
   )
-  const getRolesList = useSelector(
+  const getRolesList = useAppSelector(
     (state: RootState) => state.appConfig.rolesList
   )
   const navigate = useNavigate()
@@ -197,7 +196,7 @@ const Header = () => {
               <ItemDirective
                 prefixIcon="e-icons e-people"
                 text="Admin"
-                click={() => navigate('/admin')}
+                click={() => navigate('/admin/Revisions')}
               />
             )}
           </ItemsDirective>

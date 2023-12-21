@@ -1,12 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { ToastComponent } from '@syncfusion/ej2-react-notifications'
-import {
-  PositionDataModel,
-  hideSpinner,
-  showSpinner
-} from '@syncfusion/ej2-react-popups'
+import { hideSpinner, showSpinner } from '@syncfusion/ej2-react-popups'
 import {
   CellDirective,
   CellsDirective,
@@ -21,11 +16,22 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
+import NotificationModal from '../../../components/NotificationModal'
 import { useGetSessionListQuery } from '../../../services'
 import './style.css'
 import dayjs from 'dayjs'
 
 const Session = () => {
+  const [notificationContent, setNotificationContent] = useState<string>('')
+  const [visibleNotificationModal, setVisibleNotificationModal] =
+    useState<boolean>(false)
+  const [notificationMode, setNotificationMode] = useState<
+    'Success' | 'Fail' | 'Warn'
+  >('Success')
+
+  const closeNotification = () => {
+    setVisibleNotificationModal(false)
+  }
   const {
     isLoading,
     isError,
@@ -42,14 +48,17 @@ const Session = () => {
     }
   }, [isLoading])
 
-  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const toastInstance = useRef<ToastComponent>(null)
-
-  function toastCreated() {
-    if (isError) {
-      toastInstance.current?.show()
+  useEffect(() => {
+    setVisibleNotificationModal(true)
+    setNotificationMode('Fail')
+    if (error && 'status' in error) {
+      setNotificationContent(error?.data.message)
+    } else {
+      setNotificationContent('Error!')
     }
-  }
+  }, [isError])
+
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
 
   const dataSource = sessionDetails?.map(item => {
     const {
@@ -86,20 +95,10 @@ const Session = () => {
       )
     }
   }, [])
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const position: PositionDataModel = { X: 'Center' }
+
   return (
     <div className="admin-container">
       <div className="admin-content">
-        <ToastComponent
-          ref={toastInstance}
-          title="Error!"
-          position={position}
-          cssClass="e-toast-danger"
-          content={error}
-          created={toastCreated}
-        />
-
         <SpreadsheetComponent
           ref={spreadsheetRef}
           allowOpen={true}
@@ -151,6 +150,12 @@ const Session = () => {
           Expire Selected
         </ButtonComponent>
       </div>
+      <NotificationModal
+        mode={notificationMode}
+        visible={visibleNotificationModal}
+        dialogClose={closeNotification}
+        content={notificationContent}
+      />
     </div>
   )
 }
