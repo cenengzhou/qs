@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { hideSpinner, showSpinner } from '@syncfusion/ej2-react-popups'
 import {
   CellDirective,
   CellsDirective,
@@ -17,11 +16,14 @@ import {
 } from '@syncfusion/ej2-react-spreadsheet'
 
 import NotificationModal from '../../../components/NotificationModal'
+import { closeLoading, openLoading } from '../../../redux/loadingReducer'
+import { useAppDispatch } from '../../../redux/store'
 import { useGetSessionListQuery } from '../../../services'
 import './style.css'
 import dayjs from 'dayjs'
 
 const Session = () => {
+  const dispatch = useAppDispatch()
   const [notificationContent, setNotificationContent] = useState<string>('')
   const [visibleNotificationModal, setVisibleNotificationModal] =
     useState<boolean>(false)
@@ -40,21 +42,22 @@ const Session = () => {
   } = useGetSessionListQuery()
 
   useEffect(() => {
-    const root = document.getElementById('root')!
     if (isLoading) {
-      showSpinner(root)
+      dispatch(openLoading())
     } else {
-      hideSpinner(root)
+      dispatch(closeLoading())
     }
   }, [isLoading])
 
   useEffect(() => {
-    setVisibleNotificationModal(true)
-    setNotificationMode('Fail')
-    if (error && 'status' in error) {
-      setNotificationContent(error?.data.message)
-    } else {
-      setNotificationContent('Error!')
+    if (error) {
+      setVisibleNotificationModal(true)
+      setNotificationMode('Fail')
+      if ('data' in error) {
+        setNotificationContent(error?.data.message)
+      } else {
+        setNotificationContent('Error!')
+      }
     }
   }, [isError])
 
