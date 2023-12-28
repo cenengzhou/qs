@@ -6,7 +6,7 @@ import {
   fetchBaseQuery
 } from '@reduxjs/toolkit/query/react'
 
-interface CustomError {
+export interface CustomError {
   data: {
     status: string
     message: string
@@ -139,14 +139,31 @@ const apiSlice = createApi({
           params: queryArg
         })
       }),
-      getAllWorkScopes: builder.query<AllWorkScopesResponse, void>({
+      getAllWorkScopes: builder.query<AllWorkScopesResponseTrans, void>({
         query: () => ({
           url: 'service/adl/getAllWorkScopes'
-        })
+        }),
+        transformResponse: (
+          response: AllWorkScopesResponse
+        ): AllWorkScopesResponseTrans => {
+          const data = response.map((item: WorkScopes) => {
+            return {
+              codeWorkscope: Number(item.codeWorkscope?.trim()),
+              workscopeDescription: item.workscopeDescription?.trim()
+            }
+          })
+          return data
+        }
       }),
-      getSubcontract: builder.mutation<Subcontract, void>({
-        query: () => ({
-          url: 'service/subcontract/getSubcontract'
+      getSubcontract: builder.mutation<
+        Subcontract,
+        {
+          jobNo?: string
+          subcontractNo?: number
+        }
+      >({
+        query: ({ jobNo, subcontractNo }) => ({
+          url: `service/subcontract/getSubcontract?jobNo=${jobNo}&subcontractNo=${subcontractNo}`
         })
       }),
       getSCDetails: builder.mutation<SCDetail[], SCDetailRequest>({
@@ -226,6 +243,13 @@ const apiSlice = createApi({
         query: ({ jobNo, packageNo, paymentNo }) => ({
           url: `service/payment/generatePaymentPDFAdmin?jobNo=${jobNo}&packageNo=${packageNo}&paymentNo=${paymentNo}`,
           method: 'POST'
+        })
+      }),
+      updateSubcontractAdmin: builder.mutation<void, Subcontract>({
+        query: queryArg => ({
+          url: 'service/subcontract/updateSubcontractAdmin',
+          method: 'POST',
+          body: queryArg
         })
       })
     }
@@ -461,7 +485,12 @@ export type WorkScopes = {
   codeWorkscope?: string
   workscopeDescription?: string
 }
+export type WorkScopesTrans = {
+  codeWorkscope?: number
+  workscopeDescription?: string
+}
 
+export type AllWorkScopesResponseTrans = WorkScopesTrans[]
 export type AllWorkScopesResponse = WorkScopes[]
 
 export type SubcontractResquest = JobNo & {
@@ -667,6 +696,7 @@ export const {
   useUpdateF58001FromSCPackageManuallyMutation,
   useUpdateF58011FromSCPaymentCertManuallyMutation,
   useUpdateMainCertFromF03B14ManuallyMutation,
-  useGeneratePaymentPDFAdminMutation
+  useGeneratePaymentPDFAdminMutation,
+  useUpdateSubcontractAdminMutation
 } = apiSlice
 export default apiSlice

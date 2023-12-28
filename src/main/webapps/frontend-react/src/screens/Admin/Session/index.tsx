@@ -108,11 +108,11 @@ const Session = () => {
           openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
           allowSave={true}
           saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
+          allowEditing={false}
         >
           <SheetsDirective>
             <SheetDirective
               name="Session"
-              isProtected={true}
               protectSettings={{ selectCells: true }}
             >
               <RangesDirective>

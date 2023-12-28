@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
-import { TextBoxComponent } from '@syncfusion/ej2-react-inputs'
+import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
+import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 import {
   CellDirective,
   CellsDirective,
@@ -20,11 +20,19 @@ import {
 
 import DatePicker from '../../../../components/DatePicker'
 import { useHasRole } from '../../../../hooks/useHasRole'
+import dayjs from 'dayjs'
 
 const RocSubDetail = () => {
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
+  const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
+
+  const [jobNo, setJobNo] = useState<string>('')
+  const [itemNo, setItemNo] = useState<string>('')
+  const [date, setDate] = useState<string>('')
   useEffect(() => {
     const spreadsheet = spreadsheetRef.current
+    spreadsheetRef.current?.refresh()
+
     if (spreadsheet) {
       spreadsheet.cellFormat(
         {
@@ -37,7 +45,19 @@ const RocSubDetail = () => {
         'A1:J1'
       )
     }
-  }, [])
+  }, [isQsAdm])
+
+  const updateJobNo = (value?: string) => {
+    setJobNo(value ?? '')
+  }
+  const updateItemNo = (value?: string) => {
+    setItemNo(value ?? '')
+  }
+  const changeDate = (e: calendarsChangedEventArgs) => {
+    setDate(dayjs(e.value).format('YYYY-MM-DD') ?? new Date())
+  }
+
+  const search = async () => {}
 
   return (
     <div className="admin-container">
@@ -47,6 +67,10 @@ const RocSubDetail = () => {
             placeholder="Job Number"
             floatLabelType="Auto"
             cssClass="e-outline"
+            value={jobNo}
+            input={(value: InputEventArgs) => {
+              updateJobNo(value.value)
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -54,18 +78,29 @@ const RocSubDetail = () => {
             placeholder="Item No (Optional)"
             floatLabelType="Auto"
             cssClass="e-outline"
+            value={itemNo}
+            input={(value: InputEventArgs) => {
+              updateItemNo(value.value)
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <DatePicker placeholder="Date" />
+          <DatePicker placeholder="Date" value={date} onChange={changeDate} />
         </div>
 
         <div className="col-lg-3 col-md-3">
-          <ButtonComponent cssClass="e-info full-btn">Search</ButtonComponent>
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            disabled={!(jobNo && date)}
+            onClick={search}
+          >
+            Search
+          </ButtonComponent>
         </div>
       </div>
       <div className="admin-content">
         <SpreadsheetComponent
+          allowDataValidation={true}
           ref={spreadsheetRef}
           allowOpen={true}
           openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
@@ -79,14 +114,10 @@ const RocSubDetail = () => {
               protectSettings={{ selectCells: true }}
             >
               <RangesDirective>
-                {/* <RangeDirective
+                <RangeDirective
                   dataSource={[]}
                   startCell="A2"
                   showFieldAsHeader={false}
-                ></RangeDirective> */}
-                <RangeDirective
-                  template={dropDownList}
-                  address="J2:J9"
                 ></RangeDirective>
               </RangesDirective>
               <RowsDirective>
@@ -108,51 +139,51 @@ const RocSubDetail = () => {
               <ColumnsDirective>
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective
-                  isLocked={!useHasRole('ROLE_QS_QS_ADM')}
                   width={130}
+                  isLocked={!isQsAdm}
                 ></ColumnDirective>
                 <ColumnDirective
-                  isLocked={!useHasRole('ROLE_QS_QS_ADM')}
                   width={100}
+                  isLocked={!isQsAdm}
                 ></ColumnDirective>
                 <ColumnDirective
-                  isLocked={!useHasRole('ROLE_QS_QS_ADM')}
                   width={80}
+                  isLocked={!isQsAdm}
                 ></ColumnDirective>
                 <ColumnDirective
-                  isLocked={!useHasRole('ROLE_QS_QS_ADM')}
                   width={80}
+                  isLocked={!isQsAdm}
                 ></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective width={80}></ColumnDirective>
                 <ColumnDirective isLocked={false} width={180}></ColumnDirective>
                 <ColumnDirective
-                  isLocked={!useHasRole('ROLE_QS_QS_ADM')}
                   width={180}
+                  isLocked={!isQsAdm}
                 ></ColumnDirective>
-                <ColumnDirective isLocked={false} width={180}></ColumnDirective>
+                <ColumnDirective
+                  validation={{
+                    type: 'List',
+                    value1: 'INACTIVE,ACTIVE',
+                    ignoreBlank: false
+                  }}
+                  width={180}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
               </ColumnsDirective>
             </SheetDirective>
           </SheetsDirective>
         </SpreadsheetComponent>
       </div>
+      <div className="row">
+        <div className="col-lg-12 col-md-12">
+          <ButtonComponent cssClass="e-info full-btn">
+            Update Roc Subdetail
+          </ButtonComponent>
+        </div>
+      </div>
     </div>
   )
 }
-const dropDownList = (): Node => {
-  const selete = document.createElement('input')
-  // const experience = [
-  //   '0 - 1 year',
-  //   '1 - 3 years',
-  //   '3 - 5 years',
-  //   '5 - 10 years'
-  // ]
-  // return (
-  //   <DropDownListComponent
-  //     placeholder="Experience"
-  //     dataSource={experience}
-  //   ></DropDownListComponent>
-  // )
-  return selete
-}
+
 export default RocSubDetail

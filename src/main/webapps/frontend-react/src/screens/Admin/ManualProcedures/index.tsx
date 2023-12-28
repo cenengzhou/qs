@@ -14,6 +14,7 @@ import { GLOBALPARAMETER } from '../../../constants/global'
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
 import { useAppDispatch } from '../../../redux/store'
 import {
+  CustomError,
   useGeneratePaymentPDFAdminMutation,
   useGenerateSCPackageSnapshotManuallyMutation,
   useGetAuditTableMapQuery,
@@ -93,20 +94,16 @@ const ManualProcedures = () => {
       await updateHouseKeep(auditTableName)
         .unwrap()
         .then(payload => {
-          dispatch(closeLoading())
           if (payload) {
-            setNotificationMode('Success')
-            setVisibleNotificationModal(true)
             setNotificationContent(
               `Removed ${payload} records from ${auditTableName}`
             )
+            commonSuccess()
           }
         })
-        .catch(error => {
-          dispatch(closeLoading())
-          setNotificationMode('Fail')
-          setVisibleNotificationModal(true)
+        .catch((error: CustomError) => {
           setNotificationContent(error.data.message)
+          commonFailed()
         })
     } catch (err) {
       console.error('failed:', err)
@@ -122,42 +119,57 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          dispatch(closeLoading())
-          setNotificationMode('Success')
-          setVisibleNotificationModal(true)
           setNotificationContent('Posted.')
+          commonSuccess()
+          setProvisionPostingJobNo('')
+          setProvisionPostingDate(dayjs(new Date()).format('YYYY-MM-DD'))
         })
-        .catch(error => {
-          dispatch(closeLoading())
-          setNotificationMode('Fail')
-          setVisibleNotificationModal(true)
+        .catch((error: CustomError) => {
           setNotificationContent(error.data.message)
+          commonFailed()
         })
     } catch (err) {
       console.error(err)
     }
-    setProvisionPostingJobNo('')
-    setProvisionPostingDate(dayjs(new Date()).format('YYYY-MM-DD'))
   }
 
   const updateCeoApprovalSubmit = async () => {
+    dispatch(openLoading())
     try {
-      const updateCeoApprovalPayload = await updateCeoApproval({
+      await updateCeoApproval({
         jobNumber: updateCeoApprovalJobNo,
         packageNo: updateCeoApprovalPackageNo
       })
-      setUpdateCeoApprovalJobNo('')
-      setUpdateCeoApprovalPackageNo('')
-      console.log(updateCeoApprovalPayload)
+        .unwrap()
+        .then(() => {
+          setNotificationContent('Update CED Approval completed.')
+          commonSuccess()
+          setUpdateCeoApprovalJobNo('')
+          setUpdateCeoApprovalPackageNo('')
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('Failed:', err)
     }
   }
 
   const generateSnapshotSubmit = async () => {
+    dispatch(openLoading())
     try {
-      const generateSnapshotPayload = await generateSnapshot()
-      console.log(generateSnapshotPayload)
+      await generateSnapshot()
+        .unwrap()
+        .then(payload => {
+          console.log(payload)
+          setNotificationContent('Generate Payment Cert PDF completed.')
+          commonSuccess()
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('Failed:', err)
     }
@@ -165,8 +177,16 @@ const ManualProcedures = () => {
 
   const postSubcontractPaymentSubmit = async () => {
     try {
-      const postSubcontractPaymentPayload = await postSubcontractPayment()
-      console.log(postSubcontractPaymentPayload)
+      await postSubcontractPayment()
+        .unwrap()
+        .then(() => {
+          setNotificationContent('succuss')
+          commonSuccess()
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('failed:', err)
     }
@@ -174,9 +194,16 @@ const ManualProcedures = () => {
 
   const synchronizeF58001Submit = async () => {
     try {
-      const synchronizeF58001SubmitPayload =
-        await synchronizeSubcontractPackage()
-      console.log(synchronizeF58001SubmitPayload)
+      await synchronizeSubcontractPackage()
+        .unwrap()
+        .then(() => {
+          setNotificationContent('Success')
+          commonSuccess()
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('Failed:', err)
     }
@@ -184,9 +211,16 @@ const ManualProcedures = () => {
 
   const synchronizeSubcontractPaymentCertSubmit = async () => {
     try {
-      const synchronizeSubcontractPaymentCertPayload =
-        await synchronizeSubcontractPaymentCert()
-      console.log(synchronizeSubcontractPaymentCertPayload)
+      await synchronizeSubcontractPaymentCert()
+        .unwrap()
+        .then(() => {
+          setNotificationContent('Success')
+          commonSuccess()
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('Failed:', err)
     }
@@ -194,23 +228,39 @@ const ManualProcedures = () => {
 
   const synchronizeMainContractSubmit = async () => {
     try {
-      const synchronizeMainContractPayload = await synchronizeMainContract()
-      console.log(synchronizeMainContractPayload)
+      await synchronizeMainContract()
+        .unwrap()
+        .then(() => {
+          setNotificationContent('Success')
+          commonSuccess()
+        })
+        .catch(error => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
     } catch (err) {
       console.error('Failed:', err)
     }
   }
   const generatePaymentCertPdfSubmit = async () => {
     try {
-      const generatePaymentCertPdfPayload = await generatePaymentCertPdf({
+      await generatePaymentCertPdf({
         jobNo: paymentCertPdfJobNo,
         packageNo: paymentCertPdfPackageNo,
         paymentNo: paymentCertPdfPaymentNo
       })
-      setPaymentCertPdfJobNo('')
-      setPaymentCertPdfPackageNo('')
-      setPaymentCertPdfPaymentNo('')
-      console.log(generatePaymentCertPdfPayload)
+        .unwrap()
+        .then(() => {
+          setNotificationContent('Success')
+          commonSuccess()
+          setPaymentCertPdfJobNo('')
+          setPaymentCertPdfPackageNo('')
+          setPaymentCertPdfPaymentNo('')
+        })
+        .catch((error: CustomError) => {
+          setNotificationContent(error.data.message)
+          commonFailed()
+        })
       // {data:"1 payment PDF(s) failed to generate. Please check the log file."}
     } catch (err) {
       console.error('Failed:', err)
@@ -245,6 +295,17 @@ const ManualProcedures = () => {
     setVisibleNotificationModal(false)
   }
 
+  const commonFailed = () => {
+    dispatch(closeLoading())
+    setNotificationMode('Fail')
+    setVisibleNotificationModal(true)
+  }
+
+  const commonSuccess = () => {
+    dispatch(closeLoading())
+    setNotificationMode('Success')
+    setVisibleNotificationModal(true)
+  }
   return (
     <div className="admin-container">
       <div className="manual-procedures-container">
