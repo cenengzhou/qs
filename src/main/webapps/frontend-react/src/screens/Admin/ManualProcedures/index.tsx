@@ -161,8 +161,7 @@ const ManualProcedures = () => {
     try {
       await generateSnapshot()
         .unwrap()
-        .then(payload => {
-          console.log(payload)
+        .then(() => {
           setNotificationContent('Generate Payment Cert PDF completed.')
           commonSuccess()
         })

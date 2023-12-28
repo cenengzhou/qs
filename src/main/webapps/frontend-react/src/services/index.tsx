@@ -155,21 +155,15 @@ const apiSlice = createApi({
           return data
         }
       }),
-      getSubcontract: builder.mutation<
-        Subcontract,
-        {
-          jobNo?: string
-          subcontractNo?: number
-        }
-      >({
+      getSubcontract: builder.mutation<Subcontract, SCDetailRequest>({
         query: ({ jobNo, subcontractNo }) => ({
           url: `service/subcontract/getSubcontract?jobNo=${jobNo}&subcontractNo=${subcontractNo}`
         })
       }),
       getSCDetails: builder.mutation<SCDetail[], SCDetailRequest>({
-        query: queryArg => ({
-          url: 'service/subcontract/getSCDetails',
-          params: queryArg
+        query: ({ jobNo, subcontractNo }) => ({
+          url: `service/subcontract/getSCDetails?jobNo=${jobNo}&subcontractNo=${subcontractNo}`,
+          method: 'GET'
         })
       }),
       housekeepAuditTable: builder.mutation<number, string>({
@@ -641,7 +635,7 @@ export type SCDetail = CreatedUser & {
 
 export type SCDetailRequest = {
   jobNo?: string
-  subcontractNo?: string
+  subcontractNo?: number
 }
 
 export type SessionListDetail = {

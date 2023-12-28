@@ -82,7 +82,6 @@ const Subcontract = () => {
         dispatch(closeLoading())
         if (payload instanceof Object) {
           setSubcontractRecord(payload)
-          console.log(SubcontractRecord)
         } else {
           setNotificationMode('Warn')
           setNotificationContent('Subcontract not found')
@@ -98,7 +97,6 @@ const Subcontract = () => {
   }
 
   const updateSubcontractSubmit = async () => {
-    console.log(SubcontractRecord)
     dispatch(openLoading())
     await updateSubcontract(SubcontractRecord)
       .unwrap()

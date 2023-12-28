@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from 'react'
 
+import { Query } from '@syncfusion/ej2-data'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
 import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
@@ -23,6 +24,18 @@ import { useHasRole } from '../../../../hooks/useHasRole'
 import dayjs from 'dayjs'
 
 const RocSubDetail = () => {
+  const query = new Query().select([
+    'itemNo',
+    'description',
+    'amountBest',
+    'amountRealistic',
+    'amountWorst',
+    'year',
+    'month',
+    'hyperlink',
+    'remarks',
+    'systemStatus'
+  ])
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
   const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
 
@@ -116,6 +129,7 @@ const RocSubDetail = () => {
               <RangesDirective>
                 <RangeDirective
                   dataSource={[]}
+                  query={query}
                   startCell="A2"
                   showFieldAsHeader={false}
                 ></RangeDirective>
