@@ -4,11 +4,13 @@ import { Query } from '@syncfusion/ej2-data'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
   FocusOutEventArgs,
+  InputEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
 import {
   CellDirective,
+  CellSaveEventArgs,
   CellsDirective,
   ColumnDirective,
   ColumnsDirective,
@@ -21,70 +23,50 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
-import NotificationModal from '../../../../components/NotificationModal'
-import { useHasRole } from '../../../../hooks/useHasRole'
+import { regex } from '..'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import {
+  setNotificationContent,
+  setNotificationMode,
+  setNotificationVisible
+} from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import {
   CustomError,
   SCDetail,
-  useGetSCDetailsMutation
+  useGetSCDetailsMutation,
+  useUpdateSubcontractDetailListAdminMutation
 } from '../../../../services'
+import { getAddressIndex, getAddressKey, selectQuery } from './constants'
 import './style.css'
 
-const SubcontractDetail = () => {
+const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
   const dispatch = useAppDispatch()
-  const query = new Query().select([
-    'id',
-    'jobNo',
-    'subcontract.packageNo',
-    'sequenceNo',
-    'description',
-    'remark',
-    'objectCode',
-    'subsidiaryCode',
-    'billItem',
-    'unit',
-    'lineType',
-    'approved',
-    'resourceNo',
-    'scRate',
-    'quantity',
-    'amountCumulativeCert',
-    'cumCertifiedQuantity',
-    'amountCumulativeWD',
-    'cumWorkDoneQuantity',
-    'amountPostedCert',
-    'postedCertifiedQuantity',
-    'amountSubcontractNew',
-    'newQuantity',
-    'originalQuantity',
-    'toBeApprovedRate',
-    'amountSubcontract',
-    'amountBudget',
-    'lastModifiedDate',
-    'lastModifiedUser',
-    'createdDate',
-    'createdUser',
-    'systemStatus',
-    'typeRecoverable'
-  ])
-  const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
+  const query = new Query().select(selectQuery)
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
+  const validateInput = (value: InputEventArgs) => {
+    if (value.value && regex.test(value.value)) {
+      value.container?.classList.add('e-success')
+      value.container?.classList.remove('e-error')
+    } else if (value.value && !regex.test(value.value)) {
+      value.container?.classList.remove('e-success')
+      value.container?.classList.add('e-error')
+    } else {
+      value.container?.classList.remove('e-error')
+      value.container?.classList.remove('e-success')
+    }
+  }
 
+  const updateDetails = useRef<SCDetail[]>([])
+  const detail = useRef<SCDetail>({ id: undefined })
   const [searchRecord, setSearchRecord] = useState<{
     jobNo?: string
     subcontractNo?: number
   }>({ jobNo: undefined, subcontractNo: undefined })
-  const [detail, setDetail] = useState<SCDetail[]>([])
-  const [notificationContent, setNotificationContent] = useState<string>('')
-  const [visibleNotificationModal, setVisibleNotificationModal] =
-    useState<boolean>(false)
-  const [notificationMode, setNotificationMode] = useState<
-    'Success' | 'Fail' | 'Warn'
-  >('Success')
-
+  const [details, setDetails] = useState<SCDetail[]>([])
   const [getScdetails, { isLoading }] = useGetSCDetailsMutation()
+  const [updateDetail] = useUpdateSubcontractDetailListAdminMutation()
+
   const getData = async () => {
     dispatch(openLoading())
     await getScdetails({
@@ -94,19 +76,67 @@ const SubcontractDetail = () => {
       .unwrap()
       .then(payload => {
         dispatch(closeLoading())
-        setDetail(payload)
+        setDetails(payload)
       })
       .catch((error: CustomError) => {
         dispatch(closeLoading())
-        setNotificationContent(error.data.message)
-        setNotificationMode('Fail')
-        setVisibleNotificationModal(true)
+        dispatch(setNotificationMode('Fail'))
+        dispatch(setNotificationContent(error.data.message))
+        dispatch(setNotificationVisible(true))
         console.error(error.data.message)
       })
   }
+  const updateDedail = async () => {
+    if (!updateDetails.current.length) {
+      dispatch(setNotificationMode('Warn'))
+      dispatch(setNotificationContent('No Subcontract Detail modified'))
+      dispatch(setNotificationVisible(true))
+      return
+    }
+    dispatch(openLoading())
+    await updateDetail(updateDetails.current)
+      .then(() => {
+        dispatch(closeLoading())
+
+        dispatch(setNotificationMode('Success'))
+        dispatch(setNotificationContent('Subcontract Detail updated'))
+        dispatch(setNotificationVisible(true))
+      })
+      .catch((error: CustomError) => {
+        dispatch(closeLoading())
+
+        dispatch(setNotificationMode('Fail'))
+        dispatch(setNotificationContent(error.data.message))
+        dispatch(setNotificationVisible(true))
+      })
+  }
+
+  const cellSave = (args: CellSaveEventArgs) => {
+    const index = getAddressIndex(args.address)
+    const key = getAddressKey(args.address)
+
+    detail.current = { id: details[index].id, [`${key}`]: args.value }
+    let obj: SCDetail = {}
+    if (updateDetails.current.find(item => item.id === detail.current.id)) {
+      obj =
+        updateDetails.current.find(item => item.id === detail.current.id) ?? {}
+    } else {
+      obj = details.find(item => item.id === detail.current.id) ?? {}
+    }
+    obj = { ...obj, [`${key}`]: args.value }
+    const updateIndex = updateDetails.current.findIndex(
+      item => item.id === obj.id
+    )
+    if (updateIndex === -1) {
+      updateDetails.current.push(obj)
+    } else {
+      updateDetails.current[updateIndex] = obj
+    }
+    console.log(updateDetails.current)
+  }
+
   useEffect(() => {
     const spreadsheet = spreadsheetRef.current
-    spreadsheetRef.current?.refresh()
 
     if (spreadsheet) {
       spreadsheet.cellFormat(
@@ -120,17 +150,20 @@ const SubcontractDetail = () => {
         'A1:AG1'
       )
     }
+    spreadsheetRef.current?.refresh()
   }, [isQsAdm])
 
   // 清除殘留spreadsheet的數據
   useEffect(() => {
     spreadsheetRef.current!.sheets[0].rows =
       spreadsheetRef.current!.sheets[0].rows?.slice(0, 1)
+    const spreadsheet = spreadsheetRef.current
+    if (spreadsheet) {
+      spreadsheet.numberFormat('#,##0.0000_);[Red]-#,##0.0000', 'N2:N1000')
+      spreadsheet.numberFormat('$#,##0.0000_);[Red]-$#,##0.0000', 'O2:AA1000')
+    }
   }, [isLoading])
 
-  const closeNotification = () => {
-    setVisibleNotificationModal(false)
-  }
   return (
     <div className="admin-container">
       {/* input */}
@@ -141,9 +174,10 @@ const SubcontractDetail = () => {
             floatLabelType="Auto"
             cssClass="e-outline"
             value={searchRecord.jobNo}
-            blur={(e: FocusOutEventArgs) =>
+            blur={(e: FocusOutEventArgs) => {
               setSearchRecord({ ...searchRecord, jobNo: e.value ?? '' })
-            }
+              validateInput(e)
+            }}
           />
         </div>
         <div className="col-lg-4 col-md-4">
@@ -163,7 +197,13 @@ const SubcontractDetail = () => {
         </div>
         <div className="col-lg-4 col-md-4">
           <ButtonComponent
-            disabled={!(searchRecord.jobNo && !!searchRecord.subcontractNo)}
+            disabled={
+              !(
+                regex.test(searchRecord.jobNo ?? '') &&
+                searchRecord.jobNo &&
+                !!searchRecord.subcontractNo
+              )
+            }
             cssClass="e-info full-btn"
             onClick={() => {
               getData()
@@ -173,18 +213,24 @@ const SubcontractDetail = () => {
           </ButtonComponent>
         </div>
       </div>
-
       <div className="admin-content">
-        <SpreadsheetComponent ref={spreadsheetRef} allowDataValidation={true}>
+        <SpreadsheetComponent
+          ref={spreadsheetRef}
+          allowDataValidation={true}
+          cellSave={cellSave}
+          allowEditing={!!details.length}
+        >
           <SheetsDirective>
             <SheetDirective
               name="Subcontract Detail"
               isProtected={true}
-              protectSettings={{ selectCells: true }}
+              protectSettings={{ selectCells: true, formatCells: true }}
+              frozenRows={1}
+              selectedRange="A2"
             >
               <RangesDirective>
                 <RangeDirective
-                  dataSource={detail}
+                  dataSource={details}
                   query={query}
                   startCell="A2"
                   showFieldAsHeader={false}
@@ -353,12 +399,17 @@ const SubcontractDetail = () => {
           </SheetsDirective>
         </SpreadsheetComponent>
       </div>
-      <NotificationModal
-        mode={notificationMode}
-        visible={visibleNotificationModal}
-        dialogClose={closeNotification}
-        content={notificationContent}
-      />
+      <div className="row">
+        <div className="col-lg-12 col-md-12">
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            onClick={updateDedail}
+            disabled={!details.length}
+          >
+            Update Subcontract Detail
+          </ButtonComponent>
+        </div>
+      </div>
     </div>
   )
 }

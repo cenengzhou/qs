@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react'
 
 import {
@@ -5,6 +6,7 @@ import {
   ChangeEventArgs as CheckBoxChangeEventArgs,
   CheckBoxComponent
 } from '@syncfusion/ej2-react-buttons'
+import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
 import {
   DropDownListComponent,
   ChangeEventArgs as DropdownChangeEventArgs
@@ -17,10 +19,15 @@ import {
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
 
+import { regex } from '..'
 import DatePicker from '../../../../components/DatePicker'
-import NotificationModal from '../../../../components/NotificationModal'
 import { GLOBALPARAMETER } from '../../../../constants/global'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import {
+  setNotificationContent,
+  setNotificationMode,
+  setNotificationVisible
+} from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import {
   CustomError,
@@ -29,13 +36,9 @@ import {
   useGetSubcontractMutation,
   useUpdateSubcontractAdminMutation
 } from '../../../../services'
-import {
-  PaymentMethodData,
-  commonFields,
-  regex,
-  workScopesFields
-} from './interface'
+import { PaymentMethodData, commonFields, workScopesFields } from './interface'
 import './style.css'
+import dayjs from 'dayjs'
 
 const Subcontract = () => {
   const dispatch = useAppDispatch()
@@ -50,16 +53,6 @@ const Subcontract = () => {
     jobNo?: string
     subcontractNo?: number
   }>({ jobNo: undefined, subcontractNo: undefined })
-  const [notificationContent, setNotificationContent] = useState<string>('')
-  const [visibleNotificationModal, setVisibleNotificationModal] =
-    useState<boolean>(false)
-  const [notificationMode, setNotificationMode] = useState<
-    'Success' | 'Fail' | 'Warn'
-  >('Success')
-
-  const closeNotification = () => {
-    setVisibleNotificationModal(false)
-  }
 
   const validateInput = (value: InputEventArgs) => {
     if (value.value && regex.test(value.value)) {
@@ -83,16 +76,17 @@ const Subcontract = () => {
         if (payload instanceof Object) {
           setSubcontractRecord(payload)
         } else {
-          setNotificationMode('Warn')
-          setNotificationContent('Subcontract not found')
-          setVisibleNotificationModal(true)
+          dispatch(setNotificationMode('Warn'))
+          dispatch(setNotificationContent('Subcontract not found'))
+          dispatch(setNotificationVisible(true))
         }
       })
       .catch((error: CustomError) => {
         dispatch(closeLoading())
-        setVisibleNotificationModal(true)
-        setNotificationMode('Fail')
-        setNotificationContent(error.data.message)
+
+        dispatch(setNotificationMode('Fail'))
+        dispatch(setNotificationContent(error.data.message))
+        dispatch(setNotificationVisible(true))
       })
   }
 
@@ -102,15 +96,17 @@ const Subcontract = () => {
       .unwrap()
       .then(() => {
         dispatch(closeLoading())
-        setNotificationMode('Success')
-        setNotificationContent('Subcontract updated.')
-        setVisibleNotificationModal(true)
+
+        dispatch(setNotificationMode('Success'))
+        dispatch(setNotificationContent('Subcontract updated.'))
+        dispatch(setNotificationVisible(true))
       })
       .catch((error: CustomError) => {
         dispatch(closeLoading())
-        setNotificationMode('Fail')
-        setNotificationContent(error.data.message)
-        setVisibleNotificationModal(true)
+        dispatch(setNotificationMode('Fail'))
+        dispatch(setNotificationContent(error.data.message))
+        dispatch(setNotificationVisible(true))
+
         console.error(error)
       })
   }
@@ -151,7 +147,11 @@ const Subcontract = () => {
             cssClass="e-info full-btn"
             onClick={getSubcontractSubmit}
             disabled={
-              !(subcontractSearch.subcontractNo && subcontractSearch.jobNo)
+              !(
+                regex.test(subcontractSearch.jobNo ?? '') &&
+                subcontractSearch.subcontractNo &&
+                subcontractSearch.jobNo
+              )
             }
           >
             Search
@@ -171,7 +171,6 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   value={SubcontractRecord?.jobInfo?.jobNo}
                   readOnly
-                  // SubcontractRecord.jobInfo.jobNo
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -181,7 +180,6 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   value={SubcontractRecord?.packageNo}
                   readOnly
-                  // SubcontractRecord.packageNo
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -196,7 +194,6 @@ const Subcontract = () => {
                       vendorNo: value.value
                     })
                   }}
-                  // SubcontractRecord.vendorNo
                 />
               </div>
             </div>
@@ -213,7 +210,6 @@ const Subcontract = () => {
                       nameSubcontractor: value.value
                     })
                   }}
-                  // SubcontractRecord.nameSubcontractor
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -228,7 +224,6 @@ const Subcontract = () => {
                       approvalRoute: value.value
                     })
                   }}
-                  // SubcontractRecord.approvalRoute
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -243,7 +238,6 @@ const Subcontract = () => {
                       internalJobNo: value.value
                     })
                   }}
-                  // SubcontractRecord.internalJobNo
                 />
               </div>
             </div>
@@ -263,7 +257,6 @@ const Subcontract = () => {
                       notes: value.value
                     })
                   }}
-                  // SubcontractRecord.notes
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -279,7 +272,6 @@ const Subcontract = () => {
                       description: value.value
                     })
                   }}
-                  // SubcontractRecord.description
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -295,7 +287,6 @@ const Subcontract = () => {
                       paymentTermsDescription: value.value
                     })
                   }}
-                  // SubcontractRecord.paymentTermsDescription
                 />
               </div>
             </div>
@@ -313,7 +304,6 @@ const Subcontract = () => {
                       periodForPayment: value.value
                     })
                   }}
-                  // SubcontractRecord.periodForPayment
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -329,7 +319,6 @@ const Subcontract = () => {
                       executionMethodMainContract: value.value
                     })
                   }}
-                  // SubcontractRecord.executionMethodMainContract
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -345,7 +334,6 @@ const Subcontract = () => {
                       executionMethodPropsed: value.value
                     })
                   }}
-                  // SubcontractRecord.executionMethodPropsed
                 />
               </div>
             </div>
@@ -363,7 +351,6 @@ const Subcontract = () => {
                       reasonLoa: value.value
                     })
                   }}
-                  // SubcontractRecord.reasonLoa
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -379,7 +366,6 @@ const Subcontract = () => {
                       reasonQuotation: value.value
                     })
                   }}
-                  // SubcontractRecord.reasonQuotation
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -395,7 +381,6 @@ const Subcontract = () => {
                       reasonManner: value.value
                     })
                   }}
-                  // SubcontractRecord.reasonManner
                 />
               </div>
             </div>
@@ -417,7 +402,6 @@ const Subcontract = () => {
                       cpfCalculation: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.cpfCalculation
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -435,7 +419,6 @@ const Subcontract = () => {
                       formOfSubcontract: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.formOfSubcontract
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -472,7 +455,6 @@ const Subcontract = () => {
                       paymentCurrency: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.paymentCurrency
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -490,7 +472,6 @@ const Subcontract = () => {
                       paymentInformation: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.paymentInformation
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -508,7 +489,6 @@ const Subcontract = () => {
                       subcontractorNature: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.subcontractorNature
                 />
               </div>
             </div>
@@ -528,7 +508,6 @@ const Subcontract = () => {
                       submittedAddendum: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.submittedAddendum
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -546,7 +525,6 @@ const Subcontract = () => {
                       paymentTerms: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.paymentTerms
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -564,7 +542,6 @@ const Subcontract = () => {
                       retentionTerms: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.retentionTerms
                 />
               </div>
             </div>
@@ -584,7 +561,6 @@ const Subcontract = () => {
                       subcontractTerm: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.subcontractTerm
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -602,7 +578,6 @@ const Subcontract = () => {
                       packageStatus: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.packageStatus
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -620,7 +595,6 @@ const Subcontract = () => {
                       paymentStatus: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.paymentStatus
                 />
               </div>
             </div>
@@ -640,7 +614,6 @@ const Subcontract = () => {
                       splitTerminateStatus: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.splitTerminateStatus
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -658,7 +631,6 @@ const Subcontract = () => {
                       scStatus: Number(value.value)
                     })
                   }}
-                  // SubcontractRecord.scStatus
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -676,7 +648,6 @@ const Subcontract = () => {
                       workscope: Number(value.value)
                     })
                   }
-                  // SubcontractRecord.workscope
                 />
               </div>
             </div>
@@ -695,7 +666,6 @@ const Subcontract = () => {
                       paymentMethod: String(value.value)
                     })
                   }}
-                  // SubcontractRecord.paymentMethod
                 />
               </div>
             </div>
@@ -713,7 +683,6 @@ const Subcontract = () => {
                     })
                   }}
                 />
-                {/* SubcontractRecord.labourIncludedContract */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <CheckBoxComponent
@@ -726,7 +695,6 @@ const Subcontract = () => {
                     })
                   }}
                 />
-                {/* SubcontractRecord. */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <CheckBoxComponent
@@ -739,7 +707,6 @@ const Subcontract = () => {
                     })
                   }}
                 />
-                {/* SubcontractRecord.plantIncludedContract */}
               </div>
             </div>
             {/* checkbox */}
@@ -753,7 +720,12 @@ const Subcontract = () => {
                   format="n"
                   cssClass="e-outline"
                   value={SubcontractRecord?.cpfBasePeriod}
-                  // SubcontractRecord.cpfBasePeriod
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      cpfBasePeriod: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -763,7 +735,12 @@ const Subcontract = () => {
                   format="n"
                   cssClass="e-outline"
                   value={Number(SubcontractRecord?.cpfBaseYear)}
-                  // SubcontractRecord.cpfBaseYear
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      cpfBaseYear: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -774,7 +751,12 @@ const Subcontract = () => {
                   format="c2"
                   step={0.01}
                   value={SubcontractRecord?.accumlatedRetention}
-                  // SubcontractRecord.accumlatedRetention
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      accumlatedRetention: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -787,7 +769,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.approvedVOAmount}
-                  // SubcontractRecord.approvedVOAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      approvedVOAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -798,7 +785,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalAPPostedCertAmount}
-                  // SubcontractRecord.totalAPPostedCertAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalAPPostedCertAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -809,7 +801,12 @@ const Subcontract = () => {
                   format="n2"
                   step={0.01}
                   value={SubcontractRecord?.exchangeRate}
-                  // SubcontractRecord.exchangeRate
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      exchangeRate: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -821,7 +818,12 @@ const Subcontract = () => {
                   format="###.## '%'"
                   cssClass="e-outline"
                   value={SubcontractRecord?.interimRentionPercentage}
-                  // SubcontractRecord.interimRentionPercentage
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      interimRentionPercentage: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -831,7 +833,12 @@ const Subcontract = () => {
                   format="###.## '%'"
                   cssClass="e-outline"
                   value={SubcontractRecord?.maxRetentionPercentage}
-                  // SubcontractRecord.maxRetentionPercentage
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      maxRetentionPercentage: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -841,7 +848,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   format="###.## '%'"
                   value={SubcontractRecord?.mosRetentionPercentage}
-                  // SubcontractRecord.mosRetentionPercentage
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      mosRetentionPercentage: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -854,7 +866,12 @@ const Subcontract = () => {
                   step={0.01}
                   cssClass="e-outline"
                   value={SubcontractRecord?.originalSubcontractSum}
-                  // SubcontractRecord.originalSubcontractSum
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      originalSubcontractSum: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -865,7 +882,12 @@ const Subcontract = () => {
                   step={0.01}
                   cssClass="e-outline"
                   value={SubcontractRecord?.remeasuredSubcontractSum}
-                  // SubcontractRecord.remeasuredSubcontractSum
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      remeasuredSubcontractSum: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -876,7 +898,12 @@ const Subcontract = () => {
                   format="c2"
                   step={0.01}
                   value={SubcontractRecord?.retentionAmount}
-                  // SubcontractRecord.retentionAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      retentionAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -889,7 +916,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord.retentionReleased}
-                  // SubcontractRecord.retentionReleased
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      retentionReleased: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -900,7 +932,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalCCPostedCertAmount}
-                  // SubcontractRecord.totalCCPostedCertAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalCCPostedCertAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -911,7 +948,12 @@ const Subcontract = () => {
                   format="c2"
                   step={0.01}
                   value={SubcontractRecord?.totalCumCertifiedAmount}
-                  // SubcontractRecord.totalCumCertifiedAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalCumCertifiedAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -924,7 +966,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalCumWorkDoneAmount}
-                  // SubcontractRecord.totalCumWorkDoneAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalCumWorkDoneAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -935,7 +982,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalMOSPostedCertAmount}
-                  // SubcontractRecord.totalMOSPostedCertAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalMOSPostedCertAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -946,7 +998,13 @@ const Subcontract = () => {
                   format="c2"
                   step={0.01}
                   value={SubcontractRecord?.totalPostedCertifiedAmount}
-                  // SubcontractRecord.totalPostedCertifiedAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalPostedCertifiedAmount:
+                        Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -959,7 +1017,13 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalPostedWorkDoneAmount}
-                  // SubcontractRecord.totalPostedWorkDoneAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalPostedWorkDoneAmount:
+                        Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -970,7 +1034,13 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={Number(SubcontractRecord?.amountPackageStretchTarget)}
-                  // SubcontractRecord.amountPackageStretchTarget
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      amountPackageStretchTarget:
+                        Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -981,7 +1051,12 @@ const Subcontract = () => {
                   format="c2"
                   step={0.01}
                   value={SubcontractRecord?.totalRecoverableAmount}
-                  // SubcontractRecord.totalRecoverableAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalRecoverableAmount: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -994,7 +1069,13 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={SubcontractRecord?.totalNonRecoverableAmount}
-                  // SubcontractRecord.totalNonRecoverableAmount
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      totalNonRecoverableAmount:
+                        Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -1005,7 +1086,12 @@ const Subcontract = () => {
                   cssClass="e-outline"
                   step={0.01}
                   value={Number(SubcontractRecord?.amtCEDApproved)}
-                  // SubcontractRecord.amtCEDApproved
+                  change={(value: InputChangeEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      amtCEDApproved: Number(value.value) ?? undefined
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -1017,22 +1103,43 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="Final Payment Issued Date"
                   value={SubcontractRecord?.finalPaymentIssuedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      finalPaymentIssuedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.finalPaymentIssuedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="First Payment Cert Issued Date"
                   value={SubcontractRecord?.firstPaymentCertIssuedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      firstPaymentCertIssuedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.firstPaymentCertIssuedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="Last Addendum Value Update Date"
                   value={SubcontractRecord?.latestAddendumValueUpdatedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      latestAddendumValueUpdatedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.latestAddendumValueUpdatedDate */}
               </div>
             </div>
             <div className="row">
@@ -1040,22 +1147,41 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="Last Payment Cert Issueed Date"
                   value={SubcontractRecord?.lastPaymentCertIssuedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      lastPaymentCertIssuedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.lastPaymentCertIssuedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="LOA Signed Date"
                   value={SubcontractRecord.loaSignedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      loaSignedDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.loaSignedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="Preaward Metting Date"
                   value={SubcontractRecord?.preAwardMeetingDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      preAwardMeetingDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.preAwardMeetingDate */}
               </div>
             </div>
             <div className="row">
@@ -1063,22 +1189,41 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="Requisition Approved Date"
                   value={SubcontractRecord.requisitionApprovedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      requisitionApprovedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.requisitionApprovedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="SC Approval Date"
                   value={SubcontractRecord?.scApprovalDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scApprovalDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.scApprovalDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="SC Award Approval Requestent Date"
                   value={SubcontractRecord?.scAwardApprovalRequestSentDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scAwardApprovalRequestSentDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.scAwardApprovalRequestSentDate */}
               </div>
             </div>
             <div className="row">
@@ -1093,15 +1238,25 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="SC DOC LEGAL Date"
                   value={SubcontractRecord?.scDocLegalDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scDocLegalDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.scDocLegalDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="SC Doc SCR Date"
                   value={SubcontractRecord?.scDocScrDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scDocScrDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.scDocScrDate */}
               </div>
             </div>
             <div className="row">
@@ -1109,22 +1264,39 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="TA Approved Date"
                   value={SubcontractRecord?.tenderAnalysisApprovedDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      tenderAnalysisApprovedDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.tenderAnalysisApprovedDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="Work Commence Date"
                   value={SubcontractRecord?.workCommenceDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      workCommenceDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.workCommenceDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="On-site start Date"
                   value={SubcontractRecord?.onSiteStartDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      onSiteStartDate: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.onSiteStartDate */}
               </div>
             </div>
             <div className="row">
@@ -1132,13 +1304,28 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="SC final account draft date"
                   value={SubcontractRecord?.scFinalAccDraftDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scFinalAccDraftDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.scFinalAccDraftDate */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="SC final account sign off date"
                   value={SubcontractRecord?.scFinalAccSignoffDate}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scFinalAccSignoffDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
                 {/* SubcontractRecord.scFinalAccSignoffDate */}
               </div>
@@ -1146,8 +1333,15 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="Target date for subcontract execution"
                   value={SubcontractRecord?.dateScExecutionTarget}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      scFinalAccSignoffDate: dayjs(value.value).format(
+                        'YYYY-MM-DD'
+                      )
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.dateScExecutionTarget */}
               </div>
             </div>
             <div className="row">
@@ -1155,15 +1349,25 @@ const Subcontract = () => {
                 <DatePicker
                   placeholder="Sub-Contract Duration From"
                   value={SubcontractRecord?.durationFrom}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      durationFrom: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.durationFrom */}
               </div>
               <div className="col-lg-4 col-md-4">
                 <DatePicker
                   placeholder="Sub-Contract Duration To"
                   value={SubcontractRecord?.durationTo}
+                  onChange={(value: calendarsChangedEventArgs) => {
+                    setSubcontractRecord({
+                      ...SubcontractRecord,
+                      durationTo: dayjs(value.value).format('YYYY-MM-DD')
+                    })
+                  }}
                 />
-                {/* SubcontractRecord.durationTo */}
               </div>
             </div>
             {/* datePicker */}
@@ -1182,13 +1386,6 @@ const Subcontract = () => {
           </div>
         </>
       )}
-
-      <NotificationModal
-        mode={notificationMode}
-        visible={visibleNotificationModal}
-        dialogClose={closeNotification}
-        content={notificationContent}
-      />
     </div>
   )
 }

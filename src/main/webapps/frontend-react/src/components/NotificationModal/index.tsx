@@ -1,21 +1,26 @@
 import { DialogComponent } from '@syncfusion/ej2-react-popups'
 
+import {
+  selectContent,
+  selectIsVisible,
+  selectMode,
+  setNotificationVisible
+} from '../../redux/notificationReducer'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
 import style from './style.module.scss'
 import classNames from 'classnames'
 
-interface NotificationModalProps {
-  visible: boolean
-  mode?: 'Fail' | 'Success' | 'Warn'
-  content: string
-  dialogClose: () => void
-}
+const NotificationModal = () => {
+  const visible = useAppSelector(selectIsVisible)
+  const mode = useAppSelector(selectMode)
+  const content = useAppSelector(selectContent)
 
-const NotificationModal = ({
-  visible,
-  mode = 'Success',
-  content,
-  dialogClose
-}: NotificationModalProps) => {
+  const dispatch = useAppDispatch()
+
+  const dialogClose = () => {
+    dispatch(setNotificationVisible(false))
+  }
+
   return (
     <div
       className={classNames([
@@ -41,7 +46,7 @@ const NotificationModal = ({
   )
 }
 
-function header(mode?: 'Fail' | 'Success' | 'Warn') {
+function header(mode?: string) {
   return <div className={style['modal__header']}>{mode}</div>
 }
 

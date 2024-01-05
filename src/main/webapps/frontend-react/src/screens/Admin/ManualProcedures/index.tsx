@@ -9,9 +9,13 @@ import {
 import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../components/DatePicker'
-import NotificationModal from '../../../components/NotificationModal'
 import { GLOBALPARAMETER } from '../../../constants/global'
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
+import {
+  setNotificationContent,
+  setNotificationMode,
+  setNotificationVisible
+} from '../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../redux/store'
 import {
   CustomError,
@@ -66,13 +70,6 @@ const ManualProcedures = () => {
     '-' +
     CutoffPeriod?.cutoffDate?.split(' ')[2]
 
-  const [notificationContent, setNotificationContent] = useState<string>('')
-  const [visibleNotificationModal, setVisibleNotificationModal] =
-    useState<boolean>(false)
-  const [notificationMode, setNotificationMode] = useState<
-    'Success' | 'Fail' | 'Warn'
-  >('Success')
-
   const [auditTableName, setAuditTableName] = useState(auditTables[0]?.text)
   const [provisionPostingJobNo, setProvisionPostingJobNo] = useState<string>('')
   const [provisionPostingDate, setProvisionPostingDate] = useState<string>(
@@ -95,14 +92,16 @@ const ManualProcedures = () => {
         .unwrap()
         .then(payload => {
           if (payload) {
-            setNotificationContent(
-              `Removed ${payload} records from ${auditTableName}`
+            dispatch(
+              setNotificationContent(
+                `Removed ${payload} records from ${auditTableName}`
+              )
             )
             commonSuccess()
           }
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -119,13 +118,13 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          setNotificationContent('Posted.')
+          dispatch(setNotificationContent('Posted.'))
           commonSuccess()
           setProvisionPostingJobNo('')
           setProvisionPostingDate(dayjs(new Date()).format('YYYY-MM-DD'))
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -142,13 +141,13 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          setNotificationContent('Update CED Approval completed.')
+          dispatch(setNotificationContent('Update CED Approval completed.'))
           commonSuccess()
           setUpdateCeoApprovalJobNo('')
           setUpdateCeoApprovalPackageNo('')
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -162,11 +161,14 @@ const ManualProcedures = () => {
       await generateSnapshot()
         .unwrap()
         .then(() => {
-          setNotificationContent('Generate Payment Cert PDF completed.')
+          dispatch(
+            setNotificationContent('Generate Payment Cert PDF completed.')
+          )
+
           commonSuccess()
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -179,11 +181,11 @@ const ManualProcedures = () => {
       await postSubcontractPayment()
         .unwrap()
         .then(() => {
-          setNotificationContent('succuss')
+          dispatch(setNotificationContent('succuss'))
           commonSuccess()
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -196,11 +198,11 @@ const ManualProcedures = () => {
       await synchronizeSubcontractPackage()
         .unwrap()
         .then(() => {
-          setNotificationContent('Success')
+          dispatch(setNotificationContent('Success'))
           commonSuccess()
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -213,11 +215,11 @@ const ManualProcedures = () => {
       await synchronizeSubcontractPaymentCert()
         .unwrap()
         .then(() => {
-          setNotificationContent('Success')
+          dispatch(setNotificationContent('Success'))
           commonSuccess()
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -230,11 +232,11 @@ const ManualProcedures = () => {
       await synchronizeMainContract()
         .unwrap()
         .then(() => {
-          setNotificationContent('Success')
+          dispatch(setNotificationContent('Success'))
           commonSuccess()
         })
         .catch(error => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
     } catch (err) {
@@ -250,14 +252,15 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          setNotificationContent('Success')
+          dispatch(setNotificationContent('Success'))
           commonSuccess()
           setPaymentCertPdfJobNo('')
           setPaymentCertPdfPackageNo('')
           setPaymentCertPdfPaymentNo('')
         })
         .catch((error: CustomError) => {
-          setNotificationContent(error.data.message)
+          dispatch(setNotificationContent)
+          dispatch(setNotificationContent(error.data.message))
           commonFailed()
         })
       // {data:"1 payment PDF(s) failed to generate. Please check the log file."}
@@ -290,20 +293,19 @@ const ManualProcedures = () => {
   const changeUpadatePaymentCertPdfPaymentNo = (value?: string) => {
     setPaymentCertPdfPaymentNo(value ?? '')
   }
-  const closeNotification = () => {
-    setVisibleNotificationModal(false)
-  }
 
   const commonFailed = () => {
     dispatch(closeLoading())
-    setNotificationMode('Fail')
-    setVisibleNotificationModal(true)
+
+    dispatch(setNotificationMode('Fail'))
+    dispatch(setNotificationVisible(true))
   }
 
   const commonSuccess = () => {
     dispatch(closeLoading())
-    setNotificationMode('Success')
-    setVisibleNotificationModal(true)
+
+    dispatch(setNotificationMode('Success'))
+    dispatch(setNotificationVisible(true))
   }
   return (
     <div className="admin-container">
@@ -677,12 +679,6 @@ const ManualProcedures = () => {
           </div>
         </div>
       </div>
-      <NotificationModal
-        mode={notificationMode}
-        visible={visibleNotificationModal}
-        dialogClose={closeNotification}
-        content={notificationContent}
-      />
     </div>
   )
 }

@@ -9,5 +9,3 @@ export const PaymentMethodData = [
   { text: 'IPS', value: 'IPS' },
   { text: 'Milestone', value: 'Milestone' }
 ]
-
-export const regex = /^(\d{5})$/g

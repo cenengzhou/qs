@@ -245,6 +245,39 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg
         })
+      }),
+      getPaymentCert: builder.mutation<
+        Payment,
+        {
+          jobNo?: string
+          subcontractNo?: number
+          paymentCertNo?: number
+        }
+      >({
+        query: ({ jobNo, subcontractNo, paymentCertNo }) => ({
+          url: `service/payment/getPaymentCert?jobNo=${jobNo}&paymentCertNo=${paymentCertNo}&subcontractNo=${subcontractNo}`,
+          method: 'GET'
+        })
+      }),
+      updateSubcontractDetailListAdmin: builder.mutation<void, SCDetail[]>({
+        query: queryArg => ({
+          url: 'service/subcontract/updateSubcontractDetailListAdmin',
+          method: 'POST',
+          body: queryArg
+        })
+      }),
+      deletePendingPaymentAndDetails: builder.mutation<void, number>({
+        query: (paymentCertId: number) => ({
+          url: `service/payment/deletePendingPaymentAndDetails?paymentCertId=${paymentCertId}`,
+          method: 'POST'
+        })
+      }),
+      updatePaymentCert: builder.mutation<void, Payment>({
+        query: queryArg => ({
+          url: 'service/payment/updatePaymentCert',
+          method: 'POST',
+          body: queryArg
+        })
       })
     }
   }
@@ -493,14 +526,14 @@ export type SubcontractResquest = JobNo & {
 
 export type Subcontract = {
   accumlatedRetention?: number
-  amountPackageStretchTarget?: string
-  amtCEDApproved?: string
+  amountPackageStretchTarget?: number
+  amtCEDApproved?: number
   approvalRoute?: string
   approvedVOAmount?: number
   awarded?: boolean
   balanceToCompleteAmount?: number
   cpfBasePeriod?: number
-  cpfBaseYear?: string
+  cpfBaseYear?: number
   cpfCalculation?: string
   createdDate?: string
   createdUser?: string
@@ -585,6 +618,28 @@ export type Subcontract = {
   workCommenceDate?: string
   workscope?: number
 }
+
+export type Payment = CreatedUser &
+  Subcontract & {
+    paymentCertNo?: string
+    paymentStatus?: string
+    mainContractPaymentCertNo?: number
+    dueDate?: string
+    asAtDate?: string
+    ipaOrInvoiceReceivedDate?: string | null
+    certIssueDate?: string
+    certAmount?: number
+    intermFinalPayment?: string
+    addendumAmount?: number
+    remeasureContractSum?: number
+    directPayment?: string
+    jobNo?: string
+    packageNo?: string
+    bypassPaymentTerms?: string
+    originalDueDate?: string | null
+    vendorNo?: string | null
+    explanation?: string | null
+  }
 
 export type SCDetail = CreatedUser & {
   jobNo?: string
@@ -691,6 +746,10 @@ export const {
   useUpdateF58011FromSCPaymentCertManuallyMutation,
   useUpdateMainCertFromF03B14ManuallyMutation,
   useGeneratePaymentPDFAdminMutation,
-  useUpdateSubcontractAdminMutation
+  useUpdateSubcontractAdminMutation,
+  useGetPaymentCertMutation,
+  useUpdateSubcontractDetailListAdminMutation,
+  useDeletePendingPaymentAndDetailsMutation,
+  useUpdatePaymentCertMutation
 } = apiSlice
 export default apiSlice

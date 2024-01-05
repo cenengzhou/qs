@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
@@ -15,8 +15,12 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
-import NotificationModal from '../../../components/NotificationModal'
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
+import {
+  setNotificationContent,
+  setNotificationMode,
+  setNotificationVisible
+} from '../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../redux/store'
 import { useGetSessionListQuery } from '../../../services'
 import './style.css'
@@ -24,16 +28,7 @@ import dayjs from 'dayjs'
 
 const Session = () => {
   const dispatch = useAppDispatch()
-  const [notificationContent, setNotificationContent] = useState<string>('')
-  const [visibleNotificationModal, setVisibleNotificationModal] =
-    useState<boolean>(false)
-  const [notificationMode, setNotificationMode] = useState<
-    'Success' | 'Fail' | 'Warn'
-  >('Success')
 
-  const closeNotification = () => {
-    setVisibleNotificationModal(false)
-  }
   const {
     isLoading,
     isError,
@@ -51,12 +46,12 @@ const Session = () => {
 
   useEffect(() => {
     if (error) {
-      setVisibleNotificationModal(true)
-      setNotificationMode('Fail')
+      dispatch(setNotificationVisible(true))
+      dispatch(setNotificationMode('Fail'))
       if ('data' in error) {
-        setNotificationContent(error?.data.message)
+        dispatch(setNotificationContent(error?.data.message))
       } else {
-        setNotificationContent('Error!')
+        dispatch(setNotificationContent('Error!'))
       }
     }
   }, [isError])
@@ -153,12 +148,6 @@ const Session = () => {
           Expire Selected
         </ButtonComponent>
       </div>
-      <NotificationModal
-        mode={notificationMode}
-        visible={visibleNotificationModal}
-        dialogClose={closeNotification}
-        content={notificationContent}
-      />
     </div>
   )
 }

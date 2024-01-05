@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import * as React from 'react'
-
 import {
   SelectingEventArgs,
   TabComponent,
@@ -8,6 +5,7 @@ import {
   TabItemsDirective
 } from '@syncfusion/ej2-react-navigations'
 
+import { useHasRole } from '../../../hooks/useHasRole'
 import Subcontract from '../Revisisons/Subcontract'
 import Addendum from './Addendum'
 import AddendumDetail from './AddendumDetail'
@@ -17,7 +15,7 @@ import ConsultancyAgreement from './ConsultancyAgreement'
 import FinalAccount from './FinalAccount'
 import MainCertificate from './MainCertificate'
 import MonthlyMovement from './MonthlyMovement'
-import Payment from './Payment'
+import PaymentRender from './Payment'
 import Roc from './ROC'
 import ROCDetail from './ROCDetail'
 import RocSubDetail from './ROCSubDetail'
@@ -28,6 +26,7 @@ import TenderDetail from './TenderDetail'
 import Transit from './Transit'
 import './style.css'
 
+export const regex = /^(\d{5})$/g
 interface TabData {
   text: string
   id: string
@@ -35,14 +34,20 @@ interface TabData {
 }
 
 const Revisions = () => {
+  const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
+
   const tabData: TabData[] = [
-    { text: 'Subcontract', id: 'subcontract', content: <Subcontract /> },
+    {
+      text: 'Subcontract',
+      id: 'subcontract',
+      content: <Subcontract />
+    },
     {
       text: 'Subcontract Detail',
       id: 'subcontractDetail',
-      content: <SubcontractDetail />
+      content: <SubcontractDetail isQsAdm={isQsAdm} />
     },
-    { text: 'Payment', id: 'payment', content: <Payment /> },
+    { text: 'Payment', id: 'payment', content: <PaymentRender /> },
     { text: 'Addendum', id: 'addendum', content: <Addendum /> },
     {
       text: 'Addendum Detail',
@@ -99,13 +104,15 @@ const Revisions = () => {
   }
 
   return (
-    <TabComponent id="defaultTab" overflowMode="MultiRow" selecting={select}>
-      <TabItemsDirective>
-        {tabData.map((e: TabData) => (
-          <TabItemDirective header={e} content={() => e.content} key={e.id} />
-        ))}
-      </TabItemsDirective>
-    </TabComponent>
+    <>
+      <TabComponent id="defaultTab" overflowMode="MultiRow" selecting={select}>
+        <TabItemsDirective>
+          {tabData.map((e: TabData) => (
+            <TabItemDirective header={e} content={() => e.content} key={e.id} />
+          ))}
+        </TabItemsDirective>
+      </TabComponent>
+    </>
   )
 }
 
