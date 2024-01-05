@@ -52,7 +52,13 @@ const PaymentRender = () => {
       .unwrap()
       .then(payload => {
         dispatch(closeLoading())
-        setPaymentRecord(payload)
+        if (payload instanceof Object) {
+          setPaymentRecord(payload)
+        } else {
+          dispatch(setNotificationContent('Payment certificate not found!'))
+          dispatch(setNotificationMode('Warn'))
+          dispatch(setNotificationVisible(true))
+        }
       })
       .catch((error: CustomError) => {
         dispatch(closeLoading())
@@ -140,7 +146,17 @@ const PaymentRender = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <ButtonComponent cssClass="e-info full-btn" onClick={search}>
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            onClick={search}
+            disabled={
+              !(
+                !!paymentSearch.jobNo &&
+                !!paymentSearch.subcontractNo &&
+                !!paymentSearch.paymentCertNo
+              )
+            }
+          >
             Search
           </ButtonComponent>
         </div>
