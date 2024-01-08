@@ -15,7 +15,7 @@
   
   .top_title {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     font-size: 24px;
     padding-bottom: 5px;
     padding-top: 10px;
@@ -25,7 +25,7 @@
     padding: 10px;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     user-select:text;
     color: #30373e;
     border-top: 1px solid var(--gray);

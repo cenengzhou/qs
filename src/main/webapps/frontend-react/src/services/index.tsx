@@ -1,11 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  BaseQueryFn,
+  FetchArgs,
+  createApi,
+  fetchBaseQuery
+} from '@reduxjs/toolkit/query/react'
+
+export interface CustomError {
+  data: {
+    status: string
+    message: string
+  }
+  status: number
+}
 
 const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/pcms'
-  }),
+  }) as BaseQueryFn<string | FetchArgs, unknown, CustomError, object>,
   tagTypes: ['updateStatus'],
   endpoints: builder => {
     return {
@@ -27,6 +40,27 @@ const apiSlice = createApi({
       getCurrentUser: builder.query<CurrentUser, void>({
         query: () => ({
           url: 'service/security/getCurrentUser'
+        })
+      }),
+      getSessionList: builder.query<SessionListDetail[], void>({
+        query: () => ({
+          method: 'POST',
+          url: 'service/system/GetSessionList'
+        })
+      }),
+      getAuditTableMap: builder.query<
+        Map<string, ProceduresAuditTableItemMap>,
+        void
+      >({
+        query: () => ({
+          method: 'POST',
+          url: 'service/system/getAuditTableMap'
+        })
+      }),
+      getCutoffPeriod: builder.query<ProceduresCutoffPeriod, void>({
+        query: () => ({
+          method: 'GET',
+          url: 'service/roc/getCutoffPeriod'
         })
       }),
       obtainCacheKey: builder.query<string, string>({
@@ -105,20 +139,144 @@ const apiSlice = createApi({
           params: queryArg
         })
       }),
-      getAllWorkScopes: builder.query<AllWorkScopesResponse, void>({
+      getAllWorkScopes: builder.query<AllWorkScopesResponseTrans, void>({
         query: () => ({
           url: 'service/adl/getAllWorkScopes'
-        })
+        }),
+        transformResponse: (
+          response: AllWorkScopesResponse
+        ): AllWorkScopesResponseTrans => {
+          const data = response.map((item: WorkScopes) => {
+            return {
+              codeWorkscope: Number(item.codeWorkscope?.trim()),
+              workscopeDescription: item.workscopeDescription?.trim()
+            }
+          })
+          return data
+        }
       }),
-      getSubcontract: builder.mutation<Subcontract, void>({
-        query: () => ({
-          url: 'service/subcontract/getSubcontract'
+      getSubcontract: builder.mutation<Subcontract, SCDetailRequest>({
+        query: ({ jobNo, subcontractNo }) => ({
+          url: `service/subcontract/getSubcontract?jobNo=${jobNo}&subcontractNo=${subcontractNo}`
         })
       }),
       getSCDetails: builder.mutation<SCDetail[], SCDetailRequest>({
+        query: ({ jobNo, subcontractNo }) => ({
+          url: `service/subcontract/getSCDetails?jobNo=${jobNo}&subcontractNo=${subcontractNo}`,
+          method: 'GET'
+        })
+      }),
+      housekeepAuditTable: builder.mutation<number, string>({
         query: queryArg => ({
-          url: 'service/subcontract/getSCDetails',
-          params: queryArg
+          url: `service/system/housekeepAuditTable?tableName=${queryArg}`,
+          method: 'POST'
+        })
+      }),
+      runProvisionPostingManually: builder.mutation<
+        void,
+        {
+          glDate?: string | undefined
+          jobNumber?: string | undefined
+        }
+      >({
+        query: ({ glDate, jobNumber }) => ({
+          url: `service/subcontract/runProvisionPostingManually?glDate=${glDate}&jobNumber=${jobNumber}`,
+          method: 'POST'
+        })
+      }),
+      updateCEOApproval: builder.mutation<
+        void,
+        {
+          jobNumber?: string | undefined
+          packageNo?: string | undefined
+        }
+      >({
+        query: ({ jobNumber, packageNo }) => ({
+          url: `service/subcontract/updateCEDApprovalManually?jobNo=${jobNumber}&packageNo=${packageNo}`,
+          method: 'POST'
+        })
+      }),
+      generateSCPackageSnapshotManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/subcontract/generateSCPackageSnapshotManually',
+          method: 'POST'
+        })
+      }),
+      runPaymentPosting: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/payment/runPaymentPosting',
+          method: 'POST'
+        })
+      }),
+      updateF58001FromSCPackageManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/subcontract/updateF58001FromSCPackageManually',
+          method: 'POST'
+        })
+      }),
+      updateF58011FromSCPaymentCertManually: builder.mutation<void, void>({
+        query: () => ({
+          url: 'service/payment/updateF58011FromSCPaymentCertManually',
+          method: 'POST'
+        })
+      }),
+      updateMainCertFromF03B14Manually: builder.mutation<boolean, void>({
+        query: () => ({
+          url: 'service/mainCert/updateMainCertFromF03B14Manually',
+          method: 'POST'
+        })
+      }),
+      generatePaymentPDFAdmin: builder.mutation<
+        string,
+        {
+          jobNo?: string | undefined
+          packageNo?: string | undefined
+          paymentNo?: string | undefined
+        }
+      >({
+        query: ({ jobNo, packageNo, paymentNo }) => ({
+          url: `service/payment/generatePaymentPDFAdmin?jobNo=${jobNo}&packageNo=${packageNo}&paymentNo=${paymentNo}`,
+          method: 'POST'
+        })
+      }),
+      updateSubcontractAdmin: builder.mutation<void, Subcontract>({
+        query: queryArg => ({
+          url: 'service/subcontract/updateSubcontractAdmin',
+          method: 'POST',
+          body: queryArg
+        })
+      }),
+      getPaymentCert: builder.mutation<
+        Payment,
+        {
+          jobNo?: string
+          subcontractNo?: number
+          paymentCertNo?: number
+        }
+      >({
+        query: ({ jobNo, subcontractNo, paymentCertNo }) => ({
+          url: `service/payment/getPaymentCert?jobNo=${jobNo}&paymentCertNo=${paymentCertNo}&subcontractNo=${subcontractNo}`,
+          method: 'GET'
+        })
+      }),
+      updateSubcontractDetailListAdmin: builder.mutation<void, SCDetail[]>({
+        query: queryArg => ({
+          url: 'service/subcontract/updateSubcontractDetailListAdmin',
+          method: 'POST',
+          body: queryArg
+        })
+      }),
+      deletePendingPaymentAndDetails: builder.mutation<void, number>({
+        query: (paymentCertId: number) => ({
+          url: `service/payment/deletePendingPaymentAndDetails?paymentCertId=${paymentCertId}`,
+          method: 'POST'
+        })
+      }),
+      updatePaymentCert: builder.mutation<void, Payment>({
+        query: queryArg => ({
+          url: 'service/payment/updatePaymentCert',
+          method: 'POST',
+          body: queryArg
         })
       })
     }
@@ -354,7 +512,12 @@ export type WorkScopes = {
   codeWorkscope?: string
   workscopeDescription?: string
 }
+export type WorkScopesTrans = {
+  codeWorkscope?: number
+  workscopeDescription?: string
+}
 
+export type AllWorkScopesResponseTrans = WorkScopesTrans[]
 export type AllWorkScopesResponse = WorkScopes[]
 
 export type SubcontractResquest = JobNo & {
@@ -363,14 +526,14 @@ export type SubcontractResquest = JobNo & {
 
 export type Subcontract = {
   accumlatedRetention?: number
-  amountPackageStretchTarget?: string
-  amtCEDApproved?: string
+  amountPackageStretchTarget?: number
+  amtCEDApproved?: number
   approvalRoute?: string
   approvedVOAmount?: number
   awarded?: boolean
   balanceToCompleteAmount?: number
   cpfBasePeriod?: number
-  cpfBaseYear?: string
+  cpfBaseYear?: number
   cpfCalculation?: string
   createdDate?: string
   createdUser?: string
@@ -456,6 +619,28 @@ export type Subcontract = {
   workscope?: number
 }
 
+export type Payment = CreatedUser &
+  Subcontract & {
+    paymentCertNo?: string
+    paymentStatus?: string
+    mainContractPaymentCertNo?: number
+    dueDate?: string
+    asAtDate?: string
+    ipaOrInvoiceReceivedDate?: string | null
+    certIssueDate?: string
+    certAmount?: number
+    intermFinalPayment?: string
+    addendumAmount?: number
+    remeasureContractSum?: number
+    directPayment?: string
+    jobNo?: string
+    packageNo?: string
+    bypassPaymentTerms?: string
+    originalDueDate?: string | null
+    vendorNo?: string | null
+    explanation?: string | null
+  }
+
 export type SCDetail = CreatedUser & {
   jobNo?: string
   sequenceNo?: number
@@ -505,7 +690,31 @@ export type SCDetail = CreatedUser & {
 
 export type SCDetailRequest = {
   jobNo?: string
-  subcontractNo?: string
+  subcontractNo?: number
+}
+
+export type SessionListDetail = {
+  authType?: string
+  creationTime?: number
+  expired?: boolean
+  idleTime?: number
+  lastAccessedTime?: number
+  lastRequest?: string
+  maxInactiveInterval?: number
+  principal?: CurrentUser
+  sessionId?: string
+}
+
+export type ProceduresAuditTableItemMap = {
+  housekeep?: boolean
+  period?: string
+  tableName?: string
+}
+
+export type ProceduresCutoffPeriod = CreatedUser & {
+  cutoffDate?: string
+  excludeJobList?: null | JobListResponse
+  period?: string
 }
 
 export const {
@@ -524,6 +733,23 @@ export const {
   useGetSubcontractMutation,
   useGetAllWorkScopesQuery,
   useUpdateNotificationReadStatusByCurrentUserMutation,
-  useGetSCDetailsMutation
+  useGetSCDetailsMutation,
+  useGetSessionListQuery,
+  useGetAuditTableMapQuery,
+  useGetCutoffPeriodQuery,
+  useHousekeepAuditTableMutation,
+  useRunProvisionPostingManuallyMutation,
+  useUpdateCEOApprovalMutation,
+  useGenerateSCPackageSnapshotManuallyMutation,
+  useRunPaymentPostingMutation,
+  useUpdateF58001FromSCPackageManuallyMutation,
+  useUpdateF58011FromSCPaymentCertManuallyMutation,
+  useUpdateMainCertFromF03B14ManuallyMutation,
+  useGeneratePaymentPDFAdminMutation,
+  useUpdateSubcontractAdminMutation,
+  useGetPaymentCertMutation,
+  useUpdateSubcontractDetailListAdminMutation,
+  useDeletePendingPaymentAndDetailsMutation,
+  useUpdatePaymentCertMutation
 } = apiSlice
 export default apiSlice

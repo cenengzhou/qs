@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
+  BreadcrumbBeforeItemRenderEventArgs,
   BreadcrumbComponent,
   FieldsSettingsModel,
   NodeSelectEventArgs,
@@ -44,6 +45,20 @@ const Sidebar = ({ routeList, treeData, onSelect }: Props) => {
       return !p
     })
   }
+  const beforeItemRenderHandler = (
+    args: BreadcrumbBeforeItemRenderEventArgs
+  ): void => {
+    if (
+      args.item.text === 'pcms' ||
+      args.item.text === 'web' ||
+      args.item.text === 'admin'
+    ) {
+      args.cancel = true
+    }
+    if (args.item.iconCss === 'e-icons e-home') {
+      args.item.url = '/pcms/web/admin/Session'
+    }
+  }
 
   return (
     <div
@@ -58,7 +73,10 @@ const Sidebar = ({ routeList, treeData, onSelect }: Props) => {
       </div>
       <div className="maincontent">
         <div className="listView">
-          <BreadcrumbComponent cssClass="breadcrumb"></BreadcrumbComponent>
+          <BreadcrumbComponent
+            cssClass="breadcrumb"
+            beforeItemRender={beforeItemRenderHandler}
+          />
           <Routes>
             {routeList.map((item, index) => (
               <Route key={index} path={item.path} element={item.element} />

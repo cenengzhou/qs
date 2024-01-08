@@ -96,6 +96,34 @@ export const GLOBALPARAMETER = {
     })
     return newArr
   },
+  getChineseMonth: function (month: string | undefined) {
+    switch (month) {
+      case '一':
+        return '01'
+      case '二':
+        return '02'
+      case '三':
+        return '03'
+      case '四':
+        return '04'
+      case '五':
+        return '05'
+      case '六':
+        return '06'
+      case '七':
+        return '07'
+      case '八':
+        return '08'
+      case '十':
+        return '10'
+      case '十一':
+        return '11'
+      case '十二':
+        return '12'
+      default:
+        return undefined
+    }
+  },
   DATE_FORMAT: 'dd/MM/yyyy',
   DATE_MONTH_FORMAT: 'dd/MMM/yyyy',
   DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',

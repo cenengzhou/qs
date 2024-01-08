@@ -1,3 +1,5 @@
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+
 import { configureStore } from '@reduxjs/toolkit'
 
 import apiSlice from '../services'
@@ -34,4 +36,9 @@ const persistor = persistStore(store)
 
 export type RootDispatch = typeof store.dispatch
 export type RootState = ReturnType<typeof store.getState>
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch = () => useDispatch<RootDispatch>()
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+
 export { store, persistor }

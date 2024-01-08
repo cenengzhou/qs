@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
@@ -18,26 +15,50 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
+import { closeLoading, openLoading } from '../../../redux/loadingReducer'
+import {
+  setNotificationContent,
+  setNotificationMode,
+  setNotificationVisible
+} from '../../../redux/notificationReducer'
+import { useAppDispatch } from '../../../redux/store'
+import { useGetSessionListQuery } from '../../../services'
 import './style.css'
 import dayjs from 'dayjs'
 
-// TODO 接口 service/system/GetSessionList POST
 const Session = () => {
-  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const data: any[] = [
-    {
-      authType: 'LDAP',
-      creationTime: 1698219512026,
-      lastAccessedTime: 1698289099682,
-      maxInactiveInterval: 60000,
-      principal: {
-        fullname: 'cenengzhou'
-      },
-      lastRequest: '2023-10-26T02:58:19.621+00:00',
-      sessionId: '321EB5F772CB29602D8254C0D38C1584'
+  const dispatch = useAppDispatch()
+
+  const {
+    isLoading,
+    isError,
+    error,
+    data: sessionDetails
+  } = useGetSessionListQuery()
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
     }
-  ]
-  const dataSource = data.map(item => {
+  }, [isLoading])
+
+  useEffect(() => {
+    if (error) {
+      dispatch(setNotificationVisible(true))
+      dispatch(setNotificationMode('Fail'))
+      if ('data' in error) {
+        dispatch(setNotificationContent(error?.data.message))
+      } else {
+        dispatch(setNotificationContent('Error!'))
+      }
+    }
+  }, [isError])
+
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
+
+  const dataSource = sessionDetails?.map(item => {
     const {
       authType,
       sessionId,
@@ -47,7 +68,7 @@ const Session = () => {
       maxInactiveInterval
     } = item
     return {
-      name: item.principal.fullname,
+      name: item.principal?.fullname,
       authType,
       sessionId,
       creationTime: dayjs(creationTime).format('DD/MM/YYYY HH:MM'),
@@ -82,11 +103,11 @@ const Session = () => {
           openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
           allowSave={true}
           saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
+          allowEditing={false}
         >
           <SheetsDirective>
             <SheetDirective
               name="Session"
-              isProtected={true}
               protectSettings={{ selectCells: true }}
             >
               <RangesDirective>

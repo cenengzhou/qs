@@ -25,6 +25,10 @@
   border-bottom: 1px solid #ebebeb;
 }
 
+.manual-procedures .e-card .e-card-header .e-card-header-title {
+  white-space: wrap;
+}
+
 .manual-procedures .e-card .e-card-actions {
   padding: 0 10px 10px;
 }
