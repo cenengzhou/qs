@@ -2051,6 +2051,13 @@
   dependencies:
     "@syncfusion/ej2-icons" "~23.2.4"
 
+"@syncfusion/ej2-base@~23.2.6":
+  version "23.2.6"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-base/-/ej2-base-23.2.6.tgz#9fe7b3e1a0159ff42c71bb40d7ff18af1d38f450"
+  integrity sha512-EuMzCLpSSuRrslC03Kilim7Vdu1Kc5x5cYTEyXef1lYsWKjAiewqI/bvD4kqdTClaxtl+TcNfjQHEngYhuIU6w==
+  dependencies:
+    "@syncfusion/ej2-icons" "~23.2.4"
+
 "@syncfusion/ej2-buttons@23.1.41", "@syncfusion/ej2-buttons@~23.1.36", "@syncfusion/ej2-buttons@~23.1.39", "@syncfusion/ej2-buttons@~23.1.41":
   version "23.1.41"
   resolved "https://registry.npmmirror.com/@syncfusion/ej2-buttons/-/ej2-buttons-23.1.41.tgz#5fe95f78cdf804adee4b6e2e6bcec0531cb1c57b"
@@ -2064,6 +2071,13 @@
   integrity sha512-BOWmD3rNet1xCT4ZdVGJ6vX+yoFOG4kAly3s2RRansZrToaq6CKK5jb6uHdkRTPCF4gIUtsIXQhGJyKxcKK+zQ==
   dependencies:
     "@syncfusion/ej2-base" "~23.2.4"
+
+"@syncfusion/ej2-buttons@~23.2.7":
+  version "23.2.7"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-buttons/-/ej2-buttons-23.2.7.tgz#7e905508f3c00bd84fa0f658ad4c54f14de75041"
+  integrity sha512-a7/NHBABXTYs5s4uIOokKVvh29DzS86yH9G9qZfqfhfgUvoO4LDg8HY2ifshM5b2Zun8cyP6OgNoPBZRGjy67g==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.6"
 
 "@syncfusion/ej2-calendars@23.1.41", "@syncfusion/ej2-calendars@~23.1.41":
   version "23.1.41"
@@ -2086,6 +2100,32 @@
     "@syncfusion/ej2-inputs" "~23.2.4"
     "@syncfusion/ej2-lists" "~23.2.4"
     "@syncfusion/ej2-popups" "~23.2.4"
+
+"@syncfusion/ej2-calendars@~23.2.7":
+  version "23.2.7"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-calendars/-/ej2-calendars-23.2.7.tgz#916cff0c9db2b9be4c10b847435b431acb50c2cd"
+  integrity sha512-06/hPO2JGyiNSGNNLQCMkpsoCdswt8qtkCV7ryfi77xGWnvU585kDroW+5Yu7dRV6N0KNlaXApRlRxzvDYj9kQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.6"
+    "@syncfusion/ej2-buttons" "~23.2.7"
+    "@syncfusion/ej2-inputs" "~23.2.4"
+    "@syncfusion/ej2-lists" "~23.2.4"
+    "@syncfusion/ej2-popups" "~23.2.4"
+
+"@syncfusion/ej2-charts@23.2.7":
+  version "23.2.7"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-charts/-/ej2-charts-23.2.7.tgz#838197379717926e705d732ab8140d15e8b3e3c0"
+  integrity sha512-01Bkt5mZDojGCtk2falOC3ZT1J2qY0ZurKP/ezM01qHQhoEhXT+7VPM3NgnNZCINFBqjo1r4ABgKyr3VcvVgtg==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.6"
+    "@syncfusion/ej2-calendars" "~23.2.7"
+    "@syncfusion/ej2-compression" "~23.2.4"
+    "@syncfusion/ej2-data" "~23.2.4"
+    "@syncfusion/ej2-excel-export" "~23.2.4"
+    "@syncfusion/ej2-file-utils" "~23.2.4"
+    "@syncfusion/ej2-navigations" "~23.2.7"
+    "@syncfusion/ej2-pdf-export" "~23.2.6"
+    "@syncfusion/ej2-svg-base" "~23.2.5"
 
 "@syncfusion/ej2-charts@~23.2.5":
   version "23.2.5"
@@ -2303,6 +2343,18 @@
     "@syncfusion/ej2-lists" "~23.2.4"
     "@syncfusion/ej2-popups" "~23.2.4"
 
+"@syncfusion/ej2-navigations@~23.2.7":
+  version "23.2.7"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-navigations/-/ej2-navigations-23.2.7.tgz#bec539a0f83c3803f858d7fed37bbfd08acedbaa"
+  integrity sha512-Pp0R6SOemct5XVBPHwJRtO7GCJvyg45CzEJ0tjyhAxvH951ntulZ3DbEVS+zQOTSjlfinna+XzZ9ykCvOFIK8Q==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.6"
+    "@syncfusion/ej2-buttons" "~23.2.7"
+    "@syncfusion/ej2-data" "~23.2.4"
+    "@syncfusion/ej2-inputs" "~23.2.4"
+    "@syncfusion/ej2-lists" "~23.2.4"
+    "@syncfusion/ej2-popups" "~23.2.4"
+
 "@syncfusion/ej2-notifications@23.1.40", "@syncfusion/ej2-notifications@~23.1.40":
   version "23.1.40"
   resolved "https://registry.npmmirror.com/@syncfusion/ej2-notifications/-/ej2-notifications-23.1.40.tgz#efec47c01bd46f9b64d7a6c10977029f6d8a5606"
@@ -2332,6 +2384,13 @@
   version "23.2.4"
   resolved "https://registry.npmmirror.com/@syncfusion/ej2-pdf-export/-/ej2-pdf-export-23.2.4.tgz#8b3fb6029781562a867251aac17db26ffaef4f23"
   integrity sha512-4kdIVXT3rO69SzL3x04Bw++lweVueoiezXWlVEZMIzRlpczO5OpGeIPmyHKR5jHjaWiPp51PLMZNod+51LWu2w==
+  dependencies:
+    "@syncfusion/ej2-compression" "~23.2.4"
+
+"@syncfusion/ej2-pdf-export@~23.2.6":
+  version "23.2.6"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-pdf-export/-/ej2-pdf-export-23.2.6.tgz#febe9b039a65ffd62a5a357e45e4c77da6730eeb"
+  integrity sha512-N6xBXt8YUxzE0yEB55P1Tgr+rqe30qheA/JoSo/mhPOArA62/KxKn+6qnITO+F2/pylLsJkFb7XBv4vkX2S6/w==
   dependencies:
     "@syncfusion/ej2-compression" "~23.2.4"
 
@@ -2382,6 +2441,15 @@
     "@syncfusion/ej2-base" "~23.1.41"
     "@syncfusion/ej2-calendars" "23.1.41"
     "@syncfusion/ej2-react-base" "~23.1.36"
+
+"@syncfusion/ej2-react-charts@^23.2.6":
+  version "23.2.7"
+  resolved "https://registry.npmmirror.com/@syncfusion/ej2-react-charts/-/ej2-react-charts-23.2.7.tgz#01e99c4b66778ee6a5c3c4e65ea8326d7eb5c289"
+  integrity sha512-r3cyAxBf4fZxlbjpPHzeaBW9jEQSrTDlkwyLI/Oy0pQ0Q/MnPP8kTal889ld1Mz5h6swOqe2Fk4raVymybJr4g==
+  dependencies:
+    "@syncfusion/ej2-base" "~23.2.6"
+    "@syncfusion/ej2-charts" "23.2.7"
+    "@syncfusion/ej2-react-base" "~23.2.5"
 
 "@syncfusion/ej2-react-dropdowns@^23.1.41":
   version "23.1.41"
@@ -4069,7 +4137,7 @@ check-types@^11.2.3:
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-11.2.3.tgz#1ffdf68faae4e941fce252840b1787b8edc93b71"
   integrity sha512-+67P1GkJRaxQD6PKK0Et9DhwQB+vGg3PM5+aavopCpZT1lj9jeqfvpgTLAWErNj8qApkkmXlu/Ug74kmhagkXg==
 
-chokidar@^3.4.2, chokidar@^3.5.3:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.4.2, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -4561,7 +4629,7 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dayjs@^1.11.1:
+dayjs@^1.11.1, dayjs@^1.11.10:
   version "1.11.10"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
   integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
@@ -6130,7 +6198,7 @@ http-proxy-agent@^4.0.1:
     agent-base "6"
     debug "4"
 
-http-proxy-middleware@^2.0.3:
+http-proxy-middleware@^2.0.3, http-proxy-middleware@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.6.tgz#e1a4dd6979572c7ab5a4e4b55095d1f32a74963f"
   integrity sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==
@@ -6208,6 +6276,11 @@ immer@^9.0.21, immer@^9.0.7:
   version "9.0.21"
   resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.21.tgz#1e025ea31a40f24fb064f1fef23e931496330176"
   integrity sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==
+
+immutable@^4.0.0:
+  version "4.3.4"
+  resolved "https://registry.npmmirror.com/immutable/-/immutable-4.3.4.tgz#2e07b33837b4bb7662f288c244d1ced1ef65a78f"
+  integrity sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==
 
 import-fresh@^3.1.0, import-fresh@^3.2.1:
   version "3.3.0"
@@ -9688,6 +9761,22 @@ sass-loader@^12.3.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
+sass-loader@^13.3.2:
+  version "13.3.3"
+  resolved "https://registry.npmmirror.com/sass-loader/-/sass-loader-13.3.3.tgz#60df5e858788cffb1a3215e5b92e9cba61e7e133"
+  integrity sha512-mt5YN2F1MOZr3d/wBRcZxeFgwgkH44wVc2zohO2YF6JiOMkiXe4BYRZpSu2sO1g71mo/j16txzUhsKZlqjVGzA==
+  dependencies:
+    neo-async "^2.6.2"
+
+sass@^1.69.5:
+  version "1.69.7"
+  resolved "https://registry.npmmirror.com/sass/-/sass-1.69.7.tgz#6e7e1c8f51e8162faec3e9619babc7da780af3b7"
+  integrity sha512-rzj2soDeZ8wtE2egyLXgOOHQvaC2iosZrkF6v3EUG+tBwEvhqUCzm0VP3k9gHF9LXbSrRhT5SksoI56Iw8NPnQ==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -9910,7 +9999,7 @@ source-list-map@^2.0.0, source-list-map@^2.0.1:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
 
-source-map-js@^1.0.1, source-map-js@^1.0.2:
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.1, source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==

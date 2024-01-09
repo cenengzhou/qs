@@ -224,16 +224,10 @@ const Addendum = () => {
         </div>
         <div className="row">
           <div className="col-lg-4 col-md-4">
-            <DatePicker
-              placeholder="Final Payment Issued Date"
-              value={new Date()}
-            />
+            <DatePicker placeholder="Approval Date" value={new Date()} />
           </div>
           <div className="col-lg-4 col-md-4">
-            <DatePicker
-              placeholder="First Payment Cert Issued Date"
-              value={'2022-11-9'}
-            />
+            <DatePicker placeholder="Submission Date" value={'2022-11-19'} />
           </div>
         </div>
       </div>
