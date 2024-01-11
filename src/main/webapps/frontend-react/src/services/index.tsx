@@ -278,6 +278,19 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg
         })
+      }),
+      getAddendum: builder.mutation<AddendumResponse, AddendumRequest>({
+        query: queryArg => ({
+          url: 'service/addendum/getAddendum',
+          params: queryArg
+        })
+      }),
+      updateAddendumAdmin: builder.mutation<string, AddendumResponse>({
+        query: queryArg => ({
+          url: 'service/addendum/updateAddendumAdmin',
+          method: 'POST',
+          body: queryArg
+        })
       })
     }
   }
@@ -521,10 +534,10 @@ export type AllWorkScopesResponseTrans = WorkScopesTrans[]
 export type AllWorkScopesResponse = WorkScopes[]
 
 export type SubcontractResquest = JobNo & {
-  subcontractNo?: string
+  subcontractNo?: number
 }
 
-export type Subcontract = {
+export type Subcontract = CreatedUser & {
   accumlatedRetention?: number
   amountPackageStretchTarget?: number
   amtCEDApproved?: number
@@ -535,8 +548,6 @@ export type Subcontract = {
   cpfBasePeriod?: number
   cpfBaseYear?: number
   cpfCalculation?: string
-  createdDate?: string
-  createdUser?: string
   dateScExecutionTarget?: string
   description?: string
   durationFrom?: string
@@ -547,13 +558,10 @@ export type Subcontract = {
   finalPaymentIssuedDate?: string
   firstPaymentCertIssuedDate?: string
   formOfSubcontract?: string
-  id?: number
   interimRentionPercentage?: number
   internalJobNo?: string
   jobInfo?: JobInfo
   labourIncludedContract?: boolean
-  lastModifiedDate?: string
-  lastModifiedUser?: string
   lastPaymentCertIssuedDate?: string
   latestAddendumValueUpdatedDate?: string
   loaSignedDate?: string
@@ -717,6 +725,44 @@ export type ProceduresCutoffPeriod = CreatedUser & {
   period?: string
 }
 
+export type AddendumRequest = SubcontractResquest & {
+  addendumNo?: number
+}
+
+export type AddendumResponse = {
+  usernameCreated?: string
+  dateCreated?: string
+  usernameLastModified?: string
+  dateLastModified?: string
+  id?: number
+  idSubcontract?: Subcontract
+  noJob?: string
+  noSubcontract?: string
+  descriptionSubcontract?: string
+  noSubcontractor?: string
+  nameSubcontractor?: string
+  no?: number
+  title?: string
+  amtSubcontractRemeasured?: number
+  amtSubcontractRevised?: number
+  amtAddendumTotal?: number
+  amtAddendumTotalTba?: number
+  amtAddendum?: number
+  amtSubcontractRevisedTba?: number
+  recoverableAmount?: number
+  nonRecoverableAmount?: number
+  dateSubmission?: string
+  dateApproval?: string
+  status?: string
+  statusApproval?: string
+  usernamePreparedBy?: string
+  remarks?: string
+  finalAccount?: string
+  noAddendumDetailNext?: number
+  amtCEDApproved?: string
+  cedApproval?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -750,6 +796,8 @@ export const {
   useGetPaymentCertMutation,
   useUpdateSubcontractDetailListAdminMutation,
   useDeletePendingPaymentAndDetailsMutation,
-  useUpdatePaymentCertMutation
+  useUpdatePaymentCertMutation,
+  useGetAddendumMutation,
+  useUpdateAddendumAdminMutation
 } = apiSlice
 export default apiSlice

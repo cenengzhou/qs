@@ -611,3 +611,22 @@ export const GLOBALMESSAGE = {
   deleteRoc:
     'ROC and all details will be permanently deleted, are you sure to proceed?'
 }
+
+export const STATUS = [
+  { value: 'PENDING', text: 'Pending' },
+  { value: 'SUBMITTED', text: 'Submitted' },
+  { value: 'APPROVED', text: 'Approved' }
+]
+
+export const STATUS_APPROVAL = [
+  { value: '', text: 'N/A' },
+  { value: 'APPROVED', text: 'Approved' },
+  { value: 'REJECTED', text: 'Rejected' }
+]
+
+export const YESORNO = [
+  { value: 'YES', text: 'Yes' },
+  { value: 'NO', text: 'No' }
+]
+
+export const FIELDS = { text: 'text', value: 'value' }

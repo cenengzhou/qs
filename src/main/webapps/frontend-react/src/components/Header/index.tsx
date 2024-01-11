@@ -40,6 +40,7 @@ import RightSidebar from '../RightSidebar'
 import './style.css'
 
 const Header = () => {
+  const { hasRole } = useHasRole()
   const dispatch = useAppDispatch()
   const env = useAppSelector((state: RootState) => state.appConfig.env)
   const getCurrentUser = useAppSelector(
@@ -192,7 +193,7 @@ const Header = () => {
               text="Transit"
               click={() => navigate('/')}
             />
-            {useHasRole('QS_ENQ') && (
+            {hasRole('QS_ENQ') && (
               <ItemDirective
                 prefixIcon="e-icons e-people"
                 text="Admin"

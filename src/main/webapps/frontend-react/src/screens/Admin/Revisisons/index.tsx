@@ -34,7 +34,8 @@ interface TabData {
 }
 
 const Revisions = () => {
-  const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
+  const { hasRole } = useHasRole()
+  const isQsAdm = hasRole('ROLE_QS_QS_ADM')
 
   const tabData: TabData[] = [
     {

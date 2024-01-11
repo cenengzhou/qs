@@ -37,7 +37,8 @@ const RocSubDetail = () => {
     'systemStatus'
   ])
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const isQsAdm = useHasRole('ROLE_QS_QS_ADM')
+  const { hasRole } = useHasRole()
+  const isQsAdm = hasRole('ROLE_QS_QS_ADM')
 
   const [jobNo, setJobNo] = useState<string>('')
   const [itemNo, setItemNo] = useState<string>('')
