@@ -25,11 +25,7 @@ import {
 
 import { regex } from '..'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
-import {
-  setNotificationContent,
-  setNotificationMode,
-  setNotificationVisible
-} from '../../../../redux/notificationReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import {
   CustomError,
@@ -65,49 +61,33 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
   }>({ jobNo: undefined, subcontractNo: undefined })
   const [details, setDetails] = useState<SCDetail[]>([])
   const [getScdetails, { isLoading }] = useGetSCDetailsMutation()
-  const [updateDetail] = useUpdateSubcontractDetailListAdminMutation()
+  const [updateDetail, { isLoading: updateLoading }] =
+    useUpdateSubcontractDetailListAdminMutation()
 
   const getData = async () => {
-    dispatch(openLoading())
     await getScdetails({
       jobNo: searchRecord.jobNo,
       subcontractNo: searchRecord.subcontractNo
     })
       .unwrap()
       .then(payload => {
-        dispatch(closeLoading())
         setDetails(payload)
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationVisible(true))
-        console.error(error.data.message)
+        showTotas('Fail', error.data.message)
       })
   }
   const updateDedail = async () => {
     if (!updateDetails.current.length) {
-      dispatch(setNotificationMode('Warn'))
-      dispatch(setNotificationContent('No Subcontract Detail modified'))
-      dispatch(setNotificationVisible(true))
+      showTotas('Success', 'No Subcontract Detail modified')
       return
     }
-    dispatch(openLoading())
     await updateDetail(updateDetails.current)
       .then(() => {
-        dispatch(closeLoading())
-
-        dispatch(setNotificationMode('Success'))
-        dispatch(setNotificationContent('Subcontract Detail updated'))
-        dispatch(setNotificationVisible(true))
+        showTotas('Success', 'Subcontract Detail updated')
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationVisible(true))
+        showTotas('Fail', error.data.message)
       })
   }
 
@@ -134,6 +114,24 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
     }
     console.log(updateDetails.current)
   }
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (isLoading || updateLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading, updateLoading])
 
   useEffect(() => {
     const spreadsheet = spreadsheetRef.current

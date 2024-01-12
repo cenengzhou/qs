@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   ButtonComponent,
@@ -23,11 +23,7 @@ import { regex } from '..'
 import DatePicker from '../../../../components/DatePicker'
 import { GLOBALPARAMETER } from '../../../../constants/global'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
-import {
-  setNotificationContent,
-  setNotificationMode,
-  setNotificationVisible
-} from '../../../../redux/notificationReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import {
   CustomError,
@@ -44,8 +40,9 @@ const Subcontract = () => {
   const dispatch = useAppDispatch()
 
   const { data: workScopesData } = useGetAllWorkScopesQuery()
-  const [getSubcontract] = useGetSubcontractMutation()
-  const [updateSubcontract] = useUpdateSubcontractAdminMutation()
+  const [getSubcontract, { isLoading }] = useGetSubcontractMutation()
+  const [updateSubcontract, { isLoading: updateLoading }] =
+    useUpdateSubcontractAdminMutation()
 
   const [SubcontractRecord, setSubcontractRecord] =
     useState<SubcontractRecordProps>({})
@@ -68,48 +65,50 @@ const Subcontract = () => {
   }
 
   const getSubcontractSubmit = async () => {
-    dispatch(openLoading())
     await getSubcontract(subcontractSearch)
       .unwrap()
       .then(payload => {
-        dispatch(closeLoading())
         if (payload instanceof Object) {
           setSubcontractRecord(payload)
         } else {
-          dispatch(setNotificationMode('Warn'))
-          dispatch(setNotificationContent('Subcontract not found'))
-          dispatch(setNotificationVisible(true))
+          showTotas('Warn', 'Subcontract not found')
         }
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationVisible(true))
+        showTotas('Fail', error.data.message)
       })
   }
 
   const updateSubcontractSubmit = async () => {
-    dispatch(openLoading())
     await updateSubcontract(SubcontractRecord)
       .unwrap()
       .then(() => {
-        dispatch(closeLoading())
-
-        dispatch(setNotificationMode('Success'))
-        dispatch(setNotificationContent('Subcontract updated.'))
-        dispatch(setNotificationVisible(true))
+        showTotas('Success', 'Subcontract updated.')
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationVisible(true))
+        showTotas('Fail', error.data.message)
 
         console.error(error)
       })
   }
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (isLoading || updateLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading, updateLoading])
 
   return (
     <div className="admin-container">

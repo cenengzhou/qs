@@ -1,9 +1,7 @@
 import { DialogComponent } from '@syncfusion/ej2-react-popups'
 
 import {
-  selectContent,
   selectIsVisible,
-  selectMode,
   setNotificationVisible
 } from '../../redux/notificationReducer'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
@@ -11,14 +9,12 @@ import style from './style.module.scss'
 import classNames from 'classnames'
 
 const NotificationModal = () => {
-  const visible = useAppSelector(selectIsVisible)
-  const mode = useAppSelector(selectMode)
-  const content = useAppSelector(selectContent)
+  const { visible, mode, content } = useAppSelector(selectIsVisible)
 
   const dispatch = useAppDispatch()
 
   const dialogClose = () => {
-    dispatch(setNotificationVisible(false))
+    dispatch(setNotificationVisible({ visible: false }))
   }
 
   return (

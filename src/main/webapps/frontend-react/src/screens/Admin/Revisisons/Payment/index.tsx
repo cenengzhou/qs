@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
@@ -18,11 +18,7 @@ import {
 import DatePicker from '../../../../components/DatePicker'
 import { GLOBALPARAMETER } from '../../../../constants/global'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
-import {
-  setNotificationContent,
-  setNotificationMode,
-  setNotificationVisible
-} from '../../../../redux/notificationReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import {
   CustomError,
@@ -37,9 +33,12 @@ const fiels = { text: 'value', value: 'id' }
 const PaymentRender = () => {
   const dispatch = useAppDispatch()
 
-  const [getPaymentCert] = useGetPaymentCertMutation()
-  const [deletePaymentCert] = useDeletePendingPaymentAndDetailsMutation()
-  const [updatePaymentCert] = useUpdatePaymentCertMutation()
+  const [getPaymentCert, { isLoading: getLoading }] =
+    useGetPaymentCertMutation()
+  const [deletePaymentCert, { isLoading: deleteLoading }] =
+    useDeletePendingPaymentAndDetailsMutation()
+  const [updatePaymentCert, { isLoading: updateLoading }] =
+    useUpdatePaymentCertMutation()
   const [paymentRecord, setPaymentRecord] = useState<Payment>({})
   const [paymentSearch, setPaymentSearch] = useState<{
     jobNo?: string
@@ -47,62 +46,62 @@ const PaymentRender = () => {
     paymentCertNo?: number
   }>({ jobNo: undefined, subcontractNo: undefined, paymentCertNo: undefined })
   const search = async () => {
-    dispatch(openLoading())
     await getPaymentCert(paymentSearch)
       .unwrap()
       .then(payload => {
-        dispatch(closeLoading())
         if (payload instanceof Object) {
           setPaymentRecord(payload)
         } else {
-          dispatch(setNotificationContent('Payment certificate not found!'))
-          dispatch(setNotificationMode('Warn'))
-          dispatch(setNotificationVisible(true))
+          setPaymentRecord({})
+          showTotas('Warn', 'Payment certificate not found!')
         }
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationVisible(true))
-        console.error(error.data.message)
+        showTotas('Fail', error.data.message)
       })
   }
 
   const deletePayment = async () => {
-    dispatch(openLoading())
     if (paymentRecord.id)
       await deletePaymentCert(paymentRecord.id)
         .unwrap()
         .then(() => {
-          dispatch(closeLoading())
           setPaymentRecord({})
         })
         .catch((error: CustomError) => {
-          dispatch(closeLoading())
-          dispatch(setNotificationContent(error.data.message))
-          dispatch(setNotificationMode('Fail'))
-          dispatch(setNotificationVisible(true))
+          showTotas('Fail', error.data.message)
         })
   }
 
   const updatePayment = async () => {
-    dispatch(openLoading())
     await updatePaymentCert(paymentRecord)
       .unwrap()
       .then(() => {
-        dispatch(closeLoading())
-        dispatch(setNotificationContent('Payment Certificate updated.'))
-        dispatch(setNotificationMode('Success'))
-        dispatch(setNotificationVisible(true))
+        showTotas('Success', 'Payment Certificate updated.')
       })
       .catch((error: CustomError) => {
-        dispatch(closeLoading())
-        dispatch(setNotificationContent(error.data.message))
-        dispatch(setNotificationMode('Fail'))
-        dispatch(setNotificationVisible(true))
+        showTotas('Fail', error.data.message)
       })
   }
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (getLoading || updateLoading || deleteLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [getLoading, updateLoading, deleteLoading])
+
   return (
     <div className="admin-container">
       {/* input */}

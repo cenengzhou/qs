@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
@@ -11,11 +11,7 @@ import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 import DatePicker from '../../../components/DatePicker'
 import { GLOBALPARAMETER } from '../../../constants/global'
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
-import {
-  setNotificationContent,
-  setNotificationMode,
-  setNotificationVisible
-} from '../../../redux/notificationReducer'
+import { setNotificationVisible } from '../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../redux/store'
 import {
   CustomError,
@@ -39,18 +35,24 @@ const ManualProcedures = () => {
 
   const { data: AuditTable } = useGetAuditTableMapQuery()
   const { data: CutoffPeriod } = useGetCutoffPeriodQuery()
-  const [updateHouseKeep] = useHousekeepAuditTableMutation()
-  const [updateProvisionPosting] = useRunProvisionPostingManuallyMutation()
-  const [updateCeoApproval] = useUpdateCEOApprovalMutation()
-  const [generateSnapshot] = useGenerateSCPackageSnapshotManuallyMutation()
-  const [postSubcontractPayment] = useRunPaymentPostingMutation()
-  const [synchronizeSubcontractPackage] =
+  const [updateHouseKeep, { isLoading: houseKeepLoading }] =
+    useHousekeepAuditTableMutation()
+  const [updateProvisionPosting, { isLoading: provisionPostingLoading }] =
+    useRunProvisionPostingManuallyMutation()
+  const [updateCeoApproval, { isLoading: ceoApprovalLoading }] =
+    useUpdateCEOApprovalMutation()
+  const [generateSnapshot, { isLoading: generateSnapshotLoading }] =
+    useGenerateSCPackageSnapshotManuallyMutation()
+  const [postSubcontractPayment, { isLoading: paymentLoading }] =
+    useRunPaymentPostingMutation()
+  const [synchronizeSubcontractPackage, { isLoading: packageLoading }] =
     useUpdateF58001FromSCPackageManuallyMutation()
-  const [synchronizeSubcontractPaymentCert] =
+  const [synchronizeSubcontractPaymentCert, { isLoading: paymentCertLoading }] =
     useUpdateF58011FromSCPaymentCertManuallyMutation()
-  const [synchronizeMainContract] =
+  const [synchronizeMainContract, { isLoading: mainContractLoading }] =
     useUpdateMainCertFromF03B14ManuallyMutation()
-  const [generatePaymentCertPdf] = useGeneratePaymentPDFAdminMutation()
+  const [generatePaymentCertPdf, { isLoading: certPdfLoading }] =
+    useGeneratePaymentPDFAdminMutation()
 
   const auditTables = Object.values(AuditTable ?? {}).map((item, index) => {
     return {
@@ -86,23 +88,19 @@ const ManualProcedures = () => {
     useState<string>('')
 
   const houseKeepSubmit = async () => {
-    dispatch(openLoading())
     try {
       await updateHouseKeep(auditTableName)
         .unwrap()
         .then(payload => {
           if (payload) {
-            dispatch(
-              setNotificationContent(
-                `Removed ${payload} records from ${auditTableName}`
-              )
+            showTotas(
+              'Success',
+              `Removed ${payload} records from ${auditTableName}`
             )
-            commonSuccess()
           }
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('failed:', err)
@@ -110,7 +108,6 @@ const ManualProcedures = () => {
   }
 
   const provisionPostingSubmit = async () => {
-    dispatch(openLoading())
     try {
       await updateProvisionPosting({
         jobNumber: provisionPostingJobNo,
@@ -118,14 +115,12 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Posted.'))
-          commonSuccess()
+          showTotas('Success', 'Posted.')
           setProvisionPostingJobNo('')
           setProvisionPostingDate(dayjs(new Date()).format('YYYY-MM-DD'))
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error(err)
@@ -133,7 +128,6 @@ const ManualProcedures = () => {
   }
 
   const updateCeoApprovalSubmit = async () => {
-    dispatch(openLoading())
     try {
       await updateCeoApproval({
         jobNumber: updateCeoApprovalJobNo,
@@ -141,14 +135,12 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Update CED Approval completed.'))
-          commonSuccess()
+          showTotas('Success', 'Update CED Approval completed.')
           setUpdateCeoApprovalJobNo('')
           setUpdateCeoApprovalPackageNo('')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('Failed:', err)
@@ -156,20 +148,14 @@ const ManualProcedures = () => {
   }
 
   const generateSnapshotSubmit = async () => {
-    dispatch(openLoading())
     try {
       await generateSnapshot()
         .unwrap()
         .then(() => {
-          dispatch(
-            setNotificationContent('Generate Payment Cert PDF completed.')
-          )
-
-          commonSuccess()
+          showTotas('Success', 'Generate Payment Cert PDF completed.')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('Failed:', err)
@@ -181,12 +167,10 @@ const ManualProcedures = () => {
       await postSubcontractPayment()
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('succuss'))
-          commonSuccess()
+          showTotas('Success', 'Success')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('failed:', err)
@@ -198,12 +182,10 @@ const ManualProcedures = () => {
       await synchronizeSubcontractPackage()
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Success'))
-          commonSuccess()
+          showTotas('Success', 'Success')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('Failed:', err)
@@ -215,12 +197,10 @@ const ManualProcedures = () => {
       await synchronizeSubcontractPaymentCert()
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Success'))
-          commonSuccess()
+          showTotas('Success', 'Success')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('Failed:', err)
@@ -232,12 +212,10 @@ const ManualProcedures = () => {
       await synchronizeMainContract()
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Success'))
-          commonSuccess()
+          showTotas('Success', 'Success')
         })
         .catch(error => {
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
     } catch (err) {
       console.error('Failed:', err)
@@ -252,21 +230,28 @@ const ManualProcedures = () => {
       })
         .unwrap()
         .then(() => {
-          dispatch(setNotificationContent('Success'))
-          commonSuccess()
+          showTotas('Success', 'Success')
           setPaymentCertPdfJobNo('')
           setPaymentCertPdfPackageNo('')
           setPaymentCertPdfPaymentNo('')
         })
         .catch((error: CustomError) => {
-          dispatch(setNotificationContent)
-          dispatch(setNotificationContent(error.data.message))
-          commonFailed()
+          showTotas('Fail', error.data.message)
         })
       // {data:"1 payment PDF(s) failed to generate. Please check the log file."}
     } catch (err) {
       console.error('Failed:', err)
     }
+  }
+
+  const showTotas = (mode: 'Fail' | 'Success', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
   }
 
   const changeAudiTableName = (value: ChangeEventArgs) => {
@@ -294,19 +279,34 @@ const ManualProcedures = () => {
     setPaymentCertPdfPaymentNo(value ?? '')
   }
 
-  const commonFailed = () => {
-    dispatch(closeLoading())
+  useEffect(() => {
+    if (
+      houseKeepLoading ||
+      provisionPostingLoading ||
+      ceoApprovalLoading ||
+      generateSnapshotLoading ||
+      paymentLoading ||
+      packageLoading ||
+      paymentCertLoading ||
+      mainContractLoading ||
+      certPdfLoading
+    ) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [
+    houseKeepLoading,
+    provisionPostingLoading,
+    ceoApprovalLoading,
+    generateSnapshotLoading,
+    paymentLoading,
+    packageLoading,
+    paymentCertLoading,
+    mainContractLoading,
+    certPdfLoading
+  ])
 
-    dispatch(setNotificationMode('Fail'))
-    dispatch(setNotificationVisible(true))
-  }
-
-  const commonSuccess = () => {
-    dispatch(closeLoading())
-
-    dispatch(setNotificationMode('Success'))
-    dispatch(setNotificationVisible(true))
-  }
   return (
     <div className="admin-container">
       <div className="manual-procedures-container">

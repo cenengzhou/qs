@@ -16,11 +16,7 @@ import {
 } from '@syncfusion/ej2-react-spreadsheet'
 
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
-import {
-  setNotificationContent,
-  setNotificationMode,
-  setNotificationVisible
-} from '../../../redux/notificationReducer'
+import { setNotificationVisible } from '../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../redux/store'
 import { useGetSessionListQuery } from '../../../services'
 import './style.css'
@@ -46,12 +42,22 @@ const Session = () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(setNotificationVisible(true))
-      dispatch(setNotificationMode('Fail'))
       if ('data' in error) {
-        dispatch(setNotificationContent(error?.data.message))
+        dispatch(
+          setNotificationVisible({
+            visible: true,
+            mode: 'Fail',
+            content: error?.data.message
+          })
+        )
       } else {
-        dispatch(setNotificationContent('Error!'))
+        dispatch(
+          setNotificationVisible({
+            visible: true,
+            mode: 'Fail',
+            content: 'Error!'
+          })
+        )
       }
     }
   }, [isError])

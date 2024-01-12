@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { ChangedEventArgs } from '@syncfusion/ej2-react-calendars'
@@ -22,6 +22,9 @@ import {
   YESORNO
 } from '../../../../constants/global'
 import { useHasRole } from '../../../../hooks/useHasRole'
+import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
+import { useAppDispatch } from '../../../../redux/store'
 import {
   AddendumRequest,
   AddendumResponse,
@@ -30,36 +33,69 @@ import {
 } from '../../../../services'
 
 const Addendum = () => {
+  const dispatch = useAppDispatch()
   const { showQSAdmin } = useHasRole()
   const [addendumSearch, setAddendumSearch] = useState<AddendumRequest>({
     jobNo: undefined,
     subcontractNo: undefined,
     addendumNo: undefined
   })
-  const [getAddendum] = useGetAddendumMutation()
-  const [updateAddendumAdmin] = useUpdateAddendumAdminMutation()
+  const [getAddendum, { isLoading: getLoading }] = useGetAddendumMutation()
+  const [updateAddendumAdmin, { isLoading: updateLoading }] =
+    useUpdateAddendumAdminMutation()
   const [data, setData] = useState<AddendumResponse>()
-  const onSearch = async () => {
+  const onSearch = () => {
     try {
-      const result = await getAddendum(addendumSearch).unwrap()
-      setData(result)
+      getAddendum(addendumSearch)
+        .unwrap()
+        .then(res => {
+          if (res) {
+            setData(res)
+          } else {
+            showTotas('Warn', 'Addendum not found')
+          }
+        })
+        .catch(() => {
+          showTotas('Fail', 'Failed to fetch')
+        })
     } catch (error) {
-      console.log(error)
+      showTotas('Fail', 'Fail')
     }
   }
-  const update = async () => {
+  const update = () => {
     try {
       if (data) {
         updateAddendumAdmin(data)
           .unwrap()
-          .then(result => {
-            console.log(result)
+          .then(() => {
+            showTotas('Success', 'Success')
+          })
+          .catch(() => {
+            showTotas('Fail', 'Failed to fetch')
           })
       }
     } catch (error) {
-      console.log(error)
+      showTotas('Fail', 'Fail')
     }
   }
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (getLoading || updateLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [getLoading, updateLoading])
 
   return (
     <div className="admin-container">
