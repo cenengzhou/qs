@@ -52,6 +52,7 @@ const Addendum = () => {
           if (res) {
             setData(res)
           } else {
+            setData({})
             showTotas('Warn', 'Addendum not found')
           }
         })
@@ -143,12 +144,20 @@ const Addendum = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <ButtonComponent cssClass="e-info full-btn" onClick={onSearch}>
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            onClick={onSearch}
+            disabled={
+              !addendumSearch.jobNo ||
+              !addendumSearch.subcontractNo ||
+              !addendumSearch.addendumNo
+            }
+          >
             Search
           </ButtonComponent>
         </div>
       </div>
-      {data && (
+      {data?.id && (
         <>
           <div className="admin-content">
             <div className="row">

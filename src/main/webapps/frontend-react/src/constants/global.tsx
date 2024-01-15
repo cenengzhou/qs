@@ -625,8 +625,8 @@ export const STATUS_APPROVAL = [
 ]
 
 export const YESORNO = [
-  { value: 'YES', text: 'Yes' },
-  { value: 'NO', text: 'No' }
+  { value: 'Y', text: 'Yes' },
+  { value: 'N', text: 'No' }
 ]
 
 export const FIELDS = { text: 'text', value: 'value' }

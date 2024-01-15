@@ -291,6 +291,26 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg
         })
+      }),
+      getFinalAccountAdmin: builder.mutation<
+        FinalAccountResponse,
+        AddendumRequest
+      >({
+        query: queryArg => ({
+          url: `service/finalAccount/getFinalAccountAdmin/${queryArg.jobNo}/${queryArg.subcontractNo}/${queryArg.addendumNo}`
+        })
+      }),
+      updateFinalAccountAdmin: builder.mutation<string, FinalAccountRequest>({
+        query: queryArg => ({
+          url: 'service/addendum/updateFinalAccountAdmin',
+          method: 'POST',
+          params: {
+            jobNo: queryArg.data.jobNo,
+            subcontractNo: queryArg.subcontractNo,
+            addendumNo: queryArg.data.addendumNo
+          },
+          body: queryArg.data
+        })
       })
     }
   }
@@ -763,6 +783,29 @@ export type AddendumResponse = {
   cedApproval?: string
 }
 
+export type FinalAccountResponse = CreatedUser & {
+  jobNo?: string
+  addendumNo?: string
+  addendum?: AddendumResponse
+  finalAccountAppAmt?: number
+  finalAccountAppCCAmt?: number
+  finalAccountPreAmt?: number
+  finalAccountPreCCAmt?: number
+  finalAccountThisAmt?: number
+  finalAccountThisCCAmt?: number
+  latestBudgetAmt?: number
+  latestBudgetAmtCC?: number
+  comments?: string
+  preparedDate?: string
+  preparedUser?: string
+  status?: string
+}
+
+export type FinalAccountRequest = {
+  subcontractNo?: string
+  data: FinalAccountResponse
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -798,6 +841,8 @@ export const {
   useDeletePendingPaymentAndDetailsMutation,
   useUpdatePaymentCertMutation,
   useGetAddendumMutation,
-  useUpdateAddendumAdminMutation
+  useUpdateAddendumAdminMutation,
+  useGetFinalAccountAdminMutation,
+  useUpdateFinalAccountAdminMutation
 } = apiSlice
 export default apiSlice
