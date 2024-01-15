@@ -302,7 +302,19 @@ const apiSlice = createApi({
       }),
       updateFinalAccountAdmin: builder.mutation<string, FinalAccountRequest>({
         query: queryArg => ({
-          url: 'service/addendum/updateFinalAccountAdmin',
+          url: 'service/finalAccount/updateFinalAccountAdmin',
+          method: 'POST',
+          params: {
+            jobNo: queryArg.data.jobNo,
+            subcontractNo: queryArg.subcontractNo,
+            addendumNo: queryArg.data.addendumNo
+          },
+          body: queryArg.data
+        })
+      }),
+      deleteFinalAccountAdmin: builder.mutation<string, FinalAccountRequest>({
+        query: queryArg => ({
+          url: 'service/finalAccount/deleteFinalAccountAdmin',
           method: 'POST',
           params: {
             jobNo: queryArg.data.jobNo,
@@ -843,6 +855,7 @@ export const {
   useGetAddendumMutation,
   useUpdateAddendumAdminMutation,
   useGetFinalAccountAdminMutation,
-  useUpdateFinalAccountAdminMutation
+  useUpdateFinalAccountAdminMutation,
+  useDeleteFinalAccountAdminMutation
 } = apiSlice
 export default apiSlice

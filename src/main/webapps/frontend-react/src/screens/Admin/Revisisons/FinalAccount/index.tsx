@@ -3,12 +3,17 @@ import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
+  DropDownListComponent,
+  SelectEventArgs
+} from '@syncfusion/ej2-react-dropdowns'
+import {
   ChangeEventArgs,
   InputEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
 
+import { FIELDS, STATUS } from '../../../../constants/global'
 import { useHasRole } from '../../../../hooks/useHasRole'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../../redux/notificationReducer'
@@ -16,6 +21,7 @@ import { useAppDispatch } from '../../../../redux/store'
 import {
   AddendumRequest,
   FinalAccountResponse,
+  useDeleteFinalAccountAdminMutation,
   useGetFinalAccountAdminMutation,
   useUpdateFinalAccountAdminMutation
 } from '../../../../services'
@@ -24,21 +30,25 @@ const FinalAccount = () => {
   const dispatch = useAppDispatch()
   const { showQSAdmin } = useHasRole()
   const [subcontractNo, setSubcontractNo] = useState<string>()
-  const [addendumSearch, setAddendumSearch] = useState<AddendumRequest>({
-    jobNo: undefined,
-    subcontractNo: undefined,
-    addendumNo: undefined
-  })
+  const [finalAccountSearch, setFinalAccountSearch] = useState<AddendumRequest>(
+    {
+      jobNo: undefined,
+      subcontractNo: undefined,
+      addendumNo: undefined
+    }
+  )
   const [getFinalAddendum, { isLoading: getLoading }] =
     useGetFinalAccountAdminMutation()
   const [updateFinalAddendumAdmin, { isLoading: updateLoading }] =
     useUpdateFinalAccountAdminMutation()
+  const [deleteFinalAccountAdmin, { isLoading: deleteLoading }] =
+    useDeleteFinalAccountAdminMutation()
   const [data, setData] = useState<FinalAccountResponse>()
 
   const onSearch = () => {
-    setSubcontractNo(String(addendumSearch.subcontractNo))
+    setSubcontractNo(String(finalAccountSearch.subcontractNo))
     try {
-      getFinalAddendum(addendumSearch)
+      getFinalAddendum(finalAccountSearch)
         .unwrap()
         .then(res => {
           if (res) {
@@ -71,6 +81,23 @@ const FinalAccount = () => {
       showTotas('Fail', 'Fail')
     }
   }
+  const onDelete = () => {
+    try {
+      if (data) {
+        deleteFinalAccountAdmin({ data, subcontractNo })
+          .unwrap()
+          .then(() => {
+            setData({})
+            showTotas('Success', 'Success')
+          })
+          .catch(() => {
+            showTotas('Fail', 'Failed to fetch')
+          })
+      }
+    } catch (error) {
+      showTotas('Fail', 'Fail')
+    }
+  }
 
   const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
     dispatch(
@@ -83,12 +110,12 @@ const FinalAccount = () => {
   }
 
   useEffect(() => {
-    if (getLoading || updateLoading) {
+    if (getLoading || updateLoading || deleteLoading) {
       dispatch(openLoading())
     } else {
       dispatch(closeLoading())
     }
-  }, [getLoading, updateLoading])
+  }, [getLoading, updateLoading, deleteLoading])
 
   return (
     <div className="admin-container">
@@ -98,9 +125,9 @@ const FinalAccount = () => {
             placeholder="Job Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            value={addendumSearch.jobNo}
+            value={finalAccountSearch.jobNo}
             input={(value: InputEventArgs) =>
-              setAddendumSearch(prev => ({ ...prev, jobNo: value.value }))
+              setFinalAccountSearch(prev => ({ ...prev, jobNo: value.value }))
             }
           />
         </div>
@@ -110,9 +137,9 @@ const FinalAccount = () => {
             floatLabelType="Auto"
             cssClass="e-outline"
             format="######"
-            value={addendumSearch.subcontractNo}
+            value={finalAccountSearch.subcontractNo}
             change={(value: ChangeEventArgs) =>
-              setAddendumSearch(prev => ({
+              setFinalAccountSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
               }))
@@ -125,9 +152,9 @@ const FinalAccount = () => {
             floatLabelType="Auto"
             cssClass="e-outline"
             format="######"
-            value={addendumSearch.addendumNo}
+            value={finalAccountSearch.addendumNo}
             change={(value: ChangeEventArgs) =>
-              setAddendumSearch(prev => ({
+              setFinalAccountSearch(prev => ({
                 ...prev,
                 addendumNo: value.value
               }))
@@ -139,45 +166,156 @@ const FinalAccount = () => {
             cssClass="e-info full-btn"
             onClick={onSearch}
             disabled={
-              !addendumSearch.jobNo ||
-              !addendumSearch.subcontractNo ||
-              !addendumSearch.addendumNo
+              !finalAccountSearch.jobNo ||
+              !finalAccountSearch.subcontractNo ||
+              !finalAccountSearch.addendumNo
             }
           >
             Search
           </ButtonComponent>
         </div>
       </div>
-      <div className="admin-content">
-        <div className="row">
-          <div className="col-lg-6 col-md-6">
-            <TextBoxComponent
-              placeholder="Subcontract Description"
-              floatLabelType="Auto"
-              cssClass="e-outline"
-              value={data?.jobNo}
-              readOnly
-            />
+      {data?.id && (
+        <>
+          <div className="admin-content">
+            <div className="row">
+              <div className="col-lg-6 col-md-6">
+                <TextBoxComponent
+                  placeholder="Subcontract Description"
+                  floatLabelType="Auto"
+                  cssClass="e-outline"
+                  value={data?.jobNo}
+                  readOnly
+                />
+              </div>
+              <div className="col-lg-6 col-md-6">
+                <TextBoxComponent
+                  placeholder="Subcontract Name"
+                  floatLabelType="Auto"
+                  cssClass="e-outline"
+                  value={data?.addendumNo}
+                  readOnly
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-4 col-md-4">
+                <NumericTextBoxComponent
+                  placeholder="Final Account App Amount"
+                  floatLabelType="Auto"
+                  format="c2"
+                  cssClass="e-outline"
+                  value={data?.finalAccountAppAmt}
+                  change={(value: ChangeEventArgs) =>
+                    setData({ ...data, finalAccountAppAmt: value.value })
+                  }
+                />
+              </div>
+              <div className="col-lg-4 col-md-4">
+                <NumericTextBoxComponent
+                  placeholder="Final Account App CC Amount"
+                  floatLabelType="Auto"
+                  format="c2"
+                  cssClass="e-outline"
+                  value={data?.finalAccountAppCCAmt}
+                  change={(value: ChangeEventArgs) =>
+                    setData({ ...data, finalAccountAppCCAmt: value.value })
+                  }
+                />
+              </div>
+              <div className="col-lg-4 col-md-4">
+                <NumericTextBoxComponent
+                  placeholder="Latest Budget Amount"
+                  floatLabelType="Auto"
+                  format="c2"
+                  cssClass="e-outline"
+                  value={data?.latestBudgetAmt}
+                  change={(value: ChangeEventArgs) =>
+                    setData({ ...data, latestBudgetAmt: value.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-4 col-md-4">
+                <NumericTextBoxComponent
+                  placeholder="Latest Budget CC Amount"
+                  floatLabelType="Auto"
+                  format="c2"
+                  cssClass="e-outline"
+                  value={data?.latestBudgetAmtCC}
+                  change={(value: ChangeEventArgs) =>
+                    setData({ ...data, latestBudgetAmtCC: value.value })
+                  }
+                />
+              </div>
+              <div className="col-lg-4 col-md-4">
+                <NumericTextBoxComponent
+                  placeholder="This Final Account CC Amount"
+                  floatLabelType="Auto"
+                  format="c2"
+                  cssClass="e-outline"
+                  value={data?.finalAccountThisCCAmt}
+                  change={(value: ChangeEventArgs) =>
+                    setData({ ...data, finalAccountThisCCAmt: value.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                <TextBoxComponent
+                  placeholder="Final Account Comments"
+                  floatLabelType="Auto"
+                  cssClass="e-outline"
+                  multiline={true}
+                  value={data?.comments}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-4 col-md-4">
+                <DropDownListComponent
+                  dataSource={STATUS}
+                  fields={FIELDS}
+                  cssClass="e-outline"
+                  floatLabelType="Always"
+                  showClearButton
+                  placeholder="Status"
+                  value={data?.status}
+                  select={(value: SelectEventArgs) =>
+                    setData({ ...data, status: value.itemData.value })
+                  }
+                />
+              </div>
+            </div>
           </div>
-          <div className="col-lg-6 col-md-6">
-            <TextBoxComponent
-              placeholder="Subcontract Name"
-              floatLabelType="Auto"
-              cssClass="e-outline"
-              value={data?.addendumNo}
-              readOnly
-            />
-          </div>
-        </div>
-      </div>
-      {showQSAdmin && (
-        <div className="row">
-          <div className="col-lg-12 col-md-12">
-            <ButtonComponent cssClass="e-info full-btn" onClick={update}>
-              Update
-            </ButtonComponent>
-          </div>
-        </div>
+          {showQSAdmin && (
+            <div className="row">
+              <div
+                className={
+                  data?.status == 'PENDING'
+                    ? 'col-lg-6 col-md-6'
+                    : 'col-lg-12 col-md-12'
+                }
+              >
+                <ButtonComponent cssClass="e-info full-btn" onClick={update}>
+                  Update
+                </ButtonComponent>
+              </div>
+              {data?.status == 'PENDING' && (
+                <div className="col-lg-6 col-md-6">
+                  <ButtonComponent
+                    cssClass="e-danger full-btn"
+                    onClick={onDelete}
+                  >
+                    Delete
+                  </ButtonComponent>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
