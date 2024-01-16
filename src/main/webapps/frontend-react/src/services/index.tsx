@@ -323,6 +323,31 @@ const apiSlice = createApi({
           },
           body: queryArg.data
         })
+      }),
+      findByUsernameIsNotNull: builder.query<UserInfo[], void>({
+        query: () => ({
+          url: 'service/hr/findByUsernameIsNotNull'
+        })
+      }),
+      getMemo: builder.mutation<MemoResponse, SubcontractResquest>({
+        query: queryArg => ({
+          url: 'service/consultancyAgreement/getMemo',
+          params: queryArg
+        })
+      }),
+      updateConsultancyAgreementAdmin: builder.mutation<
+        string,
+        ConsultancyAgreementRequest
+      >({
+        query: queryArg => ({
+          url: 'service/finalAccount/updateConsultancyAgreementAdmin',
+          method: 'POST',
+          params: {
+            jobNo: queryArg.jobNo,
+            subcontractNo: queryArg.subcontractNo
+          },
+          body: queryArg.data
+        })
       })
     }
   }
@@ -566,7 +591,7 @@ export type AllWorkScopesResponseTrans = WorkScopesTrans[]
 export type AllWorkScopesResponse = WorkScopes[]
 
 export type SubcontractResquest = JobNo & {
-  subcontractNo?: number
+  subcontractNo?: string
 }
 
 export type Subcontract = CreatedUser & {
@@ -758,7 +783,7 @@ export type ProceduresCutoffPeriod = CreatedUser & {
 }
 
 export type AddendumRequest = SubcontractResquest & {
-  addendumNo?: number
+  addendumNo?: string
 }
 
 export type AddendumResponse = {
@@ -818,6 +843,42 @@ export type FinalAccountRequest = {
   data: FinalAccountResponse
 }
 
+export type UserInfo = {
+  department?: string
+  division?: string
+  email?: string
+  employeeId?: string
+  fullName?: string
+  mobile?: string
+  physicalDeliveryOfficeName?: string
+  supportBy?: string
+  telOffice?: string
+  title?: string
+  username?: string
+}
+
+export type MemoResponse = CreatedUser & {
+  budgetAmount?: number
+  ccList?: string
+  consultantName?: string
+  dateApproval?: string
+  dateSubmission?: string
+  description?: string
+  explanation?: string
+  feeEstimate?: number
+  fromList?: number
+  idSubcontract?: Subcontract
+  period?: string
+  ref?: string
+  statusApproval?: string
+  subject?: string
+  toList?: string
+}
+
+export type ConsultancyAgreementRequest = SubcontractResquest & {
+  data?: MemoResponse
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -856,6 +917,9 @@ export const {
   useUpdateAddendumAdminMutation,
   useGetFinalAccountAdminMutation,
   useUpdateFinalAccountAdminMutation,
-  useDeleteFinalAccountAdminMutation
+  useDeleteFinalAccountAdminMutation,
+  useFindByUsernameIsNotNullQuery,
+  useGetMemoMutation,
+  useUpdateConsultancyAgreementAdminMutation
 } = apiSlice
 export default apiSlice

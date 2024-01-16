@@ -114,13 +114,13 @@ const Addendum = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Subcontract Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            format="######"
+            type="number"
             value={addendumSearch.subcontractNo}
-            change={(value: ChangeEventArgs) =>
+            input={(value: InputEventArgs) =>
               setAddendumSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
@@ -129,13 +129,13 @@ const Addendum = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Addendum Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            format="######"
+            type="number"
             value={addendumSearch.addendumNo}
-            change={(value: ChangeEventArgs) =>
+            input={(value: InputEventArgs) =>
               setAddendumSearch(prev => ({
                 ...prev,
                 addendumNo: value.value

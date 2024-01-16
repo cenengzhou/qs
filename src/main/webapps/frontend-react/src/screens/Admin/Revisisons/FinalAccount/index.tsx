@@ -132,13 +132,13 @@ const FinalAccount = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Subcontract Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            format="######"
+            type="number"
             value={finalAccountSearch.subcontractNo}
-            change={(value: ChangeEventArgs) =>
+            input={(value: InputEventArgs) =>
               setFinalAccountSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
@@ -147,13 +147,13 @@ const FinalAccount = () => {
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Addendum Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            format="######"
+            type="number"
             value={finalAccountSearch.addendumNo}
-            change={(value: ChangeEventArgs) =>
+            input={(value: InputEventArgs) =>
               setFinalAccountSearch(prev => ({
                 ...prev,
                 addendumNo: value.value
