@@ -866,7 +866,7 @@ export type MemoResponse = CreatedUser & {
   description?: string
   explanation?: string
   feeEstimate?: number
-  fromList?: number
+  fromList?: string
   idSubcontract?: Subcontract
   period?: string
   ref?: string

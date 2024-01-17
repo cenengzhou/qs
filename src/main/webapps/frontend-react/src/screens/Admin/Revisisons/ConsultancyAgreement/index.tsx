@@ -15,6 +15,7 @@ import {
 } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../../components/DatePicker'
+import MultiSelectUser from '../../../../components/MultiSelectUser'
 import { FIELDS, STATUS } from '../../../../constants/global'
 import { useHasRole } from '../../../../hooks/useHasRole'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
@@ -95,7 +96,6 @@ const ConsultancyAgreement = () => {
   useEffect(() => {
     if (getLoading || updateLoading || getUserLoading) {
       dispatch(openLoading())
-      console.log(userList)
     } else {
       dispatch(closeLoading())
     }
@@ -154,6 +154,16 @@ const ConsultancyAgreement = () => {
                   input={(value: InputEventArgs) =>
                     setData({ ...data, ref: value.value })
                   }
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                <MultiSelectUser
+                  userList={userList || []}
+                  value={data?.fromList?.split(';') || []}
+                  selected={e => setData({ ...data, fromList: e })}
+                  removed={e => setData({ ...data, fromList: e })}
                 />
               </div>
             </div>
