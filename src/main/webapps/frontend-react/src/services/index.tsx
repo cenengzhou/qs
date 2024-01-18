@@ -340,7 +340,7 @@ const apiSlice = createApi({
         ConsultancyAgreementRequest
       >({
         query: queryArg => ({
-          url: 'service/finalAccount/updateConsultancyAgreementAdmin',
+          url: 'service/consultancyAgreement/updateConsultancyAgreementAdmin',
           method: 'POST',
           params: {
             jobNo: queryArg.jobNo,

@@ -160,10 +160,33 @@ const ConsultancyAgreement = () => {
             <div className="row">
               <div className="col-lg-12 col-md-12">
                 <MultiSelectUser
+                  placeholder="From List"
                   userList={userList || []}
                   value={data?.fromList?.split(';') || []}
                   selected={e => setData({ ...data, fromList: e })}
                   removed={e => setData({ ...data, fromList: e })}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                <MultiSelectUser
+                  placeholder="To List"
+                  userList={userList || []}
+                  value={data?.toList?.split(';') || []}
+                  selected={e => setData({ ...data, toList: e })}
+                  removed={e => setData({ ...data, toList: e })}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                <MultiSelectUser
+                  placeholder="CC List"
+                  userList={userList || []}
+                  value={data?.ccList?.split(';') || []}
+                  selected={e => setData({ ...data, ccList: e })}
+                  removed={e => setData({ ...data, ccList: e })}
                 />
               </div>
             </div>

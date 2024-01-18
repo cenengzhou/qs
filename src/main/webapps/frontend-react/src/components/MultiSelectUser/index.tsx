@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  FilteringEventArgs,
   MultiSelectComponent,
   RemoveEventArgs,
   SelectEventArgs
@@ -12,6 +12,7 @@ import { UserInfo } from '../../services'
 interface MultiSelectUserProps {
   userList: UserInfo[]
   value: string[]
+  placeholder?: string
   selected: (args: string) => void
   removed: (args: string) => void
 }
@@ -19,11 +20,14 @@ interface MultiSelectUserProps {
 const MultiSelectUser = ({
   userList,
   value,
+  placeholder,
   selected,
   removed
 }: MultiSelectUserProps) => {
-  const [filterUser, setFilterUser] = useState<UserInfo[]>()
+  const msRef = useRef<MultiSelectComponent>(null)
+  const [filterUser, setFilterUser] = useState<UserInfo[]>([])
   const [defaultValue, setDefaultValue] = useState<string[]>([])
+  const hasInput = useRef<boolean>(false)
 
   const itemTemplate = (item: UserInfo) => {
     return (
@@ -50,50 +54,60 @@ const MultiSelectUser = ({
   }
 
   useEffect(() => {
-    console.log('value===', value)
     init()
+    setDefaultValue(value)
   }, [value])
 
   useEffect(() => {
-    setDefaultValue(value)
-  }, [])
-
-  useEffect(() => {
-    console.log('newUserList===', filterUser)
-  }, [filterUser])
+    if (msRef.current && !hasInput.current) {
+      hasInput.current = true
+      msRef.current!.element.previousSibling!.addEventListener(
+        'input',
+        (e: any) => {
+          const value = e.target.value
+          if (value.length >= 3) {
+            if (userList && userList.length > 0) {
+              const newUserList: UserInfo[] = userList.filter(
+                item =>
+                  item.fullName?.toUpperCase().includes(value.toUpperCase()) ||
+                  item.username?.toUpperCase().includes(value.toUpperCase())
+              )
+              setFilterUser(pre => [...pre, ...newUserList])
+            }
+          } else {
+            init()
+          }
+        },
+        true
+      )
+    }
+  }, [msRef.current])
 
   return (
     <MultiSelectComponent
+      ref={msRef}
       dataSource={filterUser}
       fields={{ text: 'fullName', value: 'username' }}
-      allowFiltering={true}
       value={defaultValue}
+      floatLabelType="Always"
       itemTemplate={itemTemplate}
       valueTemplate={valueTemplate}
-      filterBarPlaceholder="Form"
+      placeholder={placeholder}
       select={(item: SelectEventArgs) => {
-        const oldValue = value
-        selected([...oldValue, (item.itemData as UserInfo)?.username].join(';'))
+        const username = (item.itemData as UserInfo).username
+        if (username && defaultValue.indexOf(username) === -1) {
+          setDefaultValue([...defaultValue, username])
+          selected([...defaultValue, username].join(';'))
+        }
       }}
       removed={(item: RemoveEventArgs) => {
-        const oldValue = value
-        oldValue.slice(
+        const oldValue = [...defaultValue]
+        oldValue.splice(
           oldValue.findIndex(e => e == (item.itemData as UserInfo)?.username),
           1
         )
+        setDefaultValue(oldValue)
         removed(oldValue.join(';'))
-      }}
-      filtering={(e: FilteringEventArgs) => {
-        if (e.text.length >= 3) {
-          if (userList && userList.length > 0) {
-            const newUserList: UserInfo[] = userList.filter(
-              item =>
-                item.fullName?.toUpperCase().includes(e.text.toUpperCase()) ||
-                item.username?.toUpperCase().includes(e.text.toUpperCase())
-            )
-            setFilterUser(newUserList)
-          }
-        }
       }}
     />
   )
