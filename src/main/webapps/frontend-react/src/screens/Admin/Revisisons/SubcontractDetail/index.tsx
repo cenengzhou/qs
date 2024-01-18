@@ -4,7 +4,6 @@ import { Query } from '@syncfusion/ej2-data'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
   FocusOutEventArgs,
-  InputEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
@@ -23,7 +22,6 @@ import {
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
-import { regex } from '..'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
@@ -33,25 +31,13 @@ import {
   useGetSCDetailsMutation,
   useUpdateSubcontractDetailListAdminMutation
 } from '../../../../services'
-import { getAddressIndex, getAddressKey, selectQuery } from './constants'
+import { getAddressIndex, regex, validateJobNo } from '../helper'
+import { getAddressKey, selectQuery } from './constants'
 import './style.css'
 
 const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
   const dispatch = useAppDispatch()
-  const query = new Query().select(selectQuery)
   const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const validateInput = (value: InputEventArgs) => {
-    if (value.value && regex.test(value.value)) {
-      value.container?.classList.add('e-success')
-      value.container?.classList.remove('e-error')
-    } else if (value.value && !regex.test(value.value)) {
-      value.container?.classList.remove('e-success')
-      value.container?.classList.add('e-error')
-    } else {
-      value.container?.classList.remove('e-error')
-      value.container?.classList.remove('e-success')
-    }
-  }
 
   const updateDetails = useRef<SCDetail[]>([])
   const detail = useRef<SCDetail>({ id: undefined })
@@ -112,7 +98,6 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
     } else {
       updateDetails.current[updateIndex] = obj
     }
-    console.log(updateDetails.current)
   }
 
   const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
@@ -174,7 +159,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             value={searchRecord.jobNo}
             blur={(e: FocusOutEventArgs) => {
               setSearchRecord({ ...searchRecord, jobNo: e.value ?? '' })
-              validateInput(e)
+              validateJobNo(e)
             }}
           />
         </div>
@@ -199,7 +184,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
               !(
                 regex.test(searchRecord.jobNo ?? '') &&
                 searchRecord.jobNo &&
-                !!searchRecord.subcontractNo
+                searchRecord.subcontractNo
               )
             }
             cssClass="e-info full-btn"
@@ -214,7 +199,6 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
       <div className="admin-content">
         <SpreadsheetComponent
           ref={spreadsheetRef}
-          allowDataValidation={true}
           cellSave={cellSave}
           allowEditing={!!details.length}
         >
@@ -229,7 +213,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
               <RangesDirective>
                 <RangeDirective
                   dataSource={details}
-                  query={query}
+                  query={new Query().select(selectQuery)}
                   startCell="A2"
                   showFieldAsHeader={false}
                 ></RangeDirective>
@@ -387,7 +371,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   width={120}
                   validation={{
                     type: 'List',
-                    value1: ' ,Recoverable,Non-Recoverable',
+                    value1: ' ,R,NR',
                     ignoreBlank: false
                   }}
                   isLocked={!isQsAdm}
@@ -397,17 +381,19 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
           </SheetsDirective>
         </SpreadsheetComponent>
       </div>
-      <div className="row">
-        <div className="col-lg-12 col-md-12">
-          <ButtonComponent
-            cssClass="e-info full-btn"
-            onClick={updateDedail}
-            disabled={!details.length}
-          >
-            Update Subcontract Detail
-          </ButtonComponent>
+      {isQsAdm && (
+        <div className="row">
+          <div className="col-lg-12 col-md-12">
+            <ButtonComponent
+              cssClass="e-info full-btn"
+              onClick={updateDedail}
+              disabled={!details.length}
+            >
+              Update Subcontract Detail
+            </ButtonComponent>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -1,371 +1,370 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { useEffect, useRef, useState } from 'react'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef } from 'react'
-
+import { Query } from '@syncfusion/ej2-data'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
+  FocusOutEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
 } from '@syncfusion/ej2-react-inputs'
 import {
+  CellDirective,
+  CellSaveEventArgs,
+  CellsDirective,
   ColumnDirective,
   ColumnsDirective,
   RangeDirective,
   RangesDirective,
+  RowDirective,
+  RowsDirective,
   SheetDirective,
   SheetsDirective,
   SpreadsheetComponent
 } from '@syncfusion/ej2-react-spreadsheet'
 
+import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
+import { useAppDispatch } from '../../../../redux/store'
+import {
+  IDADDENDUM,
+  useGetAllAddendumDetailsMutation,
+  useUpdateAddendumDetailListAdminMutation
+} from '../../../../services'
+import { getAddressIndex, regex, validateJobNo } from '../helper'
+import { getAddressKey, selectQuery } from './constant'
 import './style.css'
 
-const AddendumDetail = () => {
-  const spreadsheet = useRef<SpreadsheetComponent>(null)
+const AddendumDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
+  const dispatch = useAppDispatch()
 
-  // const data1: any[] = [
-  //   {
-  //     usernameCreated: 'raymondcwy',
-  //     dateCreated: '2022-01-06T05:09:11.000+00:00',
-  //     usernameLastModified: 'raymondcwy',
-  //     dateLastModified: '2022-01-06T05:09:11.000+00:00',
-  //     id: 97463,
-  //     idAddendum: {
-  //       usernameCreated: 'raymondcwy',
-  //       dateCreated: '2022-01-06T05:06:00.000+00:00',
-  //       usernameLastModified: 'SYSTEM',
-  //       dateLastModified: '2022-01-10T01:18:10.000+00:00',
-  //       id: 29478,
-  //       idSubcontract: {
-  //         createdUser: 'conniewoo',
-  //         createdDate: '2019-09-17T02:52:57.000+00:00',
-  //         lastModifiedUser: 'SYSTEM',
-  //         lastModifiedDate: '2022-03-25T20:29:23.000+00:00',
-  //         systemStatus: 'ACTIVE',
-  //         id: 73570,
-  //         jobInfo: {
-  //           createdUser: 'conniewoo',
-  //           createdDate: '2019-08-23T01:58:42.000+00:00',
-  //           lastModifiedUser: 'IDT-KOEY',
-  //           lastModifiedDate: '2022-09-05T13:45:08.000+00:00',
-  //           systemStatus: 'ACTIVE',
-  //           id: 7813,
-  //           budgetPosted: null,
-  //           eotApplied: 0.0,
-  //           eotAwarded: 0.0,
-  //           ldExposureAmount: 0.0,
-  //           residualAfterEot: 0.0,
-  //           nameExecutiveDirector: null,
-  //           nameDirector: null,
-  //           nameDirectSupervisorPic: null,
-  //           nameProjectInCharge: null,
-  //           nameCommercialInCharge: null,
-  //           nameTempWorkController: null,
-  //           nameSafetyEnvRep: null,
-  //           nameAuthorizedPerson: null,
-  //           nameSiteAdmin1: null,
-  //           nameSiteAdmin2: null,
-  //           nameSiteManagement1: null,
-  //           nameSiteManagement2: null,
-  //           nameSiteManagement3: null,
-  //           nameSiteManagement4: null,
-  //           nameSiteSupervision1: null,
-  //           nameSiteSupervision2: null,
-  //           nameSiteSupervision3: null,
-  //           nameSiteSupervision4: null,
-  //           noReference: 47523469,
-  //           statusApproval: 'APPROVED',
-  //           projectFullDescription:
-  //             'WORKS CONTRACT NO.: PD/WC/209\nMAIN WORKS CONTRACT FOR DEVELOPMENT OF IE 2.0 PROJECT C\nADVANCED MANUFACTURING CENTRE',
-  //           projectLocation: 'TKO Industrial Estate',
-  //           natureOfWorkBB: null,
-  //           natureOfWorkGammon: 'K02',
-  //           tenderNumber: 'T19010E',
-  //           immediateParentJobNumber: null,
-  //           ultimateParentJobNumber: null,
-  //           ultimateClient: '33103',
-  //           immediateClientBusinessSector: null,
-  //           ultimateClientBusinessSector: null,
-  //           clientType: null,
-  //           engineerArchitect: 'WONG TUNG & PARTNERS LIMITED',
-  //           beam: null,
-  //           beamPlus: null,
-  //           leed: null,
-  //           innovationApplicable: '0',
-  //           innovationPercent: null,
-  //           paymentTermFromClient: 49,
-  //           provision: 'N',
-  //           isParentCompanyGuarantee: null,
-  //           jobNo: '13838',
-  //           description: 'Adv Manfacturg Ctr E&M(S13828)',
-  //           company: '00007',
-  //           employer: '33540',
-  //           contractType: 'LS',
-  //           division: 'E&M',
-  //           department: 'E&M',
-  //           internalJob: 'EB',
-  //           soloJV: 'S',
-  //           completionStatus: '1',
-  //           insuranceCAR: ' ',
-  //           insuranceECI: ' ',
-  //           insuranceTPL: ' ',
-  //           clientContractNo: 'PD/WC/209',
-  //           parentJobNo: '13838',
-  //           jvPartnerNo: '0',
-  //           jvPercentage: 0.0,
-  //           originalContractValue: 1.413171954e9,
-  //           projectedContractValue: 1.413171954e9,
-  //           orginalNSCContractValue: 0.0,
-  //           tenderGP: 9.8922037e7,
-  //           forecastEndYear: 2021,
-  //           forecastEndPeriod: 0,
-  //           maxRetPercent: 5.0,
-  //           interimRetPercent: 10.0,
-  //           mosRetPercent: 10.0,
-  //           valueOfBSWork: 1.413171954e9,
-  //           grossFloorArea: 0.0,
-  //           grossFloorAreaUnit: '  ',
-  //           billingCurrency: '   ',
-  //           paymentTermForNSC: null,
-  //           defectProvisionPercent: 0.5,
-  //           cpfApplicable: '0',
-  //           cpfIndexName: null,
-  //           cpfBaseYear: null,
-  //           cpfBasePeriod: null,
-  //           levyApplicable: '0',
-  //           levyCITAPercent: 0.0,
-  //           levyPCFBPercent: 0.0,
-  //           expectedPCCDate: null,
-  //           actualPCCDate: null,
-  //           expectedMakingGoodDate: null,
-  //           actualMakingGoodDate: null,
-  //           defectLiabilityPeriod: 12,
-  //           defectListIssuedDate: null,
-  //           financialEndDate: null,
-  //           dateFinalACSettlement: null,
-  //           yearOfCompletion: 0,
-  //           bqFinalizedFlag: ' ',
-  //           manualInputSCWD: 'Y',
-  //           legacyJob: null,
-  //           conversionStatus: 'Y',
-  //           repackagingType: '1',
-  //           finQS0Review: 'D'
-  //         },
-  //         packageNo: '1003',
-  //         description:
-  //           'Provision of skilled labour for the movement and fixing of modules',
-  //         packageType: 'S',
-  //         packageStatus: null,
-  //         subcontractorNature: 'DSC',
-  //         originalSubcontractSum: 9667300.0,
-  //         approvedVOAmount: 8528584.0,
-  //         remeasuredSubcontractSum: 9667300.0,
-  //         approvalRoute: null,
-  //         retentionTerms: 'No Retention',
-  //         maxRetentionPercentage: 0.0,
-  //         interimRentionPercentage: 0.0,
-  //         mosRetentionPercentage: 0.0,
-  //         retentionAmount: 0.0,
-  //         accumlatedRetention: 0.0,
-  //         retentionReleased: 0.0,
-  //         paymentInformation: null,
-  //         paymentCurrency: 'HKD',
-  //         exchangeRate: 1.0,
-  //         paymentTerms: 'QS0',
-  //         subcontractTerm: 'Re-measurement',
-  //         cpfCalculation: '0',
-  //         cpfBasePeriod: null,
-  //         cpfBaseYear: null,
-  //         formOfSubcontract: 'Major',
-  //         internalJobNo: null,
-  //         paymentStatus: 'I',
-  //         submittedAddendum: ' ',
-  //         splitTerminateStatus: '0',
-  //         paymentTermsDescription: 'Pay when GEM get paid + 14 days',
-  //         notes:
-  //           'Inclusive of car park module connection works\nThe SED module connection works are by Fugo \nThe Airtech rates are inclusive of hand tools, PPE + MPF\nSC sum not fixed dependent on quantity of labour provided by Airtech',
-  //         workscope: 264,
-  //         nameSubcontractor: 'Airtech M&E HK Ltd',
-  //         scCreatedDate: null,
-  //         latestAddendumValueUpdatedDate: '2022-01-10',
-  //         firstPaymentCertIssuedDate: '2020-06-10',
-  //         lastPaymentCertIssuedDate: '2022-03-15',
-  //         finalPaymentIssuedDate: null,
-  //         scAwardApprovalRequestSentDate: '2020-05-27',
-  //         scApprovalDate: '2020-06-02',
-  //         labourIncludedContract: true,
-  //         plantIncludedContract: false,
-  //         materialIncludedContract: false,
-  //         totalPostedWorkDoneAmount: 17689304.5,
-  //         totalCumWorkDoneAmount: 17689304.5,
-  //         totalPostedCertifiedAmount: 17229417.5,
-  //         totalCumCertifiedAmount: 17229417.5,
-  //         totalCCPostedCertAmount: -124965.0,
-  //         totalMOSPostedCertAmount: 0.0,
-  //         totalAPPostedCertAmount: 0,
-  //         totalRecoverableAmount: 616340,
-  //         totalNonRecoverableAmount: 1448710,
-  //         requisitionApprovedDate: '2019-12-02',
-  //         tenderAnalysisApprovedDate: '2020-04-16',
-  //         preAwardMeetingDate: '2020-04-03',
-  //         loaSignedDate: null,
-  //         scDocScrDate: '2020-05-20',
-  //         scDocLegalDate: '2020-05-20',
-  //         workCommenceDate: '2020-05-05',
-  //         onSiteStartDate: '2020-05-06',
-  //         scFinalAccDraftDate: null,
-  //         scFinalAccSignoffDate: null,
-  //         paymentMethod: null,
-  //         periodForPayment: null,
-  //         amountPackageStretchTarget: null,
-  //         reasonLoa: null,
-  //         dateScExecutionTarget: null,
-  //         executionMethodMainContract: null,
-  //         executionMethodPropsed: null,
-  //         durationFrom: null,
-  //         durationTo: null,
-  //         reasonQuotation: null,
-  //         reasonManner: null,
-  //         amtCEDApproved: 18168484,
-  //         retentionBalance: 0.0,
-  //         splitTerminateStatusText: 'Not Submitted',
-  //         balanceToCompleteAmount: 506579.5,
-  //         totalProvisionAmount: 459887.0,
-  //         paymentStatusText: 'Interim',
-  //         subcontractType: 'Labour',
-  //         totalNetPostedCertifiedAmount: 17104452.5,
-  //         awarded: true,
-  //         subcontractSum: 18195884.0,
-  //         vendorNo: '502934',
-  //         scStatus: 500
-  //       },
-  //       noJob: '13838',
-  //       noSubcontract: '1003',
-  //       descriptionSubcontract:
-  //         'Provision of skilled labour for the movement and fixing of modules',
-  //       noSubcontractor: '502934',
-  //       nameSubcontractor: 'Airtech M&E HK Ltd',
-  //       no: 7,
-  //       title: 'Addendum No.7',
-  //       amtSubcontractRemeasured: 9667300,
-  //       amtSubcontractRevised: 18188084,
-  //       amtAddendumTotal: 8520784,
-  //       amtAddendumTotalTba: 8528584,
-  //       amtAddendum: 7800,
-  //       amtSubcontractRevisedTba: 18195884,
-  //       recoverableAmount: 7800,
-  //       nonRecoverableAmount: 0,
-  //       dateSubmission: '2022-01-06',
-  //       dateApproval: '2022-01-10',
-  //       status: 'APPROVED',
-  //       statusApproval: 'APPROVED',
-  //       usernamePreparedBy: 'raymondcwy',
-  //       remarks:
-  //         'ISC-010 Diversion of temporary rainwater pipe to underground drain pipe',
-  //       finalAccount: null,
-  //       noAddendumDetailNext: 3,
-  //       amtCEDApproved: null,
-  //       cedApproval: null
-  //     },
-  //     noJob: '13838',
-  //     noSubcontract: '1003',
-  //     no: 7,
-  //     typeHd: 'DETAIL',
-  //     typeVo: 'V1',
-  //     bpi: '95/7/V1/0002',
-  //     description:
-  //       'ISC-010 Diversion of temporary rainwater pipe to underground drain pipe',
-  //     quantity: 1,
-  //     rateAddendum: 7800,
-  //     amtAddendum: 7800,
-  //     rateBudget: 0,
-  //     amtBudget: 0,
-  //     codeObject: '140199',
-  //     codeSubsidiary: '20801422',
-  //     unit: 'AM',
-  //     remarks: 'charge to GCL',
-  //     idHeaderRef: null,
-  //     codeObjectForDaywork: null,
-  //     noSubcontractChargedRef: null,
-  //     typeAction: 'ADD',
-  //     idResourceSummary: null,
-  //     idSubcontractDetail: null,
-  //     typeRecoverable: 'R'
-  //   }
-  // ]
-  const data = [
-    {
-      id: 603069,
-      description: 'Ground Investigation Works (Buying Gain)',
-      remark: null,
-      objectCode: '149999',
-      subsidiaryCode: '25999999',
-      objectCodeForDayWork: '149999',
-      bpi: '12',
-      unit: 'UN',
-      typeVo: 402141,
-      resourceSummary: null,
-      headerReference: 47523469,
-      subcontractChargedRef: '324',
-      rateAddendum: 7800,
-      rateBudget: 0,
-      quantity: 171239.9,
-      addendumAmount: 22434,
-      amountBudget: 171239.9,
-      lastModifiedDate: '2020-11-17T15:00:04.000+00:00',
-      lastModifiedUser: 'SYSTEM',
-      createdDate: '2020-11-17T15:00:04.000+00:00',
-      createdUser: 'SYSTEM',
-      typeRecoverable: null
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
+
+  const updateDetails = useRef<IDADDENDUM[]>([])
+  const detail = useRef<IDADDENDUM>({ id: undefined })
+
+  const [searchRecord, setSearchRecord] = useState<{
+    jobNo?: string
+    subcontractNo?: number
+    addendumNo?: number
+  }>({ jobNo: undefined, subcontractNo: undefined, addendumNo: undefined })
+  const [details, setDetails] = useState<IDADDENDUM[]>([])
+
+  const [getAddendumDetails, { isLoading }] = useGetAllAddendumDetailsMutation()
+  const [updateAddendumDetails, { isLoading: updateLoading }] =
+    useUpdateAddendumDetailListAdminMutation()
+
+  const search = async () => {
+    setDetails([])
+    await getAddendumDetails(searchRecord)
+      .unwrap()
+      .then(payload => {
+        setDetails(payload)
+      })
+      .catch(() => {
+        showTotas('Fail', 'Fail')
+      })
+  }
+
+  const update = async () => {
+    if (!updateDetails.current.length) {
+      showTotas('Success', 'No Addendum Detail modified')
+      return
     }
-  ]
+    await updateAddendumDetails(updateDetails.current)
+      .unwrap()
+      .then(payload => {
+        if (payload !== '') {
+          showTotas('Warn', 'Addendum Detail update fail')
+        } else {
+          showTotas('Success', 'Addendum Detail updated')
+        }
+      })
+      .catch(() => {
+        showTotas('Fail', 'Fail')
+      })
+  }
+
+  const cellSave = (args: CellSaveEventArgs) => {
+    const index = getAddressIndex(args.address)
+    const key = getAddressKey(args.address)
+
+    detail.current = { id: details[index].id, [`${key}`]: args.value }
+    let obj: IDADDENDUM = {}
+    if (updateDetails.current.find(item => item.id === detail.current.id)) {
+      obj =
+        updateDetails.current.find(item => item.id === detail.current.id) ?? {}
+    } else {
+      obj = details.find(item => item.id === detail.current.id) ?? {}
+    }
+    obj = { ...obj, [`${key}`]: args.value }
+    const updateIndex = updateDetails.current.findIndex(
+      item => item.id === obj.id
+    )
+    if (updateIndex === -1) {
+      updateDetails.current.push(obj)
+    } else {
+      updateDetails.current[updateIndex] = obj
+    }
+  }
+
+  useEffect(() => {
+    if (isLoading || updateLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading, updateLoading])
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    const spreadsheet = spreadsheetRef.current
+
+    if (spreadsheet) {
+      spreadsheet.cellFormat(
+        {
+          backgroundColor: '#1E88E5',
+          color: '#F5F5F5',
+          fontWeight: 'bold',
+          verticalAlign: 'middle',
+          textAlign: 'center'
+        },
+        'A1:V1'
+      )
+    }
+    spreadsheetRef.current?.refresh()
+  }, [isQsAdm])
+
+  // 清除殘留spreadsheet的數據
+  useEffect(() => {
+    spreadsheetRef.current!.sheets[0].rows =
+      spreadsheetRef.current!.sheets[0].rows?.slice(0, 1)
+    const spreadsheet = spreadsheetRef.current
+    if (spreadsheet) {
+      spreadsheet.numberFormat('#,##0.0000_);[Red]-#,##0.0000', 'M2:Q1000')
+    }
+  }, [isLoading])
 
   return (
     <div className="admin-container">
-      {/* input */}
       <div className="admin-header row">
-        <div className="col-lg-4 col-md-4">
+        <div className="col-lg-3 col-md-3">
           <TextBoxComponent
             placeholder="Job Number"
             floatLabelType="Auto"
             cssClass="e-outline"
+            value={searchRecord.jobNo}
+            blur={(args: FocusOutEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                jobNo: args.value ?? ''
+              })
+              validateJobNo(args)
+            }}
           />
         </div>
-        <div className="col-lg-4 col-md-4">
+        <div className="col-lg-3 col-md-3">
           <NumericTextBoxComponent
             placeholder="Subcontract Number"
             floatLabelType="Auto"
             cssClass="e-outline"
+            format="###"
+            value={searchRecord.subcontractNo}
+            blur={(args: FocusOutEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                subcontractNo: Number(args.value)
+              })
+            }}
           />
         </div>
-        <div className="col-lg-4 col-md-4">
-          <ButtonComponent cssClass="e-info full-btn">Search</ButtonComponent>
+        <div className="col-lg-3 col-md-3">
+          <NumericTextBoxComponent
+            placeholder="ADDENDUM Number"
+            floatLabelType="Auto"
+            cssClass="e-outline"
+            format="###"
+            value={searchRecord.addendumNo}
+            blur={(args: FocusOutEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                addendumNo: Number(args.value)
+              })
+            }}
+          />
+        </div>
+        <div className="col-lg-3 col-md-3">
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            disabled={
+              !(
+                searchRecord.jobNo &&
+                searchRecord.subcontractNo &&
+                searchRecord.addendumNo &&
+                regex.test(searchRecord.jobNo)
+              )
+            }
+            onClick={search}
+          >
+            Search
+          </ButtonComponent>
         </div>
       </div>
       <div className="admin-content">
-        <SpreadsheetComponent ref={spreadsheet}>
+        <SpreadsheetComponent
+          ref={spreadsheetRef}
+          allowEditing={!!details.length}
+          cellSave={cellSave}
+        >
           <SheetsDirective>
-            <SheetDirective name="Addendum Detail">
+            <SheetDirective
+              name="Addendum Detail"
+              isProtected={true}
+              protectSettings={{ selectCells: true, formatCells: true }}
+              frozenRows={1}
+              selectedRange="A2"
+            >
               <RangesDirective>
-                <RangeDirective dataSource={data}></RangeDirective>
+                <RangeDirective
+                  dataSource={details}
+                  query={new Query().select(selectQuery)}
+                  startCell="A2"
+                  showFieldAsHeader={false}
+                ></RangeDirective>
               </RangesDirective>
+              <RowsDirective>
+                <RowDirective index={0} height={40}>
+                  <CellsDirective>
+                    <CellDirective value="ID"></CellDirective>
+                    <CellDirective value="Description"></CellDirective>
+                    <CellDirective value="Remark"></CellDirective>
+                    <CellDirective value="Object Code"></CellDirective>
+                    <CellDirective value="Subsidiary Code"></CellDirective>
+                    <CellDirective value="Object Code for day work"></CellDirective>
+                    <CellDirective value="BPI"></CellDirective>
+                    <CellDirective value="Unit"></CellDirective>
+                    <CellDirective value="typeVo"></CellDirective>
+                    <CellDirective value="Resource summary"></CellDirective>
+                    <CellDirective value="Header Reference"></CellDirective>
+                    <CellDirective value="Subcontract charged ref"></CellDirective>
+                    <CellDirective value="Addendum Rate"></CellDirective>
+                    <CellDirective value="Budget Rate"></CellDirective>
+                    <CellDirective value="Quantity"></CellDirective>
+                    <CellDirective value="Addendum Amount"></CellDirective>
+                    <CellDirective value="Budget Amount"></CellDirective>
+                    <CellDirective value="Last Modify Date"></CellDirective>
+                    <CellDirective value="Last Modify User"></CellDirective>
+                    <CellDirective value="Date Create"></CellDirective>
+                    <CellDirective value="User Create"></CellDirective>
+                    <CellDirective value="Recoverablet"></CellDirective>
+                  </CellsDirective>
+                </RowDirective>
+              </RowsDirective>
               <ColumnsDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
-                <ColumnDirective width={80}></ColumnDirective>
+                <ColumnDirective width={120}></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={360}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
+                <ColumnDirective width={120}></ColumnDirective>
+                <ColumnDirective width={120}></ColumnDirective>
+                <ColumnDirective width={120}></ColumnDirective>
+                <ColumnDirective width={120}></ColumnDirective>
+                <ColumnDirective
+                  width={120}
+                  validation={{
+                    type: 'List',
+                    value1: ' ,R,NR',
+                    ignoreBlank: false
+                  }}
+                  isLocked={!isQsAdm}
+                ></ColumnDirective>
               </ColumnsDirective>
             </SheetDirective>
           </SheetsDirective>
         </SpreadsheetComponent>
       </div>
+      {isQsAdm && (
+        <div className="row">
+          <div className="col-lg-12 col-md-12">
+            <ButtonComponent
+              cssClass="e-info full-btn"
+              onClick={update}
+              disabled={!details.length}
+            >
+              Update Addendum Detail
+            </ButtonComponent>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

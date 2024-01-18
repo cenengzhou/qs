@@ -348,6 +348,23 @@ const apiSlice = createApi({
           },
           body: queryArg.data
         })
+      }),
+      getAllAddendumDetails: builder.mutation<
+        ADDENDUM[],
+        { addendumNo?: number; jobNo?: string; subcontractNo?: number }
+      >({
+        query: queryArg => ({
+          url: 'service/addendum/getAllAddendumDetails',
+          params: queryArg,
+          method: 'GET'
+        })
+      }),
+      updateAddendumDetailListAdmin: builder.mutation<string, ADDENDUM[]>({
+        query: queryArg => ({
+          url: 'service/addendum/updateAddendumDetailListAdmin',
+          body: queryArg,
+          method: 'POST'
+        })
       })
     }
   }
@@ -879,6 +896,72 @@ export type ConsultancyAgreementRequest = SubcontractResquest & {
   data?: MemoResponse
 }
 
+export type IDADDENDUM = {
+  amtAddendum?: number
+  amtAddendumTotal?: number
+  amtAddendumTotalTba?: number
+  amtCEDApproved?: string
+  amtSubcontractRemeasured?: number
+  amtSubcontractRevised?: number
+  amtSubcontractRevisedTba?: number
+  cedApproval?: string
+  dateApproval?: string
+  dateCreated?: string
+  dateLastModified?: string
+  dateSubmission?: string
+  descriptionSubcontract?: string
+  finalAccount?: string
+  id?: number
+  nameSubcontractor?: string
+  no?: number
+  noAddendumDetailNext?: number
+  noJob?: string
+  noSubcontract?: string
+  noSubcontractor?: string
+  nonRecoverableAmount?: number
+  recoverableAmount?: number
+  remarks?: string
+  status?: string
+  statusApproval?: string
+  title?: string
+  usernameCreated?: string
+  usernameLastModified?: string
+  usernamePreparedBy?: string
+  idSubcontract?: Subcontract
+}
+
+export type ADDENDUM = {
+  amtAddendum?: number
+  amtBudget?: number
+  bpi?: string
+  codeObject?: string
+  codeObjectForDaywork?: string
+  codeSubsidiary?: string
+  dateCreated?: string
+  dateLastModified?: string
+  description?: string
+  id?: number
+  idHeaderRef?: string
+  idResourceSummary?: string
+  idSubcontractDetail?: string
+  no?: number
+  noJob?: string
+  noSubcontract?: string
+  noSubcontractChargedRef?: string
+  quantity?: number
+  rateAddendum?: number
+  rateBudget?: number
+  remarks?: string
+  typeAction?: string
+  typeHd?: string
+  typeRecoverable?: string
+  typeVo?: string
+  unit?: string
+  usernameCreated?: string
+  usernameLastModified?: string
+  idAddendum?: IDADDENDUM
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -920,6 +1003,8 @@ export const {
   useDeleteFinalAccountAdminMutation,
   useFindByUsernameIsNotNullQuery,
   useGetMemoMutation,
-  useUpdateConsultancyAgreementAdminMutation
+  useUpdateConsultancyAgreementAdminMutation,
+  useGetAllAddendumDetailsMutation,
+  useUpdateAddendumDetailListAdminMutation
 } = apiSlice
 export default apiSlice

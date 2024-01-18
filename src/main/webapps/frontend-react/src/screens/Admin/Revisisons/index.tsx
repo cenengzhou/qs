@@ -26,7 +26,6 @@ import TenderDetail from './TenderDetail'
 import Transit from './Transit'
 import './style.css'
 
-export const regex = /^(\d{5})$/g
 interface TabData {
   text: string
   id: string
@@ -57,7 +56,7 @@ const Revisions = () => {
     {
       text: 'Addendum Detail',
       id: 'addendumDetail',
-      content: <AddendumDetail />
+      content: <AddendumDetail isQsAdm={isQsAdm} />
     },
     {
       text: 'Main Certificate',
