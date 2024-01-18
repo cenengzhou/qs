@@ -36,7 +36,7 @@ import { PaymentMethodData, commonFields, workScopesFields } from './interface'
 import './style.css'
 import dayjs from 'dayjs'
 
-const Subcontract = () => {
+const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
   const dispatch = useAppDispatch()
 
   const { data: workScopesData } = useGetAllWorkScopesQuery()
@@ -1372,17 +1372,19 @@ const Subcontract = () => {
             {/* datePicker */}
           </div>
 
-          <div className="row">
-            <div className="col-lg-12 col-md-12">
-              {/* post service/subcontract/updateSubcontractAdmin */}
-              <ButtonComponent
-                cssClass="e-info full-btn"
-                onClick={updateSubcontractSubmit}
-              >
-                Update
-              </ButtonComponent>
+          {isQsAdm && (
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                {/* post service/subcontract/updateSubcontractAdmin */}
+                <ButtonComponent
+                  cssClass="e-info full-btn"
+                  onClick={updateSubcontractSubmit}
+                >
+                  Update
+                </ButtonComponent>
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>

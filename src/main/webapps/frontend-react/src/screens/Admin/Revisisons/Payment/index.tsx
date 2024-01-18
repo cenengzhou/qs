@@ -27,10 +27,10 @@ import {
   useGetPaymentCertMutation,
   useUpdatePaymentCertMutation
 } from '../../../../services'
+import { FIELS } from '../helper'
 import dayjs from 'dayjs'
 
-const fiels = { text: 'value', value: 'id' }
-const PaymentRender = () => {
+const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
   const dispatch = useAppDispatch()
 
   const [getPaymentCert, { isLoading: getLoading }] =
@@ -214,7 +214,7 @@ const PaymentRender = () => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={fiels}
+                  fields={FIELS}
                   dataSource={GLOBALPARAMETER.directPayment}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -231,7 +231,7 @@ const PaymentRender = () => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={fiels}
+                  fields={FIELS}
                   dataSource={GLOBALPARAMETER.paymentStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -250,7 +250,7 @@ const PaymentRender = () => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={fiels}
+                  fields={FIELS}
                   dataSource={GLOBALPARAMETER.intermFinalPayment}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -403,37 +403,41 @@ const PaymentRender = () => {
               </div>
             </div>
           </div>
-          {paymentRecord.paymentStatus !== 'PND' && (
-            <div className="row">
-              <div className="col-lg-12 col-md-12">
-                <ButtonComponent
-                  cssClass="e-info full-btn"
-                  onClick={updatePayment}
-                >
-                  Update
-                </ButtonComponent>
-              </div>
-            </div>
-          )}
-          {paymentRecord.paymentStatus === 'PND' && (
-            <div className="row">
-              <div className="col-lg-6 col-md-6">
-                <ButtonComponent
-                  cssClass="e-info full-btn"
-                  onClick={updatePayment}
-                >
-                  Update
-                </ButtonComponent>
-              </div>
-              <div className="col-lg-6 col-md-6">
-                <ButtonComponent
-                  cssClass="e-danger full-btn"
-                  onClick={deletePayment}
-                >
-                  Delete
-                </ButtonComponent>
-              </div>
-            </div>
+          {isQsAdm && (
+            <>
+              {paymentRecord.paymentStatus !== 'PND' && (
+                <div className="row">
+                  <div className="col-lg-12 col-md-12">
+                    <ButtonComponent
+                      cssClass="e-info full-btn"
+                      onClick={updatePayment}
+                    >
+                      Update
+                    </ButtonComponent>
+                  </div>
+                </div>
+              )}
+              {paymentRecord.paymentStatus === 'PND' && (
+                <div className="row">
+                  <div className="col-lg-6 col-md-6">
+                    <ButtonComponent
+                      cssClass="e-info full-btn"
+                      onClick={updatePayment}
+                    >
+                      Update
+                    </ButtonComponent>
+                  </div>
+                  <div className="col-lg-6 col-md-6">
+                    <ButtonComponent
+                      cssClass="e-danger full-btn"
+                      onClick={deletePayment}
+                    >
+                      Delete
+                    </ButtonComponent>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </>
       )}

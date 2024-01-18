@@ -41,14 +41,18 @@ const Revisions = () => {
     {
       text: 'Subcontract',
       id: 'subcontract',
-      content: <Subcontract />
+      content: <Subcontract isQsAdm={isQsAdm} />
     },
     {
       text: 'Subcontract Detail',
       id: 'subcontractDetail',
       content: <SubcontractDetail isQsAdm={isQsAdm} />
     },
-    { text: 'Payment', id: 'payment', content: <PaymentRender /> },
+    {
+      text: 'Payment',
+      id: 'payment',
+      content: <PaymentRender isQsAdm={isQsAdm} />
+    },
     { text: 'Addendum', id: 'addendum', content: <Addendum /> },
     {
       text: 'Addendum Detail',
