@@ -19,7 +19,7 @@ import PaymentRender from './Payment'
 import Roc from './ROC'
 import ROCDetail from './ROCDetail'
 import RocSubDetail from './ROCSubDetail'
-import Repackaging from './Repackaging'
+import RepackagingRender from './Repackaging'
 import SubcontractDetail from './SubcontractDetail'
 import Tender from './Tender'
 import TenderDetail from './TenderDetail'
@@ -66,7 +66,7 @@ const Revisions = () => {
     {
       text: 'Repackaging',
       id: 'Repackaging',
-      content: <Repackaging />
+      content: <RepackagingRender isQsAdm={isQsAdm} />
     },
     { text: 'Approval', id: 'approval', content: <Approval /> },
     { text: 'Attachment', id: 'attachment', content: <Attachment /> },

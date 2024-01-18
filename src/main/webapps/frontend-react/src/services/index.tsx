@@ -259,7 +259,7 @@ const apiSlice = createApi({
           method: 'GET'
         })
       }),
-      updateSubcontractDetailListAdmin: builder.mutation<void, SCDetail[]>({
+      updateSubcontractDetailListAdmin: builder.mutation<string, SCDetail[]>({
         query: queryArg => ({
           url: 'service/subcontract/updateSubcontractDetailListAdmin',
           method: 'POST',
@@ -363,6 +363,38 @@ const apiSlice = createApi({
         query: queryArg => ({
           url: 'service/addendum/updateAddendumDetailListAdmin',
           body: queryArg,
+          method: 'POST'
+        })
+      }),
+      obtainResourceSummariesByJobNumberForAdmin: builder.mutation<
+        Repackaging[],
+        { jobNumber?: string }
+      >({
+        query: queryArg => ({
+          url: 'service/resourceSummary/obtainResourceSummariesByJobNumberForAdmin',
+          params: queryArg,
+          method: 'GET'
+        }),
+        transformResponse: (response: Repackaging[]): Repackaging[] => {
+          const data = response.map((item: Repackaging) => {
+            const { excludeDefect, forIvRollbackOnly, excludeLevy } = item
+            return {
+              ...item,
+              excludeDefect: String(excludeDefect),
+              forIvRollbackOnly: String(forIvRollbackOnly),
+              excludeLevy: String(excludeLevy)
+            }
+          })
+          return data
+        }
+      }),
+      updateResourceSummariesForAdmin: builder.mutation<
+        string,
+        { body: ADDENDUM[]; jobNo: string }
+      >({
+        query: queryArg => ({
+          url: `service/resourceSummary/updateResourceSummariesForAdmin?jobNo=${queryArg.jobNo}`,
+          body: queryArg.body,
           method: 'POST'
         })
       })
@@ -962,6 +994,35 @@ export type ADDENDUM = {
   idAddendum?: IDADDENDUM
 }
 
+export type Repackaging = {
+  amountBudget?: number
+  createdDate?: string
+  createdUser?: string
+  cumQuantity?: number
+  currIVAmount?: number
+  excludeDefect?: string
+  excludeLevy?: string
+  finalized?: string
+  forIvRollbackOnly?: string
+  id?: number
+  ivMovement?: number
+  jobInfo?: JobInfo
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  mergeTo?: string
+  objectCode?: string
+  packageNo?: string
+  postedIVAmount?: number
+  quantity?: number
+  rate?: number
+  resourceDescription?: string
+  resourceType?: string
+  splitFrom?: string
+  subsidiaryCode?: string
+  systemStatus?: string
+  unit?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1005,6 +1066,8 @@ export const {
   useGetMemoMutation,
   useUpdateConsultancyAgreementAdminMutation,
   useGetAllAddendumDetailsMutation,
-  useUpdateAddendumDetailListAdminMutation
+  useUpdateAddendumDetailListAdminMutation,
+  useObtainResourceSummariesByJobNumberForAdminMutation,
+  useUpdateResourceSummariesForAdminMutation
 } = apiSlice
 export default apiSlice

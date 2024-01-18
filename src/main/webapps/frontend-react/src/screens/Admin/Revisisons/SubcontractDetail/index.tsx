@@ -69,8 +69,11 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
       return
     }
     await updateDetail(updateDetails.current)
-      .then(() => {
-        showTotas('Success', 'Subcontract Detail updated')
+      .then(payload => {
+        if (!payload) {
+          updateDetails.current = []
+          showTotas('Success', 'Subcontract Detail updated')
+        }
       })
       .catch((error: CustomError) => {
         showTotas('Fail', error.data.message)

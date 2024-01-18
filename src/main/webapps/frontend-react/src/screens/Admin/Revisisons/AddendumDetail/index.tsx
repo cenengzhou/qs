@@ -67,16 +67,17 @@ const AddendumDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
 
   const update = async () => {
     if (!updateDetails.current.length) {
-      showTotas('Success', 'No Addendum Detail modified')
+      showTotas('Warn', 'No Addendum Detail modified')
       return
     }
     await updateAddendumDetails(updateDetails.current)
       .unwrap()
       .then(payload => {
-        if (payload !== '') {
-          showTotas('Warn', 'Addendum Detail update fail')
-        } else {
+        if (!payload) {
+          updateDetails.current = []
           showTotas('Success', 'Addendum Detail updated')
+        } else {
+          showTotas('Warn', 'Addendum Detail update fail')
         }
       })
       .catch(() => {
