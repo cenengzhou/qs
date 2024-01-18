@@ -10,7 +10,7 @@ import Subcontract from '../Revisisons/Subcontract'
 import Addendum from './Addendum'
 import AddendumDetail from './AddendumDetail'
 import Approval from './Approval'
-import Attachment from './Attachment'
+import AttachmentRender from './Attachment'
 import ConsultancyAgreement from './ConsultancyAgreement'
 import FinalAccount from './FinalAccount'
 import MainCertificate from './MainCertificate'
@@ -69,7 +69,11 @@ const Revisions = () => {
       content: <RepackagingRender isQsAdm={isQsAdm} />
     },
     { text: 'Approval', id: 'approval', content: <Approval /> },
-    { text: 'Attachment', id: 'attachment', content: <Attachment /> },
+    {
+      text: 'Attachment',
+      id: 'attachment',
+      content: <AttachmentRender isQsAdm={isQsAdm} />
+    },
     { text: 'Transit', id: 'transit', content: <Transit /> },
     { text: 'Tender', id: 'tender', content: <Tender /> },
     {
