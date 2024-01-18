@@ -397,6 +397,36 @@ const apiSlice = createApi({
           body: queryArg.body,
           method: 'POST'
         })
+      }),
+      obtainAttachmentList: builder.mutation<
+        Attachment[],
+        { nameObject?: string; textKey?: string }
+      >({
+        query: queryArg => ({
+          url: 'service/attachment/obtainAttachmentList',
+          params: queryArg,
+          method: 'POST'
+        })
+      }),
+      getLatestRepackaging: builder.mutation<
+        LatestRepackaging,
+        { jobNo?: string }
+      >({
+        query: queryArg => ({
+          url: 'service/repackaging/getLatestRepackaging',
+          params: queryArg,
+          method: 'GET'
+        })
+      }),
+      deleteAttachmentAdmin: builder.mutation<
+        boolean,
+        { nameObject?: string; sequenceNumber?: number; textKey?: string }
+      >({
+        query: queryArg => ({
+          url: 'service/attachment/deleteAttachmentAdmin',
+          params: queryArg,
+          method: 'POST'
+        })
       })
     }
   }
@@ -994,6 +1024,21 @@ export type ADDENDUM = {
   idAddendum?: IDADDENDUM
 }
 
+export type Attachment = {
+  dateCreated?: string
+  dateLastModified?: string
+  id?: number
+  idTable?: number
+  nameFile?: string
+  nameTable?: string
+  noSequence?: number
+  pathFile?: string
+  text?: string
+  typeDocument?: string
+  usernameCreated?: string
+  usernameLastModified?: string
+}
+
 export type Repackaging = {
   amountBudget?: number
   createdDate?: string
@@ -1021,6 +1066,21 @@ export type Repackaging = {
   subsidiaryCode?: string
   systemStatus?: string
   unit?: string
+}
+
+export type LatestRepackaging = {
+  createDate?: string
+  createdDate?: string
+  createdUser?: string
+  id?: number
+  jobInfo?: JobInfo
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  remarks?: string
+  repackagingVersion?: number
+  status?: string
+  systemStatus?: string
+  totalResourceAllowance?: number
 }
 
 export const {
@@ -1068,6 +1128,9 @@ export const {
   useGetAllAddendumDetailsMutation,
   useUpdateAddendumDetailListAdminMutation,
   useObtainResourceSummariesByJobNumberForAdminMutation,
-  useUpdateResourceSummariesForAdminMutation
+  useUpdateResourceSummariesForAdminMutation,
+  useObtainAttachmentListMutation,
+  useGetLatestRepackagingMutation,
+  useDeleteAttachmentAdminMutation
 } = apiSlice
 export default apiSlice
