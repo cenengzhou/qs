@@ -65,7 +65,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
   }
   const updateDedail = async () => {
     if (!updateDetails.current.length) {
-      showTotas('Success', 'No Subcontract Detail modified')
+      showTotas('Warn', 'No Subcontract Detail modified')
       return
     }
     await updateDetail(updateDetails.current)

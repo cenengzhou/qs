@@ -37,6 +37,7 @@ import {
   useGetLatestRepackagingMutation,
   useObtainAttachmentListMutation
 } from '../../../../services'
+import { validateJobNo } from '../helper'
 import { selectQuery } from './constant'
 import './style.css'
 import classNames from 'classnames'
@@ -219,6 +220,7 @@ const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   ...searchRecord,
                   jobNo: value.value ?? ''
                 })
+                validateJobNo(value)
               }}
             />
           </div>

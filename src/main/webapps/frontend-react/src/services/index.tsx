@@ -427,7 +427,26 @@ const apiSlice = createApi({
           params: queryArg,
           method: 'POST'
         })
-      })
+      }),
+      getTenderDetailList: builder.mutation<
+        TenderDetailList[],
+        { jobNo?: string; subcontractNo?: number; subcontractorNo?: number }
+      >({
+        query: queryArg => ({
+          url: 'service/tender/getTenderDetailList',
+          params: queryArg,
+          method: 'GET'
+        })
+      }),
+      updateTenderDetailListAdmin: builder.mutation<string, TenderDetailList[]>(
+        {
+          query: queryArg => ({
+            url: 'service/tender/updateTenderDetailListAdmin',
+            body: queryArg,
+            method: 'POST'
+          })
+        }
+      )
     }
   }
 })
@@ -1083,6 +1102,56 @@ export type LatestRepackaging = {
   totalResourceAllowance?: number
 }
 
+export type TENDER = {
+  amtBuyingGainLoss?: number
+  budgetAmount?: number
+  createdDate?: string
+  createdUser?: string
+  currencyCode?: string
+  datePrepared?: string
+  exchangeRate?: number
+  id?: number
+  jobNo?: string
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  latestBudgetForecast?: string
+  nameSubcontractor?: string
+  packageNo?: string
+  remarks?: string
+  status?: string
+  statusChangeExecutionOfSC?: string
+  subcontract?: Subcontract
+  systemStatus?: string
+  usernamePrepared?: string
+  validTender?: string
+  vendorNo?: number
+}
+
+export type TenderDetailList = {
+  amountBudget?: number
+  amountForeign?: number
+  amountSubcontract?: number
+  billItem?: string
+  createdDate?: string
+  createdUser?: string
+  description?: string
+  id?: number
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  lineType?: string
+  objectCode?: string
+  quantity?: number
+  rateBudget?: number
+  rateSubcontract?: number
+  remark?: string
+  resourceNo?: number
+  sequenceNo?: number
+  subsidiaryCode?: string
+  systemStatus?: string
+  tender?: TENDER
+  unit?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1131,6 +1200,8 @@ export const {
   useUpdateResourceSummariesForAdminMutation,
   useObtainAttachmentListMutation,
   useGetLatestRepackagingMutation,
-  useDeleteAttachmentAdminMutation
+  useDeleteAttachmentAdminMutation,
+  useGetTenderDetailListMutation,
+  useUpdateTenderDetailListAdminMutation
 } = apiSlice
 export default apiSlice

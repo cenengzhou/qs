@@ -79,7 +79,7 @@ const Revisions = () => {
     {
       text: 'Tender Detail',
       id: 'tenderDetail',
-      content: <TenderDetail />
+      content: <TenderDetail isQsAdm={isQsAdm} />
     },
     {
       text: 'Monthly Movement',
