@@ -32,7 +32,6 @@ import {
 } from '../../../../services'
 import { getAddressIndex, regex, validateJobNo } from '../helper'
 import { getAddressKey, selectQuery } from './constant'
-import './style.css'
 
 const RepackagingRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
   const dispatch = useAppDispatch()

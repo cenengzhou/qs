@@ -16,7 +16,7 @@ import FinalAccount from './FinalAccount'
 import MainCertificate from './MainCertificate'
 import MonthlyMovement from './MonthlyMovement'
 import PaymentRender from './Payment'
-import Roc from './ROC'
+import RocRender from './ROC'
 import ROCDetail from './ROCDetail'
 import RocSubDetail from './ROCSubDetail'
 import RepackagingRender from './Repackaging'
@@ -86,7 +86,7 @@ const Revisions = () => {
       id: 'monthlyMovement',
       content: <MonthlyMovement />
     },
-    { text: 'ROC', id: 'ROC', content: <Roc /> },
+    { text: 'ROC', id: 'ROC', content: <RocRender isQsAdm={isQsAdm} /> },
     { text: 'ROC Detail', id: 'ROCDetail', content: <ROCDetail /> },
     {
       text: 'ROC Subdetail',

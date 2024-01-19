@@ -39,7 +39,6 @@ import {
 } from '../../../../services'
 import { validateJobNo } from '../helper'
 import { selectQuery } from './constant'
-import './style.css'
 import classNames from 'classnames'
 
 const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
@@ -114,6 +113,7 @@ const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
       })
         .unwrap()
         .then(payload => {
+          search()
           if (payload != true) {
             showTotas('Warn', `SequenceNo ${item.noSequence} Delele Fail`)
           }

@@ -446,7 +446,61 @@ const apiSlice = createApi({
             method: 'POST'
           })
         }
-      )
+      ),
+      getRocClassDescMap: builder.query<string, void>({
+        query: () => ({
+          url: 'service/roc/getRocClassDescMap',
+          method: 'GET'
+        }),
+        transformResponse: (response: RocClassDescMap[]): string => {
+          const data: Array<string> = [' ']
+          response.forEach(item => {
+            data.push(item.classification)
+          })
+          return data.join(',')
+        }
+      }),
+      getRocCategoryList: builder.query<string, void>({
+        query: () => ({
+          url: 'service/roc/getRocCategoryList',
+          method: 'GET'
+        }),
+        transformResponse: (response: Array<string>): string => {
+          response.unshift(' ')
+          return response.join(',')
+        }
+      }),
+      getImpactList: builder.query<string, void>({
+        query: () => ({
+          url: 'service/roc/getImpactList',
+          method: 'GET'
+        }),
+        transformResponse: (response: Array<string>): string => {
+          response.unshift(' ')
+          return response.join(',')
+        }
+      }),
+      getRocAdmin: builder.mutation<
+        RocAdmin[],
+        { jobNo: string; itemNo?: string }
+      >({
+        query: queryArg => ({
+          url: queryArg.itemNo
+            ? `service/roc/getRocAdmin/${queryArg.jobNo}?itemNo=${queryArg.itemNo}`
+            : `service/roc/getRocAdmin/${queryArg.jobNo}`,
+          method: 'GET'
+        })
+      }),
+      updateRocAdmin: builder.mutation<
+        string,
+        { body: RocAdmin[]; jobNo: string }
+      >({
+        query: queryArg => ({
+          url: `service/roc/updateRocAdmin?jobNo=${queryArg.jobNo}`,
+          body: queryArg.body,
+          method: 'POST'
+        })
+      })
     }
   }
 })
@@ -1152,6 +1206,37 @@ export type TenderDetailList = {
   unit?: string
 }
 
+export type RocClassDescMap = {
+  classification: string
+  createdDate?: string
+  createdUser?: string
+  description?: string
+  id?: number
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  systemStatus?: string
+}
+
+export type RocAdmin = {
+  classification?: string
+  closedDate?: string
+  createdDate?: string
+  createdUser?: string
+  description?: string
+  id?: number
+  impact?: string
+  itemNo?: number
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  openDate?: string
+  projectNo?: string
+  projectRef?: string
+  rocCategory?: string
+  rocOwner?: string
+  status?: string
+  systemStatus?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1202,6 +1287,11 @@ export const {
   useGetLatestRepackagingMutation,
   useDeleteAttachmentAdminMutation,
   useGetTenderDetailListMutation,
-  useUpdateTenderDetailListAdminMutation
+  useUpdateTenderDetailListAdminMutation,
+  useGetRocClassDescMapQuery,
+  useGetRocCategoryListQuery,
+  useGetImpactListQuery,
+  useGetRocAdminMutation,
+  useUpdateRocAdminMutation
 } = apiSlice
 export default apiSlice

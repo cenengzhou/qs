@@ -33,7 +33,6 @@ import {
 } from '../../../../services'
 import { regex, validateJobNo } from '../helper'
 import { PaymentMethodData, workScopesFields } from './interface'
-import './style.css'
 import dayjs from 'dayjs'
 
 const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
