@@ -1,12 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from 'react'
 
 import { Query } from '@syncfusion/ej2-data'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { ChangedEventArgs as calendarsChangedEventArgs } from '@syncfusion/ej2-react-calendars'
-import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
+import {
+  FocusOutEventArgs,
+  TextBoxComponent
+} from '@syncfusion/ej2-react-inputs'
 import {
   CellDirective,
+  CellSaveEventArgs,
   CellsDirective,
   ColumnDirective,
   ColumnsDirective,
@@ -20,29 +23,40 @@ import {
 } from '@syncfusion/ej2-react-spreadsheet'
 
 import DatePicker from '../../../../components/DatePicker'
-import { useHasRole } from '../../../../hooks/useHasRole'
+import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
+import { useAppDispatch } from '../../../../redux/store'
+import {
+  RocSubDetail,
+  useGetRocSubdetailListAdminMutation,
+  useUpdateRocSubdetailListAdminMutation
+} from '../../../../services'
+import { getAddressIndex, validateJobNo } from '../helper'
+import { getAddressKey, selectQuery } from './constant'
 import dayjs from 'dayjs'
 
-const RocSubDetail = () => {
-  const query = new Query().select([
-    'itemNo',
-    'description',
-    'amountBest',
-    'amountRealistic',
-    'amountWorst',
-    'year',
-    'month',
-    'hyperlink',
-    'remarks',
-    'systemStatus'
-  ])
-  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
-  const { hasRole } = useHasRole()
-  const isQsAdm = hasRole('ROLE_QS_QS_ADM')
+const RocSubDetailRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
+  const dispatch = useAppDispatch()
 
-  const [jobNo, setJobNo] = useState<string>('')
-  const [itemNo, setItemNo] = useState<string>('')
-  const [date, setDate] = useState<string>('')
+  const spreadsheetRef = useRef<SpreadsheetComponent>(null)
+
+  const updateDetails = useRef<RocSubDetail[]>([])
+  const detail = useRef<RocSubDetail>({ itemNo: undefined })
+
+  const [searchRecord, setSearchRecord] = useState<{
+    jobNo: string
+    itemNo?: string
+    period: string
+  }>({
+    jobNo: '',
+    period: ''
+  })
+  const [details, setDetails] = useState<RocSubDetail[]>([])
+
+  const [getRocSubDetail, { isLoading }] = useGetRocSubdetailListAdminMutation()
+  const [updateRocSubDetail, { isLoading: updateLoading }] =
+    useUpdateRocSubdetailListAdminMutation()
+
   useEffect(() => {
     const spreadsheet = spreadsheetRef.current
     spreadsheetRef.current?.refresh()
@@ -61,17 +75,80 @@ const RocSubDetail = () => {
     }
   }, [isQsAdm])
 
-  const updateJobNo = (value?: string) => {
-    setJobNo(value ?? '')
-  }
-  const updateItemNo = (value?: string) => {
-    setItemNo(value ?? '')
-  }
-  const changeDate = (e: calendarsChangedEventArgs) => {
-    setDate(dayjs(e.value).format('YYYY-MM-DD') ?? new Date())
+  // 清除殘留spreadsheet的數據
+  useEffect(() => {
+    spreadsheetRef.current!.sheets[0].rows =
+      spreadsheetRef.current!.sheets[0].rows?.slice(0, 1)
+    const spreadsheet = spreadsheetRef.current
+    if (spreadsheet) {
+      spreadsheet.numberFormat('#,##0.00_);[Red]-#,##0.00', 'C2:E1000')
+    }
+  }, [isLoading])
+
+  const search = async () => {
+    await getRocSubDetail(searchRecord)
+      .unwrap()
+      .then(payload => {
+        setDetails(payload)
+      })
+      .catch(() => {})
   }
 
-  const search = async () => {}
+  const update = async () => {
+    if (!updateDetails.current.length) {
+      showTotas('Warn', 'No ROC SubDetail modified')
+      return
+    }
+    await updateRocSubDetail({
+      body: updateDetails.current,
+      jobNo: searchRecord.jobNo
+    })
+  }
+
+  const cellSave = (args: CellSaveEventArgs) => {
+    const index = getAddressIndex(args.address)
+    const key = getAddressKey(args.address)
+
+    detail.current = { itemNo: details[index].itemNo, [`${key}`]: args.value }
+    let obj: RocSubDetail = {}
+    if (
+      updateDetails.current.find(item => item.itemNo === detail.current.itemNo)
+    ) {
+      obj =
+        updateDetails.current.find(
+          item => item.itemNo === detail.current.itemNo
+        ) ?? {}
+    } else {
+      obj = details.find(item => item.itemNo === detail.current.itemNo) ?? {}
+    }
+    obj = { ...obj, [`${key}`]: args.value }
+    const updateIndex = updateDetails.current.findIndex(
+      item => item.itemNo === obj.itemNo
+    )
+    if (updateIndex === -1) {
+      updateDetails.current.push(obj)
+    } else {
+      updateDetails.current[updateIndex] = obj
+    }
+  }
+
+  useEffect(() => {
+    if (isLoading || updateLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading, updateLoading])
+
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
 
   return (
     <div className="admin-container">
@@ -81,9 +158,13 @@ const RocSubDetail = () => {
             placeholder="Job Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            value={jobNo}
-            input={(value: InputEventArgs) => {
-              updateJobNo(value.value)
+            value={searchRecord.jobNo}
+            blur={(args: FocusOutEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                jobNo: args.value ?? ''
+              })
+              validateJobNo(args)
             }}
           />
         </div>
@@ -92,45 +173,58 @@ const RocSubDetail = () => {
             placeholder="Item No (Optional)"
             floatLabelType="Auto"
             cssClass="e-outline"
-            value={itemNo}
-            input={(value: InputEventArgs) => {
-              updateItemNo(value.value)
+            value={searchRecord.itemNo}
+            blur={(args: FocusOutEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                itemNo: args.value
+              })
             }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <DatePicker placeholder="Date" value={date} onChange={changeDate} />
+          <DatePicker
+            placeholder="Date"
+            depth="Year"
+            start="Year"
+            format="MMMM y"
+            value={searchRecord.period}
+            onChange={(args: calendarsChangedEventArgs) => {
+              setSearchRecord({
+                ...searchRecord,
+                period: dayjs(args.value).format('YYYY-MM')
+              })
+            }}
+          />
         </div>
 
         <div className="col-lg-3 col-md-3">
-          <ButtonComponent
-            cssClass="e-info full-btn"
-            disabled={!(jobNo && date)}
-            onClick={search}
-          >
+          <ButtonComponent cssClass="e-info full-btn" onClick={search}>
             Search
           </ButtonComponent>
         </div>
       </div>
       <div className="admin-content">
         <SpreadsheetComponent
-          allowDataValidation={true}
           ref={spreadsheetRef}
-          allowOpen={true}
-          openUrl="https://services.syncfusion.com/react/production/api/spreadsheet/open"
-          allowSave={true}
-          saveUrl="https://services.syncfusion.com/react/production/api/spreadsheet/save"
+          allowEditing={!!details.length}
+          cellSave={cellSave}
         >
           <SheetsDirective>
             <SheetDirective
               name="ROC Subdetail"
               isProtected={true}
-              protectSettings={{ selectCells: true }}
+              protectSettings={{
+                selectCells: details.length ? true : false,
+                formatCells: true
+              }}
+              frozenRows={1}
+              selectedRange="A2"
             >
               <RangesDirective>
                 <RangeDirective
-                  dataSource={[]}
-                  query={query}
+                  dataSource={details}
+                  query={new Query().select(selectQuery)}
                   startCell="A2"
                   showFieldAsHeader={false}
                 ></RangeDirective>
@@ -192,7 +286,11 @@ const RocSubDetail = () => {
       </div>
       <div className="row">
         <div className="col-lg-12 col-md-12">
-          <ButtonComponent cssClass="e-info full-btn">
+          <ButtonComponent
+            cssClass="e-info full-btn"
+            disabled={!details.length}
+            onClick={update}
+          >
             Update Roc Subdetail
           </ButtonComponent>
         </div>
@@ -201,4 +299,4 @@ const RocSubDetail = () => {
   )
 }
 
-export default RocSubDetail
+export default RocSubDetailRender

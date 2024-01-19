@@ -18,7 +18,7 @@ import MonthlyMovement from './MonthlyMovement'
 import PaymentRender from './Payment'
 import RocRender from './ROC'
 import ROCDetail from './ROCDetail'
-import RocSubDetail from './ROCSubDetail'
+import RocSubDetailRender from './ROCSubDetail'
 import RepackagingRender from './Repackaging'
 import SubcontractDetail from './SubcontractDetail'
 import Tender from './Tender'
@@ -95,7 +95,7 @@ const Revisions = () => {
     {
       text: 'ROC Subdetail',
       id: 'ROCSubdetail',
-      content: <RocSubDetail />
+      content: <RocSubDetailRender isQsAdm={isQsAdm} />
     },
     {
       text: 'Final Account',

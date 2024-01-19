@@ -521,6 +521,27 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg.body
         })
+      }),
+      getRocSubdetailListAdmin: builder.mutation<
+        RocSubDetail[],
+        { jobNo: string; itemNo?: string; period: string }
+      >({
+        query: queryArg => ({
+          url: queryArg.itemNo
+            ? `service/roc/getRocSubdetailListAdmin/${queryArg.jobNo}?itemNo=${queryArg.itemNo}&period=${queryArg.period}`
+            : `service/roc/getRocSubdetailListAdmin/${queryArg.jobNo}?period=${queryArg.period}`,
+          method: 'GET'
+        })
+      }),
+      updateRocSubdetailListAdmin: builder.mutation<
+        string,
+        { body: RocSubDetail[]; jobNo: string }
+      >({
+        query: queryArg => ({
+          url: `service/roc/updateRocSubdetailListAdmin?jobNo=${queryArg.jobNo}`,
+          method: 'POST',
+          body: queryArg.body
+        })
       })
     }
   }
@@ -1271,6 +1292,20 @@ export type RocDetail = {
   year?: number
 }
 
+export type RocSubDetail = {
+  amountBest?: number
+  amountRealistic?: number
+  amountWorst?: number
+  description?: string
+  hyperlink?: string
+  itemNo?: number
+  month?: number
+  remarks?: string
+  subdetailId?: number
+  systemStatus?: string
+  year?: number
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1328,6 +1363,8 @@ export const {
   useGetRocAdminMutation,
   useUpdateRocAdminMutation,
   useGetRocDetailListAdminMutation,
-  useUpdateRocDetailListAdminMutation
+  useUpdateRocDetailListAdminMutation,
+  useGetRocSubdetailListAdminMutation,
+  useUpdateRocSubdetailListAdminMutation
 } = apiSlice
 export default apiSlice
