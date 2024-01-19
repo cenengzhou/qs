@@ -61,7 +61,7 @@ const Revisions = () => {
     {
       text: 'Main Certificate',
       id: 'mainCertificate',
-      content: <MainCertificate />
+      content: <MainCertificate isQsAdm={isQsAdm} />
     },
     {
       text: 'Repackaging',

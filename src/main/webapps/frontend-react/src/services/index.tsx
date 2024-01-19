@@ -542,6 +542,23 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg.body
         })
+      }),
+      getCertificate: builder.mutation<
+        Certificate,
+        { jobNo?: string; certificateNumber?: number }
+      >({
+        query: queryArg => ({
+          url: 'service/mainCert/getCertificate',
+          method: 'GET',
+          params: queryArg
+        })
+      }),
+      updateCertificateByAdmin: builder.mutation<string, Certificate>({
+        query: queryArg => ({
+          url: 'service/mainCert/updateCertificateByAdmin',
+          method: 'POST',
+          body: queryArg
+        })
       })
     }
   }
@@ -1305,6 +1322,66 @@ export type RocSubDetail = {
   systemStatus?: string
   year?: number
 }
+export type Certificate = {
+  actualReceiptDate?: string
+  amount_cumulativeRetention?: number
+  amount_retentionRelease?: number
+  appGrossAmount?: number
+  appNetAmount?: number
+  appliedAdjustmentAmount?: number
+  appliedAdvancePayment?: number
+  appliedCPFAmount?: number
+  appliedClaimsAmount?: number
+  appliedContraChargeAmount?: number
+  appliedMOSAmount?: number
+  appliedMOSRetention?: number
+  appliedMOSRetentionReleased?: number
+  appliedMainContractorAmount?: number
+  appliedMainContractorRetention?: number
+  appliedMainContractorRetentionReleased?: number
+  appliedNSCNDSCAmount?: number
+  appliedRetentionforNSCNDSC?: number
+  appliedRetentionforNSCNDSCReleased?: number
+  appliedVariationAmount?: number
+  arDocNumber?: number
+  certAsAtDate?: string
+  certDueDate?: string
+  certGrossAmount?: number
+  certIssueDate?: string
+  certNetAmount?: number
+  certStatusChangeDate?: string
+  certificateNumber?: string
+  certificateStatus?: string
+  certifiedAdjustmentAmount?: number
+  certifiedAdvancePayment?: number
+  certifiedCPFAmount?: number
+  certifiedClaimsAmount?: number
+  certifiedContraChargeAmount?: number
+  certifiedMOSAmount?: number
+  certifiedMOSRetention?: number
+  certifiedMOSRetentionReleased?: number
+  certifiedMainContractorAmount?: number
+  certifiedMainContractorRetention?: number
+  certifiedMainContractorRetentionReleased?: number
+  certifiedNSCNDSCAmount?: number
+  certifiedRetentionforNSCNDSC?: number
+  certifiedRetentionforNSCNDSCReleased?: number
+  certifiedVariationAmount?: number
+  clientCertNo?: string
+  createdDate?: string
+  createdUser?: string
+  gstPayable?: number
+  gstReceivable?: number
+  id?: number
+  ipaSentoutDate?: string
+  ipaSubmissionDate?: string
+  jobNo?: string
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  remark?: string
+  systemStatus?: string
+  totalReceiptAmount?: number
+}
 
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
@@ -1365,6 +1442,8 @@ export const {
   useGetRocDetailListAdminMutation,
   useUpdateRocDetailListAdminMutation,
   useGetRocSubdetailListAdminMutation,
-  useUpdateRocSubdetailListAdminMutation
+  useUpdateRocSubdetailListAdminMutation,
+  useGetCertificateMutation,
+  useUpdateCertificateByAdminMutation
 } = apiSlice
 export default apiSlice
