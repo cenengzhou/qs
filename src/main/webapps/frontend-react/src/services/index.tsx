@@ -559,6 +559,23 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg
         })
+      }),
+      getTender: builder.mutation<
+        Certificate,
+        { jobNo?: string; subcontractNo?: number; subcontractorNo?: number }
+      >({
+        query: queryArg => ({
+          url: 'service/tender/getTender',
+          method: 'GET',
+          params: queryArg
+        })
+      }),
+      updateTenderAdmin: builder.mutation<string, Tender>({
+        query: queryArg => ({
+          url: 'service/tender/updateTenderAdmin',
+          method: 'POST',
+          body: queryArg
+        })
       })
     }
   }
@@ -1383,6 +1400,31 @@ export type Certificate = {
   totalReceiptAmount?: number
 }
 
+export type Tender = {
+  amtBuyingGainLoss?: number
+  budgetAmount?: number
+  createdDate?: string
+  createdUser?: string
+  currencyCode?: string
+  datePrepared?: string
+  exchangeRate?: number
+  id?: number
+  jobNo?: string
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  latestBudgetForecast?: string
+  nameSubcontractor?: string
+  packageNo?: string
+  remarks?: string
+  status?: string
+  statusChangeExecutionOfSC?: string
+  subcontract?: Subcontract
+  systemStatus?: string
+  usernamePrepared?: string
+  validTender?: string
+  vendorNo?: number
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1444,6 +1486,8 @@ export const {
   useGetRocSubdetailListAdminMutation,
   useUpdateRocSubdetailListAdminMutation,
   useGetCertificateMutation,
-  useUpdateCertificateByAdminMutation
+  useUpdateCertificateByAdminMutation,
+  useGetTenderMutation,
+  useUpdateTenderAdminMutation
 } = apiSlice
 export default apiSlice

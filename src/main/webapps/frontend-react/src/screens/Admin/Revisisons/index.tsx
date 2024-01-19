@@ -21,7 +21,7 @@ import ROCDetail from './ROCDetail'
 import RocSubDetailRender from './ROCSubDetail'
 import RepackagingRender from './Repackaging'
 import SubcontractDetail from './SubcontractDetail'
-import Tender from './Tender'
+import TenderRender from './Tender'
 import TenderDetail from './TenderDetail'
 import Transit from './Transit'
 import './style.css'
@@ -75,7 +75,11 @@ const Revisions = () => {
       content: <AttachmentRender isQsAdm={isQsAdm} />
     },
     { text: 'Transit', id: 'transit', content: <Transit /> },
-    { text: 'Tender', id: 'tender', content: <Tender /> },
+    {
+      text: 'Tender',
+      id: 'tender',
+      content: <TenderRender isQsAdm={isQsAdm} />
+    },
     {
       text: 'Tender Detail',
       id: 'tenderDetail',
