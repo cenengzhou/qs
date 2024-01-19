@@ -87,7 +87,11 @@ const Revisions = () => {
       content: <MonthlyMovement />
     },
     { text: 'ROC', id: 'ROC', content: <RocRender isQsAdm={isQsAdm} /> },
-    { text: 'ROC Detail', id: 'ROCDetail', content: <ROCDetail /> },
+    {
+      text: 'ROC Detail',
+      id: 'ROCDetail',
+      content: <ROCDetail isQsAdm={isQsAdm} />
+    },
     {
       text: 'ROC Subdetail',
       id: 'ROCSubdetail',
