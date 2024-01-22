@@ -1,15 +1,51 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { TextBoxComponent } from '@syncfusion/ej2-react-inputs'
-import { ToastComponent } from '@syncfusion/ej2-react-notifications'
+import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
+
+import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
+import { setNotificationVisible } from '../../../../redux/notificationReducer'
+import { useAppDispatch } from '../../../../redux/store'
+import { useUnlockTransitAdminMutation } from '../../../../services'
 
 const Transit = () => {
-  const toast = useRef<ToastComponent>(null)
-  const show = () => {
-    toast.current?.show({ title: 'Success', cssClass: 'full' })
+  const dispatch = useAppDispatch()
+  const [jobNumber, setJobNumber] = useState<string>()
+  const [unlockTransitAdmin, { isLoading }] = useUnlockTransitAdminMutation()
+
+  const update = () => {
+    try {
+      if (jobNumber) {
+        unlockTransitAdmin({ jobNumber })
+          .unwrap()
+          .then(() => {
+            showTotas('Success', 'Transit updated.')
+          })
+          .catch(() => {
+            showTotas('Fail', 'Failed to fetch')
+          })
+      }
+    } catch (error) {
+      showTotas('Fail', 'Fail')
+    }
   }
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading])
 
   return (
     <>
@@ -21,18 +57,22 @@ const Transit = () => {
               placeholder="Job Number"
               floatLabelType="Auto"
               cssClass="e-outline"
-              value={'19015'}
+              value={jobNumber}
+              input={(value: InputEventArgs) => setJobNumber(value.value)}
             />
           </div>
           <div className="col-lg-6 col-md-6">
-            <ButtonComponent cssClass="e-info full-btn" onClick={show}>
+            <ButtonComponent
+              cssClass="e-info full-btn"
+              onClick={update}
+              disabled={jobNumber?.length == 5 ? false : true}
+            >
               Unlock
             </ButtonComponent>
           </div>
         </div>
         <div className="admin-content"></div>
       </div>
-      <ToastComponent ref={toast} />
     </>
   )
 }

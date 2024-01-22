@@ -576,6 +576,13 @@ const apiSlice = createApi({
           method: 'POST',
           body: queryArg
         })
+      }),
+      unlockTransitAdmin: builder.mutation<void, { jobNumber: string }>({
+        query: queryArg => ({
+          url: `service/transit/unlockTransitAdmin`,
+          method: 'POST',
+          params: queryArg
+        })
       })
     }
   }
@@ -1488,6 +1495,7 @@ export const {
   useGetCertificateMutation,
   useUpdateCertificateByAdminMutation,
   useGetTenderMutation,
-  useUpdateTenderAdminMutation
+  useUpdateTenderAdminMutation,
+  useUnlockTransitAdminMutation
 } = apiSlice
 export default apiSlice

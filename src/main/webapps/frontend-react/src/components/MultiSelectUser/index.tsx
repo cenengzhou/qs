@@ -27,61 +27,75 @@ const MultiSelectUser = ({
   const msRef = useRef<MultiSelectComponent>(null)
   const [filterUser, setFilterUser] = useState<UserInfo[]>([])
   const [defaultValue, setDefaultValue] = useState<string[]>([])
-  const hasInput = useRef<boolean>(false)
+  const [noRecordsText, setNoRecordsText] = useState<string>('No records found')
 
   const itemTemplate = (item: UserInfo) => {
     return (
-      <div className="user-item">
-        <div className="user-item-name">{item.fullName}</div>
-        <div className="user-item-email">{item.email}</div>
+      <div
+        className={
+          defaultValue.includes(item.username!) ? 'multi-selected' : ''
+        }
+      >
+        <div>{item.fullName}</div>
+        <div>{item.email}</div>
       </div>
     )
   }
 
   const valueTemplate = (item: UserInfo) => item.fullName
 
-  const init = () => {
-    if (value && value.length > 0) {
+  const init = (values: string[]) => {
+    setNoRecordsText('Please enter at least three letters')
+    if (values && values.length > 0) {
       const users: UserInfo[] = []
-      value.forEach(e => {
+      values.forEach(e => {
         const user = userList?.find(f => f.username === e)
         if (user) {
           users.push(user)
         }
       })
       setFilterUser(users)
+    } else {
+      setFilterUser([])
     }
   }
 
   useEffect(() => {
-    init()
+    init(value)
     setDefaultValue(value)
   }, [value])
 
-  useEffect(() => {
-    if (msRef.current && !hasInput.current) {
-      hasInput.current = true
-      msRef.current!.element.previousSibling!.addEventListener(
-        'input',
-        (e: any) => {
-          const value = e.target.value
-          if (value.length >= 3) {
-            if (userList && userList.length > 0) {
-              const newUserList: UserInfo[] = userList.filter(
-                item =>
-                  item.fullName?.toUpperCase().includes(value.toUpperCase()) ||
-                  item.username?.toUpperCase().includes(value.toUpperCase())
-              )
-              setFilterUser(pre => [...pre, ...newUserList])
-            }
-          } else {
-            init()
-          }
-        },
-        true
-      )
+  const onFocus = () => {
+    msRef.current!.element.previousSibling!.addEventListener(
+      'input',
+      onInput,
+      false
+    )
+  }
+
+  const onBlur = () => {
+    msRef.current!.element.previousSibling!.removeEventListener(
+      'input',
+      onInput,
+      false
+    )
+  }
+
+  const onInput = (e: any) => {
+    const value = e.target.value
+    init(defaultValue)
+    if (value.length >= 3) {
+      setNoRecordsText('No records found')
+      if (userList && userList.length > 0) {
+        const newUserList: UserInfo[] = userList.filter(
+          item => item.fullName?.toUpperCase().includes(value.toUpperCase())
+        )
+        if (newUserList.length > 0) {
+          setFilterUser(pre => [...pre, ...newUserList])
+        }
+      }
     }
-  }, [msRef.current])
+  }
 
   return (
     <MultiSelectComponent
@@ -91,6 +105,7 @@ const MultiSelectUser = ({
       value={defaultValue}
       floatLabelType="Always"
       itemTemplate={itemTemplate}
+      noRecordsTemplate={() => <div>{noRecordsText}</div>}
       valueTemplate={valueTemplate}
       placeholder={placeholder}
       select={(item: SelectEventArgs) => {
@@ -100,14 +115,16 @@ const MultiSelectUser = ({
           selected([...defaultValue, username].join(';'))
         }
       }}
+      focus={onFocus}
+      blur={onBlur}
       removed={(item: RemoveEventArgs) => {
-        const oldValue = [...defaultValue]
-        oldValue.splice(
-          oldValue.findIndex(e => e == (item.itemData as UserInfo)?.username),
+        const newValue = [...defaultValue]
+        newValue.splice(
+          newValue.findIndex(e => e == (item.itemData as UserInfo)?.username),
           1
         )
-        setDefaultValue(oldValue)
-        removed(oldValue.join(';'))
+        setDefaultValue(newValue)
+        removed(newValue.join(';'))
       }}
     />
   )
