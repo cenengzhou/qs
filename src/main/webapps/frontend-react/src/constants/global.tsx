@@ -630,3 +630,5 @@ export const YESORNO = [
 ]
 
 export const FIELDS = { text: 'text', value: 'value' }
+
+export const IDFIELDS = { text: 'value', value: 'id' }

@@ -583,6 +583,64 @@ const apiSlice = createApi({
           method: 'POST',
           params: queryArg
         })
+      }),
+      completeAwardApprovalAdmin: builder.mutation<
+        { completed: boolean },
+        { jobNo?: string; packageNo?: string; type?: string }
+      >({
+        query: ({ jobNo, packageNo, type }) => ({
+          url: `service/ap/completeAwardApprovalAdmin/${jobNo}/${packageNo}/${type}`,
+          method: 'GET'
+        })
+      }),
+      completePaymentApprovalAdmin: builder.mutation<
+        { completed: boolean },
+        { jobNo?: string; packageNo?: string; type?: string }
+      >({
+        query: ({ jobNo, packageNo, type }) => ({
+          url: `service/ap/completePaymentApprovalAdmin/${jobNo}/${packageNo}/${type}`,
+          method: 'GET'
+        })
+      }),
+      completeSplitTerminateApprovalAdmin: builder.mutation<
+        { completed: boolean },
+        {
+          jobNo?: string
+          packageNo?: string
+          type?: string
+          extraType?: string
+        }
+      >({
+        query: ({ jobNo, packageNo, type, extraType }) => ({
+          url: `service/ap/completeSplitTerminateApprovalAdmin/${jobNo}/${packageNo}/${type}/${extraType}`,
+          method: 'GET'
+        })
+      }),
+      completeAddendumApprovalAdmin: builder.mutation<
+        { completed: boolean },
+        {
+          jobNo?: string
+          packageNo?: string
+          type?: string
+        }
+      >({
+        query: ({ jobNo, packageNo, type }) => ({
+          url: `service/ap/completeAddendumApprovalAdmin/${jobNo}/${packageNo}/undefined/${type}`,
+          method: 'GET'
+        })
+      }),
+      completeMainCertApprovalAdmin: builder.mutation<
+        { completed: boolean },
+        {
+          jobNo?: string
+          packageNo?: string
+          type?: string
+        }
+      >({
+        query: ({ jobNo, packageNo, type }) => ({
+          url: `service/ap/completeMainCertApprovalAdmin/${jobNo}/${packageNo}/${type}`,
+          method: 'GET'
+        })
       })
     }
   }
@@ -1495,7 +1553,12 @@ export const {
   useGetCertificateMutation,
   useUpdateCertificateByAdminMutation,
   useGetTenderMutation,
+  useUnlockTransitAdminMutation,
   useUpdateTenderAdminMutation,
-  useUnlockTransitAdminMutation
+  useCompleteAwardApprovalAdminMutation,
+  useCompletePaymentApprovalAdminMutation,
+  useCompleteSplitTerminateApprovalAdminMutation,
+  useCompleteAddendumApprovalAdminMutation,
+  useCompleteMainCertApprovalAdminMutation
 } = apiSlice
 export default apiSlice

@@ -20,7 +20,7 @@ import {
 } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../../components/DatePicker'
-import { FIELDS, GLOBALPARAMETER } from '../../../../constants/global'
+import { GLOBALPARAMETER, IDFIELDS } from '../../../../constants/global'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
@@ -374,7 +374,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.cpfCalculation}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -391,7 +391,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.formOfSubcontract}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -408,7 +408,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.packageType}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -427,7 +427,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.paymentCurrency}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -444,7 +444,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.paymentInformation}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -461,7 +461,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.subcontractorNature}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -480,7 +480,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.submittedAddendum}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -497,7 +497,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.paymentTerms}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -514,7 +514,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.retentionTerms}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -533,7 +533,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.subcontractTerm}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -550,7 +550,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.packageStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -567,7 +567,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.subcontract_paymentStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -586,7 +586,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.splitTerminateStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -603,7 +603,7 @@ const Subcontract = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.subcontractStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"

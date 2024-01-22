@@ -15,7 +15,7 @@ import {
 } from '@syncfusion/ej2-react-inputs'
 
 import DatePicker from '../../../../components/DatePicker'
-import { FIELDS, GLOBALPARAMETER } from '../../../../constants/global'
+import { GLOBALPARAMETER, IDFIELDS } from '../../../../constants/global'
 import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
@@ -212,7 +212,7 @@ const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.directPayment}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -229,7 +229,7 @@ const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
               </div>
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.paymentStatus}
                   cssClass="e-outline"
                   floatLabelType="Always"
@@ -248,7 +248,7 @@ const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4">
                 <DropDownListComponent
-                  fields={FIELDS}
+                  fields={IDFIELDS}
                   dataSource={GLOBALPARAMETER.intermFinalPayment}
                   cssClass="e-outline"
                   floatLabelType="Always"
