@@ -641,6 +641,21 @@ const apiSlice = createApi({
           url: `service/ap/completeMainCertApprovalAdmin/${jobNo}/${packageNo}/${type}`,
           method: 'GET'
         })
+      }),
+      getCompanyCodeAndName: builder.query<
+        Map<string, CompanyCodeAndName>,
+        void
+      >({
+        query: () => ({
+          method: 'POST',
+          url: 'service/adl/obtainCompanyCodeAndName'
+        })
+      }),
+      getDivisions: builder.query<string[], void>({
+        query: () => ({
+          method: 'GET',
+          url: 'service/job/obtainAllJobDivision'
+        })
       })
     }
   }
@@ -1490,6 +1505,11 @@ export type Tender = {
   vendorNo?: number
 }
 
+export type CompanyCodeAndName = {
+  companyCode?: string
+  companyName?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1559,6 +1579,8 @@ export const {
   useCompletePaymentApprovalAdminMutation,
   useCompleteSplitTerminateApprovalAdminMutation,
   useCompleteAddendumApprovalAdminMutation,
-  useCompleteMainCertApprovalAdminMutation
+  useCompleteMainCertApprovalAdminMutation,
+  useGetCompanyCodeAndNameQuery,
+  useGetDivisionsQuery
 } = apiSlice
 export default apiSlice

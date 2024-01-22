@@ -186,7 +186,7 @@ const Header = () => {
             <ItemDirective
               prefixIcon="e-icons e-changes-track"
               text="Reports"
-              click={() => navigate('/')}
+              click={() => navigate('/Reports')}
             />
             <ItemDirective
               prefixIcon="e-icons e-page-columns"

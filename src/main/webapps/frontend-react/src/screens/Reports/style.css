@@ -1,0 +1,119 @@
+.control-section {
+  height: calc(100vh - 56px);
+  position: relative;
+  transition: all 0.5s;
+  background-color: #fafafa;
+  display: flex;
+}
+
+.listView {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+}
+
+.breadcrumb {
+  text-align: right;
+  flex: 0;
+  background-color: #eee;
+}
+
+.reports-container {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-top: 2px solid #eee;
+  /* background-color: #eee; */
+}
+
+.e-card {
+  height: 684px;
+}
+
+/* .manual-procedures .e-card {
+  height: auto !important;
+} */
+
+.card-content-flex {
+  flex: 1
+}
+
+.card-info {
+  background-color: #38AFD3;
+}
+
+.e-card .e-card-header-caption .e-card-header-title {
+  color: #fff;
+}
+
+.card-header-icon {
+  font-size: 28px;
+  color: #fff;
+}
+
+.p-text-color {
+  color: #000 !important;
+}
+
+.text-color {
+  color: red;
+}
+
+.e-switch-wrapper .e-switch-inner, .e-css.e-switch-wrapper .e-switch-inner {
+  border-radius: unset !important;
+}
+
+.e-switch-wrapper, .e-css.e-switch-wrapper {
+  height: 40px !important;
+}
+
+.e-switch-wrapper .e-switch-on, .e-css.e-switch-wrapper .e-switch-on {
+  background-color: #2184DA !important;
+  opacity: unset !important;
+  text-indent: unset !important;
+}
+
+.e-switch-wrapper .e-switch-off, .e-css.e-switch-wrapper .e-switch-off{
+  background-color: #ca8c34 !important;
+  opacity: unset !important;
+  text-indent: unset !important;
+}
+
+.e-switch-wrapper .e-switch-handle, .e-css.e-switch-wrapper .e-switch-handle {
+  height: 40px !important;
+  border-radius: unset !important;
+}
+
+.e-switch-wrapper .e-switch-handle.e-switch-active, .e-css.e-switch-wrapper .e-switch-handle.e-switch-active {
+  background-color: #f5f5f5 !important;
+}
+
+.e-excel-btn {
+  border-radius: 20px !important;
+  background-color: #17B6A4 !important;
+  border-color: #17B6A4 !important;
+}
+
+.e-pdf-btn {
+  border-radius: 20px !important;
+  background-color: #F04B46 !important;
+  border-color: #F04B46 !important;
+}
+
+.e-btn .e-btn-icon, .e-css.e-btn .e-btn-icon {
+  font-size: 14px !important;
+}
+
+.bg-lime-light {
+  background-color: #83D08B !important;
+  color: #d9edf7;
+  border-radius: 10px;
+  font-size: 75%;
+  font-weight: 700;
+  padding: 0 2px 0 2px;
+}
