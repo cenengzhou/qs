@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   ButtonComponent,
@@ -18,7 +18,12 @@ import {
 } from '@syncfusion/ej2-react-navigations'
 
 import DatePicker from '../../components/DatePicker'
+import { closeLoading, openLoading } from '../../redux/loadingReducer'
+import { setNotificationVisible } from '../../redux/notificationReducer'
+import { useAppDispatch } from '../../redux/store'
 import {
+  // CustomError,
+  useDownloadFileMutation,
   useGetCompanyCodeAndNameQuery,
   useGetDivisionsQuery
 } from '../../services'
@@ -45,6 +50,26 @@ const beforeItemRenderHandler = (
   }
 }
 const Reports = () => {
+  const [downloadFile, { isLoading }] = useDownloadFileMutation()
+  const dispatch = useAppDispatch()
+  const showTotas = (mode: 'Fail' | 'Success' | 'Warn', msg?: string) => {
+    dispatch(
+      setNotificationVisible({
+        visible: true,
+        mode: mode,
+        content: msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(openLoading())
+    } else {
+      dispatch(closeLoading())
+    }
+  }, [isLoading])
+
   const [reportDatas, setReportData] = useState<ReportData[]>(reportData2)
 
   const { data: companyCodeAndName } = useGetCompanyCodeAndNameQuery()
@@ -203,11 +228,23 @@ const Reports = () => {
   }
 
   const getDownloadFile = async (url: string) => {
-    const a = document.createElement('a')
-    a.href = url
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    try {
+      await downloadFile(url)
+        .unwrap()
+        .then(() => {})
+        .catch(error => {
+          console.log(error)
+          if (error.originalStatus && error.originalStatus === 200) {
+            const a = document.createElement('a')
+            a.href = '/pcms/' + url
+            a.click()
+          } else {
+            showTotas('Fail', 'file not found')
+          }
+        })
+    } catch (err) {
+      console.error('failed:', err)
+    }
   }
 
   function setDownloadFileUrl(
@@ -218,7 +255,7 @@ const Reports = () => {
   ) {
     paramsData.reportUrls?.map(item => {
       if (item.type === downloadType) {
-        let url = 'http://localhost:3000/pcms/service/report/' + item.url + '?'
+        let url = 'service/report/' + item.url + '?'
         if (item.parameters?.includes('company')) {
           url += `company=${parameters.company}`
         }

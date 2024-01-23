@@ -656,6 +656,12 @@ const apiSlice = createApi({
           method: 'GET',
           url: 'service/job/obtainAllJobDivision'
         })
+      }),
+      downloadFile: builder.mutation<DownloadFileResponse, string>({
+        query: url => ({
+          method: 'GET',
+          url: url
+        })
       })
     }
   }
@@ -1510,6 +1516,13 @@ export type CompanyCodeAndName = {
   companyName?: string
 }
 
+export type DownloadFileResponse = {
+  data?: string
+  error?: string
+  originalStatus?: number
+  status?: string
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1581,6 +1594,7 @@ export const {
   useCompleteAddendumApprovalAdminMutation,
   useCompleteMainCertApprovalAdminMutation,
   useGetCompanyCodeAndNameQuery,
-  useGetDivisionsQuery
+  useGetDivisionsQuery,
+  useDownloadFileMutation
 } = apiSlice
 export default apiSlice
