@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 import {
+  DropDownListComponent,
+  ChangeEventArgs as DropdownChangeEventArgs
+} from '@syncfusion/ej2-react-dropdowns'
+import {
+  ChangeEventArgs,
   FocusOutEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
@@ -165,6 +169,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   floatLabelType="Auto"
                   cssClass="e-outline"
                   value={tender.nameSubcontractor}
+                  blur={(args: FocusOutEventArgs) => {
+                    setTender({
+                      ...tender,
+                      nameSubcontractor: args.value
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -190,6 +200,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   showClearButton
                   placeholder="Curency Code"
                   value={tender.currencyCode}
+                  change={(args: DropdownChangeEventArgs) => {
+                    setTender({
+                      ...tender,
+                      currencyCode: String(args.value)
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -199,6 +215,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   format="#"
                   cssClass="e-outline"
                   value={tender.exchangeRate}
+                  change={(args: ChangeEventArgs) => {
+                    setTender({
+                      ...tender,
+                      exchangeRate: args.value
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -210,6 +232,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   format="#"
                   cssClass="e-outline"
                   value={tender.budgetAmount}
+                  change={(args: ChangeEventArgs) => {
+                    setTender({
+                      ...tender,
+                      budgetAmount: args.value
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -219,6 +247,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   format="#"
                   cssClass="e-outline"
                   value={tender.amtBuyingGainLoss}
+                  change={(args: ChangeEventArgs) => {
+                    setTender({
+                      ...tender,
+                      amtBuyingGainLoss: args.value
+                    })
+                  }}
                 />
               </div>
               <div className="col-lg-4 col-md-4">
@@ -227,6 +261,12 @@ const TenderRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                   floatLabelType="Auto"
                   cssClass="e-outline"
                   value={tender.remarks}
+                  blur={(args: FocusOutEventArgs) => {
+                    setTender({
+                      ...tender,
+                      remarks: args.value
+                    })
+                  }}
                 />
               </div>
             </div>
