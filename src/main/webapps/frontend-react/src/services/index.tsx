@@ -709,6 +709,31 @@ const apiSlice = createApi({
           method: 'GET',
           url: 'service/job/obtainAllJobCompany'
         })
+      }),
+      getForecastList: builder.mutation<
+        MonthlyMovement[],
+        { jobNo?: string; year?: number; month?: number; type?: string }
+      >({
+        query: ({ jobNo, year, month, type }) => ({
+          method: 'GET',
+          url: `service/forecast/getForecastList/${jobNo}/${year}/${month}/${type}`
+        })
+      }),
+      updateForecastListAdmin: builder.mutation<string, MonthlyMovement[]>({
+        query: queryArg => ({
+          method: 'POST',
+          url: 'service/forecast/updateForecastListAdmin',
+          body: queryArg
+        })
+      }),
+      deleteForecastListAdmin: builder.mutation<
+        void,
+        { jobNo?: string; id?: number }
+      >({
+        query: ({ jobNo, id }) => ({
+          method: 'DELETE',
+          url: `service/forecast/${jobNo}/${id}`
+        })
       })
     }
   }
@@ -1585,6 +1610,24 @@ export type ScStandardTerms = {
   systemStatus?: string
 }
 
+export type MonthlyMovement = {
+  amount?: number
+  date?: string
+  dateCreated?: string
+  dateLastModified?: string
+  explanation?: string
+  forecastDesc?: string
+  forecastFlag?: string
+  forecastPeriod?: string
+  forecastType?: string
+  id?: number
+  month?: number
+  noJob?: string
+  usernameCreated?: string
+  usernameLastModified?: string
+  year?: number
+}
+
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
@@ -1662,6 +1705,9 @@ export const {
   useUpdateMultipleSystemConstantsMutation,
   useDeleteSCStandardTermsMutation,
   useCreateSystemConstantMutation,
-  useObtainAllJobCompanyQuery
+  useObtainAllJobCompanyQuery,
+  useGetForecastListMutation,
+  useUpdateForecastListAdminMutation,
+  useDeleteForecastListAdminMutation
 } = apiSlice
 export default apiSlice
