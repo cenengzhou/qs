@@ -659,10 +659,13 @@ const apiSlice = createApi({
           url: 'service/job/obtainAllJobDivision'
         })
       }),
-      downloadFile: builder.mutation<DownloadFileResponse, string>({
+      downloadFile: builder.mutation<string, string>({
         query: url => ({
           method: 'GET',
-          url: url
+          url: url,
+          responseHandler(response) {
+            return response.text()
+          }
         })
       }),
       getSCStandardTermsList: builder.query<ScStandardTerms[], void>({
@@ -1563,12 +1566,6 @@ export type CompanyCodeAndName = {
   companyName?: string
 }
 
-export type DownloadFileResponse = {
-  data?: string
-  error?: string
-  originalStatus?: number
-  status?: string
-}
 export type ScStandardTerms = {
   company?: string
   createdDate?: string

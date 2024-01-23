@@ -231,16 +231,15 @@ const Reports = () => {
     try {
       await downloadFile(url)
         .unwrap()
-        .then(() => {})
-        .catch(error => {
-          console.log(error)
-          if (error.originalStatus && error.originalStatus === 200) {
+        .then(response => {
+          if (response) {
             const a = document.createElement('a')
             a.href = '/pcms/' + url
             a.click()
-          } else {
-            showTotas('Fail', 'file not found')
           }
+        })
+        .catch(() => {
+          showTotas('Fail', 'file not found')
         })
     } catch (err) {
       console.error('failed:', err)
