@@ -178,7 +178,7 @@ const AddendumDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             format="###"
             value={searchRecord.subcontractNo}
-            blur={(args: FocusOutEventArgs) => {
+            change={(args: FocusOutEventArgs) => {
               setSearchRecord({
                 ...searchRecord,
                 subcontractNo: Number(args.value)
@@ -193,7 +193,7 @@ const AddendumDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             format="###"
             value={searchRecord.addendumNo}
-            blur={(args: FocusOutEventArgs) => {
+            change={(args: FocusOutEventArgs) => {
               setSearchRecord({
                 ...searchRecord,
                 addendumNo: Number(args.value)

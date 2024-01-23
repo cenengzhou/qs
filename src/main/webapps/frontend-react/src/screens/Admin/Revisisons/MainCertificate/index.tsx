@@ -107,7 +107,7 @@ const MainCertificate = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             format="#"
             value={searchRecord.certificateNumber}
-            blur={(value: FocusOutEventArgs) => {
+            change={(value: FocusOutEventArgs) => {
               setSearchRecord({
                 ...searchRecord,
                 certificateNumber: Number(value.value)

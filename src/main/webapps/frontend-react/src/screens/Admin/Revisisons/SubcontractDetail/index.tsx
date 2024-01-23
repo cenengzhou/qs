@@ -173,7 +173,7 @@ const SubcontractDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             format="#"
             value={searchRecord.subcontractNo}
-            blur={(e: FocusOutEventArgs) =>
+            change={(e: FocusOutEventArgs) =>
               setSearchRecord({
                 ...searchRecord,
                 subcontractNo: Number(e.value) ?? ''

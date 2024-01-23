@@ -233,7 +233,7 @@ const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
               cssClass="e-outline"
               format="#"
               value={searchRecord.vendorNo}
-              blur={(value: FocusOutEventArgs) => {
+              change={(value: FocusOutEventArgs) => {
                 setSearchRecord({
                   ...searchRecord,
                   vendorNo: Number(value.value)
@@ -253,7 +253,7 @@ const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                 cssClass="e-outline"
                 format="#"
                 value={searchRecord.subcontractNo}
-                blur={(value: FocusOutEventArgs) => {
+                change={(value: FocusOutEventArgs) => {
                   setSearchRecord({
                     ...searchRecord,
                     subcontractNo: Number(value.value)
@@ -283,7 +283,7 @@ const AttachmentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
                     : 'MAIN_CERT Number'
                 }
                 value={searchRecord.alterParam}
-                blur={(value: FocusOutEventArgs) => {
+                change={(value: FocusOutEventArgs) => {
                   setSearchRecord({
                     ...searchRecord,
                     alterParam: Number(value.value)

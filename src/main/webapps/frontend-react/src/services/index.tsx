@@ -6,6 +6,8 @@ import {
   fetchBaseQuery
 } from '@reduxjs/toolkit/query/react'
 
+import { GLOBALPARAMETER } from '../constants/global'
+
 export interface CustomError {
   data: {
     status: string
@@ -661,6 +663,51 @@ const apiSlice = createApi({
         query: url => ({
           method: 'GET',
           url: url
+        })
+      }),
+      getSCStandardTermsList: builder.query<ScStandardTerms[], void>({
+        query: () => ({
+          method: 'POST',
+          url: 'service/system/getSCStandardTermsList'
+        }),
+        transformResponse: (response: ScStandardTerms[]): ScStandardTerms[] => {
+          const data = response.map(item => {
+            const { scPaymentTerm } = item
+            GLOBALPARAMETER.paymentTerms.map(i => {
+              if (i.id === scPaymentTerm) {
+                item.scPaymentTerm = `${i.id} - ${i.value}`
+              }
+            })
+            return item
+          })
+          return data
+        }
+      }),
+      updateMultipleSystemConstants: builder.mutation<void, ScStandardTerms[]>({
+        query: queryArg => ({
+          method: 'POST',
+          url: 'service/system/updateMultipleSystemConstants',
+          body: queryArg
+        })
+      }),
+      deleteSCStandardTerms: builder.mutation<void, ScStandardTerms[]>({
+        query: queryArg => ({
+          method: 'POST',
+          url: 'service/system/deleteSCStandardTerms',
+          body: queryArg
+        })
+      }),
+      createSystemConstant: builder.mutation<void, ScStandardTerms>({
+        query: queryArg => ({
+          method: 'POST',
+          url: 'service/system/createSystemConstant',
+          body: queryArg
+        })
+      }),
+      obtainAllJobCompany: builder.query<Array<string>, void>({
+        query: () => ({
+          method: 'GET',
+          url: 'service/job/obtainAllJobCompany'
         })
       })
     }
@@ -1522,6 +1569,21 @@ export type DownloadFileResponse = {
   originalStatus?: number
   status?: string
 }
+export type ScStandardTerms = {
+  company?: string
+  createdDate?: string
+  createdUser?: string
+  formOfSubcontract?: string
+  id?: number
+  lastModifiedDate?: string
+  lastModifiedUser?: string
+  retentionType?: string
+  scInterimRetentionPercent?: number
+  scMOSRetentionPercent?: number
+  scMaxRetentionPercent?: number
+  scPaymentTerm?: string
+  systemStatus?: string
+}
 
 export const {
   useObtainUserPreferenceByCurrentUserQuery,
@@ -1595,6 +1657,11 @@ export const {
   useCompleteMainCertApprovalAdminMutation,
   useGetCompanyCodeAndNameQuery,
   useGetDivisionsQuery,
-  useDownloadFileMutation
+  useDownloadFileMutation,
+  useGetSCStandardTermsListQuery,
+  useUpdateMultipleSystemConstantsMutation,
+  useDeleteSCStandardTermsMutation,
+  useCreateSystemConstantMutation,
+  useObtainAllJobCompanyQuery
 } = apiSlice
 export default apiSlice

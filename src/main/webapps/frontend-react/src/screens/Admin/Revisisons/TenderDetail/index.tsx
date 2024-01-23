@@ -175,7 +175,7 @@ const TenderDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             value={searchRecord.subcontractNo}
             format="###"
-            blur={(args: FocusOutEventArgs) => {
+            change={(args: FocusOutEventArgs) => {
               setSearchRecord({
                 ...searchRecord,
                 subcontractNo: Number(args.value)
@@ -190,7 +190,7 @@ const TenderDetail = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-outline"
             format="###"
             value={searchRecord.subcontractorNo}
-            blur={(args: FocusOutEventArgs) => {
+            change={(args: FocusOutEventArgs) => {
               setSearchRecord({
                 ...searchRecord,
                 subcontractorNo: Number(args.value)
