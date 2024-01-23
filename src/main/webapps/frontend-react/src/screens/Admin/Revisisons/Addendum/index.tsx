@@ -31,6 +31,7 @@ import {
   useGetAddendumMutation,
   useUpdateAddendumAdminMutation
 } from '../../../../services'
+import { textBoxValidation } from '../helper'
 
 const Addendum = () => {
   const dispatch = useAppDispatch()
@@ -108,9 +109,10 @@ const Addendum = () => {
             floatLabelType="Auto"
             cssClass="e-outline"
             value={addendumSearch.jobNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value, 5)
               setAddendumSearch(prev => ({ ...prev, jobNo: value.value }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -120,12 +122,13 @@ const Addendum = () => {
             cssClass="e-outline"
             type="number"
             value={addendumSearch.subcontractNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setAddendumSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
               }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -135,12 +138,13 @@ const Addendum = () => {
             cssClass="e-outline"
             type="number"
             value={addendumSearch.addendumNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setAddendumSearch(prev => ({
                 ...prev,
                 addendumNo: value.value
               }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -148,7 +152,7 @@ const Addendum = () => {
             cssClass="e-info full-btn"
             onClick={onSearch}
             disabled={
-              !addendumSearch.jobNo ||
+              addendumSearch.jobNo?.length !== 5 ||
               !addendumSearch.subcontractNo ||
               !addendumSearch.addendumNo
             }

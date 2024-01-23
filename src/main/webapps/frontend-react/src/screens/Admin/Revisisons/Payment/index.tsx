@@ -8,7 +8,6 @@ import {
 } from '@syncfusion/ej2-react-dropdowns'
 import {
   FocusOutEventArgs,
-  ChangeEventArgs as InputChangeEventArgs,
   InputEventArgs,
   NumericTextBoxComponent,
   TextBoxComponent
@@ -26,6 +25,7 @@ import {
   useGetPaymentCertMutation,
   useUpdatePaymentCertMutation
 } from '../../../../services'
+import { textBoxValidation } from '../helper'
 import dayjs from 'dayjs'
 
 const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
@@ -110,36 +110,39 @@ const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
             floatLabelType="Auto"
             cssClass="e-outline"
             input={(value: InputEventArgs) => {
+              textBoxValidation(value, 5)
               setPaymentSearch({ ...paymentSearch, jobNo: value.value })
             }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Subcontract Number"
             floatLabelType="Auto"
             cssClass="e-outline"
-            change={(value: InputChangeEventArgs) => {
+            type="number"
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setPaymentSearch({
                 ...paymentSearch,
-                subcontractNo: Number(value.value) ?? undefined
+                subcontractNo: Number(value.value)
               })
             }}
-            format="####"
           />
         </div>
         <div className="col-lg-3 col-md-3">
-          <NumericTextBoxComponent
+          <TextBoxComponent
             placeholder="Payment Certificate No"
             floatLabelType="Auto"
             cssClass="e-outline"
-            change={(value: InputChangeEventArgs) => {
+            type="number"
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setPaymentSearch({
                 ...paymentSearch,
-                paymentCertNo: Number(value.value) ?? undefined
+                paymentCertNo: Number(value.value)
               })
             }}
-            format="####"
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -147,11 +150,9 @@ const PaymentRender = ({ isQsAdm }: { isQsAdm: boolean }) => {
             cssClass="e-info full-btn"
             onClick={search}
             disabled={
-              !(
-                !!paymentSearch.jobNo &&
-                !!paymentSearch.subcontractNo &&
-                !!paymentSearch.paymentCertNo
-              )
+              paymentSearch.jobNo?.length !== 5 ||
+              !paymentSearch.subcontractNo ||
+              !paymentSearch.paymentCertNo
             }
           >
             Search

@@ -7,6 +7,7 @@ import { closeLoading, openLoading } from '../../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../../redux/store'
 import { useUnlockTransitAdminMutation } from '../../../../services'
+import { textBoxValidation } from '../helper'
 
 const Transit = () => {
   const dispatch = useAppDispatch()
@@ -58,7 +59,10 @@ const Transit = () => {
               floatLabelType="Auto"
               cssClass="e-outline"
               value={jobNumber}
-              input={(value: InputEventArgs) => setJobNumber(value.value)}
+              input={(value: InputEventArgs) => {
+                textBoxValidation(value, 5)
+                setJobNumber(value.value)
+              }}
             />
           </div>
           <div className="col-lg-6 col-md-6">

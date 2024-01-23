@@ -18,3 +18,14 @@ export const regex = /^(\d{5})$/g
 export const getAddressIndex = (address: string) => {
   return Number(address.split('!')[1].replace(/[^\d]/g, '')) - 2
 }
+
+export const textBoxValidation = (value: InputEventArgs, len?: number) => {
+  if (
+    value.value &&
+    ((len && value.value.length == len) || (!len && value.value.length > 0))
+  ) {
+    value.container!.classList.add('e-success')
+  } else {
+    value.container!.classList.remove('e-success')
+  }
+}

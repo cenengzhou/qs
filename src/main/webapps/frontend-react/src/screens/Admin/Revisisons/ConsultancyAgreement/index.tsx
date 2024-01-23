@@ -28,6 +28,7 @@ import {
   useGetMemoMutation,
   useUpdateConsultancyAgreementAdminMutation
 } from '../../../../services'
+import { textBoxValidation } from '../helper'
 
 const ConsultancyAgreement = () => {
   const dispatch = useAppDispatch()
@@ -111,9 +112,10 @@ const ConsultancyAgreement = () => {
             cssClass="e-outline"
             type="number"
             value={memoSearch.jobNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value, 5)
               setMemoSearch(prev => ({ ...prev, jobNo: value.value }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-4 col-md-4">
@@ -123,19 +125,22 @@ const ConsultancyAgreement = () => {
             cssClass="e-outline"
             type="number"
             value={memoSearch.subcontractNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setMemoSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
               }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-4 col-md-4">
           <ButtonComponent
             cssClass="e-info full-btn"
             onClick={onSearch}
-            disabled={!memoSearch.jobNo || !memoSearch.subcontractNo}
+            disabled={
+              memoSearch.jobNo?.length !== 5 || !memoSearch.subcontractNo
+            }
           >
             Search
           </ButtonComponent>

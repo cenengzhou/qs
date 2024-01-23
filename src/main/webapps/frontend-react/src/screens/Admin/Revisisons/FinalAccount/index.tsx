@@ -25,6 +25,7 @@ import {
   useGetFinalAccountAdminMutation,
   useUpdateFinalAccountAdminMutation
 } from '../../../../services'
+import { textBoxValidation } from '../helper'
 
 const FinalAccount = () => {
   const dispatch = useAppDispatch()
@@ -126,9 +127,10 @@ const FinalAccount = () => {
             floatLabelType="Auto"
             cssClass="e-outline"
             value={finalAccountSearch.jobNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value, 5)
               setFinalAccountSearch(prev => ({ ...prev, jobNo: value.value }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -138,12 +140,13 @@ const FinalAccount = () => {
             cssClass="e-outline"
             type="number"
             value={finalAccountSearch.subcontractNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setFinalAccountSearch(prev => ({
                 ...prev,
                 subcontractNo: value.value
               }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -153,12 +156,13 @@ const FinalAccount = () => {
             cssClass="e-outline"
             type="number"
             value={finalAccountSearch.addendumNo}
-            input={(value: InputEventArgs) =>
+            input={(value: InputEventArgs) => {
+              textBoxValidation(value)
               setFinalAccountSearch(prev => ({
                 ...prev,
                 addendumNo: value.value
               }))
-            }
+            }}
           />
         </div>
         <div className="col-lg-3 col-md-3">
@@ -166,7 +170,7 @@ const FinalAccount = () => {
             cssClass="e-info full-btn"
             onClick={onSearch}
             disabled={
-              !finalAccountSearch.jobNo ||
+              finalAccountSearch.jobNo?.length !== 5 ||
               !finalAccountSearch.subcontractNo ||
               !finalAccountSearch.addendumNo
             }

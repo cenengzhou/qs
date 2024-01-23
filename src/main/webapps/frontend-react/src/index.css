@@ -113,3 +113,8 @@ div:is(.multi-selected) {
   background-color: var(--blue) !important;
   color: white !important;
 }
+.e-float-input.e-success label.e-float-text,
+.e-float-input.e-success input:focus~label.e-float-text,
+.e-float-input.e-success input:valid~label.e-float-text {
+  color: #22b24b !important;
+}
