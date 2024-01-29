@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import JobItem from '../../../components/JobItem'
-// import { setJobDescription, setJobNo } from '../../../redux/appConfigReducer'
+import { setJobDescription, setJobNo } from '../../../redux/appConfigReducer'
 import { closeLoading, openLoading } from '../../../redux/loadingReducer'
 import { setNotificationVisible } from '../../../redux/notificationReducer'
 import { useAppDispatch } from '../../../redux/store'
@@ -54,8 +54,8 @@ const JobSelect = () => {
   }, [newList])
 
   useEffect(() => {
-    // dispatch(setJobNo(''))
-    // dispatch(setJobDescription(''))
+    dispatch(setJobNo(''))
+    dispatch(setJobDescription(''))
     getList()
   }, [])
 
@@ -70,7 +70,22 @@ const JobSelect = () => {
   return (
     <div className="selete-container">
       <div className="selete-header">
-        <div></div>
+        <div className="row">
+          <div id="text" className="e-btn-group">
+            <input type="radio" id="left" name="align" value="left" />
+            <label className="e-btn" htmlFor="left">
+              Left
+            </label>
+            <input type="radio" id="center" name="align" value="center" />
+            <label className="e-btn" htmlFor="center">
+              Center
+            </label>
+            <input type="radio" id="right" name="align" value="right" />
+            <label className="e-btn" htmlFor="right">
+              Right
+            </label>
+          </div>
+        </div>
       </div>
       <div className="selete-body row">
         {jobList.map((job: Job) => (

@@ -33,7 +33,7 @@ body {
   --white: #fff;
   --black: #3C454D;
   --lightBlack: #595F64;
-  --barkBlack: #30373e;
+  --darkBlack: #30373e;
   --gray: #efefef;
   --statusGreen: #1abc9c;
   --orange: #ff851b;
@@ -146,7 +146,7 @@ div:is(.multi-selected) {
 }
 
 .bg-inverse-dark {
-  background: var(--barkBlack) !important;
+  background: var(--darkBlack) !important;
 }
 
 .bg-grey {

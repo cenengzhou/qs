@@ -163,7 +163,7 @@ const Header = () => {
           {env !== 'PRO' && <span>{env}</span>}
         </Link>
       </div>
-      {jobNo && (
+      {!!jobNo && (
         <div className="toolbar_scrollable">
           <ToolbarComponent overflowMode="Scrollable">
             <ItemsDirective>
