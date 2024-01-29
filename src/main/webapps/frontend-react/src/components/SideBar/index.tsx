@@ -56,7 +56,7 @@ const Sidebar = ({ routeList, treeData, onSelect }: Props) => {
       args.cancel = true
     }
     if (args.item.iconCss === 'e-icons e-home') {
-      args.item.url = '/pcms/web/admin/Session'
+      args.item.url = '/pcms/web'
     }
   }
 

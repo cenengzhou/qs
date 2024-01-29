@@ -104,11 +104,12 @@ const apiSlice = createApi({
           params: queryArg
         })
       }),
-      getJobList: builder.query<JobListResponse, boolean>({
+      getJobList: builder.mutation<JobListResponse, boolean>({
         query: queryArg => ({
           method: 'POST',
           url: 'service/job/getJobList',
-          body: queryArg
+          body: queryArg,
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' }
         })
       }),
       getJobDates: builder.query<JobDatesResponse, JobNo>({
@@ -1637,7 +1638,7 @@ export const {
   useGetRepackagingQuery,
   useGetJobDashboardDataQuery,
   useGetResourceSummariesGroupByObjectCodeQuery,
-  useGetJobListQuery,
+  useGetJobListMutation,
   useGetSubcontractMutation,
   useGetAllWorkScopesQuery,
   useUpdateNotificationReadStatusByCurrentUserMutation,

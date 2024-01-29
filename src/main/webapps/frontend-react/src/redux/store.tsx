@@ -4,6 +4,8 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import apiSlice from '../services'
 import combinedReducer from './'
+import { loadingSlice } from './loadingReducer'
+import { notificationSlice } from './notificationReducer'
 import logger from 'redux-logger'
 import {
   FLUSH,
@@ -20,7 +22,7 @@ import storage from 'redux-persist/lib/storage'
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: [apiSlice.reducerPath]
+  blacklist: [apiSlice.reducerPath, loadingSlice.name, notificationSlice.name]
 }
 const persistedReducer = persistReducer(persistConfig, combinedReducer)
 const store = configureStore({

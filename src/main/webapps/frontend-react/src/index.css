@@ -4,27 +4,39 @@ html, body {
 body {
   --red: #F04B46;
   --lightRed: #F36F6B;
+  --darkRed: ##c03c38;
   --blue: #2184DA;
   --lightBlue: #4D9CE1;
   --green: #17B6A4;
   --lightGreen: #98ded7;
+  --darkGreen: #129283;
   --yellow: #fcaf41;
   --lightYellow: #FCBF67;
+  --darkYellow: #ca8c34;
   --grey: #aab3ba;
   --lightGrey: #BBC2C7;
+  --darkGrey: #888f95;
   --purple: #9b59b6;
   --lightPurple: #cfafdc;
+  --darkPurple: #7c4792;
   --pink: #f94877;
   --lightPink: #f71752;
   --primary: #2184DA;
+  --lightPrimary: #4D9CE1;
+  --darkPrimary: #1e77c5;
   --lime: #65C56F;
   --lightLime: #83D08B;
+  --darkLime: #519e59;
   --info: #38AFD3;
   --lightInfo: #5FBFDB;
+  --darkInfo: #2d8ca9;
   --white: #fff;
   --black: #3C454D;
+  --lightBlack: #595F64;
+  --barkBlack: #30373e;
   --gray: #efefef;
   --statusGreen: #1abc9c;
+  --orange: #ff851b;
   margin: 0;
   font-family: 'Source Sans Pro','Helvetica Neue', Helvetica,Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -109,12 +121,134 @@ body {
 .e-list-item.e-level-2 .e-text-content {
   padding-left: 50px;
 }
+
 div:is(.multi-selected) {
   background-color: var(--blue) !important;
   color: white !important;
 }
+
 .e-float-input.e-success label.e-float-text,
 .e-float-input.e-success input:focus~label.e-float-text,
 .e-float-input.e-success input:valid~label.e-float-text {
   color: #22b24b !important;
+}
+
+.bg-white {
+  background: var(--white) !important;
+}
+
+.bg-inverse {
+  background: var(--black) !important;
+}
+
+.bg-inverse-light {
+  background: var(--lightBlack) !important;
+}
+
+.bg-inverse-dark {
+  background: var(--barkBlack) !important;
+}
+
+.bg-grey {
+  background: var(--grey) !important;
+}
+
+.bg-grey-light {
+  background: var(--lightGrey) !important;
+}
+
+.bg-grey-dark {
+  background: var(--darkGrey) !important;
+}
+
+.bg-purple {
+  background: var(--purple) !important;
+}
+
+.bg-purple-light {
+  background: var(--lightPurple) !important;
+}
+
+.bg-purple-dark {
+  background: var(--darkPurple) !important;
+}
+
+.bg-primary {
+  background: var(--primary) !important;
+}
+
+.bg-primary-light {
+  background: var(--lightPrimary) !important;
+}
+
+.bg-primary-dark {
+  background: var(--darkPrimary) !important;
+}
+
+.bg-info {
+  background: var(--info) !important;
+}
+
+.bg-info-light {
+  background: var(--lightInfo) !important;
+}
+
+.bg-info-dark {
+  background: var(--darkInfo) !important;
+}
+
+.bg-success {
+  background: var(--green) !important;
+}
+
+.bg-success-light {
+  background: var(--lightGreen) !important;
+}
+
+.bg-success-dark {
+  background: var(--darkGreen) !important;
+}
+
+.bg-lime {
+  background: var(--lime) !important;
+}
+
+.bg-lime-light {
+  background: var(--lightLime) !important;
+}
+
+.bg-lime-dark {
+  background: var(--darkLime) !important;
+}
+
+.bg-warning {
+  background: var(--yellow) !important;
+}
+
+.bg-warning-light {
+  background: var(--lightYellow) !important;
+}
+
+.bg-warning-dark {
+  background: var(--darkYellow) !important;
+}
+
+.bg-danger {
+  background: var(--red) !important;
+}
+
+.bg-danger-light {
+  background: var(--lightRed) !important;
+}
+
+.bg-danger-dark {
+  background: var(--darkRed) !important;
+}
+
+.bg-orange {
+  background-color: var(--orange) !important;
+}
+
+.no-bg {
+  background: none !important;
 }

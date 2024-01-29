@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import {
@@ -42,7 +42,7 @@ import './style.css'
 const Header = () => {
   const { hasRole } = useHasRole()
   const dispatch = useAppDispatch()
-  const env = useAppSelector((state: RootState) => state.appConfig.env)
+  const { env, jobNo } = useAppSelector((state: RootState) => state.appConfig)
   const getCurrentUser = useAppSelector(
     (state: RootState) => state.appConfig.currentUser
   )
@@ -147,62 +147,72 @@ const Header = () => {
     }
   }, [handleDocumentClick])
 
+  useEffect(() => {
+    if (!jobNo) {
+      navigate('/home/job-select')
+    }
+  }, [jobNo])
+
   return (
     <AppBarComponent
       colorMode={env !== 'DEV' && env !== 'UAT' ? 'Primary' : 'Dark'}
     >
       <div className="logo-container">
-        <img src={logo} alt="logo" />
-        {env !== 'PRO' && <span>{env}</span>}
+        <Link to="/home">
+          <img src={logo} alt="logo" />
+          {env !== 'PRO' && <span>{env}</span>}
+        </Link>
       </div>
-      <div className="toolbar_scrollable">
-        <ToolbarComponent overflowMode="Scrollable">
-          <ItemsDirective>
-            <ItemDirective
-              prefixIcon="e-icons e-volume"
-              text="Repackaging"
-              click={() => navigate('/')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-bookmark-fill"
-              text="Main Contract Certificate"
-              click={() => navigate('/')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-activities"
-              text="Subcontract"
-              click={() => navigate('/')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-chart-2d-stacked-line"
-              text="Internal Valuation"
-              click={() => navigate('/')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-circle-info"
-              text="Enquiry"
-              click={() => navigate('/')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-changes-track"
-              text="Reports"
-              click={() => navigate('/Reports')}
-            />
-            <ItemDirective
-              prefixIcon="e-icons e-page-columns"
-              text="Transit"
-              click={() => navigate('/')}
-            />
-            {hasRole('QS_ENQ') && (
+      {jobNo && (
+        <div className="toolbar_scrollable">
+          <ToolbarComponent overflowMode="Scrollable">
+            <ItemsDirective>
               <ItemDirective
-                prefixIcon="e-icons e-people"
-                text="Admin"
-                click={() => navigate('/admin/Revisions')}
+                prefixIcon="e-icons e-volume"
+                text="Repackaging"
+                click={() => navigate('/')}
               />
-            )}
-          </ItemsDirective>
-        </ToolbarComponent>
-      </div>
+              <ItemDirective
+                prefixIcon="e-icons e-bookmark-fill"
+                text="Main Contract Certificate"
+                click={() => navigate('/')}
+              />
+              <ItemDirective
+                prefixIcon="e-icons e-activities"
+                text="Subcontract"
+                click={() => navigate('/')}
+              />
+              <ItemDirective
+                prefixIcon="e-icons e-chart-2d-stacked-line"
+                text="Internal Valuation"
+                click={() => navigate('/')}
+              />
+              <ItemDirective
+                prefixIcon="e-icons e-circle-info"
+                text="Enquiry"
+                click={() => navigate('/')}
+              />
+              <ItemDirective
+                prefixIcon="e-icons e-changes-track"
+                text="Reports"
+                click={() => navigate('/Reports')}
+              />
+              <ItemDirective
+                prefixIcon="e-icons e-page-columns"
+                text="Transit"
+                click={() => navigate('/')}
+              />
+              {hasRole('QS_ENQ') && (
+                <ItemDirective
+                  prefixIcon="e-icons e-people"
+                  text="Admin"
+                  click={() => navigate('/admin/Revisions')}
+                />
+              )}
+            </ItemsDirective>
+          </ToolbarComponent>
+        </div>
+      )}
       <div className="header-right">
         <div
           className="e-icons e-comments e-large"

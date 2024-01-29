@@ -8,7 +8,7 @@ export const ROUTE_BASE_NAME = 'pcms/web'
 
 export const ROUTE_LIST: Route[] = [
   {
-    path: '/home',
+    path: '/home/*',
     name: ScreenName.HOME,
     element: <Home />
   },
