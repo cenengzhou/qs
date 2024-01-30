@@ -6,6 +6,34 @@
   .selete-header {
     height: 56px;
     flex: 0;
+    .e-btn-group {
+      width: auto;
+      padding: 0;
+      .e-btn {
+        padding: 6px 8px;
+      }
+      input:active + label.e-btn, input:checked + label.e-btn {
+        color: var(--white);
+        &.bgd {
+          background-color: var(--primary);
+        }
+        &.cvl {
+          background-color: var(--orange);
+        }
+        &.em {
+          background-color: var(--green);
+        }
+        &.sgp {
+          background-color: var(--purple);
+        }
+        &.all {
+          background-color: var(--primary);
+        }
+      }
+      .icon {
+        margin-right: 5px;
+      }
+    }
   }
   .selete-body {
     padding: 0;

@@ -65,7 +65,7 @@ const apiSlice = createApi({
           url: 'service/roc/getCutoffPeriod'
         })
       }),
-      obtainCacheKey: builder.query<string, string>({
+      obtainCacheKey: builder.mutation<string, string>({
         query: queryArg => ({
           method: 'POST',
           url: 'service/system/obtainCacheKey',
@@ -1630,7 +1630,7 @@ export const {
   useObtainUserPreferenceByCurrentUserQuery,
   useGetCurrentUserQuery,
   useValidateCurrentSessionQuery,
-  useObtainCacheKeyQuery,
+  useObtainCacheKeyMutation,
   useGetNotificationReadStatusByCurrentUserQuery,
   useGetPropertiesQuery,
   useGetJobQuery,
