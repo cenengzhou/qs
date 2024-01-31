@@ -5,28 +5,36 @@
   flex-direction: column;
   .selete-header {
     height: 56px;
+    margin: 0;
+    padding: 10px 10px 0;
     flex: 0;
     .e-btn-group {
       width: auto;
       padding: 0;
       .e-btn {
         padding: 6px 8px;
-      }
-      input:active + label.e-btn, input:checked + label.e-btn {
-        color: var(--white);
-        &.bgd {
+        &.bdg {
+          color: var(--white);
           background-color: var(--primary);
         }
         &.cvl {
+          color: var(--white);
           background-color: var(--orange);
         }
         &.em {
+          color: var(--white);
           background-color: var(--green);
         }
+        &.fdn {
+          color: var(--white);
+          background-color: var(--black);
+        }
         &.sgp {
+          color: var(--white);
           background-color: var(--purple);
         }
         &.all {
+          color: var(--white);
           background-color: var(--primary);
         }
       }
@@ -41,5 +49,6 @@
     flex: 1;
     overflow: auto;
     overflow-x: hidden;
+    align-items: start;
   }
 }

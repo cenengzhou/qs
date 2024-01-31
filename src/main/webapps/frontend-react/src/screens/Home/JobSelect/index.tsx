@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   faCity,
@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
+import { InputEventArgs, TextBoxComponent } from '@syncfusion/ej2-react-inputs'
 
 import JobItem from '../../../components/JobItem'
 import { setJobDescription, setJobNo } from '../../../redux/appConfigReducer'
@@ -33,22 +34,44 @@ const JobSelect = () => {
     useObtainCacheKeyMutation()
   const [getJobList, { isLoading: getLoading }] = useGetJobListMutation()
   const [page, setPage] = useState(0)
+  const [currentBtn, setCurrentBtn] = useState<string>('ALL')
+  const btnList = [
+    { name: 'BDG', style: 'bdg', icon: faCity },
+    { name: 'CVL', style: 'cvl', icon: faRoadBarrier },
+    { name: 'E&M', style: 'em', icon: faGasPump },
+    { name: 'FDN', style: 'fdn', icon: faDigging },
+    { name: 'SGP', style: 'sgp', icon: faDollarSign },
+    { name: 'ALL', style: 'all', icon: faTableCells }
+  ]
+  const isStart = useRef(false)
+
+  const getLocalList = async (type: boolean, cacheKey: string) => {
+    const item = type == true ? 'COMPLETED_JOB_LIST' : 'ONGOING_JOB_LIST'
+    const localJobList = localStorage.getItem(item)
+    let list: Job[] = []
+    try {
+      list = JSON.parse(
+        CryptoJS.AES.decrypt(localJobList || '', cacheKey).toString(
+          CryptoJS.enc.Utf8
+        )
+      )
+    } catch (error) {
+      localStorage.removeItem(item)
+      list = await getJobList(type).unwrap()
+      localStorage.setItem(
+        item,
+        CryptoJS.AES.encrypt(JSON.stringify(list), cacheKey).toString()
+      )
+    }
+    return list
+  }
 
   const getList = async () => {
     try {
       const completedCacheKey = await getCacheKey('COMPLETED_JOB_LIST').unwrap()
       const onGingCacheKey = await getCacheKey('ONGOING_JOB_LIST').unwrap()
-      const localCompletedJobList = CryptoJS.AES.decrypt(
-        localStorage.getItem('COMPLETED_JOB_LIST') || '',
-        completedCacheKey
-      )
-      const localOngoingJobList = CryptoJS.AES.decrypt(
-        localStorage.getItem('ONGOING_JOB_LIST') || '',
-        onGingCacheKey
-      )
-      console.log(localCompletedJobList, localOngoingJobList)
-      const completedJobList = await getJobList(true).unwrap()
-      const ongoingJobList = await getJobList(false).unwrap()
+      const completedJobList = await getLocalList(true, completedCacheKey)
+      const ongoingJobList = await getLocalList(false, onGingCacheKey)
       const list = [...completedJobList, ...ongoingJobList].sort((a, b) =>
         b.jobNo!.localeCompare(a.jobNo!)
       )
@@ -61,6 +84,14 @@ const JobSelect = () => {
           content: 'Failed to fetch'
         })
       )
+    }
+  }
+
+  const handleSearch = (event: InputEventArgs) => {
+    console.log('event====', event)
+    const searchText = event.value
+    if (searchText && searchText?.length > 0) {
+      setJobList([...newList.filter(item => item.jobNo!.includes(searchText))])
     }
   }
 
@@ -84,9 +115,12 @@ const JobSelect = () => {
   }, [newList])
 
   useEffect(() => {
-    dispatch(setJobNo(''))
-    dispatch(setJobDescription(''))
-    getList()
+    if (!isStart.current) {
+      isStart.current = true
+      dispatch(setJobNo(''))
+      dispatch(setJobDescription(''))
+      getList()
+    }
   }, [])
 
   useEffect(() => {
@@ -95,48 +129,30 @@ const JobSelect = () => {
     } else {
       dispatch(closeLoading())
     }
-  }, [getLoading])
+  }, [getLoading, cacheKeyLoading])
 
   return (
     <div className="selete-container">
       <div className="selete-header row">
         <div className="row col-xl-4 col-md-6 col-sm-12">
           <div className="e-btn-group">
-            <ButtonComponent cssClass="bgd">
-              <FontAwesomeIcon icon={faCity} className="icon" />
-              BGD
-            </ButtonComponent>
-            <input type="radio" id="BGD" name="align" value="BGD" />
-            <label className="e-btn bgd" htmlFor="BGD">
-              <FontAwesomeIcon icon={faCity} className="icon" />
-              BGD
-            </label>
-            <input type="radio" id="CVL" name="align" value="CVL" />
-            <label className="e-btn cvl" htmlFor="CVL">
-              <FontAwesomeIcon icon={faRoadBarrier} className="icon" />
-              CVL
-            </label>
-            <input type="radio" id="E&M" name="align" value="E&M" />
-            <label className="e-btn em" htmlFor="E&M">
-              <FontAwesomeIcon icon={faGasPump} className="icon" />
-              E&M
-            </label>
-            <input type="radio" id="FDN" name="align" value="FDN" />
-            <label className="e-btn fdn" htmlFor="FDN">
-              <FontAwesomeIcon icon={faDigging} className="icon" />
-              FDN
-            </label>
-            <input type="radio" id="SGP" name="align" value="SGP" />
-            <label className="e-btn sgp" htmlFor="SGP">
-              <FontAwesomeIcon icon={faDollarSign} className="icon" />
-              SGP
-            </label>
-            <input type="radio" id="ALL" name="align" value="ALL" />
-            <label className="e-btn all" htmlFor="ALL">
-              <FontAwesomeIcon icon={faTableCells} className="icon" />
-              ALL
-            </label>
+            {btnList.map(item => (
+              <ButtonComponent
+                cssClass={currentBtn == item.name ? item.style : ''}
+                onClick={() => setCurrentBtn(item.name)}
+              >
+                <FontAwesomeIcon icon={item.icon} className="icon" />
+                {item.name}
+              </ButtonComponent>
+            ))}
           </div>
+        </div>
+        <div className="row col-xl-4 col-md-6 col-sm-12 justify-content-center">
+          <TextBoxComponent
+            placeholder="Search Job here..."
+            floatLabelType="Auto"
+            input={handleSearch}
+          />
         </div>
       </div>
       <div className="selete-body row">
