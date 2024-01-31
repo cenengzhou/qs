@@ -8,6 +8,9 @@
     margin: 0;
     padding: 10px 10px 0;
     flex: 0;
+    .row {
+      align-items: center;
+    }
     .e-btn-group {
       width: auto;
       padding: 0;
