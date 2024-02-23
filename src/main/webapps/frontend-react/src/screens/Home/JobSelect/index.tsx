@@ -34,7 +34,9 @@ const JobSelect = () => {
     useObtainCacheKeyMutation()
   const [getJobList, { isLoading: getLoading }] = useGetJobListMutation()
   const [page, setPage] = useState(0)
+  const [searchText, setSearchText] = useState<string>()
   const [currentBtn, setCurrentBtn] = useState<string>('ALL')
+  const [onGoing, setOnGoing] = useState<boolean>(false)
   const btnList = [
     { name: 'BDG', style: 'bdg', icon: faCity },
     { name: 'CVL', style: 'cvl', icon: faRoadBarrier },
@@ -87,12 +89,45 @@ const JobSelect = () => {
     }
   }
 
+  const btnSearch = (division: string) => {
+    setCurrentBtn(division)
+  }
+
   const handleSearch = (event: InputEventArgs) => {
-    console.log('event====', event)
-    const searchText = event.value
-    if (searchText && searchText?.length > 0) {
-      setJobList([...newList.filter(item => item.jobNo!.includes(searchText))])
+    setSearchText(event.value)
+  }
+
+  const searchOnGoing = () => {
+    setOnGoing(!onGoing)
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      search(currentBtn, searchText, onGoing)
+    }, 300)
+  }, [currentBtn, searchText, onGoing])
+
+  const search = (
+    division: string,
+    searchText: string = '',
+    onGoing: boolean = false
+  ) => {
+    let list = [...newList]
+    if (division !== 'ALL') {
+      list = list.filter(item => item.division == division)
     }
+    if (searchText && searchText.length > 0) {
+      list = list.filter(
+        item =>
+          item.jobNo?.includes(searchText) ||
+          item.division?.includes(searchText) ||
+          item.description?.includes(searchText)
+      )
+    }
+    if (onGoing) {
+      list = list.filter(item => item.completionStatus == '1')
+    }
+    setJobList(list)
   }
 
   useEffect(() => {
@@ -139,7 +174,7 @@ const JobSelect = () => {
             {btnList.map(item => (
               <ButtonComponent
                 cssClass={currentBtn == item.name ? item.style : ''}
-                onClick={() => setCurrentBtn(item.name)}
+                onClick={() => btnSearch(item.name)}
               >
                 <FontAwesomeIcon icon={item.icon} className="icon" />
                 {item.name}
@@ -148,11 +183,29 @@ const JobSelect = () => {
           </div>
         </div>
         <div className="row col-xl-4 col-md-6 col-sm-12 justify-content-center">
-          <TextBoxComponent
-            placeholder="Search Job here..."
-            floatLabelType="Auto"
-            input={handleSearch}
-          />
+          <div className="col-7">
+            <TextBoxComponent
+              placeholder="Search Job here..."
+              floatLabelType="Auto"
+              cssClass="e-outline"
+              input={handleSearch}
+            />
+          </div>
+          <div
+            className={'row col-5 switch-search ' + (onGoing ? 'on' : '')}
+            onClick={() => searchOnGoing()}
+          >
+            <div className="col-12">
+              <ButtonComponent cssClass="e-info">
+                Include completed
+              </ButtonComponent>
+            </div>
+            <div className="col-12">
+              <ButtonComponent cssClass="e-warning">
+                Only on going
+              </ButtonComponent>
+            </div>
+          </div>
         </div>
       </div>
       <div className="selete-body row">

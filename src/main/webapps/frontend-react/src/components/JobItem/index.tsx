@@ -54,7 +54,9 @@ const JobItem = ({ job }: Props) => {
         }`}
         onClick={() => onClick(job)}
       >
-        <span className="badge">Completed</span>
+        {job.completionStatus !== '1' && (
+          <span className="badge">Completed</span>
+        )}
         <FontAwesomeIcon
           icon={
             job.division == 'BDG'
