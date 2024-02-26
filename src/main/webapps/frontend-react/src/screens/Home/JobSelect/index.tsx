@@ -33,10 +33,11 @@ const JobSelect = () => {
   const [getCacheKey, { isLoading: cacheKeyLoading }] =
     useObtainCacheKeyMutation()
   const [getJobList, { isLoading: getLoading }] = useGetJobListMutation()
-  const [page, setPage] = useState(0)
+  const [start, setStart] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>()
   const [currentBtn, setCurrentBtn] = useState<string>('ALL')
   const [onGoing, setOnGoing] = useState<boolean>(false)
+  const page = useRef<number>(1)
   const btnList = [
     { name: 'BDG', style: 'bdg', icon: faCity },
     { name: 'CVL', style: 'cvl', icon: faRoadBarrier },
@@ -131,21 +132,21 @@ const JobSelect = () => {
   }
 
   useEffect(() => {
-    const num = 200
-    if (page > 0 && (page - 1) * num < newList.length) {
-      setJobList(pre => [
-        ...pre,
-        ...newList.slice((page - 1) * num, page * num)
-      ])
-      setTimeout(() => {
-        setPage(page + 1)
-      }, 500)
+    if (start) {
+      const num = 200
+      if ((page.current - 1) * num < newList.length) {
+        setJobList(pre => [
+          ...pre,
+          ...newList.slice((page.current - 1) * num, page.current * num)
+        ])
+        page.current = page.current + 1
+      }
     }
-  }, [page])
+  }, [jobList, start])
 
   useEffect(() => {
-    if (newList.length > 0 && page == 0) {
-      setPage(1)
+    if (newList.length > 0 && start == false) {
+      setStart(true)
     }
   }, [newList])
 
@@ -173,6 +174,7 @@ const JobSelect = () => {
           <div className="e-btn-group">
             {btnList.map(item => (
               <ButtonComponent
+                key={item.name}
                 cssClass={currentBtn == item.name ? item.style : ''}
                 onClick={() => btnSearch(item.name)}
               >

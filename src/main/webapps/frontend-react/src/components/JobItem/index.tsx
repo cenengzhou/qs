@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -83,4 +83,4 @@ const JobItem = ({ job }: Props) => {
   )
 }
 
-export default JobItem
+export default memo(JobItem)
